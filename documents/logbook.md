@@ -18,6 +18,8 @@ Notes from meeting:
 - All members are signed in on Trello and GitHub
 - First sprint will be of one week length
 - Given the circumstances, we have chosen that Niclas will initialilly prioritize the Product Backlog
+- Identified system type as being a "Home & Entertainment Application"
+  - Alternatively it could also be a "Exploratory, creative, and collaborative interface"
 
 Next meeting:
 - Monday the 6st of March at 10 a.m. (Continued Sprint Planning and beginning of Sprint)
