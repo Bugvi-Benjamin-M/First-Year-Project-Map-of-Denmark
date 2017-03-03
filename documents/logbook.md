@@ -1,10 +1,11 @@
 ## Logbook 3/3
-What we did yesterday: N/A
+What we did yesterday: 
+- N/A
 
 What we will do today:
-- Analysis
+- Backlog Refinement / Analysis
+- Sprint Planning
 - Design overview (classes)
 
 Impediments:
-
-Agenda of meeting:
+- Blanke has to go before 15:30
