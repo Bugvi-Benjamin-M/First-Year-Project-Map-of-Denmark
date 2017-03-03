@@ -20,3 +20,5 @@ Notes from meeting:
 
 Next meeting:
 - Monday the 6st of March at 10 a.m. (Continued Sprint Planning and beginning of Sprint)
+
+## Next logbook...
