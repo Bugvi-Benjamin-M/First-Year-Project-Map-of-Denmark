@@ -6,9 +6,10 @@ What we will do today:
 - Sprint Planning
   - Update on tools 
   - Time schedule
+  - Report skeleton
 - Backlog Refinement / Analysis
-- Design overview (classes)
-- Report skeleton
+- Initial Design of GUI 
+- Design of class structure
 
 Impediments:
 - Blanke has to go before 15:30
