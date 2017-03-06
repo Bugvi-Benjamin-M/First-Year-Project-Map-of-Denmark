@@ -1,0 +1,10 @@
+# This is our CI config file, which automatically tests and builds our project.
+
+build_environment: ubuntu1404
+language: java
+
+jdk:
+  - oraclejdk8
+
+install:
+  - ant dist
