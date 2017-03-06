@@ -1,7 +1,9 @@
 package View;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.File;
 
 /**
  * Class details:
@@ -36,5 +38,19 @@ public class ToolFeature extends ToolComponent {
         JPanel label = new JPanel();
         label.add(new JLabel(tagline));
         this.add(label);
+    }
+
+    static void loadFileChooser() {
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "OSM files", "osm");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(null);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = chooser.getSelectedFile();
+            System.out.println("You chose to open this file: " +
+                    file.getName());
+            Helpers.File.load(file.getAbsolutePath());
+        }
     }
 }

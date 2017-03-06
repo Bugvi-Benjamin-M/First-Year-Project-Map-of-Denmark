@@ -2,6 +2,8 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,9 +64,23 @@ public class Toolbar extends View {
     private class ToolFactory {
         private List<ToolComponent> setupToolbar() {
             List<ToolComponent> tools = new ArrayList<>();
-            tools.add(new ToolFeature("/load.png","Load"));
+
+            tools.add(setupLoadTool());
+
             tools.add(new ToolFeature("/save.png","Save"));
             return tools;
         }
+    }
+
+    private ToolComponent setupLoadTool() {
+        ToolComponent loadTool = new ToolFeature("/load.png","Load");
+        loadTool.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                ToolFeature.loadFileChooser();
+            }
+        });
+        return loadTool;
     }
 }
