@@ -54,7 +54,7 @@ public class Toolbar extends View {
     private class ToolFactory {
         private List<ToolComponent> setupToolbar() {
             List<ToolComponent> tools = new ArrayList<>();
-            tools.add(new ToolComponent("/load.png","Load"));
+            tools.add(new ToolComponent("/load.png","File"));
             tools.add(new ToolComponent("/save.png","Save"));
             return tools;
         }
