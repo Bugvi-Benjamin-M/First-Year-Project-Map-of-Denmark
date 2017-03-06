@@ -6,10 +6,13 @@ import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * Created by Jakob on 06-03-2017.
  */
-public class Model {
+public class Model extends Observable {
     private List<Road> roads;
     private List<Shape> unknown;
 
