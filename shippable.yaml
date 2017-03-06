@@ -7,4 +7,5 @@ jdk:
   - oraclejdk8
 
 install:
-  - javac -classpath ./src ./src/Main.java
+  - ant compile
+  - ant jar
