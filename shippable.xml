@@ -1,12 +1,10 @@
 # This is our CI config file, which automatically tests and builds our project.
 
+build_environment: ubuntu1404
 language: java
 
 jdk:
-   - openjdk7
-   - oraclejdk7
-   - oraclejdk8
+  - oraclejdk8
 
-after_success:
-   - mvn clean cobertura:cobertura
-   - mvn test
+install:
+  - javac -classpath ./src ./src/Main.java
