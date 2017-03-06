@@ -1,0 +1,84 @@
+<project name="BFST" default="dist" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
+    <description>
+        Building BFST
+    </description>
+    <!-- set global properties for this build -->
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+    <property name="dist" location="out"/>
+
+    <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+        <classpath path="lib/jacocoant.jar"/>
+    </taskdef>
+
+    <target name="init" depends="clean">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build}"/>
+    </target>
+
+    <target name="compile" depends="init"
+            description="compile the source">
+        <!-- Compile the java code from ${src} into ${build} -->
+        <javac srcdir="${src}" destdir="${build}"/>
+    </target>
+
+    <target name="dist" depends="compile"
+            description="generate the distribution">
+
+        <jar destfile="${dist}/BFST.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Main-Class" value="Main"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="test" depends="dist">
+        <junit printsummary="yes">
+            <classpath location="lib/junit-4.12.jar" />
+            <classpath location="lib/hamcrest-core-1.3.jar" />
+            <batchtest fork="yes">
+                <fileset dir="tests" includes="*.java"/>
+            </batchtest>
+        </junit>
+    </target>
+    <target name="coverage" depends="dist">
+        <jacoco:coverage destfile="${dist}/jacoco.exec">
+            <junit fork="true" forkmode="once">
+                <batchtest fork="yes">
+                    <fileset dir="tests" includes="*.java"/>
+                </batchtest>
+                <classpath>
+                    <pathelement location="./lib/junit-4.12.jar"/>
+                    <pathelement location="./lib/hamcrest-core-1.3.jar"/>
+                </classpath>
+            </junit>
+        </jacoco:coverage>
+    </target>
+    <target name="report" depends="coverage">
+        <jacoco:report>
+            <executiondata>
+                <file file="${dist}/jacoco.exec"/>
+            </executiondata>
+            <!--  the class files and optional source files ...  -->
+            <structure name="JaCoco">
+                <classfiles>
+                    <fileset dir="${dist}"/>
+                </classfiles>
+                <sourcefiles encoding="UTF-8">
+                    <fileset dir="src"/>
+                </sourcefiles>
+            </structure>
+            <csv destfile="${dist}/jacoco.csv"/>
+            <xml destfile="${dist}/jacoco.xml"/>
+        </jacoco:report>
+    </target>
+
+    <target name="clean"
+            description="clean up">
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+    </target>
+</project>

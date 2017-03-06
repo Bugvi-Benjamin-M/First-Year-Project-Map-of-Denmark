@@ -22,6 +22,30 @@ Notes from meeting:
   - Alternatively it could also be a "Exploratory, creative, and collaborative interface"
 
 Next meeting:
-- Monday the 6st of March at 10 a.m. (Continued Sprint Planning and beginning of Sprint)
+- Monday the 6st of March at 10 (Continued Sprint Planning and beginning of Sprint)
 
+
+## Logbook 6/3 (Scribe Magnussen)
+
+What we did yesterday:
+ - N/A
+ 
+What we will do today:
+ - First Scrum Meeting
+  - Division into subgroups
+  - Assignment of tasks
+  - Program skeleton 
+ 
+Impediments: 
+  - Búgvi has to go before 17.00
+  
+Notes from meeting:
+ - Blanke and Niclas are assigned the task of implementing the basic GUI
+ - Búgvi, Nikolaj and Jakob are assigned the task of implementing the OSM parser
+ 
+ 
+Next meeting:
+ - Wednesday the 8th of March at 9.45 (Status check and group work)
+ 
+ 
 ## Next logbook...
