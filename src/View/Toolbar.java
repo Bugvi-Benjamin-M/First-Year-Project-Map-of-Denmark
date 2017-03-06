@@ -1,11 +1,11 @@
 package View;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.tools.Tool;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static javax.swing.SpringLayout.*;
 
 /**
  * Class details:
@@ -17,7 +17,8 @@ import java.util.List;
 public class Toolbar extends View {
     private List<ToolComponent> tools;
 
-    private final int MARGIN_LEFT = 20;
+    private final int MARGIN_SMALL_LEFT = 20;
+    private final int MARGIN_LARGE_LEFT = 80;
     private final int MARGIN_TOP = 20;
 
     public Toolbar() {
@@ -30,32 +31,39 @@ public class Toolbar extends View {
     }
 
     private void addTools(SpringLayout layout) {
+        ToolComponent tool = addLoadTool(layout);
+        addSaveTool(layout, tool);
+    }
+
+    private ToolComponent addLoadTool(SpringLayout layout) {
         ToolComponent tool = tools.get(0);
-        layout.putConstraint(SpringLayout.WEST, tool,
-                MARGIN_LEFT,
-                SpringLayout.WEST, this);
-        layout.putConstraint(SpringLayout.NORTH, tool,
+        layout.putConstraint(WEST, tool,
+                MARGIN_SMALL_LEFT,
+                WEST, this);
+        layout.putConstraint(NORTH, tool,
                 MARGIN_TOP,
-                SpringLayout.NORTH, this);
+                NORTH, this);
         this.add(tool);
-        for (int i = 1; i < tools.size(); i++) {
-            ToolComponent next = tools.get(i);
-            layout.putConstraint(SpringLayout.WEST, next,
-                    MARGIN_LEFT,
-                    SpringLayout.EAST, tool);
-            layout.putConstraint(SpringLayout.NORTH, next,
-                    MARGIN_TOP,
-                    SpringLayout.NORTH, this);
-            tool = next;
-            this.add(tool);
-        }
+        return tool;
+    }
+
+    private void addSaveTool(SpringLayout layout, ToolComponent tool) {
+        ToolComponent next = tools.get(1);
+        layout.putConstraint(WEST, next,
+                MARGIN_SMALL_LEFT,
+                EAST, tool);
+        layout.putConstraint(NORTH, next,
+                MARGIN_TOP,
+                NORTH, this);
+        tool = next;
+        this.add( tool);
     }
 
     private class ToolFactory {
         private List<ToolComponent> setupToolbar() {
             List<ToolComponent> tools = new ArrayList<>();
-            tools.add(new ToolComponent("/load.png","Load"));
-            tools.add(new ToolComponent("/save.png","Save"));
+            tools.add(new ToolFeature("/load.png","Load"));
+            tools.add(new ToolFeature("/save.png","Save"));
             return tools;
         }
     }
