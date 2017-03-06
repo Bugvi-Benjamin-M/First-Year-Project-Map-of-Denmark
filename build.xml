@@ -1,8 +1,5 @@
 <project name="BFST" default="dist" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
-    <description>
-        Building BFST
-    </description>
-    <!-- set global properties for this build -->
+    <property name="tests" location="tests"/>
     <property name="src" location="src"/>
     <property name="build" location="build"/>
     <property name="dist" location="out"/>
@@ -11,21 +8,21 @@
         <classpath path="lib/jacocoant.jar"/>
     </taskdef>
 
-    <target name="init" depends="clean">
-        <!-- Create the time stamp -->
-        <tstamp/>
-        <!-- Create the build directory structure used by compile -->
+
+    <path id="build.path">
+        <!-- None so far -->
+    </path>
+
+    <path id="test.path">
+        <pathelement location="lib/junit-4.12.jar"/>
+    </path>
+
+    <target name="compile" description="compile the source" depends="clean">
         <mkdir dir="${build}"/>
-    </target>
+        <mkdir dir="${build}/tests"/>
 
-    <target name="compile" depends="init"
-            description="compile the source">
-        <!-- Compile the java code from ${src} into ${build} -->
-        <javac srcdir="${src}" destdir="${build}"/>
-    </target>
-
-    <target name="dist" depends="compile"
-            description="generate the distribution">
+        <javac srcdir="${src}" destdir="${build}" includeantruntime="false" classpathref="build.path" />
+        <javac srcdir="${tests}" destdir="${build}/tests" includeantruntime="true" classpathref="test.path" />
 
         <jar destfile="${dist}/BFST.jar" basedir="${build}">
             <manifest>
@@ -34,24 +31,29 @@
         </jar>
     </target>
 
-    <target name="test" depends="dist">
-        <junit printsummary="yes">
-            <classpath location="lib/junit-4.12.jar" />
-            <classpath location="lib/hamcrest-core-1.3.jar" />
-            <batchtest fork="yes">
+    <target name="test" depends="compile">
+        <junit printsummary="true" haltOnFailure="true" haltOnError="true" showoutput="true" outputtoformatters="true" fork="true">
+            <batchtest filtertrace="false" fork="yes">
+                <formatter type="plain" usefile="false"/>
                 <fileset dir="tests" includes="*.java"/>
             </batchtest>
+            <classpath>
+                <pathelement location="./lib/junit-4.12.jar"/>
+                <pathelement location="./lib/hamcrest-core-1.3.jar"/>
+                <pathelement location="${build}/tests"/>
+            </classpath>
         </junit>
     </target>
-    <target name="coverage" depends="dist">
+    <target name="coverage" depends="compile">
         <jacoco:coverage destfile="${dist}/jacoco.exec">
-            <junit fork="true" forkmode="once">
+            <junit fork="true" forkmode="once" haltOnFailure="true" haltOnError="true">
                 <batchtest fork="yes">
                     <fileset dir="tests" includes="*.java"/>
                 </batchtest>
                 <classpath>
                     <pathelement location="./lib/junit-4.12.jar"/>
                     <pathelement location="./lib/hamcrest-core-1.3.jar"/>
+                    <pathelement location="${build}/tests"/>
                 </classpath>
             </junit>
         </jacoco:coverage>
@@ -70,7 +72,6 @@
                     <fileset dir="src"/>
                 </sourcefiles>
             </structure>
-            <csv destfile="${dist}/jacoco.csv"/>
             <xml destfile="${dist}/jacoco.xml"/>
         </jacoco:report>
     </target>
