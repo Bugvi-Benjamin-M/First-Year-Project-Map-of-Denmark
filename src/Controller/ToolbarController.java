@@ -3,7 +3,6 @@ package Controller;
 import View.Toolbar;
 import View.Window;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -22,4 +21,5 @@ public class ToolbarController extends Controller {
         this.window = window;
         this.window.addComponent(BorderLayout.PAGE_START,toolbar);
     }
+
 }

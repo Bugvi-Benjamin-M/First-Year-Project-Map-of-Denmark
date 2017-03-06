@@ -4,7 +4,7 @@
 public class Tests extends junit.framework.TestCase {
 
 
-    public void testUnitTests() {
+    public boolean testUnitTests() {
         return true;
     }
 
