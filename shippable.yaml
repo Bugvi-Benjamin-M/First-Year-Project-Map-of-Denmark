@@ -9,9 +9,7 @@ jdk:
 build:
   advancedReporting: true
   ci:
-    - mkdir -p shippable/testresults
     - mkdir -p shippable/codecoverage
     - ant test
     - ant report
-    - cp out/jacoco.xml shippable/testresults
     - cp out/jacoco.xml shippable/codecoverage

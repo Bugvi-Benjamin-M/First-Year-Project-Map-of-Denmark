@@ -1,11 +1,13 @@
 /**
  * Created by niclas on 06/03/2017.
  */
-public class Tests extends junit.framework.TestCase {
+import junit.framework.TestCase;
+
+public class Tests extends TestCase {
 
 
-    public boolean testUnitTests() {
-        return true;
+    public void testUnitTests() {
+        assertEquals(true, true);
     }
 
 }
