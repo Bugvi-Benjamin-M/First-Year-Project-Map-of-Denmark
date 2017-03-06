@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
         Window window = new Window();
-        Model model = new Model();
+        Model model = Model.getInstance();
         CanvasController canvasController = new CanvasController(window);
         canvasController.setObserver(model);
         ToolbarController toolbarController = new ToolbarController(window);
