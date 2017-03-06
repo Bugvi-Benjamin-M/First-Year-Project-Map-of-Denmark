@@ -42,6 +42,9 @@ Impediments:
 Notes from meeting:
  - Blanke and Niclas are assigned the task of implementing the basic GUI
  - Búgvi, Nikolaj and Jakob are assigned the task of implementing the OSM parser
+ - Work continued throughout the day until 17.00
+ - A basic GUI is now working.
+ - Built the skeleton for the OSM parser. 
  
  
 Next meeting:
