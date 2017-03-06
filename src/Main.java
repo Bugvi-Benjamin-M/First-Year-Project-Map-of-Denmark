@@ -16,5 +16,6 @@ public class Main {
         CanvasController canvasController = new CanvasController(window);
         canvasController.setObserver(model);
         ToolbarController toolbarController = new ToolbarController(window);
+        InfobarController infobarController = new InfobarController(window);
     }
 }
