@@ -1,7 +1,9 @@
 package View;
 
+import javax.swing.*;
+
 /**
  * Created by Jakob on 06-03-2017.
  */
-public class View {
+abstract class View extends JPanel {
 }
