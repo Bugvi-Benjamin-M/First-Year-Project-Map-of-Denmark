@@ -42,7 +42,7 @@ Impediments:
 Notes from meeting:
  - Blanke and Niclas are assigned the task of implementing the basic GUI
  - Búgvi, Nikolaj and Jakob are assigned the task of implementing the OSM parser
- - 
+ 
  
 Next meeting:
  - Wednesday the 8th of March at 9.45 (Status check and group work)
