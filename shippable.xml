@@ -1,0 +1,12 @@
+# This is our CI config file, which automatically tests and builds our project.
+
+language: java
+
+jdk:
+   - openjdk7
+   - oraclejdk7
+   - oraclejdk8
+
+after_success:
+   - mvn clean cobertura:cobertura
+   - mvn test
