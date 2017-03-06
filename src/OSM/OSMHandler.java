@@ -3,7 +3,6 @@ package OSM;
 import Enums.RoadType;
 import Enums.WayType;
 import Model.*;
-import com.sun.javafx.sg.prism.NGShape;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -29,19 +28,19 @@ public final class OSMHandler implements ContentHandler {
     private float LongitudeFactor;
     private Model model;
 
-    private OSMHandler(Model model) {
+    private OSMHandler() {
         idToNode = new HashMap<>();
         idToWay = new HashMap<>();
-        this.model = model;
+        model = Model.getInstance();
     }
 
     /**
      * Returns the OSMHandler, which is a singleton.
      * @return OSMHandler.
      */
-    public static OSMHandler getInstance(Model model){
+    public static OSMHandler getInstance(){
         if(handler == null){
-            handler = new OSMHandler(model);
+            handler = new OSMHandler();
         }
         return handler;
     }
