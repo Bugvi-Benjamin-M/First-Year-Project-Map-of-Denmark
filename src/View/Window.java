@@ -14,16 +14,18 @@ public class Window {
     public Window() {
         window = new JFrame(TITLE);
         window.setLayout(new BorderLayout());
-        dimension = new Dimension(1000,1000);
+        dimension = new Dimension(1200,1000);
         window.setPreferredSize(dimension);
-        window.setExtendedState(JFrame.MAXIMIZED_BOTH);
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        update(true);
+        window.pack();
+        window.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        window.setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     public void addComponent(String layout, View component) {
         window.add(component,layout);
-        update(true);
+        setVisible(true);
     }
 
     public Dimension getDimension() {
@@ -38,8 +40,7 @@ public class Window {
         return dimension.getHeight();
     }
 
-    public void update(boolean visibility) {
-        window.pack();
+    public void setVisible(boolean visibility) {
         window.setVisible(visibility);
     }
 }
