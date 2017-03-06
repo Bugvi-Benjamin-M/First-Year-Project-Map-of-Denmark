@@ -7,5 +7,5 @@ jdk:
   - oraclejdk8
 
 install:
-  - ant compile
-  - ant jar
+  - ant dist
+  - ant test
