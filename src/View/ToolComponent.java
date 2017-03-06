@@ -1,6 +1,7 @@
 package View;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 /**
@@ -18,9 +19,12 @@ public class ToolComponent extends JPanel{
         super();
         if (tagline != null) this.tagline = tagline;
         icon = createImageIcon(path, this.tagline);
-        this.setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
+        this.setLayout(new GridLayout(2,1));
         this.add(new JLabel(icon));
-        this.add(new JLabel(tagline));
+        JPanel label = new JPanel();
+        label.add(new JLabel(tagline));
+        this.add(label);
+        this.setPreferredSize(new Dimension(50,90));
     }
 
     /** Returns an ImageIcon, or null if the path was invalid. */

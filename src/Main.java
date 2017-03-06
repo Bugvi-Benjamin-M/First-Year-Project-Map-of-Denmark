@@ -2,6 +2,8 @@ import Controller.*;
 import Model.*;
 import View.*;
 
+import java.util.Observer;
+
 /**
  * Created by Jakob on 06-03-2017.
  */
@@ -10,7 +12,9 @@ public class Main {
 
     public static void main(String[] args) {
         Window window = new Window();
-        CanvasController canvasController = new CanvasController();
+        Model model = new Model();
+        CanvasController canvasController = new CanvasController(window);
+        canvasController.setObserver(model);
         ToolbarController toolbarController = new ToolbarController(window);
     }
 }

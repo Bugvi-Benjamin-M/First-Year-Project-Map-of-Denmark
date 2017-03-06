@@ -8,11 +8,14 @@ import java.awt.*;
  */
 public class Window {
     private JFrame window;
+    private Dimension dimension;
+    private final String TITLE = "OSM Map Viewer v0.1";
 
     public Window() {
-        window = new JFrame();
+        window = new JFrame(TITLE);
         window.setLayout(new BorderLayout());
-        window.setPreferredSize(new Dimension(1000,1000));
+        dimension = new Dimension(1000,1000);
+        window.setPreferredSize(dimension);
         window.setExtendedState(JFrame.MAXIMIZED_BOTH);
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         update(true);
@@ -23,9 +26,16 @@ public class Window {
         update(true);
     }
 
-    public void addComponent(String layout, Component component) {
-        window.add(component,layout);
-        update(true);
+    public Dimension getDimension() {
+        return dimension;
+    }
+
+    public double getWidth() {
+        return dimension.getWidth();
+    }
+
+    public double getHeight() {
+        return dimension.getHeight();
     }
 
     public void update(boolean visibility) {

@@ -17,31 +17,38 @@ import java.util.List;
 public class Toolbar extends View {
     private List<ToolComponent> tools;
 
+    private final int MARGIN_LEFT = 20;
+    private final int MARGIN_TOP = 20;
+
     public Toolbar() {
         tools = new ToolFactory().setupToolbar();
         SpringLayout layout = new SpringLayout();
         this.setLayout(layout);
+        addTools(layout);
+        this.setPreferredSize(new Dimension(500,120));
+        this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    }
+
+    private void addTools(SpringLayout layout) {
         ToolComponent tool = tools.get(0);
         layout.putConstraint(SpringLayout.WEST, tool,
-                5,
+                MARGIN_LEFT,
                 SpringLayout.WEST, this);
         layout.putConstraint(SpringLayout.NORTH, tool,
-                5,
+                MARGIN_TOP,
                 SpringLayout.NORTH, this);
         this.add(tool);
         for (int i = 1; i < tools.size(); i++) {
             ToolComponent next = tools.get(i);
             layout.putConstraint(SpringLayout.WEST, next,
-                    5,
+                    MARGIN_LEFT,
                     SpringLayout.EAST, tool);
             layout.putConstraint(SpringLayout.NORTH, next,
-                    5,
+                    MARGIN_TOP,
                     SpringLayout.NORTH, this);
             tool = next;
             this.add(tool);
         }
-        this.setPreferredSize(new Dimension(500,100));
-        this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
 
     private class ToolFactory {
