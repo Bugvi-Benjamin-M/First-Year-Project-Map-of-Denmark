@@ -70,8 +70,6 @@
                     <fileset dir="src"/>
                 </sourcefiles>
             </structure>
-            <!--  to produce reports in different formats.  -->
-            <html destdir="${dist}"/>
             <csv destfile="${dist}/jacoco.csv"/>
             <xml destfile="${dist}/jacoco.xml"/>
         </jacoco:report>

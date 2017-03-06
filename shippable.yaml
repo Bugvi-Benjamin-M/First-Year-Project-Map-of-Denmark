@@ -13,5 +13,5 @@ build:
     - mkdir -p shippable/codecoverage
     - ant test
     - ant report
-    - cp -R out shippable/testresults
+    - cp out/jacoco.xml shippable/testresults
     - cp out/jacoco.xml shippable/codecoverage
