@@ -25,7 +25,7 @@ public final class OSMHandler implements ContentHandler {
     private OSMNode node;
     private WayType wayType;
     private RoadType roadType;
-    private float LongitudeFactor;
+    private float longitudeFactor;
     private Model model;
 
     private OSMHandler() {
@@ -76,12 +76,24 @@ public final class OSMHandler implements ContentHandler {
         String v = atts.getValue("v");
         switch (qName){
             case "bounds":
+                float minLatitude, maxLatitude, minLongitude, maxLongitude;
+                minLatitude = Float.parseFloat(atts.getValue("minlat"));
+                maxLatitude = Float.parseFloat(atts.getValue("maxlat"));
+                minLongitude = Float.parseFloat(atts.getValue("minlon"));
+                maxLongitude = Float.parseFloat(atts.getValue("maxlon"));
+                float avglat = minLatitude + (maxLatitude - minLatitude)/2;
+                longitudeFactor = (float) Math.cos(avglat/180*Math.PI);
+                minLongitude *= longitudeFactor;
+                maxLongitude *= longitudeFactor;
+                minLatitude = -minLatitude;
+                maxLatitude = -maxLatitude;
+                model.setBounds(minLatitude, maxLatitude, minLongitude, maxLongitude);
                 break;
             case "node":
                 long id = Long.parseLong(atts.getValue("id"));
                 float latitude = Float.parseFloat(atts.getValue("lat"));
                 float longitude = Float.parseFloat(atts.getValue("lon"));
-                idToNode.put(id, new OSMNode(longitude, -latitude));
+                idToNode.put(id, new OSMNode(longitude* longitudeFactor, -latitude));
                 break;
             case "way":
                 way = new OSMWay();

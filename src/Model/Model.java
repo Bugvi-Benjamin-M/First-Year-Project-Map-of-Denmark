@@ -11,6 +11,11 @@ public final class Model extends Observable {
     private List<Road> roads;
     private List<Shape> unknown;
     private static Model model;
+    private float minLatitude;
+    private float maxLatitude;
+    private float minLongitude;
+    private float maxLongitude;
+
 
     private Model(){
         roads = new ArrayList<>();
@@ -54,5 +59,28 @@ public final class Model extends Observable {
     public void modelHasChanged(){
         setChanged();
         notifyObservers();
+    }
+
+    public void setBounds(float minLatitude, float maxLatitude, float minLongitude, float maxLongitude) {
+        this.minLatitude = minLatitude;
+        this.maxLatitude = maxLatitude;
+        this.minLongitude = minLongitude;
+        this.maxLongitude = maxLongitude;
+    }
+
+    public float getMinLatitude() {
+        return minLatitude;
+    }
+
+    public float getMaxLatitude() {
+        return maxLatitude;
+    }
+
+    public float getMinLongitude() {
+        return minLongitude;
+    }
+
+    public float getMaxLongitude() {
+        return maxLongitude;
     }
 }

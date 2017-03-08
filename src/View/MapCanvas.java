@@ -1,12 +1,11 @@
 package View;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.util.*;
-import java.util.List;
+import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 
 /**
  * Class details:
@@ -17,21 +16,18 @@ import java.util.List;
  */
 public class MapCanvas extends View {
     private Dimension dimension;
-    private JLabel widthLabel, heightLabel;
     private java.util.List<Shape> shapes;
+    private AffineTransform transform;
 
     public MapCanvas(Dimension dimension) {
         super();
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        setBackground(Color.BLACK);
         this.dimension = dimension;
         setPreferredSize(this.dimension);
         addComponentListener();
-        widthLabel = new JLabel(""+getWidth());
-        heightLabel = new JLabel(""+getHeight());
-        this.add(widthLabel);
-        this.add(heightLabel);
         shapes = new ArrayList<>();
+        shapes.add(new Rectangle(10, 10, 100, 100));
+        transform = new AffineTransform();
     }
 
     public void resetShapes(){
@@ -46,8 +42,7 @@ public class MapCanvas extends View {
         this.addComponentListener(new ComponentListener() {
             @Override
             public void componentResized(ComponentEvent e) {
-                widthLabel.setText(""+getWidth());
-                heightLabel.setText(""+getHeight());
+
             }
 
             @Override
@@ -71,10 +66,22 @@ public class MapCanvas extends View {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
+        g2D.setTransform(transform);
+        g2D.setColor(Color.BLACK);
+        g2D.setStroke(new BasicStroke(100.1f));
         for(Shape shape : shapes) {
-            g2D.setColor(Color.WHITE);
-            g2D.setStroke(new BasicStroke(10.1f));
+
             g2D.draw(shape);
         }
+    }
+
+    public void zoom(double factor) {
+        transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+        repaint();
+    }
+
+    public void pan(double dx, double dy) {
+        transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
+        repaint();
     }
 }
