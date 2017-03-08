@@ -28,28 +28,28 @@ public class ToolbarController extends Controller {
         toolbar = new Toolbar();
         this.window = window;
         this.window.addComponent(BorderLayout.PAGE_START,toolbar);
-        addMouseListenerToToolBar();
+        addMouseListenersToTools();
     }
 
-    private void addMouseListenerToToolBar() {
+    private void addMouseListenersToTools() {
+        addMouseListenerToLoadTool();
+    }
+
+    private void addMouseListenerToLoadTool() {
         toolbar.addMouseListenerToTool(ToolType.LOAD, new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                System.out.println("LOAD CLICKED");
-
-
-                    JFileChooser chooser = new JFileChooser();
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                            "OSM files", "osm");
-                    chooser.setFileFilter(filter);
-                    int returnVal = chooser.showOpenDialog(null);
-                    if(returnVal == JFileChooser.APPROVE_OPTION) {
-                        File file = chooser.getSelectedFile();
-                        System.out.println("You chose to open this file: " +
-                                file.getName());
-                        Helpers.File.load(file.getAbsolutePath());
-                    
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "OSM files", "osm");
+                chooser.setFileFilter(filter);
+                int returnVal = chooser.showOpenDialog(null);
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = chooser.getSelectedFile();
+                    System.out.println("You chose to open this file: " +
+                            file.getName());
+                    Helpers.File.load(file.getAbsolutePath());
                 }
 
             }

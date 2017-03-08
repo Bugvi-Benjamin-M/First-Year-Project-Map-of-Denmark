@@ -1,5 +1,7 @@
 package View;
 
+import Enums.ToolType;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -16,17 +18,17 @@ import java.io.File;
 public class ToolFeature extends ToolComponent {
 
     private ImageIcon icon;
-    private String tagline = "not found";
+    private ToolType type;
 
     /**
      * Constructor for a ToolFeature
      * @param path The path to the icon file
-     * @param tagline The tagline beneath the Icon
+     * @param type The tagline beneath the Icon
      */
-    ToolFeature(String path, String tagline) {
+    ToolFeature(String path, ToolType type) {
         super();
-        if (tagline != null) this.tagline = tagline;
-        icon = createImageIcon(path, this.tagline);
+        this.type = type;
+        icon = createImageIcon(path, this.type.toString());
         setupLayout();
         this.setPreferredSize(new Dimension(50,90));
     }
@@ -36,7 +38,7 @@ public class ToolFeature extends ToolComponent {
         this.setLayout(new GridLayout(2,1));
         this.add(new JLabel(icon));
         JPanel label = new JPanel();
-        label.add(new JLabel(tagline));
+        label.add(new JLabel(type.toString()));
         this.add(label);
     }
 

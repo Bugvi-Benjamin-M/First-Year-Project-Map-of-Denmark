@@ -31,11 +31,23 @@ public class Toolbar extends View {
 
     public Toolbar() {
         tools = new ToolFactory().setupToolbar();
+
         SpringLayout layout = new SpringLayout();
         this.setLayout(layout);
+
         addTools(layout);
+
         this.setPreferredSize(new Dimension(500,120));
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    }
+
+    public void addMouseListenerToTool(ToolType toolType, MouseListener listener){
+        ToolComponent tool = tools.get(toolType);
+        if(tool != null){
+            tool.addMouseListener(listener);
+        } else {
+            throw new RuntimeException("No such tool found.");
+        }
     }
 
     private void addTools(SpringLayout layout) {
@@ -71,18 +83,10 @@ public class Toolbar extends View {
         private Map<ToolType, ToolComponent> setupToolbar() {
             Map<ToolType, ToolComponent> tools = new HashMap<>();
 
-            tools.put(ToolType.LOAD, new ToolFeature("/load.png","Load"));
-            tools.put(ToolType.SAVE, new ToolFeature("/save.png","Save"));
+            tools.put(ToolType.LOAD, new ToolFeature("/load.png",ToolType.LOAD));
+            tools.put(ToolType.SAVE, new ToolFeature("/save.png",ToolType.SAVE));
             return tools;
         }
     }
-
-    public void addMouseListenerToTool(ToolType toolType, MouseListener listener){
-        ToolComponent tool = tools.get(toolType);
-        if(tool != null){
-            tool.addMouseListener(listener);
-        }
-    }
-
 
 }
