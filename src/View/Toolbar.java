@@ -35,7 +35,7 @@ public class Toolbar extends View {
         SpringLayout layout = new SpringLayout();
         this.setLayout(layout);
 
-        addTools(layout);
+        setupTools(layout);
 
         this.setPreferredSize(new Dimension(500,120));
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -50,7 +50,7 @@ public class Toolbar extends View {
         }
     }
 
-    private void addTools(SpringLayout layout) {
+    private void setupTools(SpringLayout layout) {
         ToolComponent tool = addLoadTool(layout);
         addSaveTool(layout, tool);
     }
