@@ -43,4 +43,8 @@ public class Window {
     public void setVisible(boolean visibility) {
         window.setVisible(visibility);
     }
+
+    public void pack() {
+        window.pack();
+    }
 }

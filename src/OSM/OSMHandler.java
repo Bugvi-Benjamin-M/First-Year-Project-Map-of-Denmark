@@ -72,8 +72,6 @@ public final class OSMHandler implements ContentHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-        String k = atts.getValue("k");
-        String v = atts.getValue("v");
         switch (qName){
             case "bounds":
                 float minLatitude, maxLatitude, minLongitude, maxLongitude;
@@ -106,6 +104,8 @@ public final class OSMHandler implements ContentHandler {
                 way.add(idToNode.get(ref));
                 break;
             case "tag":
+                String k = atts.getValue("k");
+                String v = atts.getValue("v");
                 switch (k){
                     case "highway":
                         wayType = WayType.ROAD;

@@ -1,10 +1,13 @@
 package View;
 
+import Model.Model;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
 /**
@@ -21,13 +24,13 @@ public class MapCanvas extends View {
 
     public MapCanvas(Dimension dimension) {
         super();
+        transform = new AffineTransform();
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
         this.dimension = dimension;
         setPreferredSize(this.dimension);
         addComponentListener();
         shapes = new ArrayList<>();
         shapes.add(new Rectangle(10, 10, 100, 100));
-        transform = new AffineTransform();
     }
 
     public void resetShapes(){
@@ -68,11 +71,19 @@ public class MapCanvas extends View {
         Graphics2D g2D = (Graphics2D) g;
         g2D.setTransform(transform);
         g2D.setColor(Color.BLACK);
-        g2D.setStroke(new BasicStroke(100.1f));
+        g2D.setStroke(new BasicStroke(0.2f));
         for(Shape shape : shapes) {
 
             g2D.draw(shape);
+            System.out.println(shape.getBounds());
         }
+        Path2D boundary = new Path2D.Double();
+        boundary.moveTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
+        boundary.lineTo(Model.getInstance().getMaxLongitude(), Model.getInstance().getMinLatitude());
+        boundary.lineTo(Model.getInstance().getMaxLongitude(), Model.getInstance().getMaxLatitude());
+        boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMaxLatitude());
+        boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
+        g2D.draw(boundary);
     }
 
     public void zoom(double factor) {
