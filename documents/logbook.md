@@ -24,7 +24,6 @@ Notes from meeting:
 Next meeting:
 - Monday the 6st of March at 10 (Continued Sprint Planning and beginning of Sprint)
 
-
 ## Logbook 6/3 (Scribe Magnussen)
 
 What we did yesterday:
@@ -46,9 +45,32 @@ Notes from meeting:
  - A basic GUI is now working.
  - Built the skeleton for the OSM parser. 
  
- 
 Next meeting:
  - Wednesday the 8th of March at 9.45 (Status check and group work)
+ 
+## Logbook 8/3 (Scribe Magnussen)
+
+What we did yesterday:
+ - N/A
+ 
+What we will do today:
+ - Second Scrum Meeting
+  - Merging the two different parts of the application
+  - Drawing roads
+ 
+Impediments: 
+  - Nikolaj has to leave at 14.00
+  - Jakob has to leave at 16.00
+  - Algorithms exercises at 12.00
+  
+Notes from meeting:
+ - Worked on the observer pattern
+ - Had discussions about the basic structure of the program
+ - Had issues with the program that could not be resolved at this time. Postponed to next meeting. 
+ 
+Next meeting:
+ - Friday the 10 of March at 13.00 (group work)
+ 
  
  
 ## Next logbook...
