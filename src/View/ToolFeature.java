@@ -40,17 +40,4 @@ public class ToolFeature extends ToolComponent {
         this.add(label);
     }
 
-    static void loadFileChooser() {
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "OSM files", "osm");
-        chooser.setFileFilter(filter);
-        int returnVal = chooser.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = chooser.getSelectedFile();
-            System.out.println("You chose to open this file: " +
-                    file.getName());
-            Helpers.File.load(file.getAbsolutePath());
-        }
-    }
 }

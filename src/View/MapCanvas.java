@@ -5,8 +5,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
+import java.util.List;
 
 /**
  * Class details:
@@ -15,10 +15,10 @@ import java.util.Observer;
  * @version 06-03-2017.
  * @project BFST
  */
-public class MapCanvas extends View implements Observer {
-    private Observable observable;
+public class MapCanvas extends View {
     private Dimension dimension;
     private JLabel widthLabel, heightLabel;
+    private java.util.List<Shape> shapes;
 
     public MapCanvas(Dimension dimension) {
         super();
@@ -31,6 +31,15 @@ public class MapCanvas extends View implements Observer {
         heightLabel = new JLabel(""+getHeight());
         this.add(widthLabel);
         this.add(heightLabel);
+        shapes = new ArrayList<>();
+    }
+
+    public void resetShapes(){
+        shapes.clear();
+    }
+
+    public void addShapes(java.util.List<Shape> shapes){
+        this.shapes.addAll(shapes);
     }
 
     private void addComponentListener() {
@@ -58,18 +67,14 @@ public class MapCanvas extends View implements Observer {
         });
     }
 
-    public void setObserver(Observable observer) {
-        observable = observer;
-        observer.addObserver(this);
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-    }
-
-    @Override
-    public void update(Observable observer, Object arg) {
-        repaint();
+        Graphics2D g2D = (Graphics2D) g;
+        for(Shape shape : shapes) {
+            g2D.setColor(Color.WHITE);
+            g2D.setStroke(new BasicStroke(10.1f));
+            g2D.draw(shape);
+        }
     }
 }

@@ -14,7 +14,6 @@ public class Main {
         Window window = new Window();
         Model model = Model.getInstance();
         CanvasController canvasController = new CanvasController(window);
-        canvasController.setObserver(model);
         ToolbarController toolbarController = new ToolbarController(window);
         InfobarController infobarController = new InfobarController(window);
     }

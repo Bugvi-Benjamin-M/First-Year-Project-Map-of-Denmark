@@ -26,14 +26,20 @@ public final class Model extends Observable {
 
     public void addRoad(Road road){
         roads.add(road);
+        modelHasChanged();
     }
 
-    public List<Road> getRoads(){
+    public List<Shape> getRoads(){
+        List<Shape> roads = new ArrayList<>();
+        for(Road road : this.roads){
+            roads.add(road.getPath());
+        }
         return roads;
     }
 
     public void addUnknown(Shape shape){
         unknown.add(shape);
+        modelHasChanged();
     }
 
     public List<Shape> getUnknown(){
@@ -43,5 +49,10 @@ public final class Model extends Observable {
     public void clear() {
         roads.clear();
         unknown.clear();
+    }
+
+    public void modelHasChanged(){
+        setChanged();
+        notifyObservers();
     }
 }

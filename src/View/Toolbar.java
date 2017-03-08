@@ -1,11 +1,17 @@
 package View;
 
+import Enums.ToolType;
+
 import javax.swing.*;
+import javax.tools.Tool;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static javax.swing.SpringLayout.*;
 
@@ -17,7 +23,7 @@ import static javax.swing.SpringLayout.*;
  * @project BFST
  */
 public class Toolbar extends View {
-    private List<ToolComponent> tools;
+    private Map<ToolType, ToolComponent> tools;
 
     private final int MARGIN_SMALL_LEFT = 20;
     private final int MARGIN_LARGE_LEFT = 80;
@@ -38,7 +44,7 @@ public class Toolbar extends View {
     }
 
     private ToolComponent addLoadTool(SpringLayout layout) {
-        ToolComponent tool = tools.get(0);
+        ToolComponent tool = tools.get(ToolType.LOAD);
         layout.putConstraint(WEST, tool,
                 MARGIN_SMALL_LEFT,
                 WEST, this);
@@ -50,7 +56,7 @@ public class Toolbar extends View {
     }
 
     private void addSaveTool(SpringLayout layout, ToolComponent tool) {
-        ToolComponent next = tools.get(1);
+        ToolComponent next = tools.get(ToolType.SAVE);
         layout.putConstraint(WEST, next,
                 MARGIN_SMALL_LEFT,
                 EAST, tool);
@@ -62,25 +68,21 @@ public class Toolbar extends View {
     }
 
     private class ToolFactory {
-        private List<ToolComponent> setupToolbar() {
-            List<ToolComponent> tools = new ArrayList<>();
+        private Map<ToolType, ToolComponent> setupToolbar() {
+            Map<ToolType, ToolComponent> tools = new HashMap<>();
 
-            tools.add(setupLoadTool());
-
-            tools.add(new ToolFeature("/save.png","Save"));
+            tools.put(ToolType.LOAD, new ToolFeature("/load.png","Load"));
+            tools.put(ToolType.SAVE, new ToolFeature("/save.png","Save"));
             return tools;
         }
     }
 
-    private ToolComponent setupLoadTool() {
-        ToolComponent loadTool = new ToolFeature("/load.png","Load");
-        loadTool.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                ToolFeature.loadFileChooser();
-            }
-        });
-        return loadTool;
+    public void addMouseListenerToTool(ToolType toolType, MouseListener listener){
+        ToolComponent tool = tools.get(toolType);
+        if(tool != null){
+            tool.addMouseListener(listener);
+        }
     }
+
+
 }
