@@ -54,9 +54,10 @@ public final class Model extends Observable {
     public void clear() {
         roads.clear();
         unknown.clear();
+        modelHasChanged();
     }
 
-    public void modelHasChanged(){
+    private void modelHasChanged(){
         setChanged();
         notifyObservers();
     }

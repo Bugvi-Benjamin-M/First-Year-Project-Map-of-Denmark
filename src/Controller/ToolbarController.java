@@ -1,6 +1,8 @@
 package Controller;
 
 import Enums.ToolType;
+import Helpers.OSDetector;
+import Model.Model;
 import View.Toolbar;
 import View.Window;
 
@@ -42,12 +44,19 @@ public class ToolbarController extends Controller {
                 FileNameExtensionFilter filter = new FileNameExtensionFilter(
                         "OSM files", "osm");
                 chooser.setFileFilter(filter);
+                chooser.setAcceptAllFileFilterUsed(false);
                 int returnVal = chooser.showOpenDialog(null);
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
                     File file = chooser.getSelectedFile();
                     System.out.println("You chose to open this file: " +
                             file.getName());
-                    Helpers.File.load(file.getAbsolutePath());
+                    Model.getInstance().clear();
+                    if(OSDetector.isIsWindows()) {
+                        Helpers.File.load("file:" + file.toString());
+                    }
+                    if(OSDetector.isIsMac()) {
+                        Helpers.File.load("file://" + file.toString());
+                    }
                 }
 
             }
