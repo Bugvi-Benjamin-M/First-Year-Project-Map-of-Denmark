@@ -2,7 +2,6 @@ package View;
 
 import Model.Model;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -23,14 +22,11 @@ public class MapCanvas extends View {
     private AffineTransform transform;
 
     public MapCanvas(Dimension dimension) {
-        super();
         transform = new AffineTransform();
-        //setBorder(BorderFactory.createLineBorder(Color.BLACK));
         this.dimension = dimension;
         setPreferredSize(this.dimension);
         addComponentListener();
         shapes = new ArrayList<>();
-        //shapes.add(new Rectangle(10, 10, 100, 100));
     }
 
     public void resetShapes(){
@@ -73,9 +69,7 @@ public class MapCanvas extends View {
         g2D.setColor(Color.BLACK);
         g2D.setStroke(new BasicStroke(0.00001f));
         for(Shape shape : shapes) {
-
             g2D.draw(shape);
-            System.out.println(shape.getBounds());
         }
         Path2D boundary = new Path2D.Double();
         boundary.moveTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());

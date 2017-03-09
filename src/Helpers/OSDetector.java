@@ -14,11 +14,11 @@ public class OSDetector {
         isMac = os.toLowerCase().contains("mac");
     }
 
-    public static boolean isIsWindows() {
+    public static boolean isWindows() {
         return isWindows;
     }
 
-    public static boolean isIsMac() {
+    public static boolean isMac() {
         return isMac;
     }
 }

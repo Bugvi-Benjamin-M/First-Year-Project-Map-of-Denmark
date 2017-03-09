@@ -1,5 +1,6 @@
 package Controller;
 
+import Helpers.Constant;
 import Model.Model;
 import View.MapCanvas;
 import View.Window;
@@ -28,7 +29,6 @@ public class CanvasController extends Controller implements Observer {
         new CanvasMouseAdapter();
         window.addComponent(BorderLayout.CENTER,mapCanvas);
         window.pack();
-        //adjustToBounds();
     }
 
     public static void adjustToBounds() {
@@ -37,19 +37,18 @@ public class CanvasController extends Controller implements Observer {
     }
 
     @Override
+    //TODO refactor Nikolaj
     public void update(Observable o, Object arg) {
         mapCanvas.resetShapes();
         model = (Model) o;
         java.util.List<Shape> roads = model.getRoads();
         mapCanvas.addShapes(roads);
-        //adjustToBounds();
         mapCanvas.repaint();
     }
 
     private class CanvasMouseAdapter extends MouseAdapter {
 
         private Point2D lastMousePosition;
-        private final double ZOOM_FACTOR = 0.9;
 
         public CanvasMouseAdapter() {
             mapCanvas.addMouseListener(this);
@@ -74,7 +73,7 @@ public class CanvasController extends Controller implements Observer {
 
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
-            double factor = Math.pow(ZOOM_FACTOR, e.getWheelRotation());
+            double factor = Math.pow(Constant.getZOOM_FACTOR(), e.getWheelRotation());
             Point2D currentMousePosition = e.getPoint();
             double dx = currentMousePosition.getX();
             double dy = currentMousePosition.getY();

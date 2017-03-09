@@ -1,18 +1,17 @@
 package Controller;
 
 import Enums.ToolType;
+import Helpers.Constant;
 import Helpers.FileHandler;
-import Helpers.OSDetector;
 import Model.Model;
+import View.PopupWindow;
 import View.Toolbar;
 import View.Window;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 
 /**
  * Class details:
@@ -35,30 +34,15 @@ public class ToolbarController extends Controller {
     private void addMouseListenersToTools() {
         addMouseListenerToLoadTool();
     }
-
     private void addMouseListenerToLoadTool() {
         toolbar.addMouseListenerToTool(ToolType.LOAD, new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                JFileChooser chooser = new JFileChooser();
-                FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                        "OSM files", "osm");
-                chooser.setFileFilter(filter);
-                chooser.setAcceptAllFileFilterUsed(false);
-                int returnVal = chooser.showOpenDialog(null);
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
-                    File file = chooser.getSelectedFile();
-                    //System.out.println("You chose to open this file: " +
-                            //file.getName());
+                JFileChooser chooser = PopupWindow.fileChooser(false, Constant.getFileNameExtensionFilters());
+                if(chooser != null) {
                     Model.getInstance().clear();
-                    if(OSDetector.isIsWindows()) {
-                        FileHandler.load("file:" + file.toString());
-                    } else if(OSDetector.isIsMac()) {
-                        FileHandler.load("file://" + file.toString());
-                    } else {
-                        FileHandler.load(file.getAbsolutePath());
-                    }
+                    FileHandler.load(chooser.getSelectedFile().toString());
                     CanvasController.adjustToBounds();
                 }
 

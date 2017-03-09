@@ -13,9 +13,22 @@ import java.io.IOException;
  */
 public class FileHandler {
 
+    private static String pathStart;
+
+    static {
+        if(OSDetector.isWindows()) {
+            pathStart = "file:";
+        } else if(OSDetector.isMac()) {
+            pathStart = "file://";
+        } else {
+            pathStart = "";
+        }
+
+    }
+
     public static void load(String fileName) {
         if(fileName.endsWith(".osm")) {
-            loadOSM(new InputSource(fileName));
+                loadOSM(new InputSource(pathStart + fileName));
         }
     }
 
