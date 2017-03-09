@@ -17,8 +17,8 @@ import java.util.Observer;
  */
 public class CanvasController extends Controller implements Observer {
     private Window window;
-    private MapCanvas mapCanvas;
-    private Model model;
+    private static MapCanvas mapCanvas;
+    private static Model model;
 
     public CanvasController(Window window) {
         this.window = window;
@@ -28,10 +28,10 @@ public class CanvasController extends Controller implements Observer {
         new CanvasMouseAdapter();
         window.addComponent(BorderLayout.CENTER,mapCanvas);
         window.pack();
-        adjustToBounds();
+        //adjustToBounds();
     }
 
-    private void adjustToBounds() {
+    public static void adjustToBounds() {
         mapCanvas.pan(-model.getMinLongitude(), -model.getMaxLatitude());
         mapCanvas.zoom(mapCanvas.getWidth()/(model.getMaxLongitude() - model.getMinLongitude()));
     }
@@ -42,6 +42,7 @@ public class CanvasController extends Controller implements Observer {
         model = (Model) o;
         java.util.List<Shape> roads = model.getRoads();
         mapCanvas.addShapes(roads);
+        //adjustToBounds();
         mapCanvas.repaint();
     }
 

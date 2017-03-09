@@ -25,12 +25,12 @@ public class MapCanvas extends View {
     public MapCanvas(Dimension dimension) {
         super();
         transform = new AffineTransform();
-        setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        //setBorder(BorderFactory.createLineBorder(Color.BLACK));
         this.dimension = dimension;
         setPreferredSize(this.dimension);
         addComponentListener();
         shapes = new ArrayList<>();
-        shapes.add(new Rectangle(10, 10, 100, 100));
+        //shapes.add(new Rectangle(10, 10, 100, 100));
     }
 
     public void resetShapes(){
@@ -71,7 +71,7 @@ public class MapCanvas extends View {
         Graphics2D g2D = (Graphics2D) g;
         g2D.setTransform(transform);
         g2D.setColor(Color.BLACK);
-        g2D.setStroke(new BasicStroke(0.2f));
+        g2D.setStroke(new BasicStroke(0.00001f));
         for(Shape shape : shapes) {
 
             g2D.draw(shape);

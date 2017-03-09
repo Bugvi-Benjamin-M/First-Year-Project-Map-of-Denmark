@@ -49,8 +49,8 @@ public class ToolbarController extends Controller {
                 int returnVal = chooser.showOpenDialog(null);
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
                     File file = chooser.getSelectedFile();
-                    System.out.println("You chose to open this file: " +
-                            file.getName());
+                    //System.out.println("You chose to open this file: " +
+                            //file.getName());
                     Model.getInstance().clear();
                     if(OSDetector.isIsWindows()) {
                         FileHandler.load("file:" + file.toString());
@@ -59,6 +59,7 @@ public class ToolbarController extends Controller {
                     } else {
                         FileHandler.load(file.getAbsolutePath());
                     }
+                    CanvasController.adjustToBounds();
                 }
 
             }
