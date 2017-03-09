@@ -1,5 +1,7 @@
 package View;
 
+import Helpers.Constant;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,10 +11,9 @@ import java.awt.*;
 public class Window {
     private JFrame window;
     private Dimension dimension;
-    private final String TITLE = "OSM Map Viewer v0.1";
 
     public Window() {
-        window = new JFrame(TITLE);
+        window = new JFrame(Constant.getTITLE());
         window.setLayout(new BorderLayout());
         dimension = new Dimension(1200,1000);
         window.setPreferredSize(dimension);
