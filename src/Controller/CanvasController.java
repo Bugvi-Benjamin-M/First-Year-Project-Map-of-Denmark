@@ -39,7 +39,7 @@ public class CanvasController extends Controller implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         mapCanvas.resetShapes();
-        model = (Model)o;
+        model = (Model) o;
         java.util.List<Shape> roads = model.getRoads();
         mapCanvas.addShapes(roads);
         mapCanvas.repaint();

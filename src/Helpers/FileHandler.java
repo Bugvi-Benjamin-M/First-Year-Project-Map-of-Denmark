@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by Jakob on 06-03-2017.
  */
-public class File {
+public class FileHandler {
 
     public static void load(String fileName) {
         if(fileName.endsWith(".osm")) {

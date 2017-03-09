@@ -1,6 +1,7 @@
 package Controller;
 
 import Enums.ToolType;
+import Helpers.FileHandler;
 import Helpers.OSDetector;
 import Model.Model;
 import View.Toolbar;
@@ -52,10 +53,11 @@ public class ToolbarController extends Controller {
                             file.getName());
                     Model.getInstance().clear();
                     if(OSDetector.isIsWindows()) {
-                        Helpers.File.load("file:" + file.toString());
-                    }
-                    if(OSDetector.isIsMac()) {
-                        Helpers.File.load("file://" + file.toString());
+                        FileHandler.load("file:" + file.toString());
+                    } else if(OSDetector.isIsMac()) {
+                        FileHandler.load("file://" + file.toString());
+                    } else {
+                        FileHandler.load(file.getAbsolutePath());
                     }
                 }
 
