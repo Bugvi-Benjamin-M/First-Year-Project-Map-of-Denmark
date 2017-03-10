@@ -16,15 +16,16 @@
         <pathelement location="${main.build.dir}"/>
     </path>
 
-    <target name="compile" description="compile the source" depends="clean">
+    <target name="compile">
         <mkdir dir="${main.build.dir}"/>
-        <mkdir dir="${test.build.dir}"/>
-
+        <javac srcdir="${main.src.dir}" destdir="${main.build.dir}" includeantruntime="false"/>
         <copy todir="${main.build.dir}" overwrite="true">
             <fileset dir="${resources}"/>
         </copy>
+    </target>
 
-        <javac srcdir="${main.src.dir}" destdir="${main.build.dir}" includeantruntime="false" />
+    <target name="test-compile" depends="compile">
+        <mkdir dir="${test.build.dir}"/>
         <javac srcdir="${test.src.dir}" destdir="${test.build.dir}" includeantruntime="false">
             <classpath refid="classpath.test"/>
         </javac>
@@ -39,26 +40,21 @@
     </target>
 
     <target name="test" depends="compile">
-        <junit printsummary="true" haltOnFailure="true" haltOnError="true" showoutput="true" outputtoformatters="true" fork="true">
-            <formatter type="plain" usefile="false"/>
-            <batchtest filtertrace="false" fork="yes">
-                <fileset dir="tests" includes="*.java"/>
-            </batchtest>
-            <classpath>
-                <path refid="classpath.test"/>
-                <pathelement location="${test.build.dir}"/>
-            </classpath>
-        </junit>
-    </target>
-
-    <target name="coverage" depends="compile">
         <jacoco:coverage destfile="${dist}/jacoco.exec">
-            <junit fork="true" forkmode="once" haltOnFailure="false" haltOnError="false">
-                <batchtest fork="yes">
-                    <fileset dir="tests" includes="*.java"/>
+            <junit printsummary="true" haltOnFailure="true" haltOnError="true" showoutput="true" outputtoformatters="true" fork="true">
+                <classpath>
+                    <path refid="classpath.test"/>
+                    <pathelement location="${test.build.dir}"/>
+                </classpath>
+                <formatter type="brief" usefile="false" />
+                <batchtest>
+                    <fileset dir="${test.src.dir}" includes="**/*.java" />
                 </batchtest>
             </junit>
         </jacoco:coverage>
+    </target>
+
+    <target name="coverage" depends="compile">
         <jacoco:report>
             <executiondata>
                 <file file="${dist}/jacoco.exec"/>
@@ -69,7 +65,7 @@
                     <fileset dir="${dist}"/>
                 </classfiles>
                 <sourcefiles encoding="UTF-8">
-                    <fileset dir="src"/>
+                    <fileset dir="${main.src.dir}"/>
                 </sourcefiles>
             </structure>
             <xml destfile="${dist}/jacoco.xml"/>
