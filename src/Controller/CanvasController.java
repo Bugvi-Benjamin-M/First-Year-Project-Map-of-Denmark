@@ -1,7 +1,8 @@
 package Controller;
 
+import Enums.WayType;
 import Helpers.Constant;
-import Model.Model;
+import Model.*;
 import View.MapCanvas;
 import View.Window;
 
@@ -10,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -44,7 +46,9 @@ public class CanvasController extends Controller implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         mapCanvas.resetShapes();
-        java.util.List<Shape> roads = model.getRoads();
+
+        java.util.List<Shape> roads = new ArrayList<>();
+        java.util.List<Element> roadElements = model.getWayElements(WayType.ROAD);
         mapCanvas.addShapes(roads);
         mapCanvas.repaint();
     }
