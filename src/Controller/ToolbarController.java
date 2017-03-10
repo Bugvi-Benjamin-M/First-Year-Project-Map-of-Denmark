@@ -9,6 +9,7 @@ import View.Toolbar;
 import View.Window;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -39,7 +40,11 @@ public class ToolbarController extends Controller {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                JFileChooser chooser = PopupWindow.fileLoader(false, Constant.getFileNameExtensionFilters());
+                FileNameExtensionFilter[] filters = new FileNameExtensionFilter[] {
+                        new FileNameExtensionFilter("OSM Files", Constant.osmFilter),
+                        new FileNameExtensionFilter("ZIP Files", Constant.zipFilter)
+                        };
+                JFileChooser chooser = PopupWindow.fileLoader(false, filters);
                 if(chooser != null) {
                     //Clear all data in model
                     Model.getInstance().clear();
