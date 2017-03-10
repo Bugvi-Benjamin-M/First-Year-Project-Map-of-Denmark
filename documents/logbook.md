@@ -71,6 +71,29 @@ Notes from meeting:
 Next meeting:
  - Friday the 10 of March at 13.00 (group work)
  
+
+## Logbook 10/3 (Scribe Magnussen)
+
+What we did yesterday:
+ - Fixed bug related to drawing. 
  
+What we will do today:
+ - Refactor model
+ - Write Javadoc
+ - Write tests
+ 
+Impediments: 
+  - Niclas has to leave at 12.30
+  
+Notes from meeting:
+ - Worked on refactoring model
+ - Discussed design decisiions
+ - Fixed bug with fullscreen
+ - Added visual features to the toolbar icons
+ - Manual tests of loading files
+ - Started work on keyboard shortcuts
+ 
+Next meeting:
+ - Monday the 13 of March. (Code review, planning of second sprint)
  
 ## Next logbook...
