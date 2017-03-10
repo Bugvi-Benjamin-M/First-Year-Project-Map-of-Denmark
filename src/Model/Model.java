@@ -1,6 +1,11 @@
 package Model;
+import Enums.NodeType;
+import Enums.RelationType;
+import Enums.WayType;
+
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Observable;
 
@@ -8,8 +13,9 @@ import java.util.Observable;
  * Created by Jakob on 06-03-2017.
  */
 public final class Model extends Observable {
-    private List<Road> roads;
-    private List<Shape> unknown;
+    private EnumMap<WayType, List<Element>> wayElements;
+    private EnumMap<NodeType, List<Element>> nodeElements;
+    private EnumMap<RelationType, List<Element>> relationElements;
     private static Model model;
     private float minLatitude;
     private float maxLatitude;
@@ -18,8 +24,10 @@ public final class Model extends Observable {
 
 
     private Model(){
-        roads = new ArrayList<>();
-        unknown = new ArrayList<>();
+        wayElements = new EnumMap<>(WayType.class);
+        for (WayType type : WayType.values()) {
+            wayElements.put(type, new ArrayList<>());
+        }
     }
 
     public static Model getInstance() {
@@ -29,29 +37,18 @@ public final class Model extends Observable {
         return model;
     }
 
-    public void addRoad(Road road){
-        roads.add(road);
+    public void addWayElement(WayType type, Element element){
+        wayElements.get(type).add(element);
     }
 
-    public List<Shape> getRoads(){
-        List<Shape> roads = new ArrayList<>();
-        for(Road road : this.roads){
-            roads.add(road.getPath());
-        }
-        return roads;
-    }
-
-    public void addUnknown(Shape shape){
-        unknown.add(shape);
-    }
-
-    public List<Shape> getUnknown(){
-        return unknown;
+    public List<Element> getWayElements(WayType type){
+        return wayElements.get(type);
     }
 
     public void clear() {
-        roads.clear();
-        unknown.clear();
+        for(WayType type : WayType.values()){
+            wayElements.get(type).clear();
+        }
     }
 
     public void modelHasChanged(){

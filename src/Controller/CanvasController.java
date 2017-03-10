@@ -1,5 +1,6 @@
 package Controller;
 
+import Helpers.Constant;
 import Model.Model;
 import View.MapCanvas;
 import View.Window;
@@ -16,9 +17,6 @@ import java.util.Observer;
  * Created by Jakob on 06-03-2017.
  */
 public class CanvasController extends Controller implements Observer {
-
-    private final static double ZOOM_FACTOR = 0.9;
-
     private Window window;
     private static MapCanvas mapCanvas;
     private static Model model;
@@ -78,7 +76,7 @@ public class CanvasController extends Controller implements Observer {
 
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
-            double factor = Math.pow(ZOOM_FACTOR, e.getWheelRotation());
+            double factor = Math.pow(Constant.getZOOM_FACTOR(), e.getWheelRotation());
             Point2D currentMousePosition = e.getPoint();
             double dx = currentMousePosition.getX();
             double dy = currentMousePosition.getY();
