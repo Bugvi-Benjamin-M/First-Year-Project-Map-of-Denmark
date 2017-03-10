@@ -3,9 +3,7 @@ package View;
 import Enums.ToolType;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.File;
 
 /**
  * Class details:
@@ -60,5 +58,9 @@ public class ToolFeature extends ToolComponent {
             iconLabel.setBackground(getDefaultColor());
         }
         super.toggleWell();
+    }
+
+    public ToolType getType() {
+        return type;
     }
 }

@@ -1,16 +1,11 @@
 package View;
 
 import Enums.ToolType;
+import ToolListeners.ToolInteractionController;
 
 import javax.swing.*;
-import javax.tools.Tool;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static javax.swing.SpringLayout.*;
@@ -52,14 +47,15 @@ public class Toolbar extends View {
      * @param toolType The type of the Tool, unique
      * @see ToolType
      */
-    public void addMouseListenerToTool(ToolType toolType, MouseListener listener){
+    public void addInteractorToTool(ToolType toolType, ToolInteractionController interactor){
         ToolComponent tool = tools.get(toolType);
         if(tool != null){
-            tool.addMouseListener(listener);
+            tool.addMouseListener(interactor);
         } else {
             throw new RuntimeException("No such tool found.");
         }
     }
+
 
     public static void toggleWellOnTool(ToolType type) {
         ToolComponent tool = tools.get(type);
@@ -105,6 +101,15 @@ public class Toolbar extends View {
                 NORTH, this);
         tool = next;
         this.add( tool);
+    }
+
+    /**
+     * Returns the ToolComponent of the type given as parameter
+     * @param type
+     * @return a ToolFeature
+     */
+    public ToolComponent getTool(ToolType type) {
+        return tools.get(type);
     }
 
     /** ToolFactory creates the collection of visual components representing the tools */
