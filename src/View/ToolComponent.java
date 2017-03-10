@@ -44,11 +44,6 @@ abstract class ToolComponent extends JPanel {
 
     /** Toggles hovering on component */
     public void toggleHover() {
-        if (!isHovered) {
-            this.setBackground(hoverColor);
-        } else {
-            this.setBackground(defaultColor);
-        }
         isHovered = !isHovered;
     }
 
