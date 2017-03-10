@@ -17,18 +17,23 @@ import static javax.swing.SpringLayout.*;
 
 /**
  * Class details:
+ * The Toolbar is a visual component consisting of a collection of tools.
  *
  * @author Andreas Blanke, blan@itu.dk
- * @version 06-03-2017.
- * @project BFST
+ * @author Niclas Hedam, nhed@itu.dk
+ * @version 06-03-2017
  */
 public class Toolbar extends View {
+
     private Map<ToolType, ToolComponent> tools;
 
     private final int MARGIN_SMALL_LEFT = 20;
     private final int MARGIN_LARGE_LEFT = 80;
     private final int MARGIN_TOP = 20;
 
+    /**
+     *
+     */
     public Toolbar() {
         tools = new ToolFactory().setupToolbar();
 
