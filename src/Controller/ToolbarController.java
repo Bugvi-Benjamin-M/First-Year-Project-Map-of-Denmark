@@ -4,7 +4,6 @@ import Enums.ToolType;
 import Helpers.Constant;
 import Helpers.FileHandler;
 import Model.Model;
-import ToolListeners.ToolInteractionController;
 import View.PopupWindow;
 import View.ToolFeature;
 import View.Toolbar;
@@ -21,15 +20,23 @@ import java.awt.*;
  * @version 06-03-2017.
  * @project BFST
  */
-public class ToolbarController extends Controller {
+public final class ToolbarController extends Controller {
     private Window window;
     private Toolbar toolbar;
+    private static ToolbarController instance;
 
-    public ToolbarController(Window window) {
+    private ToolbarController(Window window) {
         toolbar = new Toolbar();
         this.window = window;
         this.window.addComponent(BorderLayout.PAGE_START,toolbar);
         addInteractorsToTools();
+    }
+
+    public static ToolbarController getInstance(Window window) {
+        if(instance == null) {
+            instance = new ToolbarController(window);
+        }
+        return instance;
     }
 
     private void addInteractorsToTools() {
@@ -47,12 +54,9 @@ public class ToolbarController extends Controller {
         };
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if(chooser != null) {
-            //Clear all data in model
             Model.getInstance().clear();
             CanvasController.resetBounds();
-            //load and add data to model
             FileHandler.load(chooser.getSelectedFile().toString());
-            //reset shapelist and add data from model to shapelist
             Model.getInstance().modelHasChanged();
             CanvasController.adjustToBounds();
         }

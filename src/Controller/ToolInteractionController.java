@@ -1,6 +1,5 @@
-package ToolListeners;
+package Controller;
 
-import Controller.ToolbarController;
 import Enums.ToolType;
 import View.ToolFeature;
 import View.Toolbar;
@@ -32,8 +31,6 @@ public class ToolInteractionController extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         super.mouseClicked(e);
-        Toolbar.toggleWellOnTool(type);
-
         switch (type) {
             case LOAD:
                 loadEvent();
@@ -42,6 +39,7 @@ public class ToolInteractionController extends MouseAdapter {
     }
 
     private void loadEvent() {
+        Toolbar.toggleWellOnTool(type);
         ToolbarController.loadEvent();
         Toolbar.toggleWellOnTool(type);
     }

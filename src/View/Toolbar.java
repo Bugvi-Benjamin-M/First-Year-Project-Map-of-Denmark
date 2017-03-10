@@ -1,7 +1,7 @@
 package View;
 
 import Enums.ToolType;
-import ToolListeners.ToolInteractionController;
+import Controller.ToolInteractionController;
 
 import javax.swing.*;
 import java.awt.*;
