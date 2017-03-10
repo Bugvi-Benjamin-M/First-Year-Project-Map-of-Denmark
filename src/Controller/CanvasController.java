@@ -29,7 +29,6 @@ public class CanvasController extends Controller implements Observer {
         mapCanvas = new MapCanvas(window.getDimension());
         new CanvasMouseAdapter();
         window.addComponent(BorderLayout.CENTER,mapCanvas);
-        window.pack();
     }
 
     public static void adjustToBounds() {
