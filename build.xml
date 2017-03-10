@@ -54,7 +54,7 @@
         </jacoco:coverage>
     </target>
 
-    <target name="coverage" depends="compile">
+    <target name="coverage" depends="test">
         <jacoco:report>
             <executiondata>
                 <file file="${dist}/jacoco.exec"/>
