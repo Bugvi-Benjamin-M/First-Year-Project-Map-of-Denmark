@@ -1,5 +1,6 @@
 package View;
 
+import Enums.RoadType;
 import Enums.WayType;
 import Model.*;
 
@@ -48,13 +49,8 @@ public class MapCanvas extends View {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
         g2D.setTransform(transform);
+        drawRoads(g2D);
         g2D.setColor(Color.BLACK);
-        g2D.setStroke(new BasicStroke(0.00001f));
-        java.util.List<Element> roads = wayElements.get(WayType.ROAD);
-        for(Element element : roads){
-            Road road = (Road) element;
-            g2D.draw(road.getPath());
-        }
         Path2D boundary = new Path2D.Double();
         boundary.moveTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
         boundary.lineTo(Model.getInstance().getMaxLongitude(), Model.getInstance().getMinLatitude());
@@ -62,6 +58,33 @@ public class MapCanvas extends View {
         boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMaxLatitude());
         boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
         g2D.draw(boundary);
+    }
+
+    //TODO remember to implement properly
+    private void drawRoads(Graphics2D g){
+        java.util.List<Element> roads = wayElements.get(WayType.ROAD);
+        for(Element element : roads){
+            Road road = (Road) element;
+            switch(road.getRoadType()){
+                case SERVICE:
+                    g.setColor(Color.RED);
+                    g.setStroke(new BasicStroke(0.00001f));
+                    g.draw(road.getPath());
+                    break;
+                case TERTIARY:
+                    g.setColor(Color.BLACK);
+                    g.setStroke(new BasicStroke(0.00001f));
+                    g.draw(road.getPath());
+                    break;
+                case UNCLASSIFIED:
+                    g.setColor(Color.BLUE);
+                    g.setStroke(new BasicStroke(0.00001f));
+                    g.draw(road.getPath());
+                    break;
+
+            }
+
+        }
     }
 
     /**
