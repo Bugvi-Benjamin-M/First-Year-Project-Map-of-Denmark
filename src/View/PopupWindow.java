@@ -11,7 +11,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class PopupWindow {
 
-    public static JFileChooser fileChooser(boolean allFilesFilter, FileNameExtensionFilter[] filters) {
+    public static JFileChooser fileLoader(boolean allFilesFilter, FileNameExtensionFilter[] filters) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setAcceptAllFileFilterUsed(allFilesFilter);
         for (FileNameExtensionFilter filter : filters) {

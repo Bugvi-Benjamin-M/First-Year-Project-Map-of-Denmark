@@ -39,7 +39,7 @@ public class ToolbarController extends Controller {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                JFileChooser chooser = PopupWindow.fileChooser(false, Constant.getFileNameExtensionFilters());
+                JFileChooser chooser = PopupWindow.fileLoader(false, Constant.getFileNameExtensionFilters());
                 if(chooser != null) {
                     //Clear all data in model
                     Model.getInstance().clear();

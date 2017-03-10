@@ -10,21 +10,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public final class Constant {
 
-    private final static FileNameExtensionFilter[] FILE_NAME_EXTENSION_FILTERS = {new FileNameExtensionFilter("OSM files", "osm"), new FileNameExtensionFilter("ZIP files", "zip")};
+    private final static FileNameExtensionFilter osm = new FileNameExtensionFilter("OSM files", "osm");
 
-    private final static double ZOOM_FACTOR = 0.9;
+    private final static FileNameExtensionFilter zip =  new FileNameExtensionFilter("ZIP files", "zip");
 
-    private final static String TITLE = "OSM Map Viewer v0.1";
 
     public static FileNameExtensionFilter[] getFileNameExtensionFilters() {
-        return FILE_NAME_EXTENSION_FILTERS;
-    }
+        FileNameExtensionFilter[] filters = new FileNameExtensionFilter[] {osm, zip};
 
-    public static double getZOOM_FACTOR() {
-        return ZOOM_FACTOR;
-    }
-
-    public static String getTITLE() {
-        return TITLE;
+        return filters;
     }
 }
