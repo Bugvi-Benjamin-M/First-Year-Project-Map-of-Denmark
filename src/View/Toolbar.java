@@ -25,7 +25,7 @@ import static javax.swing.SpringLayout.*;
  */
 public class Toolbar extends View {
 
-    private Map<ToolType, ToolComponent> tools;
+    private static Map<ToolType, ToolComponent> tools;
     private SpringLayout layout;
 
     private final int MARGIN_SMALL_LEFT = 20;
@@ -59,6 +59,11 @@ public class Toolbar extends View {
         } else {
             throw new RuntimeException("No such tool found.");
         }
+    }
+
+    public static void toggleHoverOnTool(ToolType type) {
+        ToolComponent tool = tools.get(type);
+        tool.toggleHover();
     }
 
     /**
@@ -112,5 +117,4 @@ public class Toolbar extends View {
             return tools;
         }
     }
-
 }

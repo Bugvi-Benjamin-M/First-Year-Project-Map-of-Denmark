@@ -1,6 +1,7 @@
 package View;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Class details:
@@ -12,6 +13,12 @@ import javax.swing.*;
  * @version 06-03-2017.
  */
 abstract class ToolComponent extends JPanel {
+
+    private Color hoverColor;
+
+    ToolComponent() {
+        hoverColor = new Color(202, 202, 202);
+    }
 
     abstract void setupLayout();
 
@@ -27,6 +34,15 @@ abstract class ToolComponent extends JPanel {
         } else {
             System.err.println("Couldn't find file: " + path);
             return null;
+        }
+    }
+
+    /** Toggles hovering on component */
+    public void toggleHover() {
+        if (this.getBackground().equals(new Color(238,238,238))) {
+            this.setBackground(hoverColor);
+        } else {
+            this.setBackground(null);
         }
     }
 }
