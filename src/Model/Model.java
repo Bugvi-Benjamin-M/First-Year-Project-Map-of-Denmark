@@ -41,8 +41,8 @@ public final class Model extends Observable {
         wayElements.get(type).add(element);
     }
 
-    public List<Element> getWayElements(WayType type){
-        return wayElements.get(type);
+    public EnumMap<WayType, List<Element>> getWayElements(){
+        return wayElements;
     }
 
     public void clear() {

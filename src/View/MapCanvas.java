@@ -1,13 +1,14 @@
 package View;
 
-import Model.Model;
+import Enums.WayType;
+import Model.*;
 
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Class details:
@@ -25,8 +26,8 @@ import java.util.ArrayList;
 public class MapCanvas extends View {
 
     private Dimension dimension;
-    private java.util.List<Shape> shapes;
     private AffineTransform transform;
+    private EnumMap<WayType, java.util.List<Element>> wayElements;
 
     /**
      * The base Constructor for the MapCanvas.
@@ -36,23 +37,8 @@ public class MapCanvas extends View {
         transform = new AffineTransform();
         this.dimension = dimension;
         setPreferredSize(this.dimension);
-        shapes = new ArrayList<>();
     }
 
-    /**
-     * Resets and clears the collection of shapes that is displayed on the MapCanvas.
-     */
-    public void resetShapes(){
-        shapes.clear();
-    }
-
-    /**
-     * Adds a collection of shapes to the existing MapCanvas collection.
-     * @param shapes The new collection of shapes to be displayed
-     */
-    public void addShapes(java.util.List<Shape> shapes){
-        this.shapes.addAll(shapes);
-    }
 
     /**
      * Paints the MapCanvas with all the shapes that should be displayed.
@@ -64,8 +50,10 @@ public class MapCanvas extends View {
         g2D.setTransform(transform);
         g2D.setColor(Color.BLACK);
         g2D.setStroke(new BasicStroke(0.00001f));
-        for(Shape shape : shapes) {
-            g2D.draw(shape);
+        java.util.List<Element> roads = wayElements.get(WayType.ROAD);
+        for(Element element : roads){
+            Road road = (Road) element;
+            g2D.draw(road.getPath());
         }
         Path2D boundary = new Path2D.Double();
         boundary.moveTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
@@ -101,5 +89,9 @@ public class MapCanvas extends View {
     public void pan(double dx, double dy) {
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
         repaint();
+    }
+
+    public void setWayElements(EnumMap wayElements){
+        this.wayElements = wayElements;
     }
 }

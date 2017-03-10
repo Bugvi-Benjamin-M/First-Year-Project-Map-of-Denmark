@@ -27,6 +27,7 @@ public class CanvasController extends Controller implements Observer {
         model = Model.getInstance();
         model.addObserver(this);
         mapCanvas = new MapCanvas(window.getDimension());
+        mapCanvas.setWayElements(model.getWayElements());
         new CanvasMouseAdapter();
         window.addComponent(BorderLayout.CENTER,mapCanvas);
     }
