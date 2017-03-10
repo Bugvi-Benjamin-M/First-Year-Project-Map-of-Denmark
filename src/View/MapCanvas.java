@@ -20,6 +20,7 @@ public class MapCanvas extends View {
     private Dimension dimension;
     private java.util.List<Shape> shapes;
     private AffineTransform transform;
+    private AffineTransform inverseTransform;
 
     public MapCanvas(Dimension dimension) {
         transform = new AffineTransform();
@@ -83,6 +84,10 @@ public class MapCanvas extends View {
     public void zoom(double factor) {
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         repaint();
+    }
+
+    public void resetTransform(){
+        transform.setToIdentity();
     }
 
     public void pan(double dx, double dy) {

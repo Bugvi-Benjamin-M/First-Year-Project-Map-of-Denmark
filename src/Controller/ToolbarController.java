@@ -41,8 +41,13 @@ public class ToolbarController extends Controller {
                 super.mouseClicked(e);
                 JFileChooser chooser = PopupWindow.fileLoader(false, Constant.getFileNameExtensionFilters());
                 if(chooser != null) {
+                    //Clear all data in model
                     Model.getInstance().clear();
+                    CanvasController.resetBounds();
+                    //load and add data to model
                     FileHandler.load(chooser.getSelectedFile().toString());
+                    //reset shapelist and add data from model to shapelist
+                    Model.getInstance().modelHasChanged();
                     CanvasController.adjustToBounds();
                 }
 

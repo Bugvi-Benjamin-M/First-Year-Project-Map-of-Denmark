@@ -22,6 +22,7 @@ public class CanvasController extends Controller implements Observer {
     private Window window;
     private static MapCanvas mapCanvas;
     private static Model model;
+    private static float zoomfactor;
 
     public CanvasController(Window window) {
         this.window = window;
@@ -30,19 +31,21 @@ public class CanvasController extends Controller implements Observer {
         mapCanvas = new MapCanvas(window.getDimension());
         new CanvasMouseAdapter();
         window.addComponent(BorderLayout.CENTER,mapCanvas);
-        window.pack();
     }
 
     public static void adjustToBounds() {
+        zoomfactor = mapCanvas.getWidth()/(model.getMaxLongitude()- model.getMinLongitude());
         mapCanvas.pan(-model.getMinLongitude(), -model.getMaxLatitude());
-        mapCanvas.zoom(mapCanvas.getWidth()/(model.getMaxLongitude() - model.getMinLongitude()));
+        mapCanvas.zoom(mapCanvas.getWidth()/(model.getMaxLongitude()- model.getMinLongitude()));
+    }
+
+    public static void resetBounds(){
+        mapCanvas.resetTransform();
     }
 
     @Override
-    //TODO refactor Nikolaj
     public void update(Observable o, Object arg) {
         mapCanvas.resetShapes();
-        model = (Model) o;
         java.util.List<Shape> roads = model.getRoads();
         mapCanvas.addShapes(roads);
         mapCanvas.repaint();
