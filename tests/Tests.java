@@ -10,4 +10,8 @@ public class Tests extends TestCase {
         assertEquals(true, true);
     }
 
+    public void testCanCrea(){
+        Main.main(null);
+    }
+
 }
