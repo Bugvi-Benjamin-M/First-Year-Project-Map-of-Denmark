@@ -9,7 +9,7 @@ package Helpers;
 public final class Constant {
 
 
-    //File extension tyoes
+    //File extension types
     public final static String osmFilter = "osm";
 
     public final static String zipFilter = "zip";

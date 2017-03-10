@@ -20,7 +20,7 @@ public class CanvasController extends Controller implements Observer {
     private Window window;
     private static MapCanvas mapCanvas;
     private static Model model;
-    private static float zoomfactor;
+    private static final double ZOOM_FACTOR = 0.9;
 
     public CanvasController(Window window) {
         this.window = window;
@@ -32,7 +32,6 @@ public class CanvasController extends Controller implements Observer {
     }
 
     public static void adjustToBounds() {
-        zoomfactor = mapCanvas.getWidth()/(model.getMaxLongitude()- model.getMinLongitude());
         mapCanvas.pan(-model.getMinLongitude(), -model.getMaxLatitude());
         mapCanvas.zoom(mapCanvas.getWidth()/(model.getMaxLongitude()- model.getMinLongitude()));
     }
@@ -43,9 +42,7 @@ public class CanvasController extends Controller implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        mapCanvas.resetShapes();
-        java.util.List<Shape> roads = model.getRoads();
-        mapCanvas.addShapes(roads);
+
         mapCanvas.repaint();
     }
 
@@ -76,7 +73,7 @@ public class CanvasController extends Controller implements Observer {
 
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
-            double factor = Math.pow(Constant.getZOOM_FACTOR(), e.getWheelRotation());
+            double factor = Math.pow(ZOOM_FACTOR, e.getWheelRotation());
             Point2D currentMousePosition = e.getPoint();
             double dx = currentMousePosition.getX();
             double dy = currentMousePosition.getY();
