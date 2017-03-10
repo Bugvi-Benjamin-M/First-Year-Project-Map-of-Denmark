@@ -1,7 +1,5 @@
 package Helpers;
 
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 /**
  * Created by  on .
  *
@@ -10,14 +8,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public final class Constant {
 
-    private final static FileNameExtensionFilter osm = new FileNameExtensionFilter("OSM files", "osm");
 
-    private final static FileNameExtensionFilter zip =  new FileNameExtensionFilter("ZIP files", "zip");
+    //File extension tyoes
+    public final static String osmFilter = "osm";
 
+    public final static String zipFilter = "zip";
 
-    public static FileNameExtensionFilter[] getFileNameExtensionFilters() {
-        FileNameExtensionFilter[] filters = new FileNameExtensionFilter[] {osm, zip};
-
-        return filters;
-    }
 }
