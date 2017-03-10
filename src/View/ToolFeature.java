@@ -9,11 +9,12 @@ import java.io.File;
 
 /**
  * Class details:
+ * The ToolFeature is a visual component consisting of one icon
+ * and one describing tagline depending on the type of the tool.
  *
  * @author Andreas Blanke, blan@itu.dk
  * @author Niclas Hedam, nhed@itu.dk
  * @version 06-03-2017
- * @project BFST
  */
 public class ToolFeature extends ToolComponent {
 
@@ -23,7 +24,7 @@ public class ToolFeature extends ToolComponent {
     /**
      * Constructor for a ToolFeature
      * @param path The path to the icon file
-     * @param type The tagline beneath the Icon
+     * @param type The type of this tool
      */
     ToolFeature(String path, ToolType type) {
         super();
@@ -33,6 +34,9 @@ public class ToolFeature extends ToolComponent {
         this.setPreferredSize(new Dimension(50,90));
     }
 
+    /**
+     * Sets up the specific layout for any Tool Feature
+     */
     @Override
     void setupLayout() {
         this.setLayout(new GridLayout(2,1));
