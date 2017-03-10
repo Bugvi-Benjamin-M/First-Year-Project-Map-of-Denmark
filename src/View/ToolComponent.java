@@ -1,6 +1,7 @@
 package View;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 /**
@@ -14,10 +15,14 @@ import java.awt.*;
  */
 abstract class ToolComponent extends JPanel {
 
+    private boolean isHovered;
     private Color hoverColor;
+    private Color defaultColor;
 
     ToolComponent() {
+        defaultColor = new Color(238,238,238);
         hoverColor = new Color(202, 202, 202);
+        isHovered = false;
     }
 
     abstract void setupLayout();
@@ -39,10 +44,23 @@ abstract class ToolComponent extends JPanel {
 
     /** Toggles hovering on component */
     public void toggleHover() {
-        if (this.getBackground().equals(new Color(238,238,238))) {
+        if (!isHovered) {
             this.setBackground(hoverColor);
         } else {
-            this.setBackground(null);
+            this.setBackground(defaultColor);
         }
+        isHovered = !isHovered;
+    }
+
+    boolean isHovered() {
+        return isHovered;
+    }
+
+    Color getHoverColor() {
+        return hoverColor;
+    }
+
+    Color getDefaultColor() {
+        return defaultColor;
     }
 }

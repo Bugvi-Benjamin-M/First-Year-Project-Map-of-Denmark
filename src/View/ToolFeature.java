@@ -20,6 +20,8 @@ public class ToolFeature extends ToolComponent {
 
     private ImageIcon icon;
     private ToolType type;
+    private JPanel label;
+    private JPanel iconLabel;
 
     /**
      * Constructor for a ToolFeature
@@ -39,11 +41,24 @@ public class ToolFeature extends ToolComponent {
      */
     @Override
     void setupLayout() {
-        this.setLayout(new GridLayout(2,1));
-        this.add(new JLabel(icon));
-        JPanel label = new JPanel();
+        iconLabel = new JPanel();
+        iconLabel.add(new JLabel(icon));
+        label = new JPanel();
         label.add(new JLabel(type.toString()));
+        this.setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
+        this.add(iconLabel);
         this.add(label);
     }
 
+    @Override
+    public void toggleHover() {
+        if(!isHovered()) {
+            label.setBackground(getHoverColor());
+            iconLabel.setBackground(getHoverColor());
+        } else {
+            label.setBackground(getDefaultColor());
+            iconLabel.setBackground(getDefaultColor());
+        }
+        super.toggleHover();
+    }
 }
