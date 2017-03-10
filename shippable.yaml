@@ -11,5 +11,5 @@ build:
   ci:
     - mkdir -p shippable/codecoverage
     - ant test
-    - ant report
+    - ant coverage
     - cp out/jacoco.xml shippable/codecoverage
