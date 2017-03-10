@@ -39,7 +39,7 @@
         </jar>
     </target>
 
-    <target name="test" depends="compile">
+    <target name="test" depends="test-compile">
         <jacoco:coverage destfile="${dist}/jacoco.exec">
             <junit printsummary="true" haltOnFailure="true" haltOnError="true" showoutput="true" outputtoformatters="true" fork="true">
                 <classpath>
