@@ -15,14 +15,14 @@ import java.awt.*;
  */
 abstract class ToolComponent extends JPanel {
 
-    private boolean isHovered;
+    private boolean isWellActivated;
     private Color hoverColor;
     private Color defaultColor;
 
     ToolComponent() {
         defaultColor = new Color(238,238,238);
         hoverColor = new Color(202, 202, 202);
-        isHovered = false;
+        isWellActivated = false;
     }
 
     abstract void setupLayout();
@@ -43,12 +43,12 @@ abstract class ToolComponent extends JPanel {
     }
 
     /** Toggles hovering on component */
-    public void toggleHover() {
-        isHovered = !isHovered;
+    public void toggleWell() {
+        isWellActivated = !isWellActivated;
     }
 
-    boolean isHovered() {
-        return isHovered;
+    boolean isWellActivated() {
+        return isWellActivated;
     }
 
     Color getHoverColor() {

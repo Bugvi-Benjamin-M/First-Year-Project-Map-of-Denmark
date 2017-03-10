@@ -6,6 +6,7 @@ import Helpers.Constant;
 import Helpers.FileHandler;
 import Model.Model;
 import View.PopupWindow;
+import View.Toolbar;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -42,6 +43,6 @@ public class LoadToolListener extends ToolListener {
             Model.getInstance().modelHasChanged();
             CanvasController.adjustToBounds();
         }
-
+        Toolbar.toggleWellOnTool(type);
     }
 }

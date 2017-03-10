@@ -15,12 +15,19 @@ import java.awt.event.MouseEvent;
  */
 public abstract class ToolListener extends MouseAdapter {
 
-    private ToolType type;
+    protected ToolType type;
 
     public ToolListener(ToolType type) {
         this.type = type;
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        super.mouseClicked(e);
+        Toolbar.toggleWellOnTool(type);
+    }
+
+    /*
     @Override
     public void mouseEntered(MouseEvent e) {
         super.mouseEntered(e);
@@ -32,4 +39,5 @@ public abstract class ToolListener extends MouseAdapter {
         super.mouseExited(e);
         Toolbar.toggleHoverOnTool(type);
     }
+    */
 }

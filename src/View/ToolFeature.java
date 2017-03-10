@@ -51,14 +51,14 @@ public class ToolFeature extends ToolComponent {
     }
 
     @Override
-    public void toggleHover() {
-        if(!isHovered()) {
+    public void toggleWell() {
+        if(!isWellActivated()) {
             label.setBackground(getHoverColor());
             iconLabel.setBackground(getHoverColor());
         } else {
             label.setBackground(getDefaultColor());
             iconLabel.setBackground(getDefaultColor());
         }
-        super.toggleHover();
+        super.toggleWell();
     }
 }

@@ -61,9 +61,9 @@ public class Toolbar extends View {
         }
     }
 
-    public static void toggleHoverOnTool(ToolType type) {
+    public static void toggleWellOnTool(ToolType type) {
         ToolComponent tool = tools.get(type);
-        tool.toggleHover();
+        tool.toggleWell();
     }
 
     /**
