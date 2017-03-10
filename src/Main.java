@@ -1,7 +1,9 @@
 import Controller.*;
+import Helpers.FileHandler;
 import Model.*;
 import View.*;
 
+import java.io.InputStream;
 import java.util.Observer;
 
 /**
@@ -16,5 +18,6 @@ public class Main {
         CanvasController canvasController = new CanvasController(window);
         ToolbarController toolbarController = new ToolbarController(window);
         InfobarController infobarController = new InfobarController(window);
+        FileHandler.loadDefault();
     }
 }

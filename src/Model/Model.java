@@ -3,7 +3,6 @@ import Enums.NodeType;
 import Enums.RelationType;
 import Enums.WayType;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
