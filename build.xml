@@ -16,7 +16,7 @@
         <pathelement location="${main.build.dir}"/>
     </path>
 
-    <target name="compile">
+    <target name="compile" depends="clean">
         <mkdir dir="${main.build.dir}"/>
         <javac srcdir="${main.src.dir}" destdir="${main.build.dir}" includeantruntime="false"/>
         <copy todir="${main.build.dir}" overwrite="true">
@@ -40,18 +40,18 @@
     </target>
 
     <target name="test" depends="test-compile">
-        <jacoco:coverage destfile="${dist}/jacoco.exec">
+        <jacoco:agent property="agentvmparam" destfile="${dist}/jacoco.exec"/>
             <junit printsummary="true" haltOnFailure="true" haltOnError="true" showoutput="true" outputtoformatters="true" fork="true">
+                <jvmarg value="${agentvmparam}"/>
                 <classpath>
                     <path refid="classpath.test"/>
                     <pathelement location="${test.build.dir}"/>
                 </classpath>
                 <formatter type="brief" usefile="false" />
-                <batchtest>
+                <batchtest fork="true">
                     <fileset dir="${test.src.dir}" includes="**/*.java" />
                 </batchtest>
             </junit>
-        </jacoco:coverage>
     </target>
 
     <target name="coverage" depends="test">
