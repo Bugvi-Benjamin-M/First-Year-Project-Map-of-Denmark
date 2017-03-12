@@ -97,6 +97,12 @@ public final class ToolbarController extends Controller {
         private int keyEvent;
         private int activationKey;
 
+        public ToolInteractionHandler(ToolType type) {
+            this.type = type;
+            keyEvent = 0;
+            activationKey = 0;
+        }
+
        public ToolInteractionHandler(ToolType type, int keyEvent) {
            this(type, keyEvent, 0);
        }
