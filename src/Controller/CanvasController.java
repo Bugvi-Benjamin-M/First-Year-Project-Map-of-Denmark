@@ -1,6 +1,5 @@
 package Controller;
 
-import Helpers.Constant;
 import Model.Model;
 import View.MapCanvas;
 import View.Window;
