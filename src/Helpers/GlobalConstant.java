@@ -6,7 +6,7 @@ package Helpers;
  * @author bugvimagnussen
  * @version 09/03/2017
  */
-public final class Constant {
+public final class GlobalConstant {
 
 
     //File extension types

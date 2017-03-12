@@ -33,5 +33,9 @@ public class PopupWindow {
         }
     }
 
+    public static void infoBox(JFrame relativeTo, String message) {
+        JOptionPane.showMessageDialog(relativeTo, message);
+    }
+
 
 }
