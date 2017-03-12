@@ -98,9 +98,7 @@ public final class ToolbarController extends Controller {
         private int activationKey;
 
         public ToolInteractionHandler(ToolType type) {
-            this.type = type;
-            keyEvent = 0;
-            activationKey = 0;
+            this(type, 0, 0);
         }
 
        public ToolInteractionHandler(ToolType type, int keyEvent) {
