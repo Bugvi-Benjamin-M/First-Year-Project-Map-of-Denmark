@@ -1,6 +1,5 @@
 package View;
 
-import Controller.ToolbarController;
 import Enums.ToolType;
 
 import javax.swing.*;
@@ -41,22 +40,6 @@ public class Toolbar extends View {
         this.setPreferredSize(new Dimension(500,100));
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
-
-    /**
-     * Adds a given MouseListener to a specified Tool
-     * @param toolType The type of the Tool, unique
-     * @param interactor
-     * @see ToolType
-     */
-    public void addInteractorToTool(ToolType toolType, ToolbarController.ToolInteractor interactor){
-        ToolComponent tool = tools.get(toolType);
-        if(tool != null){
-            tool.addMouseListener(interactor);
-        } else {
-            throw new RuntimeException("No such tool found.");
-        }
-    }
-
 
     public void toggleWellOnTool(ToolType type) {
         ToolComponent tool = tools.get(type);

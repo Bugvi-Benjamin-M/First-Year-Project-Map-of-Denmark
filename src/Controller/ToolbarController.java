@@ -49,11 +49,11 @@ public final class ToolbarController extends Controller {
     }
 
     private void addInteractorToSaveTool() {
-        toolbar.addInteractorToTool(ToolType.SAVE, new ToolInteractor(ToolType.SAVE, KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
+        new ToolInteractionHandler(ToolType.SAVE, KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK);
     }
 
     private void addInteractorToLoadTool() {
-        toolbar.addInteractorToTool(ToolType.LOAD, new ToolInteractor(ToolType.LOAD, KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK));
+        new ToolInteractionHandler(ToolType.LOAD, KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);
     }
 
     private void toolEvent(ToolType type) {
@@ -90,19 +90,32 @@ public final class ToolbarController extends Controller {
         toolbar.toggleWellOnTool(ToolType.SAVE);
     }
 
-   public class ToolInteractor extends MouseAdapter {
+   private class ToolInteractionHandler extends MouseAdapter {
 
         private ToolType type;
         private ToolFeature tool;
         private int keyEvent;
         private int activationKey;
 
-        public ToolInteractor(ToolType type, int keyEvent, int activationKey) {
+       public ToolInteractionHandler(ToolType type, int keyEvent) {
+           this(type, keyEvent, 0);
+       }
+
+        public ToolInteractionHandler(ToolType type, int keyEvent, int activationKey) {
             this.type = type;
             this.keyEvent = keyEvent;
             this.activationKey = activationKey;
             tool = (ToolFeature) toolbar.getTool(type);
+            addMouseListener();
             setKeyShortCuts();
+        }
+
+        private void addMouseListener() {
+            if (tool != null) {
+                tool.addMouseListener(this);
+            } else {
+                throw new RuntimeException("No such tool found");
+            }
         }
 
         @Override
@@ -111,12 +124,11 @@ public final class ToolbarController extends Controller {
             toolEvent(type);
         }
 
-
         private void setKeyShortCuts() {
-            String event = type.toString().toLowerCase();
             tool.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-                    .put(KeyStroke.getKeyStroke(keyEvent, activationKey), event);
-            tool.getActionMap().put(event, new AbstractAction() {
+                    .put(KeyStroke.getKeyStroke(keyEvent, activationKey), type.toString().toLowerCase());
+            tool.getActionMap().
+                    put(type.toString().toLowerCase(), new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     toolEvent(type);
