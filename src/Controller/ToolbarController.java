@@ -45,13 +45,18 @@ public final class ToolbarController extends Controller {
 
     private void addInteractorsToTools() {
         addInteractorToLoadTool();
+        addInteractorToSaveTool();
+    }
+
+    private void addInteractorToSaveTool() {
+        toolbar.addInteractorToTool(ToolType.SAVE, new ToolInteractor(ToolType.SAVE));
     }
 
     private void addInteractorToLoadTool() {
         toolbar.addInteractorToTool(ToolType.LOAD, new ToolInteractor(ToolType.LOAD));
     }
 
-    public static void loadEvent() {
+    private void loadEvent() {
         FileNameExtensionFilter[] filters = new FileNameExtensionFilter[]{
                 new FileNameExtensionFilter("OSM Files", GlobalConstant.osmFilter),
                 new FileNameExtensionFilter("ZIP Files", GlobalConstant.zipFilter)
@@ -66,6 +71,9 @@ public final class ToolbarController extends Controller {
         }
     }
 
+    private void saveEvent() {
+        PopupWindow.infoBox(null, "You activated save tool");
+    }
 
    public class ToolInteractor extends MouseAdapter {
 
@@ -83,15 +91,23 @@ public final class ToolbarController extends Controller {
             super.mouseClicked(e);
             switch (type) {
                 case LOAD:
-                    loadEvent();
+                    activateLoad();
                     break;
+                case SAVE:
+                    activateSave();
             }
         }
 
-        private void loadEvent() {
-            Toolbar.toggleWellOnTool(type);
-            ToolbarController.loadEvent();
-            Toolbar.toggleWellOnTool(type);
+       private void activateSave() {
+           toolbar.toggleWellOnTool(type);
+           saveEvent();
+           toolbar.toggleWellOnTool(type);
+       }
+
+       private void activateLoad() {
+            toolbar.toggleWellOnTool(type);
+            loadEvent();
+            toolbar.toggleWellOnTool(type);
         }
 
         private void setKeyShortCuts() {
@@ -101,12 +117,21 @@ public final class ToolbarController extends Controller {
                     tool.getActionMap().put("load", new AbstractAction() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            loadEvent();
+                            activateLoad();
                         }
                     });
                     break;
+                case SAVE:
+                    tool.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK), "save");
+                    tool.getActionMap().put("save", new AbstractAction() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            activateSave();
+                        }
+                    });
             }
         }
 
     }
+
 }
