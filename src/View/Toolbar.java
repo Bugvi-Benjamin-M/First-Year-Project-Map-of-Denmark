@@ -1,7 +1,7 @@
 package View;
 
+import Controller.ToolbarController;
 import Enums.ToolType;
-import Controller.ToolInteractionController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,9 +45,10 @@ public class Toolbar extends View {
     /**
      * Adds a given MouseListener to a specified Tool
      * @param toolType The type of the Tool, unique
+     * @param interactor
      * @see ToolType
      */
-    public void addInteractorToTool(ToolType toolType, ToolInteractionController interactor){
+    public void addInteractorToTool(ToolType toolType, ToolbarController.ToolInteractor interactor){
         ToolComponent tool = tools.get(toolType);
         if(tool != null){
             tool.addMouseListener(interactor);
