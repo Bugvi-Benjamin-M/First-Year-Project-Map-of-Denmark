@@ -49,14 +49,26 @@ public final class ToolbarController extends Controller {
     }
 
     private void addInteractorToSaveTool() {
-        toolbar.addInteractorToTool(ToolType.SAVE, new ToolInteractor(ToolType.SAVE));
+        toolbar.addInteractorToTool(ToolType.SAVE, new ToolInteractor(ToolType.SAVE, KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
     }
 
     private void addInteractorToLoadTool() {
-        toolbar.addInteractorToTool(ToolType.LOAD, new ToolInteractor(ToolType.LOAD));
+        toolbar.addInteractorToTool(ToolType.LOAD, new ToolInteractor(ToolType.LOAD, KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK));
+    }
+
+    private void toolEvent(ToolType type) {
+        switch (type) {
+            case LOAD:
+                loadEvent();
+                break;
+            case SAVE:
+                saveEvent();
+                break;
+        }
     }
 
     private void loadEvent() {
+        toolbar.toggleWellOnTool(ToolType.LOAD);
         FileNameExtensionFilter[] filters = new FileNameExtensionFilter[]{
                 new FileNameExtensionFilter("OSM Files", GlobalConstant.osmFilter),
                 new FileNameExtensionFilter("ZIP Files", GlobalConstant.zipFilter)
@@ -69,19 +81,26 @@ public final class ToolbarController extends Controller {
             Model.getInstance().modelHasChanged();
             CanvasController.adjustToBounds();
         }
+        toolbar.toggleWellOnTool(ToolType.LOAD);
     }
 
     private void saveEvent() {
+        toolbar.toggleWellOnTool(ToolType.SAVE);
         PopupWindow.infoBox(null, "You activated save tool");
+        toolbar.toggleWellOnTool(ToolType.SAVE);
     }
 
    public class ToolInteractor extends MouseAdapter {
 
         private ToolType type;
         private ToolFeature tool;
+        private int keyEvent;
+        private int activationKey;
 
-        public ToolInteractor(ToolType type) {
+        public ToolInteractor(ToolType type, int keyEvent, int activationKey) {
             this.type = type;
+            this.keyEvent = keyEvent;
+            this.activationKey = activationKey;
             tool = (ToolFeature) toolbar.getTool(type);
             setKeyShortCuts();
         }
@@ -89,47 +108,20 @@ public final class ToolbarController extends Controller {
         @Override
         public void mouseClicked(MouseEvent e) {
             super.mouseClicked(e);
-            switch (type) {
-                case LOAD:
-                    activateLoad();
-                    break;
-                case SAVE:
-                    activateSave();
-            }
+            toolEvent(type);
         }
 
-       private void activateSave() {
-           toolbar.toggleWellOnTool(type);
-           saveEvent();
-           toolbar.toggleWellOnTool(type);
-       }
-
-       private void activateLoad() {
-            toolbar.toggleWellOnTool(type);
-            loadEvent();
-            toolbar.toggleWellOnTool(type);
-        }
 
         private void setKeyShortCuts() {
-            switch (type) {
-                case LOAD:
-                    tool.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK), "load");
-                    tool.getActionMap().put("load", new AbstractAction() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            activateLoad();
-                        }
-                    });
-                    break;
-                case SAVE:
-                    tool.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK), "save");
-                    tool.getActionMap().put("save", new AbstractAction() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            activateSave();
-                        }
-                    });
-            }
+            String event = type.toString().toLowerCase();
+            tool.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                    .put(KeyStroke.getKeyStroke(keyEvent, activationKey), event);
+            tool.getActionMap().put(event, new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    toolEvent(type);
+                }
+            });
         }
 
     }
