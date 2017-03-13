@@ -18,6 +18,7 @@ public class TestOSMHandler extends TestCase {
         CanvasController canvasController = new CanvasController(window);
         ToolbarController toolbarController = ToolbarController.getInstance(window);
         InfobarController infobarController = new InfobarController(window);
+        FileHandler.loadDefault("/testRoad.osm");
 
         int RoadCount = model.getWayElements().get(WayType.ROAD).size();
         assertEquals(1, RoadCount);
@@ -29,8 +30,8 @@ public class TestOSMHandler extends TestCase {
         CanvasController canvasController = new CanvasController(window);
         ToolbarController toolbarController = ToolbarController.getInstance(window);
         InfobarController infobarController = new InfobarController(window);
-        FileHandler.loadDefault("/defaultosm.osm");
-        FileHandler.loadDefault("/test.osm");
+        FileHandler.loadDefault("/testThreeRoads.osm");
+        FileHandler.loadDefault("/testRoad.osm");
         int RoadCount = model.getWayElements().get(WayType.ROAD).size();
         assertEquals(1, RoadCount);
     }
