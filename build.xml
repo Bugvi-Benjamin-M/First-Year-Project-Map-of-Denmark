@@ -54,9 +54,9 @@
                 <path refid="classpath.test"/>
                 <pathelement location="${test.build.dir}"/>
             </classpath>
-            <formatter type="plain" usefile="false" />
+            <formatter type="plain" usefile="false"/>
             <batchtest fork="true">
-                <fileset dir="${test.src.dir}" includes="**/*.java" />
+                <fileset dir="${test.src.dir}" includes="**/*.java"/>
             </batchtest>
         </junit>
     </target>
@@ -69,9 +69,9 @@
                 <file file="${result.report.file}"/>
             </executiondata>
             <!--  the class files and optional source files ...  -->
-            <structure name="JaCoco">
+            <structure name="JaCoCo Ant Example">
                 <classfiles>
-                    <fileset dir="${dist}"/>
+                    <fileset dir="${main.build.dir}"/>
                 </classfiles>
                 <sourcefiles encoding="UTF-8">
                     <fileset dir="${main.src.dir}"/>
@@ -83,8 +83,7 @@
             <xml destfile="${result.report.dir}/jacoco.xml"/>
         </jacoco:report>
     </target>
-    <target name="clean"
-            description="clean up">
+    <target name="clean" description="clean up">
         <!-- Delete the ${build} and ${dist} directory trees -->
         <delete dir="out"></delete>
     </target>
