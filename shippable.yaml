@@ -6,6 +6,9 @@ language: java
 jdk:
   - oraclejdk8
 
+pre_ci:
+  - apt-get install -y xserver-xorg xserver-xorg-core x11-apps x11-xserver-utils
+
 build:
   advancedReporting: true
   ci:
