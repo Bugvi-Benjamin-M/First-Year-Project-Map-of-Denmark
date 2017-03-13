@@ -1,15 +1,16 @@
 package View;
 
-import Enums.RoadType;
 import Enums.WayType;
-import Model.*;
+import Model.Element;
+import Model.Model;
+import Model.Road;
+import Theme.Theme;
 
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
-import java.util.*;
+import java.util.EnumMap;
+
 
 /**
  * Class details:
@@ -29,13 +30,15 @@ public class MapCanvas extends View {
     private Dimension dimension;
     private AffineTransform transform;
     private EnumMap<WayType, java.util.List<Element>> wayElements;
+    private Theme theme;
 
     /**
      * The base Constructor for the MapCanvas.
      * @param dimension The dimension of the component
      */
-    public MapCanvas(Dimension dimension) {
+    public MapCanvas(Dimension dimension, Theme theme) {
         transform = new AffineTransform();
+        this.theme = theme;
         this.dimension = dimension;
         setPreferredSize(this.dimension);
     }
@@ -67,17 +70,17 @@ public class MapCanvas extends View {
             Road road = (Road) element;
             switch(road.getRoadType()){
                 case SERVICE:
-                    g.setColor(Color.RED);
+                    g.setColor(theme.getWaterColor());
                     g.setStroke(new BasicStroke(0.00001f));
                     g.draw(road.getPath());
                     break;
                 case TERTIARY:
-                    g.setColor(Color.BLACK);
+                    g.setColor(theme.getSandColor());
                     g.setStroke(new BasicStroke(0.00001f));
                     g.draw(road.getPath());
                     break;
                 case UNCLASSIFIED:
-                    g.setColor(Color.BLUE);
+                    g.setColor(theme.getParkColor());
                     g.setStroke(new BasicStroke(0.00001f));
                     g.draw(road.getPath());
                     break;

@@ -1,17 +1,20 @@
 package Controller;
 
+import Helpers.ThemeHelper;
 import View.Window;
+import Theme.*;
 
 /**
  * Created by Jakob on 06-03-2017.
  */
 public abstract class Controller {
 
-    private static Window window;
+    protected static Window window;
+    protected static Theme theme;
 
     public Controller(Window window) {
         this.window = window;
+        this.theme = ThemeHelper.getTheme();
     }
-
 
 }

@@ -1,5 +1,6 @@
 package Model;
 
+import Enums.DrawType;
 import Enums.RoadType;
 
 import java.awt.geom.Path2D;
@@ -11,11 +12,13 @@ public class Road implements Element {
     private RoadType roadType;
     private Path2D path;
     private String name;
+    private DrawType drawType;
 
     public Road(RoadType roadType, Path2D path, String name){
         this.roadType = roadType;
         this.path = path;
         this.name = name;
+        drawType = DrawType.DRAW;
     }
     public Road(RoadType roadType, Path2D path){
         this(roadType, path, "");
@@ -31,5 +34,10 @@ public class Road implements Element {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public DrawType getDrawType() {
+        return drawType;
     }
 }

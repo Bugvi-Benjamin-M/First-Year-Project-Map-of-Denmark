@@ -9,12 +9,19 @@ import java.awt.geom.Path2D;
  */
 public class UnknownWay implements Element{
     private Path2D path;
+    private DrawType drawType;
 
     public UnknownWay(Path2D path){
         this.path = path;
+        drawType = DrawType.DRAW;
     }
 
     public Path2D getPath() {
         return path;
+    }
+
+    @Override
+    public DrawType getDrawType() {
+        return drawType;
     }
 }
