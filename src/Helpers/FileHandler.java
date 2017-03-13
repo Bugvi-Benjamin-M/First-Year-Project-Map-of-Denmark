@@ -1,6 +1,7 @@
 package Helpers;
 
 import Controller.CanvasController;
+import Enums.FileType;
 import Model.Model;
 import OSM.OSMHandler;
 import org.xml.sax.InputSource;
@@ -24,18 +25,18 @@ public class FileHandler {
         } else if (OSDetector.isMac()) {
             pathStart = "file://";
         } else {
-            pathStart = "";
+            pathStart = "file://";
         }
 
     }
 
-    public static void loadDefault(){
-        InputStream filename = FileHandler.class.getResourceAsStream("/defaultosm.osm");
+    public static void loadDefault(String file){
+        InputStream filename = FileHandler.class.getResourceAsStream(file);
         FileHandler.loadOSM(new InputSource(filename));
     }
 
     public static void load(String fileName) {
-        if(fileName.endsWith(".osm")) {
+        if(fileName.endsWith(FileType.OSM.getExtension())) {
                 loadOSM(new InputSource(pathStart + fileName));
         }
     }
@@ -54,8 +55,5 @@ public class FileHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-
 }

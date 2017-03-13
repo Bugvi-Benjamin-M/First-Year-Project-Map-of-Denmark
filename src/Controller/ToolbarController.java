@@ -1,9 +1,9 @@
 package Controller;
 
+import Enums.FileType;
 import Enums.ToolType;
 import Helpers.FileHandler;
-import Helpers.GlobalConstant;
-import Model.Model;
+import Helpers.OSDetector;
 import View.PopupWindow;
 import View.ToolFeature;
 import View.Toolbar;
@@ -25,14 +25,14 @@ import java.awt.event.MouseEvent;
  * @project BFST
  */
 public final class ToolbarController extends Controller {
-    private Window window;
+
     private Toolbar toolbar;
     private static ToolbarController instance;
 
     private ToolbarController(Window window) {
+        super(window);
         toolbar = new Toolbar();
-        this.window = window;
-        this.window.addComponent(BorderLayout.PAGE_START, toolbar);
+        window.addComponent(BorderLayout.PAGE_START, toolbar);
         addInteractorsToTools();
     }
 
@@ -49,11 +49,11 @@ public final class ToolbarController extends Controller {
     }
 
     private void addInteractorToSaveTool() {
-        new ToolInteractionHandler(ToolType.SAVE, KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK);
+        new ToolInteractionHandler(ToolType.SAVE, KeyEvent.VK_S, OSDetector.getActivationKey());
     }
 
     private void addInteractorToLoadTool() {
-        new ToolInteractionHandler(ToolType.LOAD, KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);
+        new ToolInteractionHandler(ToolType.LOAD, KeyEvent.VK_L, OSDetector.getActivationKey());
     }
 
     private void toolEvent(ToolType type) {
@@ -70,8 +70,8 @@ public final class ToolbarController extends Controller {
     private void loadEvent() {
         toolbar.toggleWellOnTool(ToolType.LOAD);
         FileNameExtensionFilter[] filters = new FileNameExtensionFilter[]{
-                new FileNameExtensionFilter("OSM Files", GlobalConstant.osmFilter),
-                new FileNameExtensionFilter("ZIP Files", GlobalConstant.zipFilter)
+                new FileNameExtensionFilter("OSM Files", FileType.OSM.toString()),
+                new FileNameExtensionFilter("ZIP Files", FileType.ZIP.toString())
         };
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {

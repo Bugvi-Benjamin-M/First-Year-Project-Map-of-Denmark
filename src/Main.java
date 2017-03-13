@@ -17,6 +17,6 @@ public class Main {
         CanvasController canvasController = new CanvasController(window);
         ToolbarController toolbarController = ToolbarController.getInstance(window);
         InfobarController infobarController = new InfobarController(window);
-        FileHandler.loadDefault();
+        FileHandler.loadDefault("/defaultosm.osm");
     }
 }

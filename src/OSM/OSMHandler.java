@@ -109,19 +109,23 @@ public final class OSMHandler implements ContentHandler {
                 switch (k){
                     case "highway":
                         wayType = WayType.ROAD;
-                        switch (v){
-                            case "service":
-                                roadType = RoadType.SERVICE;
-                                break;
-                            case "tertiary":
-                                roadType = RoadType.TERTIARY;
-                                break;
-                            case "unclassified":
-                                roadType = RoadType.UNCLASSIFIED;
-                                break;
-                        }
+                        determineHighway(v);
                         break;
                 }
+                break;
+        }
+    }
+
+    private void determineHighway(String value) {
+        switch (value){
+            case "service":
+                roadType = RoadType.SERVICE;
+                break;
+            case "tertiary":
+                roadType = RoadType.TERTIARY;
+                break;
+            case "unclassified":
+                roadType = RoadType.UNCLASSIFIED;
                 break;
         }
     }
