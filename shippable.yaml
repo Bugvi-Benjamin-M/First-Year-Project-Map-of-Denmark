@@ -9,7 +9,8 @@ jdk:
 build:
   advancedReporting: true
   pre_ci:
-    - apt-get install -y xserver-xorg xserver-xorg-core x11-apps x11-xserver-utils
+    - apt-get install -y xvfb
+    - export DISPLAY=":1"
   ci:
     - mkdir -p shippable/codecoverage
     - ant coverage -verbose
