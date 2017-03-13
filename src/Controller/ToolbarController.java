@@ -86,6 +86,10 @@ public final class ToolbarController extends Controller {
         toolbar.toggleWellOnTool(ToolType.SAVE);
     }
 
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
    private class ToolInteractionHandler extends MouseAdapter {
 
         private ToolType type;

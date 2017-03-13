@@ -37,6 +37,10 @@ public class CanvasController extends Controller implements Observer {
         mapCanvas.zoom(mapCanvas.getWidth()/(model.getMaxLongitude()- model.getMinLongitude()));
     }
 
+    public MapCanvas getMapCanvas(){
+        return mapCanvas;
+    }
+
     public static void resetBounds(){
         mapCanvas.resetTransform();
     }
