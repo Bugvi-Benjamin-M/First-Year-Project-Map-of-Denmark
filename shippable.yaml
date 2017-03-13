@@ -10,9 +10,8 @@ build:
   advancedReporting: true
   pre_ci:
     - apt-get install -y xvfb
-    - export DISPLAY=':99.0'
     - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   ci:
     - mkdir -p shippable/codecoverage
-    - ant coverage -verbose
+    - DISPLAY=':99.0' ant coverage -verbose
     - cp out/jacoco.xml shippable/codecoverage
