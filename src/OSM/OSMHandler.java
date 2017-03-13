@@ -34,6 +34,11 @@ public final class OSMHandler implements ContentHandler {
         model = Model.getInstance();
     }
 
+    public float getLongitudeFactor(){
+        return longitudeFactor;
+    }
+
+
     /**
      * Returns the OSMHandler, which is a singleton.
      * @return OSMHandler.
