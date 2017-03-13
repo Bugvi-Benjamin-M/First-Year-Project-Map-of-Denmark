@@ -1,10 +1,11 @@
 <project name="BFST" default="dist" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
-    <property name="main.build.dir" value="out/main"/>
-    <property name="main.src.dir" value="src"/>
-    <property name="test.build.dir" value="out/test"/>
-    <property name="test.src.dir" value="Tests"/>
-    <property name="resources" value="Resources"/>
-    <property name="dist" location="out"/>
+    <property name="main.build.dir" value="./out/main"/>
+    <property name="main.src.dir" value="./src"/>
+    <property name="test.build.dir" value="./out/test"/>
+    <property name="test.src.dir" value="./tests"/>
+    <property name="main.resources" value="./resources"/>
+    <property name="test.resources" value="./testResources"/>
+    <property name="dist" location="./out"/>
 
     <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
         <classpath path="lib/jacocoant.jar"/>
@@ -20,7 +21,7 @@
         <mkdir dir="${main.build.dir}"/>
         <javac srcdir="${main.src.dir}" destdir="${main.build.dir}" includeantruntime="false"/>
         <copy todir="${main.build.dir}" overwrite="true">
-            <fileset dir="${resources}"/>
+            <fileset dir="${main.resources}"/>
         </copy>
     </target>
 
@@ -29,6 +30,9 @@
         <javac srcdir="${test.src.dir}" destdir="${test.build.dir}" includeantruntime="false">
             <classpath refid="classpath.test"/>
         </javac>
+        <copy todir="${test.build.dir}" overwrite="true">
+            <fileset dir="${test.resources}"/>
+        </copy>
     </target>
 
     <target name="dist" depends="compile">
