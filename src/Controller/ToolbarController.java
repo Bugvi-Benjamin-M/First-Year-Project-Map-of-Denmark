@@ -69,8 +69,8 @@ public final class ToolbarController extends Controller {
     private void loadEvent() {
         toolbar.toggleWellOnTool(ToolType.LOAD);
         FileNameExtensionFilter[] filters = new FileNameExtensionFilter[]{
-                new FileNameExtensionFilter("OSM Files", FileType.OSM.toString().toLowerCase()),
-                new FileNameExtensionFilter("ZIP Files", FileType.ZIP.toString().toLowerCase())
+                new FileNameExtensionFilter("OSM Files", FileType.OSM.toString()),
+                new FileNameExtensionFilter("ZIP Files", FileType.ZIP.toString())
         };
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {

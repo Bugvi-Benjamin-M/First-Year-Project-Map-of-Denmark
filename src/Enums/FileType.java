@@ -8,5 +8,13 @@ package Enums;
  */
 public enum FileType {
     OSM,
-    ZIP
+    ZIP;
+
+    @Override
+    public String toString() {
+        return super.toString().toLowerCase();
+    }
+    public String getExtension() {
+        return "." + toString();
+    }
 }
