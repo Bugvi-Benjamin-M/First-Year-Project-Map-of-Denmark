@@ -75,11 +75,7 @@ public final class ToolbarController extends Controller {
         };
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {
-            Model.getInstance().clear();
-            CanvasController.resetBounds();
             FileHandler.load(chooser.getSelectedFile().toString());
-            Model.getInstance().modelHasChanged();
-            CanvasController.adjustToBounds();
         }
         toolbar.toggleWellOnTool(ToolType.LOAD);
     }

@@ -32,8 +32,6 @@ public class FileHandler {
     public static void loadDefault(){
         InputStream filename = FileHandler.class.getResourceAsStream("/defaultosm.osm");
         FileHandler.loadOSM(new InputSource(filename));
-        Model.getInstance().modelHasChanged();
-        CanvasController.adjustToBounds();
     }
 
     public static void load(String fileName) {
@@ -44,9 +42,13 @@ public class FileHandler {
 
     public static void loadOSM(InputSource inputSource) {
         try {
+            Model.getInstance().clear();
+            CanvasController.resetBounds();
             XMLReader reader = XMLReaderFactory.createXMLReader();
             reader.setContentHandler(OSMHandler.getInstance());
             reader.parse(inputSource);
+            Model.getInstance().modelHasChanged();
+            CanvasController.adjustToBounds();
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (IOException e) {
