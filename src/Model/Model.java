@@ -1,7 +1,7 @@
 package Model;
-import Enums.NodeType;
-import Enums.RelationType;
-import Enums.WayType;
+import Enums.OSMEnums.NodeType;
+import Enums.OSMEnums.RelationType;
+import Enums.OSMEnums.WayType;
 
 import java.util.ArrayList;
 import java.util.EnumMap;

@@ -1,6 +1,6 @@
 package View;
 
-import Enums.WayType;
+import Enums.OSMEnums.WayType;
 import Model.Element;
 import Model.Model;
 import Model.Road;

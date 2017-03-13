@@ -8,7 +8,7 @@ import java.awt.geom.Path2D;
 /**
  * Created by Jakob on 06-03-2017.
  */
-public class Road implements Element {
+public class Road extends Element {
     private RoadType roadType;
     private Path2D path;
     private String name;
@@ -36,8 +36,4 @@ public class Road implements Element {
         return name;
     }
 
-    @Override
-    public DrawType getDrawType() {
-        return drawType;
-    }
 }
