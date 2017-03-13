@@ -90,7 +90,7 @@ public final class ToolbarController extends Controller {
         return toolbar;
     }
 
-   private class ToolInteractionHandler extends MouseAdapter {
+     private class ToolInteractionHandler extends MouseAdapter {
 
         private ToolType type;
         private ToolFeature tool;

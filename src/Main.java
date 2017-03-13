@@ -9,12 +9,11 @@ import View.Window;
  * Created by Jakob on 06-03-2017.
  */
 public class Main {
-    private Window window;
 
     public static void main(String[] args) {
         Window window = new Window();
         Model model = Model.getInstance();
-        CanvasController canvasController = new CanvasController(window);
+        CanvasController canvasController = CanvasController.getInstance(window);
         ToolbarController toolbarController = ToolbarController.getInstance(window);
         InfobarController infobarController = new InfobarController(window);
         FileHandler.loadDefault("/defaultosm.osm");
