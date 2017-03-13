@@ -97,3 +97,34 @@ Next meeting:
  - Monday the 13 of March. (Code review, planning of second sprint)
  
 ## Next logbook...
+## Logbook 13/3 (Scribe Mollerup)
+
+What we did yesterday:
+N/A
+
+What we will do today:
+ - Codeview
+ - Scrumreview
+
+Impediments:
+ - Lecture in algorithms at 16.00
+ - Jakob caught a cold, and will leave as early as possible.
+
+Notes from meeting:
+ - The sprint is finished with success.
+ 
+ Codereview:
+ - Javadoc is missing.
+ - Make all controllers to singletons
+ - Blanke notes down todo's.
+ - everyone is up to date with the code.
+ 
+ Scrummeeting
+ - All done in Trello have been removed, so we are ready for the next sprint.
+ - Niclas goes over the Todo (tasks) of the next sprint.
+ - We add a few tasks.
+ - We assign some of the tasks.
+
+Next meeting:
+ - We cancel the meeting on wednesday.
+ - Thurday at 10.00
