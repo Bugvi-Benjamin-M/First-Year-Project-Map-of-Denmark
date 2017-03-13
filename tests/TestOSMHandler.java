@@ -1,5 +1,9 @@
+import Controller.CanvasController;
+import Controller.InfobarController;
+import Controller.ToolbarController;
 import Enums.WayType;
 import Helpers.FileHandler;
+import View.Window;
 import junit.framework.TestCase;
 import Model.*;
 
@@ -9,9 +13,25 @@ import Model.*;
 public class TestOSMHandler extends TestCase {
 
     public void testOSMHandler(){
-        Main.main(null);
+        Window window = new Window();
         Model model = Model.getInstance();
-        FileHandler.loadDefault("/test.osm");
+        CanvasController canvasController = new CanvasController(window);
+        ToolbarController toolbarController = ToolbarController.getInstance(window);
+        InfobarController infobarController = new InfobarController(window);
+        FileHandler.loadDefault("/testRoad.osm");
+
+        int RoadCount = model.getWayElements().get(WayType.ROAD).size();
+        assertEquals(1, RoadCount);
+    }
+
+    public void testOSMHandlerWithReload(){
+        Window window = new Window();
+        Model model = Model.getInstance();
+        CanvasController canvasController = new CanvasController(window);
+        ToolbarController toolbarController = ToolbarController.getInstance(window);
+        InfobarController infobarController = new InfobarController(window);
+        FileHandler.loadDefault("/testThreeRoads.osm");
+        FileHandler.loadDefault("/testRoad.osm");
         int RoadCount = model.getWayElements().get(WayType.ROAD).size();
         assertEquals(1, RoadCount);
     }
