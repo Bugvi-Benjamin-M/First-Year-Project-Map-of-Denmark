@@ -25,7 +25,7 @@ public class FileHandler {
         } else if (OSDetector.isMac()) {
             pathStart = "file://";
         } else {
-            pathStart = "";
+            pathStart = "file://";
         }
 
     }
