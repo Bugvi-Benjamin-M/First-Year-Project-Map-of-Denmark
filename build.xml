@@ -6,6 +6,9 @@
     <property name="main.resources" value="./resources"/>
     <property name="test.resources" value="./testResources"/>
     <property name="dist" location="./out"/>
+    <property name="result.dir" location="${dist}/target"/>
+    <property name="result.report.dir" location="${result.dir}/site/jacoco"/>
+    <property name="result.report.file" location="${result.dir}/jacoco.exec"/>
 
     <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
         <classpath path="lib/jacocoant.jar"/>
@@ -44,7 +47,7 @@
     </target>
 
     <target name="test" depends="test-compile">
-        <jacoco:agent property="agentvmparam" destfile="${dist}/jacoco/jacoco.exec"/>
+        <jacoco:agent property="agentvmparam" destfile="${result.report.file}"/>
         <junit printsummary="on" haltonfailure="yes" fork="true">
             <jvmarg value="${agentvmparam}"/>
             <classpath>
@@ -59,10 +62,11 @@
     </target>
 
     <target name="coverage" depends="test">
-        <mkdir dir="${dist}/jacoco"/>
+        <mkdir dir="${result.report.dir}"/>
+
         <jacoco:report>
             <executiondata>
-                <file file="${dist}/jacoco/jacoco.exec"/>
+                <file file="${result.report.file}"/>
             </executiondata>
             <!--  the class files and optional source files ...  -->
             <structure name="JaCoco">
@@ -73,8 +77,10 @@
                     <fileset dir="${main.src.dir}"/>
                 </sourcefiles>
             </structure>
-            <xml destfile="${dist}/jacoco/jacoco.xml"/>
-            <html destdir="${dist}/jacoco"/>
+            <!--  to produce reports in different formats.  -->
+            <html destdir="${result.report.dir}"/>
+            <csv destfile="${result.report.dir}/jacoco.csv"/>
+            <xml destfile="${result.report.dir}/jacoco.xml"/>
         </jacoco:report>
     </target>
     <target name="clean"

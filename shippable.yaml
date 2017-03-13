@@ -11,6 +11,5 @@ build:
     - apt-get install -y xvfb
   ci:
     - mkdir -p shippable/codecoverage
-    - mkdir -p shippable/testresults
     - ./test.sh
-    - cp -R out/jacoco shippable/codecoverage
+    - cp -r out/target shippable/codecoverage
