@@ -10,5 +10,5 @@ build:
   advancedReporting: true
   ci:
     - mkdir -p shippable/codecoverage
-    - ant coverage
+    - ant coverage -verbose
     - cp out/jacoco.xml shippable/codecoverage
