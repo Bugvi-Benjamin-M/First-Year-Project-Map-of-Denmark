@@ -29,8 +29,8 @@ public class FileHandler {
 
     }
 
-    public static void loadDefault(){
-        InputStream filename = FileHandler.class.getResourceAsStream("/defaultosm.osm");
+    public static void loadDefault(String file){
+        InputStream filename = FileHandler.class.getResourceAsStream(file);
         FileHandler.loadOSM(new InputSource(filename));
     }
 
