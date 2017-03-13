@@ -44,7 +44,7 @@
     </target>
 
     <target name="test" depends="test-compile">
-        <jacoco:agent property="agentvmparam" destfile="${dist}/jacoco.exec"/>
+        <jacoco:agent property="agentvmparam" destfile="${dist}/jacoco/jacoco.exec"/>
         <junit printsummary="on" haltonfailure="yes" fork="true">
             <jvmarg value="${agentvmparam}"/>
             <classpath>
@@ -59,9 +59,10 @@
     </target>
 
     <target name="coverage" depends="test">
+        <mkdir dir="${dist}/jacoco"/>
         <jacoco:report>
             <executiondata>
-                <file file="${dist}/jacoco.exec"/>
+                <file file="${dist}/jacoco/jacoco.exec"/>
             </executiondata>
             <!--  the class files and optional source files ...  -->
             <structure name="JaCoco">
@@ -72,7 +73,8 @@
                     <fileset dir="${main.src.dir}"/>
                 </sourcefiles>
             </structure>
-            <xml destfile="${dist}/jacoco.xml"/>
+            <xml destfile="${dist}/jacoco/jacoco.xml"/>
+            <html destdir="${dist}/jacoco"/>
         </jacoco:report>
     </target>
     <target name="clean"
