@@ -16,13 +16,13 @@ import java.util.Observer;
  * Created by Jakob on 06-03-2017.
  */
 public class CanvasController extends Controller implements Observer {
-    private Window window;
+
     private static MapCanvas mapCanvas;
     private static Model model;
     private static final double ZOOM_FACTOR = 0.9;
 
     public CanvasController(Window window) {
-        this.window = window;
+        super(window);
         model = Model.getInstance();
         model.addObserver(this);
         mapCanvas = new MapCanvas(window.getDimension());

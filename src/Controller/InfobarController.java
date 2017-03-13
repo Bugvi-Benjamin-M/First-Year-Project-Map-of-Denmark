@@ -5,8 +5,6 @@ import View.Window;
 
 import java.awt.*;
 
-import static java.lang.Thread.sleep;
-
 /**
  * Class details:
  *
@@ -16,13 +14,12 @@ import static java.lang.Thread.sleep;
  */
 public class InfobarController extends Controller {
 
-    private Window window;
     private Infobar infobar;
 
     public InfobarController(Window window) {
-        this.window = window;
+        super(window);
         infobar = new Infobar();
-        this.window.addComponent(BorderLayout.LINE_START,infobar);
+        window.addComponent(BorderLayout.LINE_START,infobar);
         toggleVisibility();
     }
 

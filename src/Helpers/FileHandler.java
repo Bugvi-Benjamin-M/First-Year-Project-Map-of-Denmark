@@ -55,8 +55,5 @@ public class FileHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-
 }
