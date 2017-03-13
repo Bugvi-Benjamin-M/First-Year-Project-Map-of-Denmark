@@ -1,7 +1,7 @@
 package OSM;
 
 import Enums.RoadType;
-import Enums.WayType;
+import Enums.OSMEnums.WayType;
 import Model.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;

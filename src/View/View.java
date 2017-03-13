@@ -10,5 +10,5 @@ import javax.swing.*;
  * @author Jacob Mollerup, jmol@itu.dk
  * @version 10/03/2017
  */
-abstract class View extends JPanel {
+public abstract class View extends JPanel {
 }

@@ -1,4 +1,4 @@
-package Enums;
+package Enums.OSMEnums;
 
 /**
  * Created by Jakob on 06-03-2017.
