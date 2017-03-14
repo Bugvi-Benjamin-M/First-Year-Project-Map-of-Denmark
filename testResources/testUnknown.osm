@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="CGImap 0.5.8 (12631 thorn-02.openstreetmap.org)" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+    <bounds minlat="55.7272800" minlon="11.4692700" maxlat="55.7286100" maxlon="11.4735500"/>
+
+    <node id="1196047770" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7306222" lon="11.4780508"/>
+    <node id="1196047775" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7274477" lon="11.4725057"/>
+    <way id="102227563" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+        <nd ref="1196047770"/>
+        <nd ref="1196047775"/>
+        <tag k="something" v="somethingelse"/>
+        <tag k="name" v="Lammefjordsvej"/>
+    </way>
+</osm>

@@ -9,6 +9,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -30,9 +31,20 @@ public class FileHandler {
 
     }
 
-    public static void loadDefault(String file){
-        InputStream filename = FileHandler.class.getResourceAsStream(file);
-        FileHandler.loadOSM(new InputSource(filename));
+    public static void loadDefault(String fileName) throws FileNotFoundException {
+        if(fileExists(fileName)) {
+            InputStream filename = FileHandler.class.getResourceAsStream(fileName);
+            FileHandler.loadOSM(new InputSource(filename));
+        }else{
+            throw new FileNotFoundException(fileName + " does not exist.");
+        }
+    }
+
+    public static boolean fileExists(String fileName){
+        if(Model.class.getResourceAsStream(fileName) != null) {
+            return true;
+        }
+        return false;
     }
 
     public static void load(String fileName) {

@@ -7,10 +7,9 @@ jdk:
   - oraclejdk8
 
 build:
-  advancedReporting: true
   pre_ci:
-    - apt-get install -y xserver-xorg xserver-xorg-core x11-apps x11-xserver-utils
+    - apt-get install -y xvfb
   ci:
     - mkdir -p shippable/codecoverage
-    - ant coverage -verbose
-    - cp out/jacoco.xml shippable/codecoverage
+    - ./test.sh
+    - cp -r out/target shippable/codecoverage
