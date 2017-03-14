@@ -33,7 +33,7 @@ public final class ToolbarController extends Controller {
         super(window);
         toolbar = new Toolbar();
         window.addComponent(BorderLayout.PAGE_START, toolbar);
-        addInteractorsToTools();
+        addInteractionHandlersToTools();
     }
 
     public static ToolbarController getInstance(Window window) {
@@ -43,16 +43,16 @@ public final class ToolbarController extends Controller {
         return instance;
     }
 
-    private void addInteractorsToTools() {
-        addInteractorToLoadTool();
-        addInteractorToSaveTool();
+    private void addInteractionHandlersToTools() {
+        addInteractionHandlerToLoadTool();
+        addInteractionHandlerToSaveTool();
     }
 
-    private void addInteractorToSaveTool() {
+    private void addInteractionHandlerToSaveTool() {
         new ToolInteractionHandler(ToolType.SAVE, KeyEvent.VK_S, OSDetector.getActivationKey());
     }
 
-    private void addInteractorToLoadTool() {
+    private void addInteractionHandlerToLoadTool() {
         new ToolInteractionHandler(ToolType.LOAD, KeyEvent.VK_L, OSDetector.getActivationKey());
     }
 

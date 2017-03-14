@@ -4,13 +4,14 @@ import Helpers.OSDetector;
 import Model.Model;
 import View.MapCanvas;
 import View.Window;
+import org.omg.CORBA.TIMEOUT;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -18,8 +19,15 @@ import java.util.Observer;
 public final class CanvasController extends Controller implements Observer {
 
     private static final double ZOOM_FACTOR = 0.9;
-    private static final double KEYBOARD_ZOOM_IN_FACTOR = -1.3;
-    private static final double KEYBOARD_ZOOM_OUT_FACTOR = 1.3;
+    private static final double KEYBOARD_ZOOM_IN_FACTOR = -2.0;
+    private static final double KEYBOARD_ZOOM_OUT_FACTOR = 2.0;
+
+    private enum PanType {
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN
+    }
 
     private static MapCanvas mapCanvas;
     private static Model model;
@@ -33,7 +41,7 @@ public final class CanvasController extends Controller implements Observer {
         model.addObserver(this);
         mapCanvas = new MapCanvas(window.getDimension(), theme);
         mapCanvas.setWayElements(model.getWayElements());
-        addCanvasInteractionHandler();
+        addInteractionHandlerToCanvas();
         window.addComponent(BorderLayout.CENTER,mapCanvas);
     }
 
@@ -44,8 +52,11 @@ public final class CanvasController extends Controller implements Observer {
         return instance;
     }
 
-    private void addCanvasInteractionHandler() {
-        handler = new CanvasInteractionHandler();
+    private void addInteractionHandlerToCanvas() {
+        handler = new CanvasInteractionHandler(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        mapCanvas.addMouseListener(handler);
+        mapCanvas.addMouseMotionListener(handler);
+        mapCanvas.addMouseWheelListener(handler);
         specifyKeyBindings();
     }
 
@@ -62,6 +73,54 @@ public final class CanvasController extends Controller implements Observer {
                 keyboardZoomEvent(KEYBOARD_ZOOM_OUT_FACTOR);
             }
         });
+        handler.addKeyBinding(KeyEvent.VK_UP, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panEvent(PanType.UP);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_DOWN, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panEvent(PanType.DOWN);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_LEFT, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panEvent(PanType.LEFT);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_RIGHT, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panEvent(PanType.RIGHT);
+            }
+        });
+    }
+
+    private void panEvent(PanType type) {
+        double dx = 0.0;
+        double dy = 0.0;
+        switch (type) {
+            case DOWN:
+                dx = 0;
+                dy = -38.5;
+                break;
+            case UP:
+                dx = 0;
+                dy = 38.5;
+                break;
+            case LEFT:
+                dx = 38.5;
+                dy = 0;
+                break;
+            case RIGHT:
+                dx = -38.5;
+                dy = 0;
+                break;
+        }
+        mapCanvas.pan(dx, dy);
     }
 
     public static void adjustToBounds() {
@@ -85,7 +144,6 @@ public final class CanvasController extends Controller implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-
         mapCanvas.repaint();
     }
 
@@ -117,18 +175,18 @@ public final class CanvasController extends Controller implements Observer {
             mapCanvas.pan(-dx, -dy);
             mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
             mapCanvas.pan(dx, dy);
-    }
+        }
 
     private class CanvasInteractionHandler extends MouseAdapter {
 
-        private CanvasInteractionHandler() {
-            mapCanvas.addMouseListener(this);
-            mapCanvas.addMouseMotionListener(this);
-            mapCanvas.addMouseWheelListener(this);
+        private int specifiedFocus;
+
+        private CanvasInteractionHandler(int specifiedFocus) {
+            this.specifiedFocus = specifiedFocus;
         }
 
         private void addKeyBinding(int key, int activationKey, AbstractAction event) {
-            mapCanvas.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).
+            mapCanvas.getInputMap(specifiedFocus).
                     put(KeyStroke.getKeyStroke(key, activationKey), event.toString());
             mapCanvas.getActionMap().put(event.toString(), event);
         }
@@ -138,7 +196,6 @@ public final class CanvasController extends Controller implements Observer {
         public void mousePressed(MouseEvent e) {
             mousePressedEvent(e);
         }
-
 
         @Override
         public void mouseDragged(MouseEvent e) {

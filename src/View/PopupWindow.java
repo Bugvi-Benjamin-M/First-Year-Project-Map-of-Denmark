@@ -2,6 +2,7 @@ package View;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.util.Objects;
 
 /**
  * Class details:
@@ -35,6 +36,10 @@ public class PopupWindow {
 
     public static void infoBox(JFrame relativeTo, String message) {
         JOptionPane.showMessageDialog(relativeTo, message);
+    }
+
+    public static int confirmBox(JFrame relativeTo, String message, String title, int options) {
+        return JOptionPane.showConfirmDialog(relativeTo, message, title, options);
     }
 
 

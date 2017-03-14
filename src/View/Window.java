@@ -14,7 +14,7 @@ import java.awt.*;
  */
 public class Window {
 
-    private final static String TITLE = "OSM Map Viewer v0.1";
+    private final static String TITLE = "OSM Map Viewer v0.2";
 
     private JFrame window;
     private Dimension dimension;
@@ -54,5 +54,9 @@ public class Window {
 
     public Dimension getDimension() {
         return dimension;
+    }
+
+    public JFrame getFrame() {
+        return window;
     }
 }
