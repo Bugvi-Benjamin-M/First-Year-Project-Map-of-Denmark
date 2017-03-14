@@ -5,6 +5,8 @@ import Helpers.FileHandler;
 import Model.Model;
 import View.Window;
 
+import java.io.FileNotFoundException;
+
 /**
  * Created by Jakob on 06-03-2017.
  */
@@ -14,9 +16,13 @@ public class Main {
     public static void main(String[] args) {
         Window window = new Window();
         Model model = Model.getInstance();
-        CanvasController canvasController = new CanvasController(window);
+        CanvasController canvasController = CanvasController.getInstance(window);
         ToolbarController toolbarController = ToolbarController.getInstance(window);
         InfobarController infobarController = new InfobarController(window);
-        FileHandler.loadDefault("/defaultosm.osm");
+        try {
+            FileHandler.loadDefault("/defaultosm.osm");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
