@@ -5,6 +5,9 @@ import View.PopupWindow;
 import View.Window;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicLookAndFeel;
+import javax.tools.Tool;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -42,6 +45,7 @@ public final class WindowController extends Controller {
         handler.addKeyBinding(KeyEvent.VK_ESCAPE, KeyEvent.VK_UNDEFINED, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Toolkit.getDefaultToolkit().beep();
                 if(PopupWindow.confirmBox(null, "Do You Wish to Quit OSM Visualiser?",
                         "PLease Confirm!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     System.exit(0);

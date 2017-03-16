@@ -25,7 +25,7 @@ public class TestView extends TestCase {
     public void testListeners(){
         Window window = new Window();
         Model model = Model.getInstance();
-        CanvasController canvasController = new CanvasController(window);
+        CanvasController canvasController = CanvasController.getInstance(window);
         ToolbarController toolbarController = ToolbarController.getInstance(window);
         InfobarController infobarController = new InfobarController(window);
 
