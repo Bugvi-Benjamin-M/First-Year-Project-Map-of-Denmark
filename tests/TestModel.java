@@ -10,32 +10,31 @@ import java.io.FileNotFoundException;
 
 public class TestModel extends TestCase {
 
-    private Model model;
-    private Model model2;
-    private CanvasController canvasController;
-    private Window window;
 
-    public TestModel() {
-        window = new Window();
-        model = Model.getInstance();
-        model2 = Model.getInstance();
-        canvasController = CanvasController.getInstance(window);
-
+    @Test
+    public void testSingleton() {
+        Window window = new Window();
+        Model model = Model.getInstance();
+        Model model2 = Model.getInstance();
+        CanvasController canvasController = CanvasController.getInstance(window);
         try {
             FileHandler.loadDefault("/testRoad.osm");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    @Test
-    public void testSingleton() {
         assertTrue(model.equals(model2));
     }
 
     @Test
     public void testClear() {
-
+        Window window = new Window();
+        Model model = Model.getInstance();
+        CanvasController canvasController = CanvasController.getInstance(window);
+        try {
+            FileHandler.loadDefault("/testRoad.osm");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         assertFalse(model.getWayElements().isEmpty());
         model.clear();
         assertTrue(model.getWayElements().isEmpty());
