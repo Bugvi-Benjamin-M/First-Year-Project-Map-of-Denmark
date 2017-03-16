@@ -24,6 +24,7 @@ Notes from meeting:
 Next meeting:
 - Monday the 6st of March at 10 (Continued Sprint Planning and beginning of Sprint)
 
+
 ## Logbook 6/3 (Scribe Magnussen)
 
 What we did yesterday:
@@ -34,7 +35,8 @@ What we will do today:
   - Division into subgroups
   - Assignment of tasks
   - Program skeleton 
- 
+
+
 Impediments: 
   - Búgvi has to go before 17.00
   
@@ -44,7 +46,8 @@ Notes from meeting:
  - Work continued throughout the day until 17.00
  - A basic GUI is now working.
  - Built the skeleton for the OSM parser. 
- 
+
+
 Next meeting:
  - Wednesday the 8th of March at 9.45 (Status check and group work)
  
@@ -53,6 +56,7 @@ Next meeting:
 What we did yesterday:
  - N/A
  
+
 What we will do today:
  - Second Scrum Meeting
   - Merging the two different parts of the application
@@ -96,7 +100,6 @@ Notes from meeting:
 Next meeting:
  - Monday the 13 of March. (Code review, planning of second sprint)
  
-## Next logbook...
 ## Logbook 13/3 (Scribe Mollerup)
 
 What we did yesterday:
@@ -128,3 +131,21 @@ Notes from meeting:
 Next meeting:
  - We cancel the meeting on wednesday.
  - Thurday at 10.00
+ 
+ 
+## Logbook 13/3 (Scribe Mollerup)
+What we will do today:
+ - Scrummeeting
+
+Impediments:
+ - Andreas need help with the coastlines.
+ - Jakob need to change focus to the model and the new datasctructure.
+
+Notes from meeting:
+ - We are making fine progress, however with yesterdays lecture some obstacles have arised.
+   We need to change the datastructure.
+
+Next meeting:
+Friday (tomorrow) at 8.45
+
+## Next logbook...
