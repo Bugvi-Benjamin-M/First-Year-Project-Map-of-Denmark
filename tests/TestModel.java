@@ -1,5 +1,7 @@
 import Controller.CanvasController;
+import Controller.ToolbarController;
 import Helpers.FileHandler;
+import View.Toolbar;
 import View.Window;
 import junit.framework.TestCase;
 import Model.*;
