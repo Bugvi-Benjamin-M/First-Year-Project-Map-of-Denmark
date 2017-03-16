@@ -8,6 +8,7 @@ import View.Window;
 import junit.framework.TestCase;
 import Model.*;
 import junit.*;
+import org.junit.Test;
 
 import java.io.FileNotFoundException;
 
@@ -32,6 +33,7 @@ public class TestOSMHandler extends TestCase {
         assertEquals(1, RoadCount);
     }
 
+    @Test
     public void testReload(){
         Window window = new Window();
         Model model = Model.getInstance();
