@@ -15,6 +15,8 @@ import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.EventListener;
 
 /**
@@ -28,17 +30,27 @@ public class TestView extends TestCase {
         CanvasController canvasController = CanvasController.getInstance(window);
         ToolbarController toolbarController = ToolbarController.getInstance(window);
         InfobarController infobarController = new InfobarController(window);
+        try {
+            Method method = CanvasController.class.getDeclaredMethod("getMapCanvas", new Class[] {});
+            method.setAccessible(true);
+            MapCanvas canvas = (MapCanvas) method.invoke(canvasController, new Object[]{});
+            assertEquals(1, canvas.getListeners(MouseListener.class).length);
+            Toolbar toolbar = toolbarController.getToolbar();
+            assertEquals(1, canvas.getListeners(MouseListener.class).length);
 
-        MapCanvas canvas = canvasController.getMapCanvas();
-        assertEquals(1, canvas.getListeners(MouseListener.class).length);
+            JPanel loadtool = toolbar.getTool(ToolType.LOAD);
+            assertEquals(1, loadtool.getListeners(MouseListener.class).length);
 
-        Toolbar toolbar = toolbarController.getToolbar();
-        assertEquals(1, canvas.getListeners(MouseListener.class).length);
+            JPanel savetool = toolbar.getTool(ToolType.SAVE);
+            assertEquals(1, savetool.getListeners(MouseListener.class).length);
+            method.setAccessible(false);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
 
-        JPanel loadtool = toolbar.getTool(ToolType.LOAD);
-        assertEquals(1, loadtool.getListeners(MouseListener.class).length);
-
-        JPanel savetool = toolbar.getTool(ToolType.SAVE);
-        assertEquals(1, savetool.getListeners(MouseListener.class).length);
     }
 }

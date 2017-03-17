@@ -129,12 +129,13 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     /**
-     * This method returns the mapCanvas used by the MapCanvasController. It is only used for
-     * testing purposes.
+     *
+     * This method has private access and is only used by unit tests. The unit tests override the private access.
+     * Returns the mapCanvas used by the MapCanvasController.
      * @return the mapCanvas instance
      *
      */
-    public MapCanvas getMapCanvas(){
+    private MapCanvas getMapCanvas(){
         return mapCanvas;
     }
 

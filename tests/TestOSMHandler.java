@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
  */
 public class TestOSMHandler extends TestCase {
 
+    @Test
     public void testRoads(){
         Window window = new Window();
         Model model = Model.getInstance();
@@ -50,6 +51,7 @@ public class TestOSMHandler extends TestCase {
         assertEquals(1, RoadCount);
     }
 
+    @Test
     public void testUnknown() {
         Window window = new Window();
         Model model = Model.getInstance();

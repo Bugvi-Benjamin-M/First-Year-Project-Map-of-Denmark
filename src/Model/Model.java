@@ -15,7 +15,7 @@ public final class Model extends Observable {
     private EnumMap<WayType, List<Element>> wayElements;
     private EnumMap<NodeType, List<Element>> nodeElements;
     private EnumMap<RelationType, List<Element>> relationElements;
-    private static Model model;
+    private static Model instance;
     private float minLatitude;
     private float maxLatitude;
     private float minLongitude;
@@ -30,10 +30,10 @@ public final class Model extends Observable {
     }
 
     public static Model getInstance() {
-        if(model == null) {
-            model = new Model();
+        if(instance == null) {
+            instance = new Model();
         }
-        return model;
+        return instance;
     }
 
     public void addWayElement(WayType type, Element element){
@@ -76,5 +76,13 @@ public final class Model extends Observable {
 
     public float getMaxLongitude() {
         return maxLongitude;
+    }
+
+    /**
+     * This method has private access and is only used by unit tests. The unit tests override the private access.
+     * The argument for this method, is that it enables the tests to be independent
+     */
+    private void resetInstance() {
+        instance = null;
     }
 }

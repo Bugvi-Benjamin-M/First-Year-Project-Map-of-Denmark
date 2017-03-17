@@ -117,6 +117,11 @@ public class MapCanvas extends View {
         repaint();
     }
 
+
+    /**
+     * Lets other objects add an EnumMap to the MapCanvas
+     * @param wayElements
+     */
     public void setWayElements(EnumMap wayElements){
         this.wayElements = wayElements;
     }
