@@ -1,11 +1,9 @@
 import Controller.CanvasController;
-import Controller.ToolbarController;
 import Enums.OSMEnums.WayType;
 import Helpers.FileHandler;
-import View.Toolbar;
+import Model.Model;
 import View.Window;
 import junit.framework.TestCase;
-import Model.*;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -42,6 +40,11 @@ public class TestModel extends TestCase {
         model.clear();
         assertEquals(true, model.getWayElements().get(WayType.ROAD).isEmpty());
         assertEquals(true, model.getWayElements().get(WayType.UNKNOWN).isEmpty());
+
+    }
+
+    @Test
+    public void testSetBounds() {
 
     }
 
