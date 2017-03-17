@@ -1,5 +1,6 @@
 import Controller.CanvasController;
 import Controller.ToolbarController;
+import Enums.OSMEnums.WayType;
 import Helpers.FileHandler;
 import View.Toolbar;
 import View.Window;
@@ -37,9 +38,10 @@ public class TestModel extends TestCase {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        assertFalse(model.getWayElements().isEmpty());
+        assertEquals(false, model.getWayElements().isEmpty());
         model.clear();
-        assertTrue(model.getWayElements().isEmpty());
+        assertEquals(true, model.getWayElements().get(WayType.ROAD).isEmpty());
+        assertEquals(true, model.getWayElements().get(WayType.UNKNOWN).isEmpty());
 
     }
 
