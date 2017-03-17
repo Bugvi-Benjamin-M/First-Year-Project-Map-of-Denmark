@@ -148,4 +148,17 @@ Notes from meeting:
 Next meeting:
 Friday (tomorrow) at 8.45
 
+## Logbook 17/3 (Scribe Mollerup)
+What we will do today:
+- Breakfast at ITU
+- Scrummeeting
+
+Impediments:
+- We all have stuff to do.
+
+Notes from meeting:
+
+Next meeting:
+Monday at 10.00
+
 ## Next logbook...
