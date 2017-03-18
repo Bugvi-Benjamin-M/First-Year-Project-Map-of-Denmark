@@ -34,6 +34,7 @@ public class TestModel extends TestCase {
             resetModelInstance.invoke(model2);
             resetCanvasControllerInstance.invoke(canvasController);
             resetModelInstance.setAccessible(false);
+            resetCanvasControllerInstance.setAccessible(false);
             System.gc();
         } catch (NoSuchMethodException e) {
             e.printStackTrace();

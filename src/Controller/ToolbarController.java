@@ -55,7 +55,7 @@ public final class ToolbarController extends Controller {
     }
 
     private void addInteractionHandlerToLoadTool() {
-        new ToolInteractionHandler(ToolType.LOAD, KeyEvent.VK_O, OSDetector.getActivationKey());
+        new ToolInteractionHandler(ToolType.LOAD, KeyEvent.VK_L, OSDetector.getActivationKey());
     }
 
     private void addInteractionHandlerToSettingsTool() {
@@ -71,7 +71,7 @@ public final class ToolbarController extends Controller {
                 saveEvent();
                 break;
             case SETTINGS:
-                showSettings();
+                settingsEvent();
                 break;
         }
     }
@@ -95,7 +95,7 @@ public final class ToolbarController extends Controller {
         toolbar.toggleWellOnTool(ToolType.SAVE);
     }
 
-    private void showSettings() {
+    private void settingsEvent() {
         toolbar.toggleWellOnTool(ToolType.SETTINGS);
         Window settings = new Window();
         settings.addComponent(BorderLayout.NORTH, new ThemeSetting());
@@ -104,6 +104,14 @@ public final class ToolbarController extends Controller {
 
     public Toolbar getToolbar() {
         return toolbar;
+    }
+
+    /**
+     * This method has private access and is only used by unit tests. The unit tests override the private access.
+     * The argument for this method, is that it enables the tests to be independent
+     */
+    private void resetInstance() {
+        instance = null;
     }
 
      private class ToolInteractionHandler extends MouseAdapter {
