@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 
 public class TestModel extends TestCase {
 
-/*
+
     @Test
     public void testSingleton() {
         Window window = new Window();
@@ -41,7 +41,7 @@ public class TestModel extends TestCase {
             e.printStackTrace();
         }
 
-    }*/
+    }
 
     @Test
     public void testClear() {

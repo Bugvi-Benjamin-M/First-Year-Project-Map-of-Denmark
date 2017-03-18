@@ -8,6 +8,7 @@ import View.PopupWindow;
 import View.ToolFeature;
 import View.Toolbar;
 import View.Window;
+import View.ThemeSetting;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -46,6 +47,7 @@ public final class ToolbarController extends Controller {
     private void addInteractionHandlersToTools() {
         addInteractionHandlerToLoadTool();
         addInteractionHandlerToSaveTool();
+        addInteractionHandlerToSettingsTool();
     }
 
     private void addInteractionHandlerToSaveTool() {
@@ -53,7 +55,11 @@ public final class ToolbarController extends Controller {
     }
 
     private void addInteractionHandlerToLoadTool() {
-        new ToolInteractionHandler(ToolType.LOAD, KeyEvent.VK_L, OSDetector.getActivationKey());
+        new ToolInteractionHandler(ToolType.LOAD, KeyEvent.VK_O, OSDetector.getActivationKey());
+    }
+
+    private void addInteractionHandlerToSettingsTool() {
+        new ToolInteractionHandler(ToolType.SETTINGS, KeyEvent.VK_COMMA, OSDetector.getActivationKey());
     }
 
     private void toolEvent(ToolType type) {
@@ -63,6 +69,9 @@ public final class ToolbarController extends Controller {
                 break;
             case SAVE:
                 saveEvent();
+                break;
+            case SETTINGS:
+                showSettings();
                 break;
         }
     }
@@ -84,6 +93,13 @@ public final class ToolbarController extends Controller {
         toolbar.toggleWellOnTool(ToolType.SAVE);
         PopupWindow.infoBox(null, "You activated save tool");
         toolbar.toggleWellOnTool(ToolType.SAVE);
+    }
+
+    private void showSettings() {
+        toolbar.toggleWellOnTool(ToolType.SETTINGS);
+        Window settings = new Window();
+        settings.addComponent(BorderLayout.NORTH, new ThemeSetting());
+        toolbar.toggleWellOnTool(ToolType.SETTINGS);
     }
 
     public Toolbar getToolbar() {

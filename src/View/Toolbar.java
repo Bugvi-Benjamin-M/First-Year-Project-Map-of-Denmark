@@ -50,8 +50,7 @@ public class Toolbar extends View {
      * Creates and adds all the tools to the toolbar
      */
     private void setupTools() {
-        ToolComponent tool = addLoadTool();
-        addSaveTool(tool);
+        addSettingsTool(addSaveTool(addLoadTool()));
     }
 
     /**
@@ -75,8 +74,26 @@ public class Toolbar extends View {
      * @param tool the reference to the tool so that this tool can
      *             be positioned to the right of that tool
      */
-    private void addSaveTool(ToolComponent tool) {
+    private ToolComponent addSaveTool(ToolComponent tool) {
         ToolComponent next = tools.get(ToolType.SAVE);
+        layout.putConstraint(WEST, next,
+                MARGIN_SMALL_LEFT,
+                EAST, tool);
+        layout.putConstraint(NORTH, next,
+                MARGIN_TOP,
+                NORTH, this);
+        tool = next;
+        this.add( tool);
+        return tool;
+    }
+
+    /**
+     * Creates the settings tool, positions it and adds it to the toolbar
+     * @param tool the reference to the tool so that this tool can
+     *             be positioned to the right of that tool
+     */
+    private void addSettingsTool(ToolComponent tool) {
+        ToolComponent next = tools.get(ToolType.SETTINGS);
         layout.putConstraint(WEST, next,
                 MARGIN_SMALL_LEFT,
                 EAST, tool);
@@ -103,6 +120,7 @@ public class Toolbar extends View {
 
             tools.put(ToolType.LOAD, new ToolFeature("/load.png",ToolType.LOAD));
             tools.put(ToolType.SAVE, new ToolFeature("/save.png",ToolType.SAVE));
+            tools.put(ToolType.SETTINGS, new ToolFeature("/cogs.png",ToolType.SETTINGS));
             return tools;
         }
     }
