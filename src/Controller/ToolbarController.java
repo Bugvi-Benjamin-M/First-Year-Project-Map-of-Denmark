@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
 
 /**
  * Class details:
@@ -75,7 +76,11 @@ public final class ToolbarController extends Controller {
         };
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {
-            FileHandler.load(chooser.getSelectedFile().toString());
+            try {
+                FileHandler.load(chooser.getSelectedFile().toString());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         toolbar.toggleWellOnTool(ToolType.LOAD);
     }

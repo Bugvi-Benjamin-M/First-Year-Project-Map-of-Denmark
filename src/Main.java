@@ -22,12 +22,6 @@ public class Main {
         InfobarController infobarController = new InfobarController(window);
         WindowController windowController = WindowController.getInstance(window);
         long starttime = System.currentTimeMillis();
-        /*try {
-            //FileHandler.loadDefault("/defaultosm.osm");
-            //FileHandler.loadDefault("/denmark-latest.zip" + "");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }*/
         long stoptime = System.currentTimeMillis();
         System.out.println(stoptime - starttime);
     }

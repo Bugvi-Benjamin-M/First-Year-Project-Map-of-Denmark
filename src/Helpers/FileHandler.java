@@ -9,10 +9,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -58,11 +55,11 @@ public class FileHandler {
         return false;
     }
 
-    public static void load(String fileName) {
+    public static void load(String fileName) throws FileNotFoundException {
         if(fileName.endsWith(FileType.OSM.getExtension())) {
                 loadOSM(new InputSource(pathStart + fileName));
         }else if(fileName.endsWith(FileType.ZIP.getExtension())){
-            ZipInputStream zip = new ZipInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(fileName)));
+            ZipInputStream zip = new ZipInputStream(new FileInputStream(fileName));
             try {
                 zip.getNextEntry();
             } catch (IOException e) {
