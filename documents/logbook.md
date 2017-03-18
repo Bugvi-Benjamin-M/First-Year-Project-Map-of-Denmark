@@ -106,7 +106,7 @@ What we did yesterday:
 N/A
 
 What we will do today:
- - Codeview
+ - Codereview
  - Scrumreview
 
 Impediments:
@@ -114,7 +114,7 @@ Impediments:
  - Jakob caught a cold, and will leave as early as possible.
 
 Notes from meeting:
- - The sprint is finished with success.
+ - The sprint was finished successfully.
  
  Codereview:
  - Javadoc is missing.
@@ -130,7 +130,7 @@ Notes from meeting:
 
 Next meeting:
  - We cancel the meeting on wednesday.
- - Thurday at 10.00
+ - Thursday at 10.00
  
  
 ## Logbook 13/3 (Scribe Mollerup)
@@ -138,15 +138,15 @@ What we will do today:
  - Scrummeeting
 
 Impediments:
- - Andreas need help with the coastlines.
- - Jakob need to change focus to the model and the new datasctructure.
+ - Andreas needs help with the coastlines.
+ - Jakob needs to change focus to the model and the new datasctructure.
 
 Notes from meeting:
- - We are making fine progress, however with yesterdays lecture some obstacles have arised.
-   We need to change the datastructure.
+ - We are making fine progress, however with yesterday's lecture some obstacles have appeared.
+ - We need to change the datastructure.
 
 Next meeting:
-Friday (tomorrow) at 8.45
+Friday the 17 of March (tomorrow) at 8.45
 
 ## Logbook 17/3 (Scribe Mollerup)
 What we will do today:
@@ -157,8 +157,12 @@ Impediments:
 - We all have stuff to do.
 
 Notes from meeting:
+- We achieved a deeper understanding of the LongToNode map
+- Worked on coastlines
+- Worked on tests
+- Discussed the new datastructure
 
 Next meeting:
-Monday at 10.00
+Monday the 20 of March at 10.00
 
 ## Next logbook...
