@@ -84,6 +84,10 @@ public class MapCanvas extends View {
                     g.setStroke(new BasicStroke(0.00001f));
                     g.draw(road.getPath());
                     break;
+                case UNKNOWN:
+                    g.setColor(theme.getWaterColor());
+                    g.setStroke(new BasicStroke(0.00001f));
+                    g.draw(road.getPath());
 
             }
 

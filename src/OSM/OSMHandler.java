@@ -2,6 +2,7 @@ package OSM;
 
 import Enums.RoadType;
 import Enums.OSMEnums.WayType;
+import Helpers.LongToPointMap;
 import Model.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -18,7 +19,7 @@ import java.util.Map;
 public final class OSMHandler implements ContentHandler {
     private static OSMHandler handler;
 
-    private Map<Long, OSMNode> idToNode;
+    private LongToPointMap idToNode;
     private Map<Long, OSMWay> idToWay;
     private OSMWay way;
     private OSMRelation relation;
@@ -27,9 +28,10 @@ public final class OSMHandler implements ContentHandler {
     private RoadType roadType;
     private float longitudeFactor;
     private Model model;
+    private int loadednodes, loadedRelations, loadedWays;
 
     private OSMHandler() {
-        idToNode = new HashMap<>();
+        idToNode = new LongToPointMap(14);
         idToWay = new HashMap<>();
         model = Model.getInstance();
     }
@@ -96,13 +98,21 @@ public final class OSMHandler implements ContentHandler {
                 long id = Long.parseLong(atts.getValue("id"));
                 float latitude = Float.parseFloat(atts.getValue("lat"));
                 float longitude = Float.parseFloat(atts.getValue("lon"));
-                idToNode.put(id, new OSMNode(longitude* longitudeFactor, -latitude));
+                idToNode.put(id, longitude * longitudeFactor, -latitude);
+                loadednodes++;
+                if ((loadednodes & 0xFFFF) == 0) {
+                    System.out.println("Numnodes: " + loadednodes);
+                }
                 break;
             case "way":
                 way = new OSMWay();
                 id = Long.parseLong(atts.getValue("id"));
                 wayType = WayType.UNKNOWN;
                 idToWay.put(id, way);
+                loadedWays++;
+                if ((loadedWays & 0xFFFF) == 0) {
+                    System.out.println("Numways: " + loadedWays);
+                }
                 break;
             case "nd":
                 long ref = Long.parseLong(atts.getValue("ref"));
@@ -122,6 +132,7 @@ public final class OSMHandler implements ContentHandler {
     }
 
     private void determineHighway(String value) {
+        roadType = roadType.UNKNOWN; // STH I HAVE TO EXPLAIN (Nikolaj)
         switch (value){
             case "service":
                 roadType = RoadType.SERVICE;

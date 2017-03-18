@@ -6,5 +6,6 @@ package Enums;
 public enum RoadType {
     SERVICE,
     TERTIARY,
-    UNCLASSIFIED
+    UNCLASSIFIED,
+    UNKNOWN
 }
