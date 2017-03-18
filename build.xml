@@ -83,6 +83,12 @@
             <xml destfile="${result.report.dir}/jacoco.xml"/>
         </jacoco:report>
     </target>
+
+    <target name="run" depends="dist">
+        <java classname="Main" classpath="${dist}/BFST.jar" >
+        </java>
+    </target>
+
     <target name="clean" description="clean up">
         <!-- Delete the ${build} and ${dist} directory trees -->
         <delete dir="out"></delete>

@@ -6,6 +6,7 @@ package Enums;
 public enum ToolType {
     SAVE("Save"),
     LOAD("Load"),
+    SETTINGS("Settings"),
     UNKNOWN("unknown");
 
     private String tag;
