@@ -37,13 +37,7 @@ public class FileHandler {
         if(fileExists(fileName) && fileName.endsWith(FileType.OSM.getExtension())) {
             InputStream filename = FileHandler.class.getResourceAsStream(fileName);
             FileHandler.loadOSM(new InputSource(filename));
-        }else{
-            throw new FileNotFoundException(fileName + " can not be found.");
-        }
-    }
-
-    public static void loadZip(String fileName) throws FileNotFoundException{
-        if(fileExists((fileName)) && fileName.endsWith((FileType.ZIP.getExtension()))) {
+        }else if(fileExists(fileName) && fileName.endsWith(FileType.ZIP.getExtension())){
             ZipInputStream zip = new ZipInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(fileName)));
             try {
                 zip.getNextEntry();
@@ -51,7 +45,8 @@ public class FileHandler {
                 e.printStackTrace();
             }
             loadOSM(new InputSource(zip));
-        }else{
+        }
+        else{
             throw new FileNotFoundException(fileName + " can not be found.");
         }
     }
@@ -66,6 +61,14 @@ public class FileHandler {
     public static void load(String fileName) {
         if(fileName.endsWith(FileType.OSM.getExtension())) {
                 loadOSM(new InputSource(pathStart + fileName));
+        }else if(fileName.endsWith(FileType.ZIP.getExtension())){
+            ZipInputStream zip = new ZipInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(fileName)));
+            try {
+                zip.getNextEntry();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            loadOSM(new InputSource(zip));
         }
     }
 
