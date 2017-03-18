@@ -29,11 +29,10 @@ public class TestView extends TestCase {
         Model model = Model.getInstance();
         CanvasController canvasController = CanvasController.getInstance(window);
         ToolbarController toolbarController = ToolbarController.getInstance(window);
-        InfobarController infobarController = new InfobarController(window);
         try {
-            Method method = CanvasController.class.getDeclaredMethod("getMapCanvas", new Class[] {});
-            method.setAccessible(true);
-            MapCanvas canvas = (MapCanvas) method.invoke(canvasController, new Object[]{});
+            Method getMapCanvas = CanvasController.class.getDeclaredMethod("getMapCanvas");
+            getMapCanvas.setAccessible(true);
+            MapCanvas canvas = (MapCanvas) getMapCanvas.invoke(canvasController);
             assertEquals(1, canvas.getListeners(MouseListener.class).length);
             Toolbar toolbar = toolbarController.getToolbar();
             assertEquals(1, canvas.getListeners(MouseListener.class).length);
@@ -43,7 +42,20 @@ public class TestView extends TestCase {
 
             JPanel savetool = toolbar.getTool(ToolType.SAVE);
             assertEquals(1, savetool.getListeners(MouseListener.class).length);
-            method.setAccessible(false);
+            getMapCanvas.setAccessible(false);
+            Method resetModelInstance = Model.class.getDeclaredMethod("resetInstance");
+            Method resetCanvasControllerInstance = CanvasController.class.getDeclaredMethod("resetInstance");
+            Method resetToolbarControllerInstance = ToolbarController.class.getDeclaredMethod("resetInstance");
+            resetModelInstance.setAccessible(true);
+            resetCanvasControllerInstance.setAccessible(true);
+            resetToolbarControllerInstance.setAccessible(true);
+            resetModelInstance.invoke(model);
+            resetCanvasControllerInstance.invoke(canvasController);
+            resetToolbarControllerInstance.invoke(toolbarController);
+            resetModelInstance.setAccessible(false);
+            resetCanvasControllerInstance.setAccessible(false);
+            resetToolbarControllerInstance.setAccessible(false);
+            System.gc();
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

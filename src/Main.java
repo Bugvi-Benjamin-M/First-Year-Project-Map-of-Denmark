@@ -19,7 +19,7 @@ public class Main {
         Model model = Model.getInstance();
         CanvasController canvasController = CanvasController.getInstance(window);
         ToolbarController toolbarController = ToolbarController.getInstance(window);
-        InfobarController infobarController = new InfobarController(window);
+        InfobarController infobarController = InfobarController.getInstance(window);
         WindowController windowController = WindowController.getInstance(window);
         try {
             FileHandler.loadDefault("/defaultosm.osm");

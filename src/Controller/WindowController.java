@@ -54,6 +54,14 @@ public final class WindowController extends Controller {
         });
     }
 
+    /**
+     * This method has private access and is only used by unit tests. The unit tests override the private access.
+     * The argument for this method, is that it enables the tests to be independent
+     */
+    private void resetInstance() {
+        instance = null;
+    }
+
 
     private class WindowInteractionHandler extends ComponentAdapter {
 

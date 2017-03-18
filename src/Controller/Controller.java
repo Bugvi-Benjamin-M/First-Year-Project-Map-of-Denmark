@@ -12,9 +12,9 @@ public abstract class Controller {
     protected static Window window;
     protected static Theme theme;
 
+
     public Controller(Window window) {
         this.window = window;
         this.theme = ThemeHelper.getTheme();
     }
-
 }
