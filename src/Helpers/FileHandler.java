@@ -34,7 +34,7 @@ public class FileHandler {
     }
 
     public static void loadDefault(String fileName) throws FileNotFoundException {
-        if(fileExists(fileName) && fileName.endsWith(".osm")) {
+        if(fileExists(fileName) && fileName.endsWith(FileType.OSM.getExtension())) {
             InputStream filename = FileHandler.class.getResourceAsStream(fileName);
             FileHandler.loadOSM(new InputSource(filename));
         }else{
@@ -43,7 +43,7 @@ public class FileHandler {
     }
 
     public static void loadZip(String fileName) throws FileNotFoundException{
-        if(fileExists((fileName)) && fileName.endsWith((".zip"))) {
+        if(fileExists((fileName)) && fileName.endsWith((FileType.ZIP.getExtension()))) {
             ZipInputStream zip = new ZipInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(fileName)));
             try {
                 zip.getNextEntry();
