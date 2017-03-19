@@ -9,5 +9,5 @@ package Enums;
 public enum DrawType {
     FILL,
     DRAW,
-    STRING;
+    STRING
 }
