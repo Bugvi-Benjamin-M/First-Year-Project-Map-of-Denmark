@@ -61,13 +61,13 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void specifyKeyBindings() {
-        handler.addKeyBinding(KeyEvent.VK_PLUS, OSDetector.getActivationKey(), new AbstractAction() {
+        handler.addKeyBinding(KeyEvent.VK_PLUS, KeyEvent.VK_UNDEFINED, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 keyboardZoomEvent(KEYBOARD_ZOOM_IN_FACTOR);
             }
         });
-        handler.addKeyBinding(KeyEvent.VK_MINUS, OSDetector.getActivationKey(), new AbstractAction() {
+        handler.addKeyBinding(KeyEvent.VK_MINUS, KeyEvent.VK_UNDEFINED, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 keyboardZoomEvent(KEYBOARD_ZOOM_OUT_FACTOR);
@@ -95,6 +95,42 @@ public final class CanvasController extends Controller implements Observer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 panEvent(PanType.RIGHT);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_NUMPAD6, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panEvent(PanType.RIGHT);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_NUMPAD2, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panEvent(PanType.DOWN);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_NUMPAD4, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panEvent(PanType.LEFT);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_NUMPAD8, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panEvent(PanType.UP);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_ADD, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                keyboardZoomEvent(KEYBOARD_ZOOM_IN_FACTOR);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_SUBTRACT, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                keyboardZoomEvent(KEYBOARD_ZOOM_OUT_FACTOR);
             }
         });
     }

@@ -59,7 +59,7 @@ public final class ToolbarController extends Controller {
     }
 
     private void addInteractionHandlerToSettingsTool() {
-        new ToolInteractionHandler(ToolType.SETTINGS, KeyEvent.VK_COMMA, OSDetector.getActivationKey());
+        new ToolInteractionHandler(ToolType.SETTINGS, KeyEvent.VK_E, OSDetector.getActivationKey());
     }
 
     private void toolEvent(ToolType type) {
