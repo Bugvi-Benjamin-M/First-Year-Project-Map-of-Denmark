@@ -13,10 +13,7 @@ import View.ThemeSetting;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 /**
  * Class details:
@@ -29,9 +26,11 @@ public final class ToolbarController extends Controller {
 
     private Toolbar toolbar;
     private static ToolbarController instance;
+    private Window window;
 
     private ToolbarController(Window window) {
         super(window);
+        this.window = window;
         toolbar = new Toolbar();
         window.addComponent(BorderLayout.PAGE_START, toolbar);
         addInteractionHandlersToTools();
@@ -98,9 +97,15 @@ public final class ToolbarController extends Controller {
     private void settingsEvent() {
         toolbar.toggleWellOnTool(ToolType.SETTINGS);
         Window settings = new Window("Settings", WindowConstants.DISPOSE_ON_CLOSE,
-                new Dimension(500, 500), null, JFrame.NORMAL, new BorderLayout());
+                        new Dimension(500, 500), null, JFrame.NORMAL, new BorderLayout());
         settings.addComponent(BorderLayout.NORTH, new ThemeSetting());
-        toolbar.toggleWellOnTool(ToolType.SETTINGS);
+        settings.getFrame().addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                toolbar.toggleWellOnTool(ToolType.SETTINGS);
+            }
+        });
     }
 
     public Toolbar getToolbar() {
