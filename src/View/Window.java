@@ -14,23 +14,46 @@ import java.awt.*;
  */
 public class Window {
 
-    private final static String TITLE = "OSM Map Viewer v0.2";
+    private final static String MAIN_TITLE = "OSM Map Viewer v0.2";
 
     private JFrame window;
     private Dimension dimension;
+    private LayoutManager layout;
+    private String title;
+    private int closeOperation;
+    private int extendedState;
+    private JFrame relativeTo;
 
-    /** Constructor for Window objects. At default the program opens with the window maximized. */
+    /** Default constructor for Window objects. At default the program opens with the window maximized.
+     * This constructor is used to create the main window of the application.
+     *
+     */
     public Window() {
-        window = new JFrame(TITLE);
+        this(MAIN_TITLE, WindowConstants.EXIT_ON_CLOSE, new Dimension(1200, 1000),
+                null, JFrame.MAXIMIZED_BOTH, new BorderLayout());
+    }
 
-        window.setLayout(new BorderLayout());
-        dimension = new Dimension(1200,1000);
+    /**
+     * Creates a window with specific attributes
+     * @param closeOperation what should happen when the window is closed
+     * @param dimension the dimension of the window
+     * @param relativeTo the location of the window relative to the given JFrame
+     * @param extendedState the size state of the window
+     */
+    public Window(String title, int closeOperation, Dimension dimension, JFrame relativeTo, int extendedState, LayoutManager layout) {
+        this.title = title;
+        window = new JFrame(title);
+        this.layout = layout;
+        window.setLayout(layout);
+        this.dimension = dimension;
         window.setPreferredSize(dimension);
-
-        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.closeOperation = closeOperation;
+        window.setDefaultCloseOperation(closeOperation);
         window.pack();
-        window.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        window.setLocationRelativeTo(null);
+        this.extendedState = extendedState;
+        window.setExtendedState(extendedState);
+        this.relativeTo = relativeTo;
+        window.setLocationRelativeTo(relativeTo);
         setVisible(true);
     }
 
