@@ -1,11 +1,13 @@
 import Controller.CanvasController;
 import Enums.OSMEnums.WayType;
+import Enums.RoadType;
 import Helpers.FileHandler;
 import View.Window;
 import junit.framework.TestCase;
 import Model.*;
 import org.junit.Test;
 
+import java.awt.geom.Path2D;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -121,6 +123,70 @@ public class TestModel extends TestCase {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testGetWayElements() {
+        Window window = new Window();
+        Model model = Model.getInstance();
+        CanvasController canvasController = CanvasController.getInstance(window);
+        model.clear();
+        assertTrue(model.getWayElements() != null);
+        assertEquals(model.getWayElements().size(), WayType.values().length);
+        try {
+            Method resetModelInstance = Model.class.getDeclaredMethod("resetInstance");
+            Method resetCanvasControllerInstance = CanvasController.class.getDeclaredMethod("resetInstance");
+            resetModelInstance.setAccessible(true);
+            resetCanvasControllerInstance.setAccessible(true);
+            resetModelInstance.invoke(model);
+            resetCanvasControllerInstance.invoke(canvasController);
+            resetModelInstance.setAccessible(false);
+            resetCanvasControllerInstance.setAccessible(false);
+            System.gc();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testAddWayElement() {
+        Window window = new Window();
+        Model model = Model.getInstance();
+        CanvasController canvasController = CanvasController.getInstance(window);
+        try {
+            FileHandler.loadDefault("/testRoad.osm");
+        }catch(FileNotFoundException e){
+            throw new RuntimeException(e);
+        }
+        assertEquals(1, model.getWayElements().get(WayType.ROAD).size());
+        assertEquals(0, model.getWayElements().get(WayType.UNKNOWN).size());
+        Path2D path = new Path2D.Float();
+        model.addWayElement(WayType.ROAD, new Road(RoadType.SERVICE, path));
+        model.addWayElement(WayType.UNKNOWN, new UnknownWay(path));
+        assertEquals(2, model.getWayElements().get(WayType.ROAD).size());
+        assertEquals(1, model.getWayElements().get(WayType.UNKNOWN).size());
+        try {
+            Method resetModelInstance = Model.class.getDeclaredMethod("resetInstance");
+            Method resetCanvasControllerInstance = CanvasController.class.getDeclaredMethod("resetInstance");
+            resetModelInstance.setAccessible(true);
+            resetCanvasControllerInstance.setAccessible(true);
+            resetModelInstance.invoke(model);
+            resetCanvasControllerInstance.invoke(canvasController);
+            resetModelInstance.setAccessible(false);
+            resetCanvasControllerInstance.setAccessible(false);
+            System.gc();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
