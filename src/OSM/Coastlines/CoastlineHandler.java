@@ -24,6 +24,7 @@ public final class CoastlineHandler implements ContentHandler {
 
     private Map<Long, OSMNode> idToNode;
     private Map<Long, OSMWay> idToWay;
+    private Map<OSMNode,OSMWay> coastlines;
 
     private OSMWay way;
     private WayType wayType;
@@ -36,6 +37,7 @@ public final class CoastlineHandler implements ContentHandler {
     private CoastlineHandler() {
         idToNode = new HashMap<>();
         idToWay = new HashMap<>();
+        coastlines = new HashMap<>();
         administrative_boundary = false;
         admin_level_nation = false;
     }
@@ -144,15 +146,31 @@ public final class CoastlineHandler implements ContentHandler {
         if (qName.equals("way")) {
             switch (wayType) {
                 case COASTLINE:
-                    // TODO: add all
+                    coastLineFix();
                     break;
                 case COUNTRY_BOUNDARY_LAND:
                     if (!isMaritime && administrative_boundary && admin_level_nation) {
-                        // TODO: add boundary as coastline
+                        coastLineFix();
                     }   // else ignore
                     break;
             }
         } // else ignore
+    }
+
+    private void coastLineFix() {
+        OSMWay before = coastlines.remove(way.getFromNode());
+        OSMWay after = coastlines.remove(way.getToNode());
+        OSMWay merged = new OSMWay();
+        if (before != null) {
+            merged.addAll(before.subList(0, before.size()-1));
+        }
+        merged.addAll(way);
+        if (after != null) {
+            merged.addAll(after.subList(1, after.size()));
+        }
+        //System.out.println(merged.getFromNode()+" "+merged.getToNode());
+        coastlines.put(merged.getFromNode(), merged);
+        coastlines.put(merged.getToNode(), merged);
     }
 
     @Override
