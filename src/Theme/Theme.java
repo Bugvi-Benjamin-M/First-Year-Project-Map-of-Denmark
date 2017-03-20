@@ -10,6 +10,7 @@ import java.awt.*;
  */
 public interface Theme {
     public abstract Color getBackgroundColor();
+    public abstract Color getToolbarColor();
 
     public abstract Color getWaterColor();
     public abstract Color getParkColor();

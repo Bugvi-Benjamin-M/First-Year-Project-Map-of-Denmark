@@ -21,6 +21,11 @@ public class DefaultTheme implements Theme {
     }
 
     @Override
+    public Color getToolbarColor() {
+        return new Color(0xEEEEEE);
+    }
+
+    @Override
     public Color getParkColor() {
         return new Color(0xb4d39a);
     }

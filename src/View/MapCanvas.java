@@ -41,6 +41,7 @@ public class MapCanvas extends View {
         this.theme = theme;
         this.dimension = dimension;
         setPreferredSize(this.dimension);
+        this.setBackground(theme.getBackgroundColor());
     }
 
 

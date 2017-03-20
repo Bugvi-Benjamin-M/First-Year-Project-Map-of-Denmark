@@ -8,5 +8,6 @@ public enum RoadType {
     PRIMARY,
     SECONDARY,
     TERTIARY,
+    HIGHWAY,
     UNCLASSIFIED
 }
