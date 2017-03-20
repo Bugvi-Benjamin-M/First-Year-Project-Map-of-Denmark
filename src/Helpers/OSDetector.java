@@ -7,21 +7,16 @@ import java.awt.event.KeyEvent;
  */
 public class OSDetector {
 
-    private static boolean isWindows;
-    private static boolean isMac;
-
-    static {
-        String os = System.getProperty("os.name");
-        isWindows = os.toLowerCase().contains("windows");
-        isMac = os.toLowerCase().contains("mac");
+    public static String OS(){
+        return System.getProperty("os.name");
     }
 
     public static boolean isWindows() {
-        return isWindows;
+        return OSDetector.OS().toLowerCase().contains("windows");
     }
 
     public static boolean isMac() {
-        return isMac;
+        return OSDetector.OS().toLowerCase().contains("mac");
     }
 
     public static int getActivationKey() {
