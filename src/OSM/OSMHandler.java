@@ -138,7 +138,7 @@ public final class OSMHandler implements ContentHandler {
             case "tertiary":
                 roadType = RoadType.TERTIARY;
                 break;
-            default:
+            case "unclassified":
                 roadType = RoadType.UNCLASSIFIED;
                 break;
         }

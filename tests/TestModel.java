@@ -9,15 +9,19 @@ import org.junit.Test;
 
 import java.awt.geom.Path2D;
 import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import javax.swing.*;
+import java.awt.*;
 
 
 public class TestModel extends TestCase {
 
     @Test
     public void testSingleton() {
-        Window window = new Window();
+        Window window = new Window().title("TESTING")
+                            .dimension(new Dimension(1, 1))
+                            .layout(new BorderLayout())
+                            .show();
+
         Model model = Model.getInstance();
         Model model2 = Model.getInstance();
         CanvasController canvasController = CanvasController.getInstance(window);
@@ -27,29 +31,18 @@ public class TestModel extends TestCase {
             e.printStackTrace();
         }
         assertTrue(model.equals(model2));
-        try {
-            Method resetModelInstance = Model.class.getDeclaredMethod("resetInstance");
-            Method resetCanvasControllerInstance = CanvasController.class.getDeclaredMethod("resetInstance");
-            resetModelInstance.setAccessible(true);
-            resetCanvasControllerInstance.setAccessible(true);
-            resetModelInstance.invoke(model);
-            resetModelInstance.invoke(model2);
-            resetCanvasControllerInstance.invoke(canvasController);
-            resetModelInstance.setAccessible(false);
-            resetCanvasControllerInstance.setAccessible(false);
-            System.gc();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+
+        model.resetInstance();
+        model2.resetInstance();
+        canvasController.resetInstance();
     }
 
     @Test
     public void testClear() {
-        Window window = new Window();
+        Window window = new Window().title("TESTING")
+                            .dimension(new Dimension(1, 1))
+                            .show();
+
         Model model = Model.getInstance();
         CanvasController canvasController = CanvasController.getInstance(window);
         try {
@@ -61,23 +54,9 @@ public class TestModel extends TestCase {
         model.clear();
         assertEquals(true, model.getWayElements().get(WayType.ROAD).isEmpty());
         assertEquals(true, model.getWayElements().get(WayType.UNKNOWN).isEmpty());
-        try {
-            Method resetModelInstance = Model.class.getDeclaredMethod("resetInstance");
-            resetModelInstance.setAccessible(true);
-            resetModelInstance.invoke(model);
-            Method resetCanvasControllerInstance = CanvasController.class.getDeclaredMethod("resetInstance");
-            resetCanvasControllerInstance.setAccessible(true);
-            resetCanvasControllerInstance.invoke(canvasController);
-            resetModelInstance.setAccessible(false);
-            resetCanvasControllerInstance.setAccessible(false);
-            System.gc();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+
+        model.resetInstance();
+        canvasController.resetInstance();
     }
 
     @Test
@@ -87,19 +66,8 @@ public class TestModel extends TestCase {
         assertTrue(model.getMaxLatitude() == 0.0f);
         assertTrue(model.getMinLongitude() == 0.0f);
         assertTrue(model.getMaxLongitude() == 0.0f);
-        try {
-            Method resetModelInstance = Model.class.getDeclaredMethod("resetInstance");
-            resetModelInstance.setAccessible(true);
-            resetModelInstance.invoke(model);
-            resetModelInstance.setAccessible(false);
-            System.gc();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+
+        model.resetInstance();
     }
 
     @Test
@@ -110,51 +78,31 @@ public class TestModel extends TestCase {
         assertEquals(2.4f, model.getMaxLatitude());
         assertEquals(2.5f, model.getMinLongitude());
         assertEquals(2.6f, model.getMaxLongitude());
-        try {
-            Method resetModelInstance = Model.class.getDeclaredMethod("resetInstance");
-            resetModelInstance.setAccessible(true);
-            resetModelInstance.invoke(model);
-            resetModelInstance.setAccessible(false);
-            System.gc();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+
+        model.resetInstance();
     }
 
     @Test
     public void testGetWayElements() {
-        Window window = new Window();
+        Window window = new Window().title("TESTING")
+                            .dimension(new Dimension(1, 1))
+                            .show();
+
         Model model = Model.getInstance();
         CanvasController canvasController = CanvasController.getInstance(window);
         model.clear();
         assertTrue(model.getWayElements() != null);
         assertEquals(model.getWayElements().size(), WayType.values().length);
-        try {
-            Method resetModelInstance = Model.class.getDeclaredMethod("resetInstance");
-            Method resetCanvasControllerInstance = CanvasController.class.getDeclaredMethod("resetInstance");
-            resetModelInstance.setAccessible(true);
-            resetCanvasControllerInstance.setAccessible(true);
-            resetModelInstance.invoke(model);
-            resetCanvasControllerInstance.invoke(canvasController);
-            resetModelInstance.setAccessible(false);
-            resetCanvasControllerInstance.setAccessible(false);
-            System.gc();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+
+        model.resetInstance();
+        canvasController.resetInstance();
     }
 
     @Test
     public void testAddWayElement() {
-        Window window = new Window();
+        Window window = new Window().title("TESTING")
+                            .dimension(new Dimension(1, 1))
+                            .show();
         Model model = Model.getInstance();
         CanvasController canvasController = CanvasController.getInstance(window);
         try {
@@ -166,24 +114,9 @@ public class TestModel extends TestCase {
         Path2D path = new Path2D.Float();
         model.addWayElement(WayType.ROAD, new Road(RoadType.SERVICE, path));
         assertEquals(1, model.getWayElements().get(WayType.ROAD).size());
-        try {
-            Method resetModelInstance = Model.class.getDeclaredMethod("resetInstance");
-            Method resetCanvasControllerInstance = CanvasController.class.getDeclaredMethod("resetInstance");
-            resetModelInstance.setAccessible(true);
-            resetCanvasControllerInstance.setAccessible(true);
-            resetModelInstance.invoke(model);
-            resetCanvasControllerInstance.invoke(canvasController);
-            resetModelInstance.setAccessible(false);
-            resetCanvasControllerInstance.setAccessible(false);
-            System.gc();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
 
+        model.resetInstance();
+        canvasController.resetInstance();
     }
 
 }
