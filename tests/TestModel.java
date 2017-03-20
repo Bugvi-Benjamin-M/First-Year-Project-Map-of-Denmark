@@ -162,10 +162,10 @@ public class TestModel extends TestCase {
         }catch(FileNotFoundException e){
             throw new RuntimeException(e);
         }
-        assertEquals(1, model.getWayElements().get(WayType.ROAD).size());
+        assertEquals(0, model.getWayElements().get(WayType.ROAD).size());
         Path2D path = new Path2D.Float();
         model.addWayElement(WayType.ROAD, new Road(RoadType.SERVICE, path));
-        assertEquals(2, model.getWayElements().get(WayType.ROAD).size());
+        assertEquals(1, model.getWayElements().get(WayType.ROAD).size());
         try {
             Method resetModelInstance = Model.class.getDeclaredMethod("resetInstance");
             Method resetCanvasControllerInstance = CanvasController.class.getDeclaredMethod("resetInstance");
