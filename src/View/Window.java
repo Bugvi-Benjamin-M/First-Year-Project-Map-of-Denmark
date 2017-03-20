@@ -2,6 +2,7 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
+import Helpers.ThemeHelper;
 
 /**
  * Class details:

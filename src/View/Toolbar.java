@@ -1,6 +1,7 @@
 package View;
 
 import Enums.ToolType;
+import Helpers.ThemeHelper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,6 +42,8 @@ public class Toolbar extends View {
 
         this.setPreferredSize(new Dimension(500,100));
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+        this.setBackground(ThemeHelper.getTheme().getToolbarColor());
     }
 
     public void toggleWellOnTool(ToolType type) {
