@@ -18,18 +18,7 @@ import java.io.InputStream;
  */
 public class FileHandler {
 
-    private static String pathStart;
-
-    static {
-        if (OSDetector.isWindows()) {
-            pathStart = "file:";
-        } else if (OSDetector.isMac()) {
-            pathStart = "file://";
-        } else {
-            pathStart = "file://";
-        }
-
-    }
+    private static String pathStart = OSDetector.getPathPrefix();
 
     public static void loadDefault(String fileName) throws FileNotFoundException {
         if(fileExists(fileName)) {

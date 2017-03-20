@@ -34,6 +34,14 @@ public class OSDetector {
         }
 
     }
+
+    public static String getPathPrefix() {
+        if (OSDetector.isWindows()) {
+            pathStart = "file:";
+        } else if (OSDetector.isMac()) {
+            pathStart = "file://";
+        } else {
+            pathStart = "file://";
+        }
+    }
 }
-
-
