@@ -19,8 +19,7 @@ import java.util.concurrent.TimeUnit;
 public final class CanvasController extends Controller implements Observer {
 
     private static final double ZOOM_FACTOR = 0.9;
-    private static final double KEYBOARD_ZOOM_IN_FACTOR = -2.0;
-    private static final double KEYBOARD_ZOOM_OUT_FACTOR = 2.0;
+    private static final double KEYBOARD_ZOOM_FACTOR = 2.0;
 
     private enum PanType {
         LEFT,
@@ -64,13 +63,13 @@ public final class CanvasController extends Controller implements Observer {
         handler.addKeyBinding(KeyEvent.VK_PLUS, KeyEvent.VK_UNDEFINED, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                keyboardZoomEvent(KEYBOARD_ZOOM_IN_FACTOR);
+                keyboardZoomEvent(KEYBOARD_ZOOM_FACTOR);
             }
         });
         handler.addKeyBinding(KeyEvent.VK_MINUS, KeyEvent.VK_UNDEFINED, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                keyboardZoomEvent(KEYBOARD_ZOOM_OUT_FACTOR);
+                keyboardZoomEvent(-KEYBOARD_ZOOM_FACTOR);
             }
         });
         handler.addKeyBinding(KeyEvent.VK_UP, KeyEvent.VK_UNDEFINED, new AbstractAction() {
@@ -124,13 +123,13 @@ public final class CanvasController extends Controller implements Observer {
         handler.addKeyBinding(KeyEvent.VK_ADD, KeyEvent.VK_UNDEFINED, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                keyboardZoomEvent(KEYBOARD_ZOOM_IN_FACTOR);
+                keyboardZoomEvent(KEYBOARD_ZOOM_FACTOR);
             }
         });
         handler.addKeyBinding(KeyEvent.VK_SUBTRACT, KeyEvent.VK_UNDEFINED, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                keyboardZoomEvent(KEYBOARD_ZOOM_OUT_FACTOR);
+                keyboardZoomEvent(-KEYBOARD_ZOOM_FACTOR);
             }
         });
     }
