@@ -13,14 +13,23 @@ import java.awt.event.KeyEvent;
  */
 public final class MainWindowController extends WindowController {
 
+    private static final String MAIN_TITLE = "OSM Map Viewer v0.2";
+
     private static MainWindowController instance;
 
     private MainWindowController(Window window) {
         super(window);
     }
 
-    public static WindowController getInstance(Window window) {
+    public static WindowController getInstance() {
         if(instance == null) {
+            Window window = new Window().title(MAIN_TITLE)
+                    .closeOperation(WindowConstants.EXIT_ON_CLOSE)
+                    .dimension(new Dimension(1200, 1000))
+                    .extendedState(JFrame.MAXIMIZED_BOTH)
+                    .layout(new BorderLayout())
+                    .relativeTo(null)
+                    .show();
             instance = new MainWindowController(window);
         }
         return instance;
@@ -43,4 +52,5 @@ public final class MainWindowController extends WindowController {
     public void resetInstance() {
         instance = null;
     }
+
 }

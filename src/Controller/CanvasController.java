@@ -162,17 +162,6 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.zoom(mapCanvas.getWidth()/(model.getMaxLongitude()- model.getMinLongitude()));
     }
 
-    /**
-     *
-     * This method has private access and is only used by unit tests. The unit tests override the private access.
-     * Returns the mapCanvas used by the MapCanvasController.
-     * @return the mapCanvas instance
-     *
-     */
-    private MapCanvas getMapCanvas(){
-        return mapCanvas;
-    }
-
     public static void resetBounds(){
         mapCanvas.resetTransform();
     }
@@ -243,7 +232,12 @@ public final class CanvasController extends Controller implements Observer {
         }
     }
 
+    public MapCanvas getMapCanvas(){
+        return mapCanvas;
+    }
+
     public void resetInstance() {
         instance = null;
     }
+
 }

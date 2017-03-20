@@ -1,10 +1,6 @@
 import Controller.*;
 import Helpers.FileHandler;
 import Model.Model;
-import View.Window;
-
-import javax.swing.*;
-import java.awt.*;
 
 import java.io.FileNotFoundException;
 
@@ -13,24 +9,14 @@ import java.io.FileNotFoundException;
  */
 public class Main {
 
-    private final static String MAIN_TITLE = "OSM Map Viewer v0.2";
-    private Window window;
 
     public static void main(String[] args) {
-        Window window = new Window().title(MAIN_TITLE)
-                            .closeOperation(WindowConstants.EXIT_ON_CLOSE)
-                            .dimension(new Dimension(1200, 1000))
-                            .extendedState(JFrame.MAXIMIZED_BOTH)
-                            .layout(new BorderLayout())
-                            .relativeTo(null)
-                            .show();
 
-
-        Model model = Model.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(window);
-        ToolbarController toolbarController = ToolbarController.getInstance(window);
-        InfobarController infobarController = InfobarController.getInstance(window);
-        WindowController windowController = MainWindowController.getInstance(window);
+        Model.getInstance();
+        WindowController windowController = MainWindowController.getInstance();
+        CanvasController.getInstance(windowController.getWindow());
+        ToolbarController.getInstance(windowController.getWindow());
+        InfobarController.getInstance(windowController.getWindow());
         try {
             FileHandler.loadDefault("/defaultosm.osm");
         } catch (FileNotFoundException e) {

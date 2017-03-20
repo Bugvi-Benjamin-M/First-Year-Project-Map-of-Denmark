@@ -30,6 +30,12 @@ public abstract class WindowController extends Controller {
     protected abstract void specifyKeyBindings();
 
 
+    public Window getWindow() {
+        return window;
+    }
+
+    public abstract void resetInstance();
+
     protected class WindowInteractionHandler extends WindowAdapter {
 
         protected JPanel content;
