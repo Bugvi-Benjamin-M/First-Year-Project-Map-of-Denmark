@@ -176,9 +176,9 @@ Impediments:
 - Lecture at 16'o'clock
 
 Notes from meeting:
-- Data strcuture is broken, and should be fixed and optimized. Jakob is on it.
+- Data structure is broken, and should be fixed and optimized. Jakob is on it.
 - Sprint is on time, but might changed due to the data structure.
--
+- Singleton tests will use public methods, instead of invoking a private method.
 
 Notice:
 - Presentation on next monday.
