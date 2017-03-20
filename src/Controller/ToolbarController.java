@@ -96,8 +96,15 @@ public final class ToolbarController extends Controller {
 
     private void settingsEvent() {
         toolbar.toggleWellOnTool(ToolType.SETTINGS);
-        Window settings = new Window("Settings", WindowConstants.DISPOSE_ON_CLOSE,
-                        new Dimension(500, 500), null, JFrame.NORMAL, new BorderLayout());
+        Window settings = new Window().title("Settings")
+                            .closeOperation(WindowConstants.DISPOSE_ON_CLOSE)
+                            .dimension(new Dimension(500, 500))
+                            .relativeTo(null)
+                            .extendedState(JFrame.NORMAL)
+                            .layout(new BorderLayout())
+                            .show();
+
+
         settings.addComponent(BorderLayout.NORTH, new ThemeSetting());
         settings.getFrame().addWindowListener(new WindowAdapter() {
             @Override
