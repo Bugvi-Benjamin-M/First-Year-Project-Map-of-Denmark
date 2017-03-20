@@ -126,6 +126,9 @@ public final class OSMHandler implements ContentHandler {
             case "service":
                 roadType = RoadType.SERVICE;
                 break;
+            case "highway":
+                roadType = RoadType.HIGHWAY;
+                break;
             case "primary":
                 roadType = RoadType.PRIMARY;
                 break;

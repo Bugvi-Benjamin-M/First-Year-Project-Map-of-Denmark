@@ -31,6 +31,11 @@ public class DefaultTheme implements Theme {
     }
 
     @Override
+    public Color getHighwayRoadColor(){
+        return new Color(0xf15d00);
+    }
+
+    @Override
     public Color getPrimaryRoadColor(){
         return new Color(0xD4A23F);
     }

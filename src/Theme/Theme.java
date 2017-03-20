@@ -15,6 +15,7 @@ public interface Theme {
     public abstract Color getParkColor();
     public abstract Color getSandColor();
 
+    public abstract Color getHighwayRoadColor();
     public abstract Color getPrimaryRoadColor();
     public abstract Color getSecondaryRoadColor();
     public abstract Color getTertiaryRoadColor();

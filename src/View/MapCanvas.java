@@ -69,6 +69,11 @@ public class MapCanvas extends View {
         for(Element element : roads){
             Road road = (Road) element;
             switch(road.getRoadType()){
+                case HIGHWAY:
+                    g.setColor(theme.getHighwayRoadColor());
+                    g.setStroke(new BasicStroke(0.00008f));
+                    g.draw(road.getPath());
+                    break;
                 case PRIMARY:
                     g.setColor(theme.getPrimaryRoadColor());
                     g.setStroke(new BasicStroke(0.00008f));
