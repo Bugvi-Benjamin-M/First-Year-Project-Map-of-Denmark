@@ -12,6 +12,7 @@ public class BST {
     private boolean isCompareToLatitude;
 
     private ArrayList<Point> points = new ArrayList<>();
+    private Point[] pointsArray;
 
     private class Point{
         private Float latitudeKey;
@@ -59,10 +60,55 @@ public class BST {
 
     public void initialize(){
         int amountOfPoints = points.size();
-        if(amountOfPoints > 1000){
-            //OPSPLIT
-        }
+        pointsArray = points.toArray(new Point[points.size()]);
+    }
 
+    private Point findMedianLatitude(Point[] a){
+        int median = a.length / 2;
+        int low = 0;
+        int high = a.length - 1;
+        while(high > low){
+
+        }
+        return null;
+    }
+
+    private int partitionLatitude(Point[] a, int low, int high){
+        int i = low;
+        int j = high +1;
+        Point v = a[low];
+        while(true){
+            while(lessLatitude(a[++i], v)) if(i == high) break;
+            while(lessLatitude(v, a[--j])) if(j == low) break;
+            if(i >= j) break;
+            exchange(a, i, j);
+        }
+        exchange(a, low, j);
+        return j;
+    }
+    private int partitionLongitude(Point[] a, int low, int high){
+        int i = low;
+        int j = high +1;
+        Point v = a[low];
+        while(true){
+            while(lessLongitude(a[++i], v)) if(i == high) break;
+            while(lessLongitude(v, a[--j])) if(j == low) break;
+            if(i >= j) break;
+            exchange(a, i, j);
+        }
+        exchange(a, low, j);
+        return j;
+    }
+    private boolean lessLatitude(Point a, Point b){
+        return a.getLatitudeKey().compareTo(b.getLatitudeKey()) < 0;
+    }
+    private boolean lessLongitude(Point a, Point b){
+        return a.getLongitudeKey().compareTo(b.getLongitudeKey()) < 0;
+    }
+    private void exchange(Point[] a, int i, int j){
+        Point temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
     }
 
     public void addPoint(Float latitudeKey, Float longitudeKey){
