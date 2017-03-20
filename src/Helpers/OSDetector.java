@@ -37,11 +37,11 @@ public class OSDetector {
 
     public static String getPathPrefix() {
         if (OSDetector.isWindows()) {
-            pathStart = "file:";
+            return "file:";
         } else if (OSDetector.isMac()) {
-            pathStart = "file://";
+            return "file://";
         } else {
-            pathStart = "file://";
+            return "file://";
         }
     }
 }
