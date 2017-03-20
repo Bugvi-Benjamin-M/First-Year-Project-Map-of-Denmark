@@ -18,7 +18,7 @@ public final class CanvasController extends Controller implements Observer {
 
     private static final double ZOOM_FACTOR = 0.9;
     private static final double KEYBOARD_ZOOM_FACTOR = 2.0;
-    private static final double panConstant = 38.5;
+    private static final double PAN_FACTOR = 38.5;
 
     private enum PanType {
         LEFT,
@@ -139,18 +139,18 @@ public final class CanvasController extends Controller implements Observer {
         switch (type) {
             case DOWN:
                 dx = 0;
-                dy = -38.5;
+                dy = -PAN_FACTOR;
                 break;
             case UP:
                 dx = 0;
-                dy = 38.5;
+                dy = PAN_FACTOR;
                 break;
             case LEFT:
-                dx = 38.5;
+                dx = PAN_FACTOR;
                 dy = 0;
                 break;
             case RIGHT:
-                dx = -38.5;
+                dx = -PAN_FACTOR;
                 dy = 0;
                 break;
         }

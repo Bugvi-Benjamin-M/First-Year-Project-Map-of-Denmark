@@ -43,7 +43,7 @@ public class Window {
         return this;
     }
 
-    public Window dimension(Dimension dimenstion){
+    public Window dimension(Dimension dimension){
         this.dimension = dimension;
         window.setPreferredSize(dimension);
         return this;
@@ -70,6 +70,11 @@ public class Window {
 
     public Window show(){
         setVisible(true);
+        return this;
+    }
+
+    public Window hide() {
+        setVisible(false);
         return this;
     }
 

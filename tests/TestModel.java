@@ -157,11 +157,6 @@ public class TestModel extends TestCase {
         Window window = new Window();
         Model model = Model.getInstance();
         CanvasController canvasController = CanvasController.getInstance(window);
-        try {
-            FileHandler.loadDefault("/testRoad.osm");
-        }catch(FileNotFoundException e){
-            throw new RuntimeException(e);
-        }
         assertEquals(0, model.getWayElements().get(WayType.ROAD).size());
         Path2D path = new Path2D.Float();
         model.addWayElement(WayType.ROAD, new Road(RoadType.SERVICE, path));
