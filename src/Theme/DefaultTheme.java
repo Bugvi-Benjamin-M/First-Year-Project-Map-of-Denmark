@@ -30,4 +30,19 @@ public class DefaultTheme implements Theme {
         return new Color(0xfcf99a);
     }
 
+    @Override
+    public Color getPrimaryRoadColor(){
+        return new Color(0xD4A23F);
+    }
+
+    @Override
+    public Color getSecondaryRoadColor(){
+        return new Color(0xFCF99A);
+    }
+
+    @Override
+    public Color getTertiaryRoadColor(){
+        return new Color(0xFFFFFF);
+    }
+
 }

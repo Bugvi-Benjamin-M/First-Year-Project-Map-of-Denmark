@@ -126,10 +126,16 @@ public final class OSMHandler implements ContentHandler {
             case "service":
                 roadType = RoadType.SERVICE;
                 break;
+            case "primary":
+                roadType = RoadType.PRIMARY;
+                break;
+            case "secondary":
+                roadType = RoadType.SECONDARY;
+                break;
             case "tertiary":
                 roadType = RoadType.TERTIARY;
                 break;
-            case "unclassified":
+            default:
                 roadType = RoadType.UNCLASSIFIED;
                 break;
         }
