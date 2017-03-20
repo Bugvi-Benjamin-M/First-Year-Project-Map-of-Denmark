@@ -24,5 +24,12 @@ public class Main {
         long starttime = System.currentTimeMillis();
         long stoptime = System.currentTimeMillis();
         System.out.println(stoptime - starttime);
+
+        try {
+            FileHandler.loadDefault("/defaultosm.osm");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println(model.getBst().getPoints().size());
     }
 }

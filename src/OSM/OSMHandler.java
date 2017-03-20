@@ -10,6 +10,8 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -99,12 +101,17 @@ public final class OSMHandler implements ContentHandler {
                 float latitude = Float.parseFloat(atts.getValue("lat"));
                 float longitude = Float.parseFloat(atts.getValue("lon"));
                 idToNode.put(id, longitude * longitudeFactor, -latitude);
+
+                model.getBst().addPoint(-latitude, longitude * longitudeFactor);
+
                 loadednodes++;
                 if ((loadednodes & 0xFFFF) == 0) {
                     System.out.println("Numnodes: " + loadednodes);
                 }
                 break;
             case "way":
+
+
                 way = new OSMWay();
                 id = Long.parseLong(atts.getValue("id"));
                 wayType = WayType.UNKNOWN;
@@ -153,7 +160,7 @@ public final class OSMHandler implements ContentHandler {
                 Path2D path = way.toPath2D();
                 switch (wayType){
                     case ROAD:
-                        Road road = new Road(roadType, path);
+                        Road road = new Road(roadType, way);
                         model.addWayElement(wayType, road);
                         break;
                     case UNKNOWN:

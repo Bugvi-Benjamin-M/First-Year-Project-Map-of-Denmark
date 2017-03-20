@@ -21,12 +21,19 @@ public final class Model extends Observable {
     private float minLongitude;
     private float maxLongitude;
 
+    private BST bst;
+
 
     private Model(){
         wayElements = new EnumMap<>(WayType.class);
         for (WayType type : WayType.values()) {
             wayElements.put(type, new ArrayList<>());
         }
+        bst = new BST();
+    }
+
+    public BST getBst(){
+        return bst;
     }
 
     public static Model getInstance() {

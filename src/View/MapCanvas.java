@@ -72,22 +72,22 @@ public class MapCanvas extends View {
                 case SERVICE:
                     g.setColor(theme.getWaterColor());
                     g.setStroke(new BasicStroke(0.00001f));
-                    g.draw(road.getPath());
+                    //g.draw(road.getPath());
                     break;
                 case TERTIARY:
                     g.setColor(theme.getSandColor());
                     g.setStroke(new BasicStroke(0.00001f));
-                    g.draw(road.getPath());
+                    //g.draw(road.getPath());
                     break;
                 case UNCLASSIFIED:
                     g.setColor(theme.getParkColor());
                     g.setStroke(new BasicStroke(0.00001f));
-                    g.draw(road.getPath());
+                    //g.draw(road.getPath());
                     break;
                 case UNKNOWN:
                     g.setColor(theme.getWaterColor());
                     g.setStroke(new BasicStroke(0.00001f));
-                    g.draw(road.getPath());
+                    //g.draw(road.getPath());
 
             }
 
