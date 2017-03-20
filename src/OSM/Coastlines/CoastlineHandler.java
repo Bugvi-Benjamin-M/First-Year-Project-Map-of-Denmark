@@ -1,13 +1,21 @@
 package OSM.Coastlines;
 
+import Enums.FileType;
 import Enums.OSMEnums.WayType;
+import Helpers.OSDetector;
 import OSM.OSMNode;
 import OSM.OSMWay;
-import jdk.internal.org.xml.sax.Attributes;
-import jdk.internal.org.xml.sax.ContentHandler;
-import jdk.internal.org.xml.sax.Locator;
-import jdk.internal.org.xml.sax.SAXException;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +63,30 @@ public final class CoastlineHandler implements ContentHandler {
      */
     public static void main(String[] args) {
         // TODO: Load an osm file and save to a new osm file ("coastlines.osm")
+        String filename = args[0];
+        loadOSMFile(filename);
+        saveToOSMFile("/Resources/coastlines.osm");
+    }
+
+    private static void loadOSMFile(String fileName) {
+        String pathStart = OSDetector.getPathPrefix();
+        if(fileName.endsWith(FileType.OSM.getExtension())) {
+            loadOSM(new InputSource(pathStart + fileName));
+        }
+    }
+
+    private static void loadOSM(InputSource inputSource) {
+        try {
+            XMLReader reader = XMLReaderFactory.createXMLReader();
+            reader.setContentHandler(getInstance());
+            reader.parse(inputSource);
+        } catch (SAXException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void saveToOSMFile(String filename) {
+        // @see coastlines.osm for inspiration
     }
 
     @Override
