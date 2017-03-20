@@ -1,7 +1,8 @@
 package Helpers;
 
-import Theme.*;
-import java.lang.reflect.Method;
+import Theme.DefaultTheme;
+import Theme.Theme;
+
 import java.awt.*;
 
 
@@ -21,6 +22,7 @@ public class ThemeHelper {
     }
 
     public static Color getColor(String color){
+        return null;
         //TODO: Get color from getTheme by Reflection
     }
 }

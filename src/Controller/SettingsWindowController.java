@@ -51,5 +51,9 @@ public final class SettingsWindowController extends WindowController {
         });
     }
 
+    public void resetInstance() {
+        instance = null;
+    }
+
 
 }
