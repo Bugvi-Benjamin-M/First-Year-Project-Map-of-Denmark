@@ -65,14 +65,28 @@ public class BST {
 
     private Point findMedianLatitude(Point[] a){
         int median = a.length / 2;
+            int low = 0;
+        int high = a.length - 1;
+        while(high > low){
+            int j = partitionLatitude(a, low, high);
+            if(j == median) return a[median];
+            else if(j > median) high = j - 1;
+            else if(j < median) low = j + 1;
+        }
+        return a[median];
+    }
+    private Point findMedianLongitude(Point[] a){
+        int median = a.length / 2;
         int low = 0;
         int high = a.length - 1;
         while(high > low){
-
+            int j = partitionLongitude(a, low, high);
+            if(j == median) return a[median];
+            else if(j > median) high = j - 1;
+            else if(j < median) low = j + 1;
         }
-        return null;
+        return a[median];
     }
-
     private int partitionLatitude(Point[] a, int low, int high){
         int i = low;
         int j = high +1;
