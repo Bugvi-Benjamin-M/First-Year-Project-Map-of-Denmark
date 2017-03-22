@@ -1,4 +1,6 @@
 import Controller.CanvasController;
+import Controller.MainWindowController;
+import Controller.WindowController;
 import Enums.OSMEnums.WayType;
 import Helpers.FileHandler;
 import Model.Model;
@@ -40,13 +42,9 @@ public class TestOSMHandler {
 
     @Test
     public void testReload(){
-        Window window = new Window().title("TESTING")
-                            .dimension(new Dimension(1, 1))
-                            .layout(new BorderLayout())
-                            .show();
-
+        WindowController mainWindowController = MainWindowController.getInstance();
         Model model = Model.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(window);
+        CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         try {
             FileHandler.loadDefault("/testThreeRoads.osm");
             FileHandler.loadDefault("/testRoad.osm");
