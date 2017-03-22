@@ -5,10 +5,8 @@ import Enums.OSMEnums.WayType;
 import Helpers.FileHandler;
 import Model.Model;
 import OSM.OSMHandler;
-import View.Window;
 import org.junit.Test;
 
-import java.awt.*;
 import java.io.FileNotFoundException;
 
 import static junit.framework.TestCase.assertEquals;
@@ -21,13 +19,10 @@ public class TestOSMHandler {
 
     @Test
     public void testRoads(){
-        Window window = new Window().title("TESTING")
-                            .dimension(new Dimension(1, 1))
-                            .layout(new BorderLayout())
-                            .show();
 
         Model model = Model.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(window);
+        WindowController mainWindowController = MainWindowController.getInstance();
+        CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         try {
             FileHandler.loadDefault("/testRoad.osm");
         }catch(FileNotFoundException e){
@@ -47,26 +42,23 @@ public class TestOSMHandler {
         CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         try {
             FileHandler.loadDefault("/testThreeRoads.osm");
-            FileHandler.loadDefault("/testRoad.osm");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
         int RoadCount = model.getWayElements().get(WayType.ROAD).size();
-        assertEquals(1, RoadCount);
+        assertEquals(3, RoadCount);
 
+        mainWindowController.resetInstance();
         model.resetInstance();
         canvasController.resetInstance();
     }
 
     @Test
     public void testUnknown() {
-        Window window = new Window().title("TESTING")
-                            .dimension(new Dimension(1, 1))
-                            .layout(new BorderLayout())
-                            .show();
 
         Model model = Model.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(window);
+        WindowController mainWindowController = MainWindowController.getInstance();
+        CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         try {
             FileHandler.loadDefault("/testUnknown.osm");
         } catch (FileNotFoundException e) {
@@ -75,18 +67,18 @@ public class TestOSMHandler {
         int UnknownCount = model.getWayElements().get(WayType.UNKNOWN).size();
         assertEquals(1, UnknownCount);
 
+
+        mainWindowController.resetInstance();
         model.resetInstance();
         canvasController.resetInstance();
     }
 
+    @Test
     public void testBounds(){
-        Window window = new Window().title("TESTING")
-                            .dimension(new Dimension(1, 1))
-                            .layout(new BorderLayout())
-                            .show();
 
         Model model = Model.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(window);;
+        WindowController mainWindowController = MainWindowController.getInstance();
+        CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());;
         try {
             FileHandler.loadDefault("/testUnknown.osm");
         } catch (FileNotFoundException e) {
@@ -97,6 +89,8 @@ public class TestOSMHandler {
         assertTrue(Math.abs(-55.7286100 - model.getMaxLatitude()) < 0.0001);
         assertTrue(Math.abs(11.4735500 * OSMHandler.getInstance().getLongitudeFactor() - model.getMaxLongitude()) < 0.0001);
 
+
+        mainWindowController.resetInstance();
         model.resetInstance();
         canvasController.resetInstance();
     }

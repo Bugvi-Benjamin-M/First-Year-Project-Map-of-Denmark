@@ -1,4 +1,6 @@
 import Controller.CanvasController;
+import Controller.MainWindowController;
+import Controller.WindowController;
 import Enums.OSMEnums.WayType;
 import Enums.RoadType;
 import Helpers.FileHandler;
@@ -41,12 +43,10 @@ public class TestModel {
 
     @Test
     public void testClear() {
-        Window window = new Window().title("TESTING")
-                            .dimension(new Dimension(1, 1))
-                            .show();
 
         Model model = Model.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(window);
+        WindowController mainWindowController = MainWindowController.getInstance();
+        CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         try {
             FileHandler.loadDefault("/testRoad.osm");
         } catch (FileNotFoundException e) {
@@ -57,6 +57,7 @@ public class TestModel {
         assertEquals(true, model.getWayElements().get(WayType.ROAD).isEmpty());
         assertEquals(true, model.getWayElements().get(WayType.UNKNOWN).isEmpty());
 
+        mainWindowController.resetInstance();
         model.resetInstance();
         canvasController.resetInstance();
     }
@@ -86,32 +87,31 @@ public class TestModel {
 
     @Test
     public void testGetWayElements() {
-        Window window = new Window().title("TESTING")
-                            .dimension(new Dimension(1, 1))
-                            .show();
 
         Model model = Model.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(window);
+        WindowController mainWindowController = MainWindowController.getInstance();
+        CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         model.clear();
         assertTrue(model.getWayElements() != null);
         assertEquals(model.getWayElements().size(), WayType.values().length);
 
+        mainWindowController.resetInstance();
         model.resetInstance();
         canvasController.resetInstance();
     }
 
     @Test
     public void testAddWayElement() {
-        Window window = new Window().title("TESTING")
-                            .dimension(new Dimension(1, 1))
-                            .show();
         Model model = Model.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(window);
+        WindowController mainWindowController = MainWindowController.getInstance();
+        CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         assertEquals(0, model.getWayElements().get(WayType.ROAD).size());
         Path2D path = new Path2D.Float();
         model.addWayElement(WayType.ROAD, new Road(RoadType.SERVICE, path));
         assertEquals(1, model.getWayElements().get(WayType.ROAD).size());
 
+
+        mainWindowController.resetInstance();
         model.resetInstance();
         canvasController.resetInstance();
     }
