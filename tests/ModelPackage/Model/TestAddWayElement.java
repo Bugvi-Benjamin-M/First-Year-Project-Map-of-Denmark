@@ -1,13 +1,17 @@
-package Model;
+package ModelPackage.Model;
 
 import Controller.CanvasController;
 import Controller.MainWindowController;
 import Controller.WindowController;
 import Enums.OSMEnums.WayType;
+import Enums.RoadType;
 import org.junit.Test;
+import Model.Model;
+import Model.Road;
+
+import java.awt.geom.Path2D;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by  on .
@@ -15,17 +19,17 @@ import static org.junit.Assert.assertTrue;
  * @author bugvimagnussen
  * @version 22/03/2017
  */
-public class TestGetWayElements {
+public class TestAddWayElement {
 
     @Test
-    public void testGetWayElements() {
-
+    public void testAddWayElement() {
         Model model = Model.getInstance();
         WindowController mainWindowController = MainWindowController.getInstance();
         CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
-        model.clear();
-        assertTrue(model.getWayElements() != null);
-        assertEquals(model.getWayElements().size(), WayType.values().length);
+        assertEquals(0, model.getWayElements().get(WayType.ROAD).size());
+        Path2D path = new Path2D.Float();
+        model.addWayElement(WayType.ROAD, new Road(RoadType.SERVICE, path));
+        assertEquals(1, model.getWayElements().get(WayType.ROAD).size());
 
         mainWindowController.resetInstance();
         model.resetInstance();

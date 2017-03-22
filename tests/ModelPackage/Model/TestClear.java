@@ -1,4 +1,4 @@
-package Model;
+package ModelPackage.Model;
 
 import Controller.CanvasController;
 import Controller.MainWindowController;
@@ -6,6 +6,7 @@ import Controller.WindowController;
 import Enums.OSMEnums.WayType;
 import Helpers.FileHandler;
 import org.junit.Test;
+import Model.Model;
 
 import java.io.FileNotFoundException;
 

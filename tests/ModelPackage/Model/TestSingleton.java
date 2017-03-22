@@ -1,11 +1,12 @@
-package Model;
+package ModelPackage.Model;
 
 import Controller.CanvasController;
+import Controller.MainWindowController;
+import Controller.WindowController;
 import Helpers.FileHandler;
-import View.Window;
 import org.junit.Test;
+import Model.Model;
 
-import java.awt.*;
 import java.io.FileNotFoundException;
 
 import static org.junit.Assert.assertTrue;
@@ -20,14 +21,10 @@ public class TestSingleton {
 
     @Test
     public void testSingleton() {
-        Window window = new Window().title("TESTING")
-                .dimension(new Dimension(1, 1))
-                .layout(new BorderLayout())
-                .show();
-
         Model model = Model.getInstance();
         Model model2 = Model.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(window);
+        WindowController mainWindowController = MainWindowController.getInstance();
+        CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         try {
             FileHandler.loadDefault("/testRoad.osm");
         } catch (FileNotFoundException e) {
@@ -37,6 +34,7 @@ public class TestSingleton {
 
         model.resetInstance();
         model2.resetInstance();
+        mainWindowController.resetInstance();
         canvasController.resetInstance();
     }
 
