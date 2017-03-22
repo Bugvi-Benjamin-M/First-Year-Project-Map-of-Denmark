@@ -2,18 +2,20 @@ import Controller.CanvasController;
 import Enums.OSMEnums.WayType;
 import Enums.RoadType;
 import Helpers.FileHandler;
+import Model.Model;
+import Model.Road;
 import View.Window;
-import junit.framework.TestCase;
-import Model.*;
 import org.junit.Test;
 
+import java.awt.*;
 import java.awt.geom.Path2D;
 import java.io.FileNotFoundException;
-import javax.swing.*;
-import java.awt.*;
+
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
-public class TestModel extends TestCase {
+public class TestModel {
 
     @Test
     public void testSingleton() {

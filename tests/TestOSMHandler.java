@@ -1,25 +1,21 @@
 import Controller.CanvasController;
-import Controller.InfobarController;
-import Controller.ToolbarController;
 import Enums.OSMEnums.WayType;
 import Helpers.FileHandler;
+import Model.Model;
 import OSM.OSMHandler;
 import View.Window;
-import junit.framework.TestCase;
-import Model.*;
-import junit.*;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
+
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Nik on 13/03/17.
  */
-public class TestOSMHandler extends TestCase {
+public class TestOSMHandler {
 
     @Test
     public void testRoads(){

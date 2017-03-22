@@ -1,18 +1,22 @@
-import Controller.*;
+import Controller.CanvasController;
+import Controller.MainWindowController;
+import Controller.ToolbarController;
+import Controller.WindowController;
 import Enums.ToolType;
 import Model.Model;
 import View.MapCanvas;
 import View.Toolbar;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import javax.swing.*;
 import java.awt.event.MouseListener;
 
+import static junit.framework.TestCase.assertEquals;
+
 /**
  * Created by Nik on 13/03/17.
  */
-public class TestView extends TestCase {
+public class TestView {
 
     @Test
     public void testToolListeners(){

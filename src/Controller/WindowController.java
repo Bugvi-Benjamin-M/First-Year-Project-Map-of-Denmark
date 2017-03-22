@@ -3,8 +3,8 @@ package Controller;
 import View.Window;
 
 import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 /**
  * Created by  on .
@@ -24,7 +24,7 @@ public abstract class WindowController extends Controller {
 
     private void addInteractionHandlerToWindow() {
         handler = new WindowInteractionHandler();
-        window.getFrame().addWindowListener(handler);
+        window.getFrame().addComponentListener(handler);
     }
 
     protected abstract void specifyKeyBindings();
@@ -36,13 +36,19 @@ public abstract class WindowController extends Controller {
 
     public abstract void resetInstance();
 
-    protected class WindowInteractionHandler extends WindowAdapter {
+    protected class WindowInteractionHandler extends ComponentAdapter {
 
         protected JPanel content;
 
 
         protected WindowInteractionHandler() {
             this.content = (JPanel) window.getFrame().getContentPane();
+        }
+
+        @Override
+        public void componentResized(ComponentEvent e) {
+            super.componentResized(e);
+            System.out.println(window + " resized");
         }
 
 
@@ -53,10 +59,6 @@ public abstract class WindowController extends Controller {
 
         }
 
-        @Override
-        public void windowClosing(WindowEvent e) {
-            super.windowClosing(e);
-        }
-    }
 
+    }
 }
