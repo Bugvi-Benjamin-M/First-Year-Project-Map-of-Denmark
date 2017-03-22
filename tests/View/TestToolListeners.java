@@ -1,11 +1,11 @@
+package View;
+
 import Controller.CanvasController;
 import Controller.MainWindowController;
 import Controller.ToolbarController;
 import Controller.WindowController;
 import Enums.ToolType;
 import Model.Model;
-import View.MapCanvas;
-import View.Toolbar;
 import org.junit.Test;
 
 import javax.swing.*;
@@ -14,9 +14,12 @@ import java.awt.event.MouseListener;
 import static junit.framework.TestCase.assertEquals;
 
 /**
- * Created by Nik on 13/03/17.
+ * Created by  on .
+ *
+ * @author bugvimagnussen
+ * @version 22/03/2017
  */
-public class TestView {
+public class TestToolListeners {
 
     @Test
     public void testToolListeners(){
@@ -38,20 +41,4 @@ public class TestView {
         mainWindowController.resetInstance();
         System.gc();
     }
-
-
-    @Test
-    public void testCanvasListener() {
-        Model model = Model.getInstance();
-        WindowController mainWindowController = MainWindowController.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
-        MapCanvas canvas = canvasController.getMapCanvas();
-        assertEquals(1, canvas.getListeners(MouseListener.class).length);
-
-        model.resetInstance();
-        mainWindowController.resetInstance();
-        canvasController.resetInstance();
-        System.gc();
-    }
-
 }
