@@ -186,4 +186,19 @@ Notice:
 Next meeting:
 Wednesday the 22 of March at 10.00
 
+## Logbook 20/3 (Scribe Hedam)
+What we will do today:
+- Status
+
+Impediments:
+- Exercises at 12'o'clock
+
+Notes from meeting:
+- Talking and status. Nikolaj was missing due to exercises with his algs group.
+
+
+Next meeting:
+Thursday the 23 of March at 10.00, for those who has time
+Friday the 24 of March at 10.00
+
 ## Next logbook...
