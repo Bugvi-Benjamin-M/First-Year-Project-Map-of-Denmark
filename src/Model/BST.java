@@ -68,7 +68,8 @@ public class BST {
             Node medianNode = new Node(median.getX(), median.getY(),medianDepth);
             putNode(medianNode);
             initialize(medianNode, low, low + (high-low)/2);
-            initialize(medianNode, (high/2) + (high - low)/2, high);
+
+            initialize(medianNode, low + (high-low)/2, high);
         }
     }
 
