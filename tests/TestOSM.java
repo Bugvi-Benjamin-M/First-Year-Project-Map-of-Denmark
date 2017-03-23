@@ -1,5 +1,3 @@
-package OSM;
-
 import Controller.CanvasController;
 import Controller.MainWindowController;
 import Controller.WindowController;
@@ -20,6 +18,7 @@ import org.junit.Test;
 import Model.Model;
 
 import java.io.FileNotFoundException;
+import OSM.OSMHandler;
 
 /**
  * Created by  on .

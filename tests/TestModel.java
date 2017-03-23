@@ -1,5 +1,3 @@
-package ModelPackage;
-
 import Controller.CanvasController;
 import Controller.MainWindowController;
 import Controller.WindowController;
@@ -20,6 +18,8 @@ import org.junit.Test;
 import Model.Model;
 
 import java.io.FileNotFoundException;
+import Model.Element;
+import Model.UnknownWay;
 
 /**
  * Created by  on .
@@ -116,5 +116,65 @@ public class TestModel {
             e.printStackTrace();
         }
         assertTrue(model.equals(model2));
+    }
+
+    @Test
+    public void TestRoadIsElement() {
+        Road road = new Road(RoadType.SERVICE, new Path2D.Float());
+        UnknownWay unknownWay = new UnknownWay(new Path2D.Float());
+        assertTrue(road instanceof Element);
+        assertTrue(unknownWay instanceof Element);
+    }
+
+    @Test
+    public void testConstructorWithoutName() {
+        Road road = new Road(RoadType.SERVICE, new Path2D.Float());
+        assertTrue(road.getName().equals(""));
+    }
+
+    @Test
+    public void testGetname() {
+        Road road = new Road(RoadType.UNCLASSIFIED, new Path2D.Float(), "Road");
+        assertEquals("Road", road.getName());
+    }
+
+    @Test
+    public void testGetPath() {
+        Path2D.Float path = new Path2D.Float();
+        path.moveTo(0f, 0f);
+        path.lineTo(1f, 1f);
+        path.closePath();
+        Road road = new Road(RoadType.PRIMARY, path);
+        assertEquals(path, road.getPath());
+        assertTrue(path.getBounds().equals(
+                road.getPath().getBounds()));
+    }
+
+    @Test
+    public void testGetPath2() {
+        Path2D path = new Path2D.Float();
+        path.moveTo(0f, 0f);
+        path.lineTo(1f, 1f);
+        path.closePath();
+        UnknownWay unknownWay = new UnknownWay(path);
+        assertEquals(path, unknownWay.getPath());
+        assertTrue(path.getBounds().equals(
+                unknownWay.getPath().getBounds()));
+    }
+
+    @Test
+    public void testGetRoadType() {
+        Road service = new Road(RoadType.SERVICE, new Path2D.Float());
+        Road unclassified = new Road(RoadType.UNCLASSIFIED, new Path2D.Float());
+        Road highway = new Road(RoadType.HIGHWAY, new Path2D.Float());
+        Road tertiary = new Road(RoadType.TERTIARY, new Path2D.Float());
+        Road secondary = new Road(RoadType.SECONDARY, new Path2D.Float());
+        Road primary = new Road(RoadType.PRIMARY, new Path2D.Float());
+        assertEquals(RoadType.SERVICE, service.getRoadType());
+        assertEquals(RoadType.UNCLASSIFIED, unclassified.getRoadType());
+        assertEquals(RoadType.HIGHWAY, highway.getRoadType());
+        assertEquals(RoadType.TERTIARY, tertiary.getRoadType());
+        assertEquals(RoadType.SECONDARY, secondary.getRoadType());
+        assertEquals(RoadType.PRIMARY, primary.getRoadType());
     }
 }
