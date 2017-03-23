@@ -1,3 +1,5 @@
+package Main;
+
 import Controller.*;
 import Helpers.FileHandler;
 import Model.Model;

@@ -4,6 +4,7 @@ import Controller.CanvasController;
 import Enums.FileType;
 import Model.Model;
 import OSM.OSMHandler;
+import View.PopupWindow;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -36,9 +37,11 @@ public class FileHandler {
         return false;
     }
 
-    public static void load(String fileName) {
+    public static void fileChooserLoad(String fileName) {
         if(fileName.endsWith(FileType.OSM.getExtension())) {
                 loadOSM(new InputSource(pathStart + fileName));
+        } else {
+            PopupWindow.infoBox(null, "Unsupported File Type. Please Select a New File!");
         }
     }
 
