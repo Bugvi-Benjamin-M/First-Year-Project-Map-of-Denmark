@@ -11,13 +11,11 @@ import java.awt.geom.Path2D;
  */
 public class Road extends Element {
     private RoadType roadType;
-    // Path2D path;
     private String name;
     private OSMWay way;
 
     public Road(RoadType roadType, OSMWay way, String name){
         this.roadType = roadType;
-        //this.path = path;
         this.name = name;
         this.way = way;
     }
@@ -28,12 +26,6 @@ public class Road extends Element {
     public RoadType getRoadType() {
         return roadType;
     }
-
-    /*
-    public Path2D getPath() {
-        return path;
-    }
-    */
 
     public String getName() {
         return name;

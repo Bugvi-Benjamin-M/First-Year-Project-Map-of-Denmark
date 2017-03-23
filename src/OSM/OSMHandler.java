@@ -102,7 +102,7 @@ public final class OSMHandler implements ContentHandler {
                 float longitude = Float.parseFloat(atts.getValue("lon"));
                 idToNode.put(id, longitude * longitudeFactor, -latitude);
 
-                model.getBst().addPoint(-latitude, longitude * longitudeFactor);
+                model.getBst().addPoint(new Point2D.Float(-latitude, longitude * longitudeFactor));
 
                 loadednodes++;
                 if ((loadednodes & 0xFFFF) == 0) {

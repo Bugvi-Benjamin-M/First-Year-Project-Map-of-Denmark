@@ -30,6 +30,5 @@ public class Main {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println(model.getBst().getPoints().size());
     }
 }
