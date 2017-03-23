@@ -1,4 +1,4 @@
-package OSM.Coastlines;
+package Model.Coastlines;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,18 +22,16 @@ public class TestCoastlineFileGenerator {
         generator = CoastlineFileGenerator.getInstance();
     }
 
+    @After
+    public void tearDown() {
+        generator.resetInstance();
+    }
+
     @Test
     public void testSingleton() {
         assertNotNull(generator);
         CoastlineFileGenerator referenceTwo = CoastlineFileGenerator.getInstance();
         assertEquals(generator,referenceTwo);
-    }
-
-    // classes also has to be tested!
-
-    @Test
-    public void testMain() {
-
     }
 
     @Test
@@ -46,6 +44,8 @@ public class TestCoastlineFileGenerator {
 
     }
 
+
+    /* ------------ EMPTY TEST METHODS (ALWAYS EMPTY) ------------ */
     @Test
     public void testSetDocumentLocator() {}
 
@@ -72,10 +72,5 @@ public class TestCoastlineFileGenerator {
 
     @Test
     public void testSkippedEntity() {}
-
-    @After
-    public void tearDown() {
-        CoastlineFileGenerator.resetInstance();
-    }
 
 }

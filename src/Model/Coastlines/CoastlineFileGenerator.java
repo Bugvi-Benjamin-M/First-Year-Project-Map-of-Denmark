@@ -1,11 +1,10 @@
-package OSM.Coastlines;
+package Model.Coastlines;
 
 import Enums.FileType;
 import Enums.OSMEnums.WayType;
 import Helpers.OSDetector;
 
 import View.PopupWindow;
-import com.sun.org.apache.bcel.internal.generic.POP;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -223,7 +222,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
                 String v = atts.getValue("v");
                 switch (k){
                     case "natural":
-                        if (v.equals("coastline")) {
+                        if (v.equals(Coastline.OSM_IDENTIFIER)) {
                             wayType = WayType.COASTLINE;
                         }
                         break;
@@ -303,7 +302,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
     public void skippedEntity(String name) throws SAXException {}
 
     /* --------------- INTERNAL CLASSES - DO NOT USE OUTSIDE THIS CLASS --------------- */
-    public class NodeCarrier {
+    public static class NodeCarrier {
         long ref;
         double lat, lon;
 
@@ -320,7 +319,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
         }
     }
 
-    public class WayCarrier extends ArrayList<NodeCarrier> {
+    public static class WayCarrier extends ArrayList<NodeCarrier> {
         private long ref;
         private Map<String,String> tags;
 
@@ -401,7 +400,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
         }
     }
 
-    public static void resetInstance() {
+    public void resetInstance() {
         instance = null;
     }
 }
