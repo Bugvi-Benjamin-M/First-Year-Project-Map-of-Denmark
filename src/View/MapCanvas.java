@@ -8,7 +8,10 @@ import Theme.Theme;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.EnumMap;
 
 
@@ -61,6 +64,12 @@ public class MapCanvas extends View {
         boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMaxLatitude());
         boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
         g2D.draw(boundary);
+        ArrayList<Point2D> medianpoints = Model.getInstance().getMedianpoints();
+        if(medianpoints != null) {
+            for (Point2D median : medianpoints) {
+                g2D.draw(new Ellipse2D.Double(median.getX(), median.getY(), 0.0001f, 0.0001f));
+            }
+        }
     }
 
     //TODO remember to implement properly
@@ -72,7 +81,7 @@ public class MapCanvas extends View {
                 case SERVICE:
                     g.setColor(theme.getWaterColor());
                     g.setStroke(new BasicStroke(0.00001f));
-                    //g.draw(road.getPath());
+                    g.draw(road.getWay().toPath2D());
                     break;
                 case TERTIARY:
                     g.setColor(theme.getSandColor());

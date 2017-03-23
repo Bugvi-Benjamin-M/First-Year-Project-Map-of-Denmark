@@ -65,6 +65,7 @@ public class BST {
                 medianDepth = parent.depth + 1;
             }
             System.out.println(medianDepth);
+            Model.getInstance().addMedianPoints(median.getX(), median.getY());
             Node medianNode = new Node(median.getX(), median.getY(),medianDepth);
             putNode(medianNode);
             initialize(medianNode, low, low + (high-low)/2);
