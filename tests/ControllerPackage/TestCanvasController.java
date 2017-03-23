@@ -10,9 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.swing.*;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.FileNotFoundException;
 
 import static junit.framework.TestCase.assertEquals;
@@ -74,8 +73,40 @@ public class TestCanvasController {
     @Test
     public void testResetBounds() {
         //Todo implement properly
+        //Maybe consider Robot class
         //Transform is always identity, need to find a valid way to test this methof
     }
 
+    @Test
+    public void testUpdate() {
 
+        //Todo implement properly
+        Model.getInstance();
+        MapCanvas canvas = CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas();
+        CanvasController canvasController = CanvasController.getInstance(MainWindowController.getInstance().getWindow());
+        canvasController.update(Model.getInstance(), null);
+    }
+
+    @Test
+    public void testMousePressed() {
+        Model.getInstance();
+        MapCanvas canvas = CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas();
+        MouseListener[] listener = canvas.getMouseListeners();
+       // MouseEvent event = new MouseEvent(canvas, )
+
+        //tODO continue work here, create new mouse event. Maybe use robot class
+        //listener[0].mousePressed();
+
+
+    }
+
+    @Test
+    public void testMouseDragged() {
+        //Todo implement properly
+    }
+
+    @Test
+    public void testMouseWheelMoved() {
+        //Todo implement properly
+    }
 }
