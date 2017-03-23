@@ -50,6 +50,11 @@ public final class OSMHandler implements ContentHandler {
         return handler;
     }
 
+    public static void resetInstance()
+    {
+        handler = null;
+    }
+
     @Override
     public void setDocumentLocator(Locator locator) {
 
