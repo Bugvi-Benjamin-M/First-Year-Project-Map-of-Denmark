@@ -31,6 +31,7 @@ public final class OSMHandler implements ContentHandler {
     private float longitudeFactor;
     private Model model;
     private int loadednodes, loadedRelations, loadedWays;
+    private boolean initialized;
 
     private OSMHandler() {
         idToNode = new LongToPointMap(14);
@@ -110,8 +111,10 @@ public final class OSMHandler implements ContentHandler {
                 }
                 break;
             case "way":
-
-
+                if(!initialized){
+                    Model.getInstance().getBst().initialize();
+                    initialized = true;
+                }
                 way = new OSMWay();
                 id = Long.parseLong(atts.getValue("id"));
                 wayType = WayType.UNKNOWN;

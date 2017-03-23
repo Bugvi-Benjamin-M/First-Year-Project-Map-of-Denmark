@@ -26,7 +26,7 @@ public class Main {
         System.out.println(stoptime - starttime);
 
         try {
-            FileHandler.loadDefault("/defaultosm.osm");
+            FileHandler.loadDefault("/denmark-latest.zip");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
