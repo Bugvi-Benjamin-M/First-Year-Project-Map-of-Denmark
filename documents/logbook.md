@@ -186,7 +186,7 @@ Notice:
 Next meeting:
 Wednesday the 22 of March at 10.00
 
-## Logbook 20/3 (Scribe Hedam)
+## Logbook 22/3 (Scribe Hedam)
 What we will do today:
 - Status
 
@@ -199,6 +199,21 @@ Notes from meeting:
 
 Next meeting:
 Thursday the 23 of March at 10.00, for those who has time
+Friday the 24 of March at 10.00
+
+## Logbook 23/3 (Scribe Hedam)
+What we will do today:
+- Status
+- Work
+
+Impediments:
+- Lecture at 12'o'clock
+
+Notes from meeting:
+- Talked about tests and worked on our respective tasks.
+
+
+Next meeting:
 Friday the 24 of March at 10.00
 
 ## Next logbook...
