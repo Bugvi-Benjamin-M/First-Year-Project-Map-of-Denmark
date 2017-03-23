@@ -64,10 +64,11 @@ public class BST {
                 median = findMedianLatitude(lowTemp, highTemp);
                 medianDepth = parent.depth + 1;
             }
+            System.out.println(medianDepth);
             Node medianNode = new Node(median.getX(), median.getY(),medianDepth);
             putNode(medianNode);
-            initialize(medianNode, low, high/2);
-            initialize(medianNode, high/2, high);
+            initialize(medianNode, low, low + (high-low)/2);
+            initialize(medianNode, (high/2) + (high - low)/2, high);
         }
     }
 
