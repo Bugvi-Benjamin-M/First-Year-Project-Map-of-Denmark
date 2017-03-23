@@ -48,7 +48,6 @@ public abstract class WindowController extends Controller {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
-            System.out.println(window + " resized");
         }
 
 
