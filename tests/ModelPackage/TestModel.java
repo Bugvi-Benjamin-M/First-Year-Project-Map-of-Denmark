@@ -12,7 +12,6 @@ import OSM.OSMWay;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.geom.Path2D;
 import java.io.FileNotFoundException;
 
 import static junit.framework.TestCase.assertEquals;
@@ -54,7 +53,7 @@ public class TestModel {
         WindowController mainWindowController = MainWindowController.getInstance();
         CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         try {
-            FileHandler.loadDefault("/testRoad.osm");
+            FileHandler.loadResource("/testRoad.osm");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -108,7 +107,7 @@ public class TestModel {
         WindowController mainWindowController = MainWindowController.getInstance();
         CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         try {
-            FileHandler.loadDefault("/testRoad.osm");
+            FileHandler.loadResource("/testRoad.osm");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

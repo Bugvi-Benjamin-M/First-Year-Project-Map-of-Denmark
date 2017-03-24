@@ -20,7 +20,7 @@ public class FileHandler {
 
     private static String pathStart = OSDetector.getPathPrefix();
 
-    public static void loadDefault(String fileName) throws FileNotFoundException {
+    public static void loadResource(String fileName) throws FileNotFoundException {
         if(fileExists(fileName) && fileName.endsWith(FileType.OSM.getExtension())) {
             InputStream filename = FileHandler.class.getResourceAsStream(fileName);
             FileHandler.loadOSM(new InputSource(filename));

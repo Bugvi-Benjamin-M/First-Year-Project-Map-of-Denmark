@@ -2,20 +2,13 @@ import Controller.CanvasController;
 import Controller.MainWindowController;
 import Controller.WindowController;
 import Enums.OSMEnums.WayType;
-import Enums.RoadType;
 import org.junit.Test;
 import Model.Model;
-import Model.Road;
-
-import java.awt.geom.Path2D;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import org.junit.Before;
-import org.junit.After;
 import Helpers.FileHandler;
-import org.junit.Test;
-import Model.Model;
 
 import java.io.FileNotFoundException;
 import OSM.OSMHandler;
@@ -55,7 +48,7 @@ public class TestOSM {
     public void testBounds(){
 
         try {
-            FileHandler.loadDefault("/testUnknown.osm");
+            FileHandler.loadResource("/testUnknown.osm");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -67,14 +60,14 @@ public class TestOSM {
     @Test
     public void testReload(){
         try {
-            FileHandler.loadDefault("/testThreeRoads.osm");
+            FileHandler.loadResource("/testThreeRoads.osm");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
         int RoadCount = model.getWayElements().get(WayType.ROAD).size();
         assertEquals(3, RoadCount);
         try {
-            FileHandler.loadDefault("/testRoad.osm");
+            FileHandler.loadResource("/testRoad.osm");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -85,7 +78,7 @@ public class TestOSM {
     public void testRoads(){
 
         try {
-            FileHandler.loadDefault("/testRoad.osm");
+            FileHandler.loadResource("/testRoad.osm");
         }catch(FileNotFoundException e){
             throw new RuntimeException(e);
         }
@@ -98,7 +91,7 @@ public class TestOSM {
     public void testUnknown() {
 
         try {
-            FileHandler.loadDefault("/testUnknown.osm");
+            FileHandler.loadResource("/testUnknown.osm");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
