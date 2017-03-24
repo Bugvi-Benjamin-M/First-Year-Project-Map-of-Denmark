@@ -46,7 +46,6 @@ public class CoastlineFactory {
     }
 
     public List<Path2D> getCoastlinePolygons(float minLatitude, float maxLatitude) {
-        if (minLatitude >= maxLatitude) throw new IllegalArgumentException();
         setLongitudeFactor( minLatitude,  maxLatitude);
         return coastlines.stream().map(Coastline::toPath2D).collect(Collectors.toList());
     }

@@ -3,6 +3,7 @@ package Main;
 import Controller.*;
 import Helpers.FileHandler;
 import Model.Model;
+import View.PopupWindow;
 
 import java.io.FileNotFoundException;
 
@@ -11,6 +12,7 @@ import java.io.FileNotFoundException;
  */
 public class Main {
 
+    public static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
 
     public static void main(String[] args) {
 
@@ -21,13 +23,14 @@ public class Main {
         CanvasController.getInstance(windowController.getWindow());
         ToolbarController.getInstance(windowController.getWindow());
         InfobarController.getInstance(windowController.getWindow());
-        long starttime = System.currentTimeMillis();
+
         try {
-            FileHandler.loadResource("/denmark-latest.zip");
+            long startTime = System.currentTimeMillis();
+            FileHandler.loadResource(DEFAULT_RESOURCE);
+            long stopTime = System.currentTimeMillis();
+            System.out.println("Loading time: " + (stopTime - startTime) + " ms");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            PopupWindow.errorBox(null,"Program was not able to load up \""+DEFAULT_RESOURCE+"\"");
         }
-        long stoptime = System.currentTimeMillis();
-        System.out.println(stoptime - starttime);
     }
 }

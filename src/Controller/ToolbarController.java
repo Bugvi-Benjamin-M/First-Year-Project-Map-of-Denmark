@@ -32,7 +32,7 @@ public final class ToolbarController extends Controller {
         super(window);
         this.window = window;
         toolbar = new Toolbar();
-        window.addComponent(BorderLayout.PAGE_START, toolbar);
+        this.window.addComponent(BorderLayout.PAGE_START, toolbar);
         addInteractionHandlersToTools();
     }
 

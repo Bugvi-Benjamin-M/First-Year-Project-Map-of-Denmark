@@ -25,6 +25,7 @@ public final class CoastlineController extends Controller {
     private CoastlineController(Window window) {
         super(window);
         model = Model.getInstance();
+        loadCoastlines();
     }
 
     public static CoastlineController getInstance() {

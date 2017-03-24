@@ -35,7 +35,6 @@ public class MapCanvas extends View {
     private java.util.List<Path2D> coastlines;
     private Theme theme;
     private ArrayList<Element> currentSection;
-    private Rectangle2D rectangle = new Rectangle2D.Double(getWidth()/2, getHeight()/2, 1, 1);
 
     /**
      * The base Constructor for the MapCanvas.
@@ -47,6 +46,7 @@ public class MapCanvas extends View {
         this.dimension = dimension;
         setPreferredSize(this.dimension);
         this.setBackground(theme.getWaterColor());
+        coastlines = new ArrayList<>();
     }
 
     /**
@@ -73,11 +73,11 @@ public class MapCanvas extends View {
     }
 
     private void drawCoastlines(Graphics2D g) {
-        if (coastlines == null) throw new RuntimeException("Coastlines has not been set!");
         g.setColor(theme.getBackgroundColor());
         for (Path2D path: coastlines) {
             g.fill(path);
         }
+        System.out.println("Contains "+coastlines.size() + " coastlines");
     }
 
     //TODO remember to implement properly
@@ -167,7 +167,7 @@ public class MapCanvas extends View {
         this.wayElements = wayElements;
     }
 
-    public void setCoastlines(List<Path2D> coastlines) {
+    public void setCoastlines(java.util.List<Path2D> coastlines) {
         this.coastlines = coastlines;
     }
 

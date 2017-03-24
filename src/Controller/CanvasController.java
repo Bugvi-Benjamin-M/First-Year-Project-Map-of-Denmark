@@ -49,6 +49,7 @@ public final class CanvasController extends Controller implements Observer {
 
         mapCanvas = new MapCanvas(window.getDimension(), theme);
         mapCanvas.setWayElements(model.getWayElements());
+        mapCanvas.setCoastlines(coastlineController.getCoastlinePaths());
         addInteractionHandlerToCanvas();
         window.addComponent(BorderLayout.CENTER,mapCanvas);
     }

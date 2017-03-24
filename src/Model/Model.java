@@ -22,11 +22,7 @@ public final class Model extends Observable {
 
     private static Model instance;
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
-    private static Model model;
-    private float minLatitude;
-    private float maxLatitude;
-    private float minLongitude;
-    private float maxLongitude;
+
     private BST bst;
 
 
@@ -75,6 +71,13 @@ public final class Model extends Observable {
         this.maxLatitude = maxLatitude;
         this.minLongitude = minLongitude;
         this.maxLongitude = maxLongitude;
+    }
+
+    public boolean isBoundsSet() {
+        if (minLatitude == 0 && maxLatitude == 0 &&
+                minLongitude == 0 && maxLongitude == 0) {
+            return false;
+        } else return true;
     }
 
     public float getMinLatitude() {

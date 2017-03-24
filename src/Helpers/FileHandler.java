@@ -84,7 +84,9 @@ public class FileHandler {
             XMLReader reader = XMLReaderFactory.createXMLReader();
             reader.setContentHandler(handler);
             URL url = FileHandler.class.getClass().getResource("/coastlines.zip");
-            InputSource source = new InputSource(url.getPath());
+            ZipInputStream zip = new ZipInputStream(new FileInputStream(url.getFile()));
+            zip.getNextEntry();
+            InputSource source = new InputSource(zip);
             reader.parse(source);
             return handler.getCoastlineFactory();
         } catch (SAXException | IOException e) {
