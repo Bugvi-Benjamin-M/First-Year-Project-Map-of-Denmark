@@ -1,7 +1,7 @@
 package Controller;
 
 import Helpers.OSDetector;
-import Model.Model;
+import Model.*;
 import View.MapCanvas;
 import View.Window;
 import org.omg.CORBA.TIMEOUT;
@@ -151,6 +151,15 @@ public final class CanvasController extends Controller implements Observer {
         lastMousePosition = event.getPoint();
     }
 
+    private void mouseClickedEvent(MouseEvent event) {
+        Point2D mousePosition = event.getPoint();
+        Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
+        System.out.println(mouseInModel.getX() + " " + mouseInModel.getY());
+        ArrayList<Element> elements = Model.getInstance().getBst().getSection(mouseInModel.getX(), mouseInModel.getY());
+        mapCanvas.setCurrentSection(elements);
+        mapCanvas.repaint();
+    }
+
     private void mouseDraggedEvent(MouseEvent event) {
         Point2D currentMousePosition = event.getPoint();
         double dx = currentMousePosition.getX() - lastMousePosition.getX();
@@ -191,6 +200,11 @@ public final class CanvasController extends Controller implements Observer {
             mapCanvas.getActionMap().put(event.toString(), event);
         }
 
+
+        @Override
+        public void mouseClicked(MouseEvent e){
+            mouseClickedEvent(e);
+        }
 
         @Override
         public void mousePressed(MouseEvent e) {

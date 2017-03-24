@@ -1,7 +1,8 @@
 package Model;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
-import java.lang.reflect.Array;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 /**
@@ -50,7 +51,7 @@ public class BST {
         int medianDepth;
         if(size > 100000){
             if(parent == null || parent.depth % 2 == 1){
-                System.out.println("Sorting X (longitude)");
+                System.out.println("Sorting X (longitude)"); // for tests only
                 median = findMedianLongitude(lowTemp, highTemp);
                 if(parent == null){
                     medianDepth = 0;
@@ -60,16 +61,20 @@ public class BST {
                 }
             }
             else{
-                System.out.println("Sorting Y (latitude)");
+                System.out.println("Sorting Y (latitude)"); // for tests only
                 median = findMedianLatitude(lowTemp, highTemp);
                 medianDepth = parent.depth + 1;
             }
             System.out.println(medianDepth);
-            Model.getInstance().addMedianPoints(median.getX(), median.getY());
             Node medianNode = new Node(median.getX(), median.getY(),medianDepth);
+
+            // for tests only
+            if(medianNode.depth < 7){
+                Model.getInstance().addMedianPoints(median.getX(), median.getY());
+            }
+
             putNode(medianNode);
             initialize(medianNode, low, low + (high-low)/2);
-
             initialize(medianNode, low + (high-low)/2, high);
         }
     }
@@ -143,28 +148,24 @@ public class BST {
         pointsIndex++;
     }
 
-    /*public Point2D[] getPoints(){
-        return points;
-    }*/
-
-    public ArrayList<Element> getSection(Double latitudeKey, Double longitudeKey) {
-        return getSection(root, latitudeKey, longitudeKey);
+    public ArrayList<Element> getSection(Double longitudeKey, Double latitudeKey) {
+        return getSection(root, longitudeKey, latitudeKey);
     }
 
-    private ArrayList<Element> getSection(Node x, Double latitudeKey, Double longitudeKey) {
+    private ArrayList<Element> getSection(Node x, Double longitudeKey, Double latitudeKey) {
         // Return the Long associated with the subtree rooted at x.
         // Return null if keys are not both present in the subtree rooted at x.
         if (x == null) return null;
         if (x.elements == null) {
             if(x.depth % 2 == 0){
                 int compare = longitudeKey.compareTo(x.longitudeKey);
-                if (compare <= 0) return getSection(x.left, latitudeKey, longitudeKey);
-                else return getSection(x.right, latitudeKey, longitudeKey);
+                if (compare <= 0) return getSection(x.left, longitudeKey, latitudeKey);
+                else return getSection(x.right, longitudeKey, latitudeKey);
             }
             else{
                 int compare = latitudeKey.compareTo(x.latitudeKey);
-                if (compare <= 0) return getSection(x.left, latitudeKey, longitudeKey);
-                else return getSection(x.right, latitudeKey, longitudeKey);
+                if (compare <= 0) return getSection(x.left, longitudeKey, latitudeKey);
+                else return getSection(x.right, longitudeKey, latitudeKey);
             }
         }
         return x.getElements();
@@ -231,7 +232,6 @@ public class BST {
             }
         }
         else{
-
             x.addElement(element);
         }
     }

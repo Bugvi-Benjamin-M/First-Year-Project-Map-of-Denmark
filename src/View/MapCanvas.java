@@ -1,17 +1,16 @@
 package View;
 
+import Controller.CanvasController;
 import Enums.OSMEnums.WayType;
 import Model.Element;
 import Model.Model;
 import Model.Road;
 import OSM.OSMWay;
 import Theme.Theme;
+import javafx.scene.transform.NonInvertibleTransformException;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
+import java.awt.geom.*;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
@@ -35,6 +34,8 @@ public class MapCanvas extends View {
     private AffineTransform transform;
     private EnumMap<WayType, java.util.List<Element>> wayElements;
     private Theme theme;
+    private ArrayList<Element> currentSection;
+    private Rectangle2D rectangle = new Rectangle2D.Double(getWidth()/2, getHeight()/2, 1, 1);
 
     /**
      * The base Constructor for the MapCanvas.
@@ -76,9 +77,8 @@ public class MapCanvas extends View {
     //TODO remember to implement properly
     private void drawRoads(Graphics2D g){
         g.setStroke(new BasicStroke(0.00001f));
-        ArrayList<Element> roadelements = Model.getInstance().getBst().getSection(1.0,1.0);
-        if(roadelements != null) {
-            for (Element e : roadelements) {
+        if(currentSection != null) {
+            for (Element e : currentSection) {
                 Road r = (Road) e;
                 g.draw(r.getWay().toPath2D());
             }
@@ -144,5 +144,18 @@ public class MapCanvas extends View {
 
     public void setWayElements(EnumMap wayElements){
         this.wayElements = wayElements;
+    }
+    public Point2D toModelCoords(Point2D mousePosition){
+        try{
+            return transform.inverseTransform(mousePosition, null);
+
+        }catch(NoninvertibleTransformException e){
+            throw new RuntimeException();
+        }
+
+    }
+
+    public void setCurrentSection(ArrayList<Element> currentSection) {
+        this.currentSection = currentSection;
     }
 }
