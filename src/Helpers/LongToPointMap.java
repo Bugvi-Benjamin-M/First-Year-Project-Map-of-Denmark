@@ -2,42 +2,77 @@ package Helpers;
 import java.awt.geom.Point2D;
 
 /**
- * Created by Búgvi Magnussen on 17 March 2017
+ * Originally created by Troels Bjerre Lund on 17 March 2017
  *
- * @author bugvimagnussen
+ * Edited by Búgvi, Nikolaj, Andreas, Jakob, Niclas
+ *
+ * This class is a symbol table that maps a long key to a Node.
+ * A Node is a subtype of Point2D.Float.
+ *
  * @version 17/03/2017
  */
 
 public class LongToPointMap {
-    int MASK;
-    public Node[] tab;
 
+    private int MASK;
+    private Node[] base;
+
+
+    /**
+     * Creates a LongToPointMap object.
+     * @param capacity
+     */
     public LongToPointMap(int capacity) {
-        tab = new Node[1 << capacity];
-        MASK = tab.length - 1;
+        base = new Node[1 << capacity];
+        MASK = base.length - 1;
     }
+
+    /**
+     * This methods maps a given key to a set of coordinates
+     * @param key
+     * @param x
+     * @param y
+     */
 
     public void put(long key, float x, float y) {
-        int h = Long.hashCode(key) & MASK;
-        tab[h] = new Node(key, x, y, tab[h]);
+        int index = Long.hashCode(key) & MASK;
+        base[index] = new Node(key, x, y, base[index]);
     }
 
+
+    /**
+     * Returns the Point2D that was mapped to the given key. Null if the key
+     * does not exist.
+     * @param key
+     * @return the requested point
+     */
     public Point2D get(long key) {
-        for (Node n = tab[Long.hashCode(key) & MASK] ; n != null ; n = n.next) {
-            if (n.key == key) return n;
+        for (Node node = base[Long.hashCode(key) & MASK] ; node != null ; node = node.next) {
+            if (node.key == key) return node;
         }
         return null;
     }
 
+    /**
+     * Used by LongToNodeMap to create nodes and connect them.
+     */
     static class Node extends Point2D.Float {
         public static final long serialVersionUID = 20160216;
-        Node next;
-        long key;
+        private Node next;
+        private long key;
 
-        public Node(long _key, float x, float y, Node _next) {
+        /**
+         * Creates a new node
+         * @param key
+         * @param x
+         * @param y
+         * @param next
+         */
+
+        public Node(long key, float x, float y, Node next) {
             super(x, y);
-            key = _key;
-            next = _next;
+            this.key = key;
+            this.next = next;
         }
     }
 

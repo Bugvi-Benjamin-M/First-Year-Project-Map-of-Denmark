@@ -16,6 +16,7 @@ public final class Model extends Observable {
     private EnumMap<WayType, List<Element>> wayElements;
     private EnumMap<NodeType, List<Element>> nodeElements;
     private EnumMap<RelationType, List<Element>> relationElements;
+    private static Model instance;
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
     private static Model model;
     private float minLatitude;
@@ -39,10 +40,10 @@ public final class Model extends Observable {
     }
 
     public static Model getInstance() {
-        if(model == null) {
-            model = new Model();
+        if(instance == null) {
+            instance = new Model();
         }
-        return model;
+        return instance;
     }
 
     public void addWayElement(WayType type, Element element){
@@ -93,5 +94,9 @@ public final class Model extends Observable {
 
     public void addMedianPoints(Double longitude,Double latitude){
         medianpoints.add(new Point2D.Double(longitude, latitude));
+    }
+
+    public void resetInstance() {
+        instance = null;
     }
 }

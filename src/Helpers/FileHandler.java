@@ -4,6 +4,7 @@ import Controller.CanvasController;
 import Enums.FileType;
 import Model.Model;
 import OSM.OSMHandler;
+import View.PopupWindow;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -17,18 +18,7 @@ import java.util.zip.ZipInputStream;
  */
 public class FileHandler {
 
-    private static String pathStart;
-
-    static {
-        if (OSDetector.isWindows()) {
-            pathStart = "file:";
-        } else if (OSDetector.isMac()) {
-            pathStart = "file://";
-        } else {
-            pathStart = "file://";
-        }
-
-    }
+    private static String pathStart = OSDetector.getPathPrefix();
 
     public static void loadDefault(String fileName) throws FileNotFoundException {
         if(fileExists(fileName) && fileName.endsWith(FileType.OSM.getExtension())) {
@@ -55,7 +45,7 @@ public class FileHandler {
         return false;
     }
 
-    public static void load(String fileName) throws FileNotFoundException {
+    public static void fileChooserLoad(String fileName) {
         if(fileName.endsWith(FileType.OSM.getExtension())) {
                 loadOSM(new InputSource(pathStart + fileName));
         }else if(fileName.endsWith(FileType.ZIP.getExtension())){
@@ -66,6 +56,8 @@ public class FileHandler {
                 e.printStackTrace();
             }
             loadOSM(new InputSource(zip));
+        } else {
+            PopupWindow.infoBox(null, "Unsupported File Type. Please Select a New File!");
         }
     }
 

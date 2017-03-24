@@ -1,17 +1,17 @@
 package Controller;
 
+import Model.Model;
 import Helpers.OSDetector;
 import Model.*;
 import View.MapCanvas;
 import View.Window;
-import org.omg.CORBA.TIMEOUT;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit;
 public final class CanvasController extends Controller implements Observer {
 
     private static final double ZOOM_FACTOR = 0.9;
-    private static final double KEYBOARD_ZOOM_IN_FACTOR = -2.0;
-    private static final double KEYBOARD_ZOOM_OUT_FACTOR = 2.0;
+    private static final double KEYBOARD_ZOOM_FACTOR = 2.0;
+    private static final double PAN_FACTOR = 38.5;
 
     private enum PanType {
         LEFT,
@@ -61,16 +61,16 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void specifyKeyBindings() {
-        handler.addKeyBinding(KeyEvent.VK_PLUS, OSDetector.getActivationKey(), new AbstractAction() {
+        handler.addKeyBinding(KeyEvent.VK_PLUS, KeyEvent.VK_UNDEFINED, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                keyboardZoomEvent(KEYBOARD_ZOOM_IN_FACTOR);
+                keyboardZoomEvent(-KEYBOARD_ZOOM_FACTOR);
             }
         });
-        handler.addKeyBinding(KeyEvent.VK_MINUS, OSDetector.getActivationKey(), new AbstractAction() {
+        handler.addKeyBinding(KeyEvent.VK_MINUS, KeyEvent.VK_UNDEFINED, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                keyboardZoomEvent(KEYBOARD_ZOOM_OUT_FACTOR);
+                keyboardZoomEvent(KEYBOARD_ZOOM_FACTOR);
             }
         });
         handler.addKeyBinding(KeyEvent.VK_UP, KeyEvent.VK_UNDEFINED, new AbstractAction() {
@@ -97,6 +97,42 @@ public final class CanvasController extends Controller implements Observer {
                 panEvent(PanType.RIGHT);
             }
         });
+        handler.addKeyBinding(KeyEvent.VK_NUMPAD6, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panEvent(PanType.RIGHT);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_NUMPAD2, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panEvent(PanType.DOWN);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_NUMPAD4, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panEvent(PanType.LEFT);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_NUMPAD8, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panEvent(PanType.UP);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_ADD, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                keyboardZoomEvent(-KEYBOARD_ZOOM_FACTOR);
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_SUBTRACT, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                keyboardZoomEvent(KEYBOARD_ZOOM_FACTOR);
+            }
+        });
     }
 
     private void panEvent(PanType type) {
@@ -105,18 +141,18 @@ public final class CanvasController extends Controller implements Observer {
         switch (type) {
             case DOWN:
                 dx = 0;
-                dy = -38.5;
+                dy = -PAN_FACTOR;
                 break;
             case UP:
                 dx = 0;
-                dy = 38.5;
+                dy = PAN_FACTOR;
                 break;
             case LEFT:
-                dx = 38.5;
+                dx = PAN_FACTOR;
                 dy = 0;
                 break;
             case RIGHT:
-                dx = -38.5;
+                dx = -PAN_FACTOR;
                 dy = 0;
                 break;
         }
@@ -126,16 +162,6 @@ public final class CanvasController extends Controller implements Observer {
     public static void adjustToBounds() {
         mapCanvas.pan(-model.getMinLongitude(), -model.getMaxLatitude());
         mapCanvas.zoom(mapCanvas.getWidth()/(model.getMaxLongitude()- model.getMinLongitude()));
-    }
-
-    /**
-     * This method returns the mapCanvas used by the MapCanvasController. It is only used for
-     * testing purposes.
-     * @return the mapCanvas instance
-     *
-     */
-    public MapCanvas getMapCanvas(){
-        return mapCanvas;
     }
 
     public static void resetBounds(){
@@ -221,4 +247,13 @@ public final class CanvasController extends Controller implements Observer {
             mouseWheelMovedEvent(e);
         }
     }
+
+    public MapCanvas getMapCanvas(){
+        return mapCanvas;
+    }
+
+    public void resetInstance() {
+        instance = null;
+    }
+
 }

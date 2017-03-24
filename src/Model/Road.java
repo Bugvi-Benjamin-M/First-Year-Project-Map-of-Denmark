@@ -9,7 +9,7 @@ import java.awt.geom.Path2D;
 /**
  * Created by Jakob on 06-03-2017.
  */
-public class Road extends Element {
+public class Road implements Element {
     private RoadType roadType;
     private String name;
     private OSMWay way;

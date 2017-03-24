@@ -42,7 +42,8 @@ public class ToolFeature extends ToolComponent {
         iconLabel = new JPanel();
         iconLabel.add(new JLabel(icon));
         label = new JPanel();
-        label.add(new JLabel(type.toString()));
+            label.add(new JLabel(type.toString()));
+
         this.setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
         this.add(iconLabel);
         this.add(label);

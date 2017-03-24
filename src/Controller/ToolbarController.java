@@ -12,10 +12,7 @@ import View.Window;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.FileNotFoundException;
 
 /**
@@ -29,9 +26,11 @@ public final class ToolbarController extends Controller {
 
     private Toolbar toolbar;
     private static ToolbarController instance;
+    private Window window;
 
     private ToolbarController(Window window) {
         super(window);
+        this.window = window;
         toolbar = new Toolbar();
         window.addComponent(BorderLayout.PAGE_START, toolbar);
         addInteractionHandlersToTools();
@@ -47,6 +46,7 @@ public final class ToolbarController extends Controller {
     private void addInteractionHandlersToTools() {
         addInteractionHandlerToLoadTool();
         addInteractionHandlerToSaveTool();
+        addInteractionHandlerToSettingsTool();
     }
 
     private void addInteractionHandlerToSaveTool() {
@@ -57,6 +57,10 @@ public final class ToolbarController extends Controller {
         new ToolInteractionHandler(ToolType.LOAD, KeyEvent.VK_L, OSDetector.getActivationKey());
     }
 
+    private void addInteractionHandlerToSettingsTool() {
+        new ToolInteractionHandler(ToolType.SETTINGS, KeyEvent.VK_E, OSDetector.getActivationKey());
+    }
+
     private void toolEvent(ToolType type) {
         switch (type) {
             case LOAD:
@@ -64,6 +68,9 @@ public final class ToolbarController extends Controller {
                 break;
             case SAVE:
                 saveEvent();
+                break;
+            case SETTINGS:
+                settingsEvent();
                 break;
         }
     }
@@ -76,9 +83,10 @@ public final class ToolbarController extends Controller {
         };
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {
+            FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
             try {
-                FileHandler.load(chooser.getSelectedFile().toString());
-            } catch (FileNotFoundException e) {
+                FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -91,8 +99,17 @@ public final class ToolbarController extends Controller {
         toolbar.toggleWellOnTool(ToolType.SAVE);
     }
 
+    private void settingsEvent() {
+        toolbar.toggleWellOnTool(ToolType.SETTINGS);
+        WindowController settingsWindowController = SettingsWindowController.getInstance();
+    }
+
     public Toolbar getToolbar() {
         return toolbar;
+    }
+
+    public void resetInstance() {
+        instance = null;
     }
 
      private class ToolInteractionHandler extends MouseAdapter {

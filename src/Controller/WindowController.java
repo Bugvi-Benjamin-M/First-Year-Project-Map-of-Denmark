@@ -1,79 +1,63 @@
 package Controller;
 
-import Helpers.OSDetector;
-import View.PopupWindow;
 import View.Window;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicLookAndFeel;
-import javax.tools.Tool;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-import java.security.Key;
 
 /**
- * Created by Búgvi Magnussen on 14-03-2017.
+ * Created by  on .
+ *
+ * @author bugvimagnussen
+ * @version 20/03/2017
  */
-public final class WindowController extends Controller {
+public abstract class WindowController extends Controller {
 
-    private static WindowController instance;
-    private WindowInteractionHandler handler;
+    protected WindowInteractionHandler handler;
 
-    private WindowController(Window window) {
+    public WindowController(Window window) {
         super(window);
         addInteractionHandlerToWindow();
-    }
-
-    public static WindowController getInstance(Window window) {
-        if(instance == null) {
-            instance = new WindowController(window);
-        }
-        return instance;
+        specifyKeyBindings();
     }
 
     private void addInteractionHandlerToWindow() {
-        handler = new WindowInteractionHandler((JPanel) window.getFrame().getContentPane());
+        handler = new WindowInteractionHandler();
         window.getFrame().addComponentListener(handler);
-        specifyKeyBindings();
-
     }
 
-    private void specifyKeyBindings() {
-        handler.addKeyBinding(KeyEvent.VK_ESCAPE, KeyEvent.VK_UNDEFINED, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Toolkit.getDefaultToolkit().beep();
-                if(PopupWindow.confirmBox(null, "Do You Wish to Quit OSM Visualiser?",
-                        "PLease Confirm!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    System.exit(0);
-                }
-            }
-        });
+    protected abstract void specifyKeyBindings();
+
+
+    public Window getWindow() {
+        return window;
     }
 
+    public abstract void resetInstance();
 
-    private class WindowInteractionHandler extends ComponentAdapter {
+    protected class WindowInteractionHandler extends ComponentAdapter {
 
-        private JPanel content;
+        protected JPanel content;
 
-        public WindowInteractionHandler(JPanel content) {
-            this.content = content;
+
+        protected WindowInteractionHandler() {
+            this.content = (JPanel) window.getFrame().getContentPane();
         }
 
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
-            System.out.println("Window Resized");
         }
 
-        private void addKeyBinding(int key, int activationKey, AbstractAction event) {
+
+        protected void addKeyBinding(int key, int activationKey, AbstractAction event) {
             content.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).
                     put(KeyStroke.getKeyStroke(key, activationKey), event.toString());
             content.getActionMap().put(event.toString(), event);
 
         }
+
+
     }
 }

@@ -1,6 +1,7 @@
 package View;
 
 import Enums.ToolType;
+import Helpers.ThemeHelper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +25,8 @@ public class Toolbar extends View {
 
     private final int MARGIN_SMALL_LEFT = 20;
     private final int MARGIN_LARGE_LEFT = 80;
+    private final int MARGIN_SMALL_RIGHT = -20;
+    private final int MARGIN_LARGE_RIGHT = -80;
     private final int MARGIN_TOP = 5;
 
     /**
@@ -39,6 +42,8 @@ public class Toolbar extends View {
 
         this.setPreferredSize(new Dimension(500,100));
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+        this.setBackground(ThemeHelper.getTheme().getToolbarColor());
     }
 
     public void toggleWellOnTool(ToolType type) {
@@ -50,8 +55,8 @@ public class Toolbar extends View {
      * Creates and adds all the tools to the toolbar
      */
     private void setupTools() {
-        ToolComponent tool = addLoadTool();
-        addSaveTool(tool);
+        addSaveTool(addLoadTool());
+        addSettingsTool();
     }
 
     /**
@@ -75,7 +80,7 @@ public class Toolbar extends View {
      * @param tool the reference to the tool so that this tool can
      *             be positioned to the right of that tool
      */
-    private void addSaveTool(ToolComponent tool) {
+    private ToolComponent addSaveTool(ToolComponent tool) {
         ToolComponent next = tools.get(ToolType.SAVE);
         layout.putConstraint(WEST, next,
                 MARGIN_SMALL_LEFT,
@@ -85,11 +90,28 @@ public class Toolbar extends View {
                 NORTH, this);
         tool = next;
         this.add( tool);
+        return tool;
+    }
+
+    /**
+     * Creates the settings tool, positions it and adds it to the toolbar
+     *
+     */
+    private ToolComponent addSettingsTool() {
+        ToolComponent tool = tools.get(ToolType.SETTINGS);
+        layout.putConstraint(EAST, tool,
+                MARGIN_SMALL_RIGHT,
+                EAST, this);
+        layout.putConstraint(NORTH, tool,
+                MARGIN_TOP,
+                NORTH, this);
+        this.add( tool);
+        return tool;
     }
 
     /**
      * Returns the ToolComponent of the type given as parameter
-     * @param type
+     * @param type of the tool to be returned
      * @return a ToolFeature
      */
     public ToolComponent getTool(ToolType type) {
@@ -103,6 +125,7 @@ public class Toolbar extends View {
 
             tools.put(ToolType.LOAD, new ToolFeature("/load.png",ToolType.LOAD));
             tools.put(ToolType.SAVE, new ToolFeature("/save.png",ToolType.SAVE));
+            tools.put(ToolType.SETTINGS, new ToolFeature("/cogs.png",ToolType.SETTINGS));
             return tools;
         }
     }

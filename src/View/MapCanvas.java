@@ -7,7 +7,6 @@ import Model.Model;
 import Model.Road;
 import OSM.OSMWay;
 import Theme.Theme;
-import javafx.scene.transform.NonInvertibleTransformException;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -46,6 +45,7 @@ public class MapCanvas extends View {
         this.theme = theme;
         this.dimension = dimension;
         setPreferredSize(this.dimension);
+        this.setBackground(theme.getBackgroundColor());
     }
 
 
@@ -142,6 +142,11 @@ public class MapCanvas extends View {
         repaint();
     }
 
+
+    /**
+     * Lets other objects add an EnumMap to the MapCanvas
+     * @param wayElements
+     */
     public void setWayElements(EnumMap wayElements){
         this.wayElements = wayElements;
     }
