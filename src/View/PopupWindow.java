@@ -47,8 +47,8 @@ public class PopupWindow {
         }
     }
 
-    public static void infoBox(JFrame relativeTo, String message) {
-        JOptionPane.showMessageDialog(relativeTo, message);
+    public static void infoBox(JFrame relativeTo, String message, String title) {
+        JOptionPane.showMessageDialog(relativeTo, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void errorBox(JFrame relativeTo,String message) {

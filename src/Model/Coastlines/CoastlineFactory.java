@@ -18,7 +18,7 @@ public class CoastlineFactory {
 
     private List<Coastline> coastlines;
     private EnumMap<BoundType,Double> bounds;
-    private static float longitudeFactor;
+    private static double longitudeFactor;
 
     protected CoastlineFactory() {
         coastlines = new ArrayList<>();
@@ -27,10 +27,10 @@ public class CoastlineFactory {
 
     public void setLongitudeFactor(float minLatitude, float maxLatitude) {
         float avglat = minLatitude + (maxLatitude - minLatitude)/2;
-        longitudeFactor = (float) Math.cos(avglat/180*Math.PI);
+        longitudeFactor = Math.cos(avglat/180*Math.PI);
     }
 
-    protected static float getLongitudeFactor() {
+    protected static double getLongitudeFactor() {
         return longitudeFactor;
     }
 

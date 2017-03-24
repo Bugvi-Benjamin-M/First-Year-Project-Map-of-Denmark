@@ -22,9 +22,9 @@ public class Coastline extends OSMWay {
     @Override
     public Path2D toPath2D() {
         List<Point2D> points = new ArrayList<>();
-        float longFactor = CoastlineFactory.getLongitudeFactor();
+        double longFactor = CoastlineFactory.getLongitudeFactor();
         for (OSMNode node: this) {
-            points.add(new Point2D.Float(node.getLongitude()*longFactor,node.getLatitude()));
+            points.add(new Point2D.Float((float) (node.getLongitude()*longFactor),node.getLatitude()));
         }
         Path2D path = new Path2D.Float();
         Point2D node = points.get(0);

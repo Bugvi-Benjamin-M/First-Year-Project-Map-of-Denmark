@@ -2,6 +2,8 @@ package Helpers;
 
 import Controller.CanvasController;
 import Enums.FileType;
+import Model.Coastlines.CoastlineFactory;
+import Model.Coastlines.CoastlineHandler;
 import Model.Model;
 import OSM.OSMHandler;
 import View.PopupWindow;
@@ -41,7 +43,7 @@ public class FileHandler {
         if(fileName.endsWith(FileType.OSM.getExtension())) {
                 loadOSM(new InputSource(pathStart + fileName));
         } else {
-            PopupWindow.infoBox(null, "Unsupported File Type. Please Select a New File!");
+            PopupWindow.errorBox(null, "Unsupported File Type. Please Select a New File!");
         }
     }
 
@@ -54,10 +56,23 @@ public class FileHandler {
             reader.parse(inputSource);
             Model.getInstance().modelHasChanged();
             CanvasController.adjustToBounds();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (SAXException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static CoastlineFactory loadCoastlines() {
+        CoastlineHandler handler = CoastlineHandler.getInstance();
+        try {
+            XMLReader reader = XMLReaderFactory.createXMLReader();
+            reader.setContentHandler(handler);
+            // TODO: Add coastline.osm as a resource and reference it with InputSource
+            InputSource source = new InputSource();
+            reader.parse(source);
+            return handler.getCoastlineFactory();
+        } catch (SAXException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

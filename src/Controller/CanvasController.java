@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.Coastlines.CoastlineFactory;
 import Model.Model;
 import View.MapCanvas;
 import View.Window;
@@ -30,6 +31,9 @@ public final class CanvasController extends Controller implements Observer {
     private static MapCanvas mapCanvas;
     private static Model model;
     private static CanvasController instance;
+
+    private static CoastlineController coastlineController;
+
     private Point2D lastMousePosition;
     private CanvasInteractionHandler handler;
 
@@ -37,6 +41,9 @@ public final class CanvasController extends Controller implements Observer {
         super(window);
         model = Model.getInstance();
         model.addObserver(this);
+
+        coastlineController = CoastlineController.getInstance();
+
         mapCanvas = new MapCanvas(window.getDimension(), theme);
         mapCanvas.setWayElements(model.getWayElements());
         addInteractionHandlerToCanvas();
@@ -158,6 +165,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     public static void adjustToBounds() {
+        coastlineController.adjustToBounds();
         mapCanvas.pan(-model.getMinLongitude(), -model.getMaxLatitude());
         mapCanvas.zoom(mapCanvas.getWidth()/(model.getMaxLongitude()- model.getMinLongitude()));
     }

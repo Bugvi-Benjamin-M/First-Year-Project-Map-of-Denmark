@@ -2,6 +2,8 @@ package Model;
 import Enums.OSMEnums.NodeType;
 import Enums.OSMEnums.RelationType;
 import Enums.OSMEnums.WayType;
+import Model.Coastlines.Coastline;
+import Model.Coastlines.CoastlineFactory;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -12,15 +14,14 @@ import java.util.Observable;
  * Created by Jakob on 06-03-2017.
  */
 public final class Model extends Observable {
+
     private EnumMap<WayType, List<Element>> wayElements;
     private EnumMap<NodeType, List<Element>> nodeElements;
     private EnumMap<RelationType, List<Element>> relationElements;
-    private static Model instance;
-    private float minLatitude;
-    private float maxLatitude;
-    private float minLongitude;
-    private float maxLongitude;
 
+    private static Model instance;
+
+    private float minLatitude, maxLatitude, minLongitude, maxLongitude;
 
     private Model(){
         wayElements = new EnumMap<>(WayType.class);

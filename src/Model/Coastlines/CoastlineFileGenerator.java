@@ -81,6 +81,9 @@ public final class CoastlineFileGenerator implements ContentHandler {
      * @param args
      */
     public static void main(String[] args) {
+        PopupWindow.infoBox(null,"The function of this program is to load an osm file and discover any " +
+                "and all coastlines\n as well as any nation borders on land to create a rough outline " +
+                "of the land. \n\nOn the next window please select an osm file.","About this helper");
         JFileChooser fileChooser = PopupWindow.fileLoader(false,null);
         try {
             if (fileChooser == null) throw new Exception();
@@ -99,6 +102,9 @@ public final class CoastlineFileGenerator implements ContentHandler {
             System.out.println("Loading from file: \""+fileName+"\"\n");
             loadOSM(new InputSource(pathStart + fileName));
         }
+        PopupWindow.infoBox(null,"The following file has been loaded:\n\""+fileName+"\"\n into" +
+                " the helper which contains "+coastlines.size()+" coastlines.\n\n" +
+                "On the next window please select a location and a name for the new osm file.","File loaded");
     }
 
     private static void loadOSM(InputSource inputSource) {
@@ -169,6 +175,9 @@ public final class CoastlineFileGenerator implements ContentHandler {
 
                 // footer
                 writer.write("</osm>");
+
+                PopupWindow.infoBox(null,"Coastlines has been saved to \""+file+"\"...\nProgram will now terminate",
+                        "File saved...");
             } catch (IOException x) {
                 System.err.format("IOException: %s%n", x);
             }

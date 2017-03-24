@@ -89,7 +89,7 @@ public final class ToolbarController extends Controller {
 
     private void saveEvent() {
         toolbar.toggleWellOnTool(ToolType.SAVE);
-        PopupWindow.infoBox(null, "You activated save tool");
+        PopupWindow.infoBox(null, "You activated save tool","Tool activated");
         toolbar.toggleWellOnTool(ToolType.SAVE);
     }
 

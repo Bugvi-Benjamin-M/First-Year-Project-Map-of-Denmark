@@ -15,7 +15,9 @@ public class Main {
     public static void main(String[] args) {
 
         Model.getInstance();
+
         WindowController windowController = MainWindowController.getInstance();
+
         CanvasController.getInstance(windowController.getWindow());
         ToolbarController.getInstance(windowController.getWindow());
         InfobarController.getInstance(windowController.getWindow());
