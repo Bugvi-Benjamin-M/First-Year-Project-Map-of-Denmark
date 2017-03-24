@@ -19,11 +19,11 @@ public class OSMWay extends ArrayList<Point2D> {
         return path;
     }
 
-    public OSMNode getFromNode() {
+    public Point2D getFromNode() {
         return this.get(0);
     }
 
-    public OSMNode getToNode() {
+    public Point2D getToNode() {
         return this.get(size()-1);
     }
 }

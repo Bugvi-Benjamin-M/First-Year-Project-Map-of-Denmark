@@ -49,13 +49,13 @@ public class FileHandler {
         if(fileName.endsWith(FileType.OSM.getExtension())) {
                 loadOSM(new InputSource(pathStart + fileName));
         }else if(fileName.endsWith(FileType.ZIP.getExtension())){
-            ZipInputStream zip = new ZipInputStream(new FileInputStream(fileName));
             try {
+                ZipInputStream zip = new ZipInputStream(new FileInputStream(fileName));
                 zip.getNextEntry();
+                loadOSM(new InputSource(zip));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            loadOSM(new InputSource(zip));
         } else {
             PopupWindow.infoBox(null, "Unsupported File Type. Please Select a New File!");
         }
