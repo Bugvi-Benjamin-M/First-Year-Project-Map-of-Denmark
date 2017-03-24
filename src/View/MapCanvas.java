@@ -41,6 +41,7 @@ public class MapCanvas extends View {
         this.theme = theme;
         this.dimension = dimension;
         setPreferredSize(this.dimension);
+        this.setBackground(theme.getBackgroundColor());
     }
 
 
@@ -69,19 +70,29 @@ public class MapCanvas extends View {
         for(Element element : roads){
             Road road = (Road) element;
             switch(road.getRoadType()){
-                case SERVICE:
-                    g.setColor(theme.getWaterColor());
-                    g.setStroke(new BasicStroke(0.00001f));
+                case HIGHWAY:
+                    g.setColor(theme.getHighwayRoadColor());
+                    g.setStroke(new BasicStroke(0.00008f));
+                    g.draw(road.getPath());
+                    break;
+                case PRIMARY:
+                    g.setColor(theme.getPrimaryRoadColor());
+                    g.setStroke(new BasicStroke(0.00008f));
+                    g.draw(road.getPath());
+                    break;
+                case SECONDARY:
+                    g.setColor(theme.getSecondaryRoadColor());
+                    g.setStroke(new BasicStroke(0.00004f));
                     g.draw(road.getPath());
                     break;
                 case TERTIARY:
-                    g.setColor(theme.getSandColor());
-                    g.setStroke(new BasicStroke(0.00001f));
+                    g.setColor(theme.getTertiaryRoadColor());
+                    g.setStroke(new BasicStroke(0.00002f));
                     g.draw(road.getPath());
                     break;
                 case UNCLASSIFIED:
-                    g.setColor(theme.getParkColor());
-                    g.setStroke(new BasicStroke(0.00001f));
+                    g.setColor(theme.getTertiaryRoadColor());
+                    g.setStroke(new BasicStroke(0.00002f));
                     g.draw(road.getPath());
                     break;
 

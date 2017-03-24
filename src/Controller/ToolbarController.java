@@ -8,7 +8,6 @@ import View.PopupWindow;
 import View.ToolFeature;
 import View.Toolbar;
 import View.Window;
-import View.ThemeSetting;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -83,7 +82,7 @@ public final class ToolbarController extends Controller {
         };
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {
-            FileHandler.load(chooser.getSelectedFile().toString());
+            FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
         }
         toolbar.toggleWellOnTool(ToolType.LOAD);
     }
@@ -96,34 +95,14 @@ public final class ToolbarController extends Controller {
 
     private void settingsEvent() {
         toolbar.toggleWellOnTool(ToolType.SETTINGS);
-        Window settings = new Window().title("Settings")
-                            .closeOperation(WindowConstants.DISPOSE_ON_CLOSE)
-                            .dimension(new Dimension(500, 500))
-                            .relativeTo(null)
-                            .extendedState(JFrame.NORMAL)
-                            .layout(new BorderLayout())
-                            .show();
-
-
-        settings.addComponent(BorderLayout.NORTH, new ThemeSetting());
-        settings.getFrame().addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                super.windowClosing(e);
-                toolbar.toggleWellOnTool(ToolType.SETTINGS);
-            }
-        });
+        WindowController settingsWindowController = SettingsWindowController.getInstance();
     }
 
     public Toolbar getToolbar() {
         return toolbar;
     }
 
-    /**
-     * This method has private access and is only used by unit tests. The unit tests override the private access.
-     * The argument for this method, is that it enables the tests to be independent
-     */
-    private void resetInstance() {
+    public void resetInstance() {
         instance = null;
     }
 

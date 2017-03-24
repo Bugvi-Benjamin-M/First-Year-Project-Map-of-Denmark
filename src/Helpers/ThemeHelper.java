@@ -1,6 +1,10 @@
 package Helpers;
 
-import Theme.*;
+import Theme.DefaultTheme;
+import Theme.Theme;
+
+import java.awt.*;
+
 
 /**
  * Created by  on .
@@ -15,5 +19,10 @@ public class ThemeHelper {
             return null;
         }
         return new DefaultTheme();
+    }
+
+    public static Color getColor(String color){
+        return null;
+        //TODO: Get color from getTheme by Reflection
     }
 }

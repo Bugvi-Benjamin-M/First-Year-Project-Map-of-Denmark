@@ -50,6 +50,11 @@ public final class OSMHandler implements ContentHandler {
         return handler;
     }
 
+    public static void resetInstance()
+    {
+        handler = null;
+    }
+
     @Override
     public void setDocumentLocator(Locator locator) {
 
@@ -125,6 +130,15 @@ public final class OSMHandler implements ContentHandler {
         switch (value){
             case "service":
                 roadType = RoadType.SERVICE;
+                break;
+            case "highway":
+                roadType = RoadType.HIGHWAY;
+                break;
+            case "primary":
+                roadType = RoadType.PRIMARY;
+                break;
+            case "secondary":
+                roadType = RoadType.SECONDARY;
                 break;
             case "tertiary":
                 roadType = RoadType.TERTIARY;
