@@ -4,6 +4,7 @@ import Enums.OSMEnums.WayType;
 import Model.Element;
 import Model.Model;
 import Model.Road;
+import OSM.OSMWay;
 import Theme.Theme;
 
 import java.awt.*;
@@ -67,7 +68,7 @@ public class MapCanvas extends View {
         ArrayList<Point2D> medianpoints = Model.getInstance().getMedianpoints();
         if(medianpoints != null) {
             for (Point2D median : medianpoints) {
-                g2D.draw(new Ellipse2D.Double(median.getX(), median.getY(), 0.0001f, 0.0001f));
+                g2D.fill(new Ellipse2D.Double(median.getX(), median.getY(), 0.01f, 0.01f));
             }
         }
     }
@@ -81,7 +82,8 @@ public class MapCanvas extends View {
                 case SERVICE:
                     g.setColor(theme.getWaterColor());
                     g.setStroke(new BasicStroke(0.00001f));
-                    g.draw(road.getWay().toPath2D());
+                    OSMWay way = road.getWay();
+                    g.draw(way.toPath2D());
                     break;
                 case TERTIARY:
                     g.setColor(theme.getSandColor());
