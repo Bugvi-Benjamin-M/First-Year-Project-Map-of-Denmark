@@ -57,6 +57,8 @@ public final class CoastlineFileGenerator implements ContentHandler {
 
     private static double minLatitude, maxLatitude, minLongitude, maxLongitude;
 
+    private static long timer;
+
     private static final boolean debugging = false;     // change this for more infomation
 
     private CoastlineFileGenerator() {
@@ -84,6 +86,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
                 "and all coastlines\n as well as any nation borders on land to create a rough outline " +
                 "of the land. \n\nOn the next window please select an osm file.","About this helper");
         JFileChooser fileChooser = PopupWindow.fileLoader(false,null);
+        timer = System.currentTimeMillis();
         try {
             if (fileChooser == null) throw new Exception();
             String filename = fileChooser.getSelectedFile().getAbsolutePath();
@@ -116,6 +119,8 @@ public final class CoastlineFileGenerator implements ContentHandler {
             }
         }
 
+        System.out.println("Elapsed time of loading: "+((System.currentTimeMillis()-timer)/1000)+" s");
+
         PopupWindow.infoBox(null,"The following file has been loaded:\n\""+fileName+"\"\n into" +
                 " the helper which contains "+coastlines.size()+" coastlines.\n\n" +
                 "On the next window please select a location and a name for the new osm file.","File loaded");
@@ -136,7 +141,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
         Charset charset = Charset.forName("UTF-8");  // unicode encoding
 
         JFileChooser fileChooser = PopupWindow.fileSaver(false,null);
-
+        timer = System.currentTimeMillis();
         if (fileChooser != null) {
             // retrieves path
             File selectedFile = fileChooser.getSelectedFile();
@@ -196,10 +201,13 @@ public final class CoastlineFileGenerator implements ContentHandler {
                 System.err.format("IOException: %s%n", x);
             }
 
-            System.out.println("\n... writing complete\n... closing file");
+            System.out.println("\n... writing complete ... closing file");
         } else {
             PopupWindow.errorBox(null,"No file selected!");
         }
+
+        System.out.println("Elapsed time of saving: "+((System.currentTimeMillis()-timer)/1000)+" s");
+
     }
 
 

@@ -15,6 +15,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -66,8 +67,8 @@ public class FileHandler {
         try {
             XMLReader reader = XMLReaderFactory.createXMLReader();
             reader.setContentHandler(handler);
-            // TODO: Add coastline.osm as a resource and reference it with InputSource
-            InputSource source = new InputSource();
+            URL url = FileHandler.class.getClass().getResource("/coastlines.zip");
+            InputSource source = new InputSource(url.getPath());
             reader.parse(source);
             return handler.getCoastlineFactory();
         } catch (SAXException | IOException e) {
