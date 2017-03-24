@@ -19,10 +19,13 @@ public class Main {
         CanvasController.getInstance(windowController.getWindow());
         ToolbarController.getInstance(windowController.getWindow());
         InfobarController.getInstance(windowController.getWindow());
+        long starttime = System.currentTimeMillis();
         try {
-            FileHandler.loadDefault("/defaultosm.osm");
+            FileHandler.loadDefault("/denmark-latest.zip");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        long stoptime = System.currentTimeMillis();
+        System.out.println(stoptime - starttime);
     }
 }

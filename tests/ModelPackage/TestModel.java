@@ -8,6 +8,7 @@ import Enums.RoadType;
 import Helpers.FileHandler;
 import Model.Model;
 import Model.Road;
+import OSM.OSMWay;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,7 +42,7 @@ public class TestModel {
         WindowController mainWindowController = MainWindowController.getInstance();
         CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         assertEquals(0, model.getWayElements().get(WayType.ROAD).size());
-        Path2D path = new Path2D.Float();
+        OSMWay path = new OSMWay();
         model.addWayElement(WayType.ROAD, new Road(RoadType.SERVICE, path));
         assertEquals(1, model.getWayElements().get(WayType.ROAD).size());
     }

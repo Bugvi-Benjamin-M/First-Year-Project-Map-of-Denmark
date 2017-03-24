@@ -4,6 +4,7 @@ import Enums.BoundType;
 import OSM.OSMNode;
 
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,7 +39,7 @@ public class CoastlineFactory {
         bounds.put(type,value);
     }
 
-    protected void insertCoastline(Collection<OSMNode> nodes) {
+    protected void insertCoastline(Collection<Point2D> nodes) {
         Coastline object = new Coastline();
         object.addAll(nodes);
         coastlines.add(object);
