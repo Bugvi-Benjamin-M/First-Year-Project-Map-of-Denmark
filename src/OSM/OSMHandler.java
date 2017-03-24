@@ -34,7 +34,7 @@ public final class OSMHandler implements ContentHandler {
     private boolean initialized;
 
     private OSMHandler() {
-        idToNode = new LongToPointMap(14);
+        idToNode = new LongToPointMap(22);
         idToWay = new HashMap<>();
         model = Model.getInstance();
     }
@@ -177,9 +177,11 @@ public final class OSMHandler implements ContentHandler {
                 Path2D path = way.toPath2D();
                 switch (wayType){
                     case ROAD:
-                        Road road = new Road(roadType, way);
-                        //model.addWayElement(wayType, road);
-                        model.getBst().putElement(road);
+                        if(roadType == RoadType.SERVICE) {
+                            Road road = new Road(roadType, way);
+                            //model.addWayElement(wayType, road);
+                            model.getBst().putElement(road);
+                        }
                         break;
                     case UNKNOWN:
                         UnknownWay unknownWay = new UnknownWay(path);
