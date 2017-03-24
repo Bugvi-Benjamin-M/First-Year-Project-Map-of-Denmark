@@ -164,11 +164,12 @@ public final class OSMHandler implements ContentHandler {
                 switch (wayType){
                     case ROAD:
                         Road road = new Road(roadType, way);
-                        model.addWayElement(wayType, road);
+                        //model.addWayElement(wayType, road);
+                        model.getBst().putElement(road);
                         break;
                     case UNKNOWN:
                         UnknownWay unknownWay = new UnknownWay(path);
-                        model.addWayElement(wayType, unknownWay);
+                        //model.addWayElement(wayType, unknownWay);
                         break;
                 }
                 break;

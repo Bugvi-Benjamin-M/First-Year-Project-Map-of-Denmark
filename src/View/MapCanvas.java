@@ -75,7 +75,14 @@ public class MapCanvas extends View {
 
     //TODO remember to implement properly
     private void drawRoads(Graphics2D g){
-        java.util.List<Element> roads = wayElements.get(WayType.ROAD);
+        ArrayList<Element> roadelements = Model.getInstance().getBst().getSection(1.0,1.0);
+        for(Element e : roadelements){
+            Road r = (Road) e;
+            g.draw(r.getWay().toPath2D());
+        }
+
+
+        /*java.util.List<Element> roads = wayElements.get(WayType.ROAD);
         for(Element element : roads){
             Road road = (Road) element;
             switch(road.getRoadType()){
@@ -102,7 +109,7 @@ public class MapCanvas extends View {
 
             }
 
-        }
+        }*/
     }
 
     /**

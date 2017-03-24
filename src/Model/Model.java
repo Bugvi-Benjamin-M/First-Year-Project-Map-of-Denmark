@@ -22,7 +22,6 @@ public final class Model extends Observable {
     private float maxLatitude;
     private float minLongitude;
     private float maxLongitude;
-
     private BST bst;
 
 

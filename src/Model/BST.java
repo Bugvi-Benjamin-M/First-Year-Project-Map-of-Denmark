@@ -143,9 +143,9 @@ public class BST {
         pointsIndex++;
     }
 
-    public Point2D[] getPoints(){
+    /*public Point2D[] getPoints(){
         return points;
-    }
+    }*/
 
     public ArrayList<Element> getSection(Double latitudeKey, Double longitudeKey) {
         return getSection(root, latitudeKey, longitudeKey);
