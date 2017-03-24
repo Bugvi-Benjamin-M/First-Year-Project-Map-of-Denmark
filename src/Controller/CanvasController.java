@@ -208,10 +208,10 @@ public final class CanvasController extends Controller implements Observer {
     private void keyboardZoomEvent(double keyboardZoomFactor) {
         double dx = mapCanvas.getVisibleRect().getWidth()/2;
         double dy = mapCanvas.getVisibleRect().getHeight()/2;
-            mapCanvas.pan(-dx, -dy);
-            mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
-            mapCanvas.pan(dx, dy);
-        }
+        mapCanvas.pan(-dx, -dy);
+        mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
+        mapCanvas.pan(dx, dy);
+    }
 
     private class CanvasInteractionHandler extends MouseAdapter {
 
