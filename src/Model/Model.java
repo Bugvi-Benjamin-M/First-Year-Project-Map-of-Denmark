@@ -3,6 +3,7 @@ import Enums.OSMEnums.NodeType;
 import Enums.OSMEnums.RelationType;
 import Enums.OSMEnums.WayType;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -16,10 +17,14 @@ public final class Model extends Observable {
     private EnumMap<NodeType, List<Element>> nodeElements;
     private EnumMap<RelationType, List<Element>> relationElements;
     private static Model instance;
+    private ArrayList<Point2D> medianpoints = new ArrayList<>();
+    private static Model model;
     private float minLatitude;
     private float maxLatitude;
     private float minLongitude;
     private float maxLongitude;
+    private BST bst;
+
 
 
     private Model(){
@@ -27,6 +32,11 @@ public final class Model extends Observable {
         for (WayType type : WayType.values()) {
             wayElements.put(type, new ArrayList<>());
         }
+        bst = new BST();
+    }
+
+    public BST getBst(){
+        return bst;
     }
 
     public static Model getInstance() {
@@ -76,6 +86,14 @@ public final class Model extends Observable {
 
     public float getMaxLongitude() {
         return maxLongitude;
+    }
+
+    public ArrayList<Point2D> getMedianpoints() {
+        return medianpoints;
+    }
+
+    public void addMedianPoints(Double longitude,Double latitude){
+        medianpoints.add(new Point2D.Double(longitude, latitude));
     }
 
     public void resetInstance() {
