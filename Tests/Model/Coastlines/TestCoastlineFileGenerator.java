@@ -3,6 +3,8 @@ package Model.Coastlines;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
 
 import static org.junit.Assert.*;
 
@@ -35,15 +37,10 @@ public class TestCoastlineFileGenerator {
     }
 
     @Test
-    public void testStartElement() {
-
+    public void testAddElement() {
+        // generator.startElement(null,null,"", new AttributesImpl());
+        // generator.endElement();
     }
-
-    @Test
-    public void testEndElement() {
-
-    }
-
 
     /* ------------ EMPTY TEST METHODS (ALWAYS EMPTY) ------------ */
     @Test
