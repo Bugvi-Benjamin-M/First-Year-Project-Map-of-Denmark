@@ -34,7 +34,7 @@ public class MapCanvas extends View {
     private EnumMap<WayType, java.util.List<Element>> wayElements;
     private Theme theme;
     private ArrayList<Element> currentSection;
-    private Rectangle2D rectangle = new Rectangle2D.Double(getWidth()/2, getHeight()/2, 1, 1);
+    private Point2D currentPoint;
 
     /**
      * The base Constructor for the MapCanvas.
@@ -66,11 +66,21 @@ public class MapCanvas extends View {
         boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMaxLatitude());
         boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
         g2D.draw(boundary);
+
+        //Tests
         ArrayList<Point2D> medianpoints = Model.getInstance().getMedianpoints();
         if(medianpoints != null) {
             for (Point2D median : medianpoints) {
                 g2D.fill(new Ellipse2D.Double(median.getX(), median.getY(), 0.01f, 0.01f));
             }
+        }
+
+        //Rectangle
+        if(currentPoint != null){
+            Rectangle2D rectangle = new Rectangle2D.Double(currentPoint.getX(), currentPoint.getY(), 0.3, 0.3);
+            g2D.setStroke(new BasicStroke(0.0001f));
+            g.setColor(Color.RED);
+            g2D.draw(rectangle);
         }
     }
 
@@ -162,5 +172,9 @@ public class MapCanvas extends View {
 
     public void setCurrentSection(ArrayList<Element> currentSection) {
         this.currentSection = currentSection;
+    }
+
+    public void setCurrentPoint(Point2D currentPoint) {
+        this.currentPoint = currentPoint;
     }
 }
