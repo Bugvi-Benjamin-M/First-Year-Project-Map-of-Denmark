@@ -13,6 +13,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileNotFoundException;
 
 /**
  * Class details:
@@ -83,6 +84,11 @@ public final class ToolbarController extends Controller {
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {
             FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
+            try {
+                FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         toolbar.toggleWellOnTool(ToolType.LOAD);
     }

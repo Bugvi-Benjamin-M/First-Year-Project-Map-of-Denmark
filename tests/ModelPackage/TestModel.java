@@ -8,10 +8,10 @@ import Enums.RoadType;
 import Helpers.FileHandler;
 import Model.Model;
 import Model.Road;
+import OSM.OSMWay;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.geom.Path2D;
 import java.io.FileNotFoundException;
 
 import static junit.framework.TestCase.assertEquals;
@@ -41,7 +41,7 @@ public class TestModel {
         WindowController mainWindowController = MainWindowController.getInstance();
         CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         assertEquals(0, model.getWayElements().get(WayType.ROAD).size());
-        Path2D path = new Path2D.Float();
+        OSMWay path = new OSMWay();
         model.addWayElement(WayType.ROAD, new Road(RoadType.SERVICE, path));
         assertEquals(1, model.getWayElements().get(WayType.ROAD).size());
     }
@@ -53,7 +53,7 @@ public class TestModel {
         WindowController mainWindowController = MainWindowController.getInstance();
         CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         try {
-            FileHandler.loadDefault("/testRoad.osm");
+            FileHandler.loadResource("/testRoad.osm");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -107,7 +107,7 @@ public class TestModel {
         WindowController mainWindowController = MainWindowController.getInstance();
         CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
         try {
-            FileHandler.loadDefault("/testRoad.osm");
+            FileHandler.loadResource("/testRoad.osm");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

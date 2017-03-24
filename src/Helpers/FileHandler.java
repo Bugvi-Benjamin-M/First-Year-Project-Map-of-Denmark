@@ -12,9 +12,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.zip.ZipInputStream;
 import java.net.URL;
 
 /**
@@ -24,12 +23,21 @@ public class FileHandler {
 
     private static String pathStart = OSDetector.getPathPrefix();
 
-    public static void loadDefault(String fileName) throws FileNotFoundException {
-        if(fileExists(fileName)) {
+    public static void loadResource(String fileName) throws FileNotFoundException {
+        if(fileExists(fileName) && fileName.endsWith(FileType.OSM.getExtension())) {
             InputStream filename = FileHandler.class.getResourceAsStream(fileName);
             FileHandler.loadOSM(new InputSource(filename));
-        }else{
-            throw new FileNotFoundException(fileName + " does not exist.");
+        }else if(fileExists(fileName) && fileName.endsWith(FileType.ZIP.getExtension())){
+            ZipInputStream zip = new ZipInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(fileName)));
+            try {
+                zip.getNextEntry();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            loadOSM(new InputSource(zip));
+        }
+        else{
+            throw new FileNotFoundException(fileName + " can not be found.");
         }
     }
 
@@ -43,6 +51,14 @@ public class FileHandler {
     public static void fileChooserLoad(String fileName) {
         if(fileName.endsWith(FileType.OSM.getExtension())) {
                 loadOSM(new InputSource(pathStart + fileName));
+        }else if(fileName.endsWith(FileType.ZIP.getExtension())){
+            try {
+                ZipInputStream zip = new ZipInputStream(new FileInputStream(fileName));
+                zip.getNextEntry();
+                loadOSM(new InputSource(zip));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             PopupWindow.errorBox(null, "Unsupported File Type. Please Select a New File!");
         }

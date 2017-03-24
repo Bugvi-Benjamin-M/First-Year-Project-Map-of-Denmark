@@ -2,6 +2,8 @@ package Controller;
 
 import Model.Coastlines.CoastlineFactory;
 import Model.Model;
+import Helpers.OSDetector;
+import Model.*;
 import View.MapCanvas;
 import View.Window;
 
@@ -9,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -183,6 +186,15 @@ public final class CanvasController extends Controller implements Observer {
         lastMousePosition = event.getPoint();
     }
 
+    private void mouseClickedEvent(MouseEvent event) {
+        Point2D mousePosition = event.getPoint();
+        Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
+        System.out.println(mouseInModel.getX() + " " + mouseInModel.getY());
+        ArrayList<Element> elements = Model.getInstance().getBst().getSection(mouseInModel.getX(), mouseInModel.getY());
+        mapCanvas.setCurrentSection(elements);
+        mapCanvas.repaint();
+    }
+
     private void mouseDraggedEvent(MouseEvent event) {
         Point2D currentMousePosition = event.getPoint();
         double dx = currentMousePosition.getX() - lastMousePosition.getX();
@@ -204,10 +216,10 @@ public final class CanvasController extends Controller implements Observer {
     private void keyboardZoomEvent(double keyboardZoomFactor) {
         double dx = mapCanvas.getVisibleRect().getWidth()/2;
         double dy = mapCanvas.getVisibleRect().getHeight()/2;
-            mapCanvas.pan(-dx, -dy);
-            mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
-            mapCanvas.pan(dx, dy);
-        }
+        mapCanvas.pan(-dx, -dy);
+        mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
+        mapCanvas.pan(dx, dy);
+    }
 
     private class CanvasInteractionHandler extends MouseAdapter {
 
@@ -223,6 +235,11 @@ public final class CanvasController extends Controller implements Observer {
             mapCanvas.getActionMap().put(event.toString(), event);
         }
 
+
+        @Override
+        public void mouseClicked(MouseEvent e){
+            mouseClickedEvent(e);
+        }
 
         @Override
         public void mousePressed(MouseEvent e) {

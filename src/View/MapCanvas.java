@@ -1,17 +1,17 @@
 package View;
 
+import Controller.CanvasController;
 import Enums.OSMEnums.WayType;
 import Model.Coastlines.Coastline;
 import Model.Element;
 import Model.Model;
 import Model.Road;
+import OSM.OSMWay;
 import Theme.Theme;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Path2D;
+import java.awt.geom.*;
 import java.util.*;
-import java.util.List;
 
 
 /**
@@ -34,6 +34,8 @@ public class MapCanvas extends View {
     private EnumMap<WayType, java.util.List<Element>> wayElements;
     private java.util.List<Path2D> coastlines;
     private Theme theme;
+    private ArrayList<Element> currentSection;
+    private Rectangle2D rectangle = new Rectangle2D.Double(getWidth()/2, getHeight()/2, 1, 1);
 
     /**
      * The base Constructor for the MapCanvas.
@@ -61,6 +63,13 @@ public class MapCanvas extends View {
         drawRoads(g2D);
 
         drawBoundaries(g2D);
+
+        ArrayList<Point2D> medianpoints = Model.getInstance().getMedianpoints();
+        if(medianpoints != null) {
+            for (Point2D median : medianpoints) {
+                g2D.fill(new Ellipse2D.Double(median.getX(), median.getY(), 0.01f, 0.01f));
+            }
+        }
     }
 
     private void drawCoastlines(Graphics2D g) {
@@ -73,39 +82,43 @@ public class MapCanvas extends View {
 
     //TODO remember to implement properly
     private void drawRoads(Graphics2D g){
-        java.util.List<Element> roads = wayElements.get(WayType.ROAD);
+        g.setStroke(new BasicStroke(0.00001f));
+        if(currentSection != null) {
+            for (Element e : currentSection) {
+                Road r = (Road) e;
+                g.draw(r.getWay().toPath2D());
+            }
+        }
+
+
+        /*java.util.List<Element> roads = wayElements.get(WayType.ROAD);
         for(Element element : roads){
             Road road = (Road) element;
             switch(road.getRoadType()){
-                case HIGHWAY:
-                    g.setColor(theme.getHighwayRoadColor());
-                    g.setStroke(new BasicStroke(0.00008f));
-                    g.draw(road.getPath());
-                    break;
-                case PRIMARY:
-                    g.setColor(theme.getPrimaryRoadColor());
-                    g.setStroke(new BasicStroke(0.00008f));
-                    g.draw(road.getPath());
-                    break;
-                case SECONDARY:
-                    g.setColor(theme.getSecondaryRoadColor());
-                    g.setStroke(new BasicStroke(0.00004f));
-                    g.draw(road.getPath());
+                case SERVICE:
+                    g.setColor(theme.getWaterColor());
+                    g.setStroke(new BasicStroke(0.00001f));
+                    OSMWay way = road.getWay();
+                    g.draw(way.toPath2D());
                     break;
                 case TERTIARY:
-                    g.setColor(theme.getTertiaryRoadColor());
-                    g.setStroke(new BasicStroke(0.00002f));
-                    g.draw(road.getPath());
+                    g.setColor(theme.getSandColor());
+                    g.setStroke(new BasicStroke(0.00001f));
+                    //g.draw(road.getPath());
                     break;
                 case UNCLASSIFIED:
-                    g.setColor(theme.getTertiaryRoadColor());
-                    g.setStroke(new BasicStroke(0.00002f));
-                    g.draw(road.getPath());
+                    g.setColor(theme.getParkColor());
+                    g.setStroke(new BasicStroke(0.00001f));
+                    //g.draw(road.getPath());
                     break;
+                case UNKNOWN:
+                    g.setColor(theme.getWaterColor());
+                    g.setStroke(new BasicStroke(0.00001f));
+                    //g.draw(road.getPath());
 
             }
 
-        }
+        }*/
     }
 
     private void drawBoundaries(Graphics2D g2D) {
@@ -156,5 +169,19 @@ public class MapCanvas extends View {
 
     public void setCoastlines(List<Path2D> coastlines) {
         this.coastlines = coastlines;
+    }
+
+    public Point2D toModelCoords(Point2D mousePosition){
+        try{
+            return transform.inverseTransform(mousePosition, null);
+
+        }catch(NoninvertibleTransformException e){
+            throw new RuntimeException();
+        }
+
+    }
+
+    public void setCurrentSection(ArrayList<Element> currentSection) {
+        this.currentSection = currentSection;
     }
 }

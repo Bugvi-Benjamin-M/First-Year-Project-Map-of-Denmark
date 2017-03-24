@@ -2,6 +2,7 @@ package OSM;
 
 import Enums.RoadType;
 import Enums.OSMEnums.WayType;
+import Helpers.LongToPointMap;
 import Model.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -9,6 +10,8 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +21,7 @@ import java.util.Map;
 public final class OSMHandler implements ContentHandler {
     private static OSMHandler handler;
 
-    private Map<Long, OSMNode> idToNode;
+    private LongToPointMap idToNode;
     private Map<Long, OSMWay> idToWay;
     private OSMWay way;
     private OSMRelation relation;
@@ -27,9 +30,11 @@ public final class OSMHandler implements ContentHandler {
     private RoadType roadType;
     private float longitudeFactor;
     private Model model;
+    private int loadednodes, loadedRelations, loadedWays;
+    private boolean initialized;
 
     private OSMHandler() {
-        idToNode = new HashMap<>();
+        idToNode = new LongToPointMap(14);
         idToWay = new HashMap<>();
         model = Model.getInstance();
     }
@@ -101,13 +106,28 @@ public final class OSMHandler implements ContentHandler {
                 long id = Long.parseLong(atts.getValue("id"));
                 float latitude = Float.parseFloat(atts.getValue("lat"));
                 float longitude = Float.parseFloat(atts.getValue("lon"));
-                idToNode.put(id, new OSMNode(longitude* longitudeFactor, -latitude));
+                idToNode.put(id, longitude * longitudeFactor, -latitude);
+
+                model.getBst().addPoint(new Point2D.Float(longitude * longitudeFactor, -latitude));
+
+                loadednodes++;
+                if ((loadednodes & 0xFFFF) == 0) {
+                    System.out.println("Numnodes: " + loadednodes);
+                }
                 break;
             case "way":
+                if(!initialized){
+                    Model.getInstance().getBst().initialize();
+                    initialized = true;
+                }
                 way = new OSMWay();
                 id = Long.parseLong(atts.getValue("id"));
                 wayType = WayType.UNKNOWN;
                 idToWay.put(id, way);
+                loadedWays++;
+                if ((loadedWays & 0xFFFF) == 0) {
+                    System.out.println("Numways: " + loadedWays);
+                }
                 break;
             case "nd":
                 long ref = Long.parseLong(atts.getValue("ref"));
@@ -127,6 +147,7 @@ public final class OSMHandler implements ContentHandler {
     }
 
     private void determineHighway(String value) {
+        roadType = roadType.UNKNOWN; // STH I HAVE TO EXPLAIN (Nikolaj)
         switch (value){
             case "service":
                 roadType = RoadType.SERVICE;
@@ -156,12 +177,13 @@ public final class OSMHandler implements ContentHandler {
                 Path2D path = way.toPath2D();
                 switch (wayType){
                     case ROAD:
-                        Road road = new Road(roadType, path);
-                        model.addWayElement(wayType, road);
+                        Road road = new Road(roadType, way);
+                        //model.addWayElement(wayType, road);
+                        model.getBst().putElement(road);
                         break;
                     case UNKNOWN:
                         UnknownWay unknownWay = new UnknownWay(path);
-                        model.addWayElement(wayType, unknownWay);
+                        //model.addWayElement(wayType, unknownWay);
                         break;
                 }
                 break;

@@ -10,9 +10,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -22,6 +25,7 @@ import static org.junit.Assert.assertTrue;
  * Created by Búgvi Magnussen on 22-03-2017.
  */
 public class TestCanvasController {
+
 
     @Before
     public void buildUp() {
@@ -36,7 +40,7 @@ public class TestCanvasController {
         CanvasController canvasController = CanvasController.getInstance(MainWindowController.getInstance().getWindow());
         CanvasController canvasController2 = CanvasController.getInstance(MainWindowController.getInstance().getWindow());
         try {
-            FileHandler.loadDefault("/testRoad.osm");
+            FileHandler.loadResource("/testRoad.osm");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -108,5 +112,27 @@ public class TestCanvasController {
     @Test
     public void testMouseWheelMoved() {
         //Todo implement properly
+    }
+
+    @Test
+    public void testNumberOfKeyBindings() {
+        Model.getInstance();
+        MapCanvas canvas = CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas();
+        assertEquals(12, canvas.getRegisteredKeyStrokes().length);
+    }
+
+    @Test
+    public void testActionKeyBindings() {
+        Model.getInstance();
+        MapCanvas canvas = CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas();
+        ActionMap actionMap = canvas.getActionMap();
+        InputMap inputMap = canvas.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        List<String> inputMapKeyValues = new ArrayList<>();
+        for(KeyStroke s : inputMap.keys()) {
+            inputMapKeyValues.add((String) inputMap.get(s));
+        }
+        for(String s : inputMapKeyValues) {
+            assertTrue(actionMap.get(s).isEnabled());
+        }
     }
 }

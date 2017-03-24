@@ -10,6 +10,7 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,9 +26,9 @@ public class CoastlineHandler implements ContentHandler {
     private static CoastlineHandler instance;
     private static CoastlineFactory factory;
 
-    private static Map<Long, OSMNode> idToNode;
+    private static Map<Long, Point2D> idToNode;
     private static Map<Long, OSMWay> idToWay;
-    private static Map<OSMNode,OSMWay> coastlines;
+    private static Map<Point2D,OSMWay> coastlines;
 
     private OSMWay way;
     private WayType wayType;
@@ -91,7 +92,7 @@ public class CoastlineHandler implements ContentHandler {
         long id = Long.parseLong(attributes.getValue("id"));
         float latitude = Float.parseFloat(attributes.getValue("lat"));
         float longitude = Float.parseFloat(attributes.getValue("lon"));
-        idToNode.put(id,new OSMNode(longitude,-latitude));
+        idToNode.put(id,new Point2D.Double(longitude,-latitude));
     }
 
     private void handleWay(Attributes attributes) {
