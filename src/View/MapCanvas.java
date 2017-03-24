@@ -75,10 +75,13 @@ public class MapCanvas extends View {
 
     //TODO remember to implement properly
     private void drawRoads(Graphics2D g){
+        g.setStroke(new BasicStroke(0.00001f));
         ArrayList<Element> roadelements = Model.getInstance().getBst().getSection(1.0,1.0);
-        for(Element e : roadelements){
-            Road r = (Road) e;
-            g.draw(r.getWay().toPath2D());
+        if(roadelements != null) {
+            for (Element e : roadelements) {
+                Road r = (Road) e;
+                g.draw(r.getWay().toPath2D());
+            }
         }
 
 

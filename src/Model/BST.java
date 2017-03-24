@@ -48,7 +48,7 @@ public class BST {
         int highTemp = high;
         Point2D median;
         int medianDepth;
-        if(size > 40000){
+        if(size > 100000){
             if(parent == null || parent.depth % 2 == 1){
                 System.out.println("Sorting X (longitude)");
                 median = findMedianLongitude(lowTemp, highTemp);
@@ -206,7 +206,6 @@ public class BST {
     private void putElement(Node x, Element element){
         if(x.elements == null && x.left == null && x.right == null){
             x.elements = new ArrayList<>();
-            x.addElement(element);
         }
         if(x.elements == null) {
             if(x.depth % 2 == 0){
