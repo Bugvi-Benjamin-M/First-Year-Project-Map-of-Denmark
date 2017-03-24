@@ -40,7 +40,7 @@ public class TestCanvasController {
         CanvasController canvasController = CanvasController.getInstance(MainWindowController.getInstance().getWindow());
         CanvasController canvasController2 = CanvasController.getInstance(MainWindowController.getInstance().getWindow());
         try {
-            FileHandler.loadResource("/testRoad.osm");
+            FileHandler.loadDefault("/testRoad.osm");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
