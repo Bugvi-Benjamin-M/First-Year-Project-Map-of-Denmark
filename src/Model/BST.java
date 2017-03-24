@@ -22,7 +22,7 @@ public class BST {
         private int depth;
         private ArrayList<Element> elements;
 
-        public Node(Double latitudeKey, Double longitudeKey, int depth) {
+        public Node(Double longitudeKey, Double latitudeKey, int depth) {
             this.latitudeKey = latitudeKey;
             this.longitudeKey = longitudeKey;
             this.depth = depth;
@@ -231,6 +231,7 @@ public class BST {
             }
         }
         else{
+
             x.addElement(element);
         }
     }
