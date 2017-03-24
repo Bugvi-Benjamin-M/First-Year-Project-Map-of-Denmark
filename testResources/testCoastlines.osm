@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="CGImap 0.5.8 (12631 thorn-02.openstreetmap.org)" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+<bounds minlat="-10" minlon="-10" maxlat="10" maxlon="10"/>
+
+ <node id="123456789" lat="5.0" lon="5.0"/>
+ <node id="123456788"  lat="5.0" lon="-5.0"/>
+ <node id="123456787" lat="-5.0" lon="-5.0"/>
+ <node id="123456786"  lat="-5.0" lon="5.0"/>
+
+ <way id="123456785" >
+  <nd ref="123456789"/>
+  <nd ref="123456788"/>
+  <nd ref="123456787"/>
+  <nd ref="123456786"/>
+  <tag k="natural" v="coastline"/>
+ </way>
+
+  <way id="123456784" >
+   <nd ref="123456789"/>
+   <nd ref="123456788"/>
+   <nd ref="123456787"/>
+   <nd ref="123456786"/>
+   <tag k="admin_level" v="2"/>
+   <tag k="border_type" v="nation"/>
+   <tag k="boundary" v="administrative"/>
+  </way>
+
+  <way id="123456783" >
+     <nd ref="123456789"/>
+     <nd ref="123456788"/>
+     <nd ref="123456787"/>
+     <tag k="admin_level" v="2"/>
+     <tag k="border_type" v="nation"/>
+     <tag k="boundary" v="administrative"/>
+     <tag k="maritime" v="yes"/>
+    </way>
+</osm>

@@ -24,7 +24,7 @@ public class PopupWindow {
     public static JFileChooser fileLoader(boolean allFilesFilter, FileNameExtensionFilter[] filters) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setAcceptAllFileFilterUsed(allFilesFilter);
-        for (FileNameExtensionFilter filter : filters) {
+        if (filters != null) for (FileNameExtensionFilter filter : filters) {
             fileChooser.addChoosableFileFilter(filter);
         }
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -34,8 +34,25 @@ public class PopupWindow {
         }
     }
 
+    public static JFileChooser fileSaver(boolean allFilesFilter, FileNameExtensionFilter[] filters) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setAcceptAllFileFilterUsed(allFilesFilter);
+        if (filters != null) for (FileNameExtensionFilter filter : filters) {
+            fileChooser.addChoosableFileFilter(filter);
+        }
+        if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            return fileChooser;
+        } else {
+            return null;
+        }
+    }
+
     public static void infoBox(JFrame relativeTo, String message) {
         JOptionPane.showMessageDialog(relativeTo, message);
+    }
+
+    public static void errorBox(JFrame relativeTo,String message) {
+        JOptionPane.showMessageDialog(relativeTo,message,"Error occured!",JOptionPane.ERROR_MESSAGE);
     }
 
     public static int confirmBox(JFrame relativeTo, String message, String title, int options) {

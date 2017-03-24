@@ -5,5 +5,7 @@ package Enums.OSMEnums;
  */
 public enum WayType {
     ROAD,
+    COASTLINE,
+    COUNTRY_BOUNDARY_LAND,
     UNKNOWN
 }
