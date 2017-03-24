@@ -21,7 +21,7 @@ public class Main {
         InfobarController.getInstance(windowController.getWindow());
         long starttime = System.currentTimeMillis();
         try {
-            FileHandler.loadDefault("/denmark-latest.zip");
+            FileHandler.loadResource("/denmark-latest.zip");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

@@ -1,11 +1,13 @@
 package Model.Coastlines;
 
 import Enums.BoundType;
-import OSM.OSMNode;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**

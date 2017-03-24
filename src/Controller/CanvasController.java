@@ -1,8 +1,7 @@
 package Controller;
 
+import Model.Element;
 import Model.Model;
-import Helpers.OSDetector;
-import Model.*;
 import View.MapCanvas;
 import View.Window;
 

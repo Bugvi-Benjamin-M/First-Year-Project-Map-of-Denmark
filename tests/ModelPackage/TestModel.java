@@ -12,7 +12,6 @@ import OSM.OSMWay;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.geom.Path2D;
 import java.io.FileNotFoundException;
 
 import static junit.framework.TestCase.assertEquals;
@@ -52,9 +51,9 @@ public class TestModel {
 
         Model model = Model.getInstance();
         WindowController mainWindowController = MainWindowController.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
+        CanvasController.getInstance(mainWindowController.getWindow());
         try {
-            FileHandler.loadDefault("/testRoad.osm");
+            FileHandler.loadResource("/testRoad.osm");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -78,7 +77,7 @@ public class TestModel {
 
         Model model = Model.getInstance();
         WindowController mainWindowController = MainWindowController.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
+        CanvasController.getInstance(mainWindowController.getWindow());
         model.clear();
         assertTrue(model.getWayElements() != null);
         assertEquals(model.getWayElements().size(), WayType.values().length);
@@ -87,7 +86,7 @@ public class TestModel {
     @Test
     public void testObservers() {
         Model.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(MainWindowController.getInstance().getWindow());
+        CanvasController.getInstance(MainWindowController.getInstance().getWindow());
         assertEquals(1, Model.getInstance().countObservers());
     }
 
@@ -106,9 +105,9 @@ public class TestModel {
         Model model = Model.getInstance();
         Model model2 = Model.getInstance();
         WindowController mainWindowController = MainWindowController.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
+        CanvasController.getInstance(mainWindowController.getWindow());
         try {
-            FileHandler.loadDefault("/testRoad.osm");
+            FileHandler.loadResource("/testRoad.osm");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
