@@ -15,9 +15,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import javax.swing.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,6 +23,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.ZipInputStream;
 
 /**
  * Class details:
@@ -98,10 +97,25 @@ public final class CoastlineFileGenerator implements ContentHandler {
 
     private static void loadOSMFile(String fileName) {
         String pathStart = OSDetector.getPathPrefix();
+
         if(fileName.endsWith(FileType.OSM.getExtension())) {
             System.out.println("Loading from file: \""+fileName+"\"\n");
             loadOSM(new InputSource(pathStart + fileName));
+
+        } else if(fileName.endsWith(FileType.ZIP.getExtension())){
+            try {
+                ZipInputStream zip = new ZipInputStream(new FileInputStream(fileName));
+                try {
+                    zip.getNextEntry();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                loadOSM(new InputSource(zip));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+
         PopupWindow.infoBox(null,"The following file has been loaded:\n\""+fileName+"\"\n into" +
                 " the helper which contains "+coastlines.size()+" coastlines.\n\n" +
                 "On the next window please select a location and a name for the new osm file.","File loaded");
