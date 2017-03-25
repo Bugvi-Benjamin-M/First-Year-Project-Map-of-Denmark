@@ -176,8 +176,8 @@ public class BST {
                     getManySections(x.right, minX, minY, maxX, maxY);
                 }
                 else{ //if rectangle intersects medianline  i.e. (minX < x.longitudeKey && maxX > x.longitudeKey)
-                    getManySections(x.left, minX, minY, x.longitudeKey, maxY);
-                    getManySections(x.right, x.longitudeKey, minY, maxX, maxY);
+                    getManySections(x.left, minX, minY, maxX, x.latitudeKey);
+                    getManySections(x.right, minX, x.latitudeKey, maxX, maxY);
                 }
             }
         }else{
