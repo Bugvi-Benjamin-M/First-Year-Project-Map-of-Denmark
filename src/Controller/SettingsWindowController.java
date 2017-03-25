@@ -67,6 +67,12 @@ public final class SettingsWindowController extends WindowController {
             window.hide();
         });
         southButtons.addActionToDefaultButton(a -> {
+            if(!themeHelper.getCurrentTheme().equals("Default")) {
+                themeHelper.setTheme("Default");
+                themeSettings.setSelectedThemeToDefault();
+                notifyThemeChange();
+            }
+
             ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
             window.hide();
         });

@@ -36,5 +36,8 @@ public class ThemeSetting extends View {
         return themeList.getSelectedItem().toString();
     }
 
+    public void setSelectedThemeToDefault() {
+        themeList.setSelectedIndex(0);
+    }
 
 }
