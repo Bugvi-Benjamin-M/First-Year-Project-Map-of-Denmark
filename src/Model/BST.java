@@ -49,7 +49,7 @@ public class BST {
         int highTemp = high;
         Point2D median;
         int medianDepth;
-        if(size > 100000){
+        if(size > 50000){
             if(parent == null || parent.depth % 2 == 1){
                 System.out.println("Sorting X (longitude)"); // for tests only
                 median = findMedianLongitude(lowTemp, highTemp);
@@ -157,18 +157,6 @@ public class BST {
     private void getManySections(Node x, Double minX, Double minY, Double maxX, Double maxY){
         if(x.elements == null){
             if(x.depth % 2 == 0){
-                if(minY < x.latitudeKey && maxY < x.latitudeKey){
-                    getManySections(x.left, minX, minY, maxX, maxY);
-                }
-                else if(minY > x.latitudeKey && maxY > x.latitudeKey){
-                    getManySections(x.right, minX, minY, maxX, maxY);
-                }
-                else{ //if rectangle intersects medianline  i.e. (minY > x.latitudeKey && maxY < x.latitudeKey)
-                    getManySections(x.left, minX, x.latitudeKey, maxX, maxY);
-                    getManySections(x.right, minX, minY, maxX, x.latitudeKey);
-                }
-            }
-            else{
                 if(minX < x.longitudeKey && maxX < x.longitudeKey){
                     getManySections(x.left, minX, minY, maxX, maxY);
                 }
@@ -176,6 +164,18 @@ public class BST {
                     getManySections(x.right, minX, minY, maxX, maxY);
                 }
                 else{ //if rectangle intersects medianline  i.e. (minX < x.longitudeKey && maxX > x.longitudeKey)
+                    getManySections(x.left, minX, minY, x.longitudeKey, maxY);
+                    getManySections(x.right, x.longitudeKey, minY, maxX, maxY);
+                }
+            }
+            else{
+                if(minY < x.latitudeKey && maxY < x.latitudeKey){
+                    getManySections(x.left, minX, minY, maxX, maxY);
+                }
+                else if(minY > x.latitudeKey && maxY > x.latitudeKey){
+                    getManySections(x.right, minX, minY, maxX, maxY);
+                }
+                else{ //if rectangle intersects medianline  i.e. (minY > x.latitudeKey && maxY < x.latitudeKey)
                     getManySections(x.left, minX, minY, maxX, x.latitudeKey);
                     getManySections(x.right, minX, x.latitudeKey, maxX, maxY);
                 }
