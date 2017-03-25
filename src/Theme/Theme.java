@@ -9,6 +9,7 @@ import java.awt.*;
  * @version 13/03/2017
  */
 public interface Theme {
+    public abstract Color getBoundaryColor();
     public abstract Color getBackgroundColor();
     public abstract Color getToolbarColor();
 

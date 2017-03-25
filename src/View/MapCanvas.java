@@ -76,7 +76,7 @@ public class MapCanvas extends View {
         if(currentPoint != null){
             Rectangle2D rectangle = new Rectangle2D.Double(currentPoint.getX(), currentPoint.getY(), 0.3, 0.3);
             g2D.setStroke(new BasicStroke(0.0001f));
-            g.setColor(Color.RED);
+            g.setColor(theme.getBoundaryColor());
             g2D.draw(rectangle);
         }
     }
@@ -89,8 +89,8 @@ public class MapCanvas extends View {
         System.out.println("Contains "+coastlines.size() + " coastlines");
     }
 
-    //TODO remember to implement properly
     private void drawRoads(Graphics2D g){
+        g.setColor(theme.getHighwayRoadColor());
         g.setStroke(new BasicStroke(0.00001f));
         if(currentSection != null) {
             for (Element e : currentSection) {
@@ -98,7 +98,6 @@ public class MapCanvas extends View {
                 g.draw(r.getWay().toPath2D());
             }
         }
-
 
         /*java.util.List<Element> roads = wayElements.get(WayType.ROAD);
         for(Element element : roads){
@@ -131,7 +130,7 @@ public class MapCanvas extends View {
     }
 
     private void drawBoundaries(Graphics2D g2D) {
-        g2D.setColor(Color.BLACK);
+        g2D.setColor(theme.getBoundaryColor());
         Path2D boundary = new Path2D.Double();
         boundary.moveTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
         boundary.lineTo(Model.getInstance().getMaxLongitude(), Model.getInstance().getMinLatitude());
