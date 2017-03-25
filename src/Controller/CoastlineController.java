@@ -41,12 +41,7 @@ public final class CoastlineController extends Controller {
 
     public List<Path2D> getCoastlinePaths() {
         checkIfFactoryIsNull();
-        return factory.getCoastlinePolygons(model.getMinLatitude(),model.getMaxLatitude());
-    }
-
-    public void adjustToBounds() {
-        checkIfFactoryIsNull();
-        factory.setLongitudeFactor(model.getMinLatitude(),model.getMaxLatitude());
+        return factory.getCoastlinePolygons();
     }
 
     private void checkIfFactoryIsNull() {

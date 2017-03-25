@@ -31,7 +31,6 @@ public class Main {
             FileHandler.loadResource(DEFAULT_RESOURCE);
             long stopTime = System.currentTimeMillis();
             System.out.println("Loading time: " + (stopTime - startTime) + " ms");
-            CoastlineController.getInstance().adjustToBounds();
         } catch (FileNotFoundException e) {
             PopupWindow.errorBox(null,"Program was not able to load up \""+DEFAULT_RESOURCE+"\"");
         }

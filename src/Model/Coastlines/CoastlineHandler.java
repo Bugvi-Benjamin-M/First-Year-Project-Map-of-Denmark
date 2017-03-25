@@ -86,6 +86,7 @@ public class CoastlineHandler implements ContentHandler {
         factory.addBound(BoundType.MAX_LATITUDE,-maxLatitude);
         factory.addBound(BoundType.MIN_LONGITUDE,minLongitude);
         factory.addBound(BoundType.MAX_LONGITUDE,maxLongitude);
+        factory.setLongitudeFactor(minLatitude,maxLatitude);
     }
 
     private void handleNode(Attributes attributes) {

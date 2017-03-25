@@ -169,7 +169,6 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     public static void adjustToBounds() {
-        coastlineController.adjustToBounds();
         mapCanvas.pan(-model.getMinLongitude(), -model.getMaxLatitude());
         mapCanvas.zoom(mapCanvas.getWidth()/(model.getMaxLongitude()- model.getMinLongitude()));
     }
