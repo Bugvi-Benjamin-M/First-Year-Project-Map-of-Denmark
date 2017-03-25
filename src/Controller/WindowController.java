@@ -16,13 +16,13 @@ public abstract class WindowController extends Controller {
 
     protected WindowInteractionHandler handler;
 
-    public WindowController(Window window) {
+    protected WindowController(Window window) {
         super(window);
         addInteractionHandlerToWindow();
         specifyKeyBindings();
     }
 
-    private void addInteractionHandlerToWindow() {
+    protected void addInteractionHandlerToWindow() {
         handler = new WindowInteractionHandler();
         window.getFrame().addComponentListener(handler);
     }
@@ -35,6 +35,11 @@ public abstract class WindowController extends Controller {
     }
 
     public abstract void resetInstance();
+
+    @Override
+    public void themeHasChanged() {
+
+    }
 
     protected class WindowInteractionHandler extends ComponentAdapter {
 
@@ -50,6 +55,11 @@ public abstract class WindowController extends Controller {
             super.componentResized(e);
         }
 
+        @Override
+        public void componentHidden(ComponentEvent e) {
+            super.componentHidden(e);
+        }
+
 
         protected void addKeyBinding(int key, int activationKey, AbstractAction event) {
             content.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).
@@ -57,7 +67,6 @@ public abstract class WindowController extends Controller {
             content.getActionMap().put(event.toString(), event);
 
         }
-
 
     }
 }

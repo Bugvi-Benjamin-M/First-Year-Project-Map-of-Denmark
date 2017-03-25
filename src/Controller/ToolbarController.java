@@ -12,8 +12,10 @@ import View.Window;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.FileNotFoundException;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Class details:
@@ -112,7 +114,12 @@ public final class ToolbarController extends Controller {
         instance = null;
     }
 
-     private class ToolInteractionHandler extends MouseAdapter {
+    @Override
+    public void themeHasChanged() {
+        toolbar.setBackGroundColor();
+    }
+
+    private class ToolInteractionHandler extends MouseAdapter {
 
         private ToolType type;
         private ToolFeature tool;

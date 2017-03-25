@@ -38,4 +38,9 @@ public final class InfobarController extends Controller {
     public void resetInstance() {
         instance = null;
     }
+
+    @Override
+    public void themeHasChanged() {
+
+    }
 }

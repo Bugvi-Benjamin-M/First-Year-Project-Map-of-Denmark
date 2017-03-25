@@ -1,8 +1,7 @@
 package Controller;
 
+import Model.Element;
 import Model.Model;
-import Helpers.OSDetector;
-import Model.*;
 import View.MapCanvas;
 import View.Window;
 
@@ -40,7 +39,7 @@ public final class CanvasController extends Controller implements Observer {
         super(window);
         model = Model.getInstance();
         model.addObserver(this);
-        mapCanvas = new MapCanvas(window.getDimension(), theme);
+        mapCanvas = new MapCanvas(window.getDimension());
         mapCanvas.setWayElements(model.getWayElements());
         addInteractionHandlerToCanvas();
         window.addComponent(BorderLayout.CENTER,mapCanvas);
@@ -211,7 +210,13 @@ public final class CanvasController extends Controller implements Observer {
             mapCanvas.pan(-dx, -dy);
             mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
             mapCanvas.pan(dx, dy);
-        }
+    }
+
+    @Override
+    public void themeHasChanged() {
+        mapCanvas.setBackgroundColor();
+        //Todo find out what to do
+    }
 
     private class CanvasInteractionHandler extends MouseAdapter {
 

@@ -1,12 +1,10 @@
 package View;
 
-import Controller.CanvasController;
 import Enums.OSMEnums.WayType;
+import Helpers.ThemeHelper;
 import Model.Element;
 import Model.Model;
 import Model.Road;
-import OSM.OSMWay;
-import Theme.Theme;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -32,7 +30,6 @@ public class MapCanvas extends View {
     private Dimension dimension;
     private AffineTransform transform;
     private EnumMap<WayType, java.util.List<Element>> wayElements;
-    private Theme theme;
     private ArrayList<Element> currentSection;
     private Rectangle2D rectangle = new Rectangle2D.Double(getWidth()/2, getHeight()/2, 1, 1);
 
@@ -40,12 +37,15 @@ public class MapCanvas extends View {
      * The base Constructor for the MapCanvas.
      * @param dimension The dimension of the component
      */
-    public MapCanvas(Dimension dimension, Theme theme) {
+    public MapCanvas(Dimension dimension) {
         transform = new AffineTransform();
-        this.theme = theme;
         this.dimension = dimension;
         setPreferredSize(this.dimension);
-        this.setBackground(theme.getBackgroundColor());
+        setBackgroundColor();
+    }
+
+    public void setBackgroundColor() {
+        setBackground(ThemeHelper.color("background"));
     }
 
 
@@ -157,7 +157,6 @@ public class MapCanvas extends View {
         }catch(NoninvertibleTransformException e){
             throw new RuntimeException();
         }
-
     }
 
     public void setCurrentSection(ArrayList<Element> currentSection) {

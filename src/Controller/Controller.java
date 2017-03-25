@@ -2,7 +2,6 @@ package Controller;
 
 import Helpers.ThemeHelper;
 import View.Window;
-import Theme.*;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -10,11 +9,13 @@ import Theme.*;
 public abstract class Controller {
 
     protected static Window window;
-    protected static Theme theme;
+    protected static ThemeHelper themeHelper;
 
 
     public Controller(Window window) {
         this.window = window;
-        this.theme = ThemeHelper.getTheme();
+        themeHelper = ThemeHelper.getInstance();
     }
+
+    public abstract void themeHasChanged();
 }

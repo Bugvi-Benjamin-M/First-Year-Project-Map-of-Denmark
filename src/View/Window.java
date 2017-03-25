@@ -2,7 +2,6 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
-import Helpers.ThemeHelper;
 
 /**
  * Class details:
@@ -70,12 +69,12 @@ public class Window {
     }
 
     public Window show(){
-        setVisible(true);
+        window.setVisible(true);
         return this;
     }
 
     public Window hide() {
-        setVisible(false);
+        window.setVisible(false);
         return this;
     }
 
@@ -87,14 +86,7 @@ public class Window {
      */
     public void addComponent(String layout, View component) {
         window.add(component,layout);
-        setVisible(true);
-    }
-
-    /**
-     * Sets the visibility of the entire window
-     */
-    public void setVisible(boolean visibility) {
-        window.setVisible(visibility);
+        show();
     }
 
     public Dimension getDimension() {

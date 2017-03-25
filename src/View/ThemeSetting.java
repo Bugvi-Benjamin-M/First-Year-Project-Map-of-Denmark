@@ -2,7 +2,6 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 /**
  * Class details:
@@ -18,20 +17,23 @@ public class ThemeSetting extends View {
 
     /** Constructor of the Infobar */
     public ThemeSetting() {
-        setPreferredSize(new Dimension(400,500));
+        setPreferredSize(new Dimension(400,400));
 
         themeLabel = new JLabel("Theme:");
 
-        String[] themes = new String[] {"Standard"};
+        String[] themes = new String[] {"Default", "Color Blind"};
         themeList = new JComboBox<>(themes);
         add(themeLabel);
         add(themeList);
-
 
         // get the selected item:
         //String theme = (String) themeList.getSelectedItem();
         //System.out.println("You seleted the theme: " + theme);
 
+    }
+
+    public String getSelectedTheme() {
+        return themeList.getSelectedItem().toString();
     }
 
 
