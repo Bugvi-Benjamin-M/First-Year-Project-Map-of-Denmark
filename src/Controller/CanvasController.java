@@ -1,9 +1,11 @@
 package Controller;
 
+import Model.Coastlines.CoastlineFactory;
 import Model.Element;
 import Model.Model;
 import View.MapCanvas;
 import View.Window;
+import Helpers.OSDetector;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +34,9 @@ public final class CanvasController extends Controller implements Observer {
     private static MapCanvas mapCanvas;
     private static Model model;
     private static CanvasController instance;
+
+    private static CoastlineController coastlineController;
+
     private Point2D lastMousePosition;
     private CanvasInteractionHandler handler;
 
@@ -39,8 +44,12 @@ public final class CanvasController extends Controller implements Observer {
         super(window);
         model = Model.getInstance();
         model.addObserver(this);
+
+        coastlineController = CoastlineController.getInstance();
+
         mapCanvas = new MapCanvas(window.getDimension());
         mapCanvas.setWayElements(model.getWayElements());
+        mapCanvas.setCoastlines(coastlineController.getCoastlinePaths());
         addInteractionHandlerToCanvas();
         window.addComponent(BorderLayout.CENTER,mapCanvas);
     }
@@ -181,7 +190,10 @@ public final class CanvasController extends Controller implements Observer {
         Point2D mousePosition = event.getPoint();
         Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
         System.out.println(mouseInModel.getX() + " " + mouseInModel.getY());
-        ArrayList<Element> elements = Model.getInstance().getBst().getSection(mouseInModel.getX(), mouseInModel.getY());
+        //ArrayList<Element> elements = Model.getInstance().getBst().getSection(mouseInModel.getX(), mouseInModel.getY());
+        //mapCanvas.setCurrentSection(elements);
+        mapCanvas.setCurrentPoint(mouseInModel);
+        ArrayList<Element> elements = Model.getInstance().getBst().getManySections(mouseInModel.getX(), mouseInModel.getY(), mouseInModel.getX() + 0.3, mouseInModel.getY() + 0.3);
         mapCanvas.setCurrentSection(elements);
         mapCanvas.repaint();
     }
@@ -207,9 +219,9 @@ public final class CanvasController extends Controller implements Observer {
     private void keyboardZoomEvent(double keyboardZoomFactor) {
         double dx = mapCanvas.getVisibleRect().getWidth()/2;
         double dy = mapCanvas.getVisibleRect().getHeight()/2;
-            mapCanvas.pan(-dx, -dy);
-            mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
-            mapCanvas.pan(dx, dy);
+        mapCanvas.pan(-dx, -dy);
+        mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
+        mapCanvas.pan(dx, dy);
     }
 
     @Override

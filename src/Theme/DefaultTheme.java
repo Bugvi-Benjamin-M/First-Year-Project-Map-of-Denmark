@@ -18,6 +18,11 @@ public class DefaultTheme implements Theme {
     }
 
     @Override
+    public Color boundary() {
+        return new Color(0xFF1DF2);
+    }
+
+    @Override
     public Color background() {
         return new Color(0xede6de);
     }
