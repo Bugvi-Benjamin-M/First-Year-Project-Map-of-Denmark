@@ -2,6 +2,7 @@ package ControllerPackage;
 
 import Controller.CanvasController;
 import Controller.MainWindowController;
+import Controller.ToolbarController;
 import Controller.WindowController;
 import Helpers.FileHandler;
 import Model.Model;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
@@ -68,6 +70,9 @@ public class TestCanvasController {
 
     @Test
     public void testAdjustToBounds() {
+        Model.getInstance();
+        MapCanvas canvas = CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas();
+        canvas.getVisibleRect().contains(2,2); //Todo Check if point is on screen
         //Todo implement properly
         //Need to find a way to test this properly
     }
