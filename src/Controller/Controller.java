@@ -14,7 +14,7 @@ public abstract class Controller {
 
 
     public Controller(Window window) {
-        this.window = window;
+        if(window != null) this.window = window;
         this.theme = ThemeHelper.getTheme();
     }
 }

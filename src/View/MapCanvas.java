@@ -2,6 +2,7 @@ package View;
 
 import Controller.CanvasController;
 import Enums.OSMEnums.WayType;
+import Model.Coastlines.Coastline;
 import Model.Element;
 import Model.Model;
 import Model.Road;
@@ -10,8 +11,7 @@ import Theme.Theme;
 
 import java.awt.*;
 import java.awt.geom.*;
-import java.util.ArrayList;
-import java.util.EnumMap;
+import java.util.*;
 
 
 /**
@@ -32,6 +32,7 @@ public class MapCanvas extends View {
     private Dimension dimension;
     private AffineTransform transform;
     private EnumMap<WayType, java.util.List<Element>> wayElements;
+    private java.util.List<Path2D> coastlines;
     private Theme theme;
     private ArrayList<Element> currentSection;
     private Point2D currentPoint;
@@ -45,9 +46,9 @@ public class MapCanvas extends View {
         this.theme = theme;
         this.dimension = dimension;
         setPreferredSize(this.dimension);
-        this.setBackground(theme.getBackgroundColor());
+        this.setBackground(theme.getWaterColor());
+        coastlines = new ArrayList<>();
     }
-
 
     /**
      * Paints the MapCanvas with all the shapes that should be displayed.
@@ -57,17 +58,13 @@ public class MapCanvas extends View {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
         g2D.setTransform(transform);
-        drawRoads(g2D);
-        g2D.setColor(Color.BLACK);
-        Path2D boundary = new Path2D.Double();
-        boundary.moveTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
-        boundary.lineTo(Model.getInstance().getMaxLongitude(), Model.getInstance().getMinLatitude());
-        boundary.lineTo(Model.getInstance().getMaxLongitude(), Model.getInstance().getMaxLatitude());
-        boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMaxLatitude());
-        boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
-        g2D.draw(boundary);
 
-        //Tests
+        drawCoastlines(g2D);
+
+        drawRoads(g2D);
+
+        drawBoundaries(g2D);
+
         ArrayList<Point2D> medianpoints = Model.getInstance().getMedianpoints();
         if(medianpoints != null) {
             for (Point2D median : medianpoints) {
@@ -79,13 +76,21 @@ public class MapCanvas extends View {
         if(currentPoint != null){
             Rectangle2D rectangle = new Rectangle2D.Double(currentPoint.getX(), currentPoint.getY(), 0.3, 0.3);
             g2D.setStroke(new BasicStroke(0.0001f));
-            g.setColor(Color.RED);
+            g.setColor(theme.getBoundaryColor());
             g2D.draw(rectangle);
         }
     }
 
-    //TODO remember to implement properly
+    private void drawCoastlines(Graphics2D g) {
+        g.setColor(theme.getBackgroundColor());
+        for (Path2D path: coastlines) {
+            g.fill(path);
+        }
+        System.out.println("Contains "+coastlines.size() + " coastlines");
+    }
+
     private void drawRoads(Graphics2D g){
+        g.setColor(theme.getHighwayRoadColor());
         g.setStroke(new BasicStroke(0.00001f));
         if(currentSection != null) {
             for (Element e : currentSection) {
@@ -93,7 +98,6 @@ public class MapCanvas extends View {
                 g.draw(r.getWay().toPath2D());
             }
         }
-
 
         /*java.util.List<Element> roads = wayElements.get(WayType.ROAD);
         for(Element element : roads){
@@ -125,6 +129,17 @@ public class MapCanvas extends View {
         }*/
     }
 
+    private void drawBoundaries(Graphics2D g2D) {
+        g2D.setColor(theme.getBoundaryColor());
+        Path2D boundary = new Path2D.Double();
+        boundary.moveTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
+        boundary.lineTo(Model.getInstance().getMaxLongitude(), Model.getInstance().getMinLatitude());
+        boundary.lineTo(Model.getInstance().getMaxLongitude(), Model.getInstance().getMaxLatitude());
+        boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMaxLatitude());
+        boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
+        g2D.draw(boundary);
+    }
+
     /**
      * Zooms in or out upon the elements on the MapCanvas depending on a given factor.
      */
@@ -152,7 +167,6 @@ public class MapCanvas extends View {
         repaint();
     }
 
-
     /**
      * Lets other objects add an EnumMap to the MapCanvas
      * @param wayElements
@@ -160,6 +174,11 @@ public class MapCanvas extends View {
     public void setWayElements(EnumMap wayElements){
         this.wayElements = wayElements;
     }
+
+    public void setCoastlines(java.util.List<Path2D> coastlines) {
+        this.coastlines = coastlines;
+    }
+
     public Point2D toModelCoords(Point2D mousePosition){
         try{
             return transform.inverseTransform(mousePosition, null);

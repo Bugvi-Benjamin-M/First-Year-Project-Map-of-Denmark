@@ -16,6 +16,11 @@ public class DefaultTheme implements Theme {
     }
 
     @Override
+    public Color getBoundaryColor() {
+        return new Color(0xFF1DF2);
+    }
+
+    @Override
     public Color getBackgroundColor() {
         return new Color(0xede6de);
     }

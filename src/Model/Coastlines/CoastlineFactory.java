@@ -1,7 +1,6 @@
 package Model.Coastlines;
 
 import Enums.BoundType;
-import OSM.OSMNode;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -19,19 +18,19 @@ public class CoastlineFactory {
 
     private List<Coastline> coastlines;
     private EnumMap<BoundType,Double> bounds;
-    private static float longitudeFactor;
+    private static double longitudeFactor;
 
     protected CoastlineFactory() {
         coastlines = new ArrayList<>();
         bounds = new EnumMap<>(BoundType.class);
     }
 
-    public void setLongitudeFactor(float minLatitude, float maxLatitude) {
-        float avglat = minLatitude + (maxLatitude - minLatitude)/2;
-        longitudeFactor = (float) Math.cos(avglat/180*Math.PI);
+    public void setLongitudeFactor(double minLatitude, double maxLatitude) {
+        double avglat = minLatitude + (maxLatitude - minLatitude)/2;
+        longitudeFactor = Math.cos(avglat/180*Math.PI);
     }
 
-    protected static float getLongitudeFactor() {
+    protected static double getLongitudeFactor() {
         return longitudeFactor;
     }
 
@@ -45,9 +44,7 @@ public class CoastlineFactory {
         coastlines.add(object);
     }
 
-    public List<Path2D> getCoastlinePolygons(float minLatitude, float maxLatitude) {
-        if (minLatitude >= maxLatitude) throw new IllegalArgumentException();
-        setLongitudeFactor( minLatitude,  maxLatitude);
+    public List<Path2D> getCoastlinePolygons() {
         return coastlines.stream().map(Coastline::toPath2D).collect(Collectors.toList());
     }
 }

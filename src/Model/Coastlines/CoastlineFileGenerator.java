@@ -15,9 +15,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import javax.swing.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,6 +23,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.ZipInputStream;
 
 /**
  * Class details:
@@ -58,6 +57,8 @@ public final class CoastlineFileGenerator implements ContentHandler {
 
     private static double minLatitude, maxLatitude, minLongitude, maxLongitude;
 
+    private static long timer;
+
     private static final boolean debugging = false;     // change this for more infomation
 
     private CoastlineFileGenerator() {
@@ -81,7 +82,11 @@ public final class CoastlineFileGenerator implements ContentHandler {
      * @param args
      */
     public static void main(String[] args) {
+        PopupWindow.infoBox(null,"The function of this program is to load an osm file and discover any " +
+                "and all coastlines\n as well as any nation borders on land to create a rough outline " +
+                "of the land. \n\nOn the next window please select an osm file.","About this helper");
         JFileChooser fileChooser = PopupWindow.fileLoader(false,null);
+        timer = System.currentTimeMillis();
         try {
             if (fileChooser == null) throw new Exception();
             String filename = fileChooser.getSelectedFile().getAbsolutePath();
@@ -95,10 +100,30 @@ public final class CoastlineFileGenerator implements ContentHandler {
 
     private static void loadOSMFile(String fileName) {
         String pathStart = OSDetector.getPathPrefix();
+
+        System.out.println("Loading from file: \""+fileName+"\"\n");
+
         if(fileName.endsWith(FileType.OSM.getExtension())) {
-            System.out.println("Loading from file: \""+fileName+"\"\n");
             loadOSM(new InputSource(pathStart + fileName));
+        } else if(fileName.endsWith(FileType.ZIP.getExtension())){
+            try {
+                ZipInputStream zip = new ZipInputStream(new FileInputStream(fileName));
+                try {
+                    zip.getNextEntry();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                loadOSM(new InputSource(zip));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+
+        System.out.println("Loading time: "+((System.currentTimeMillis()-timer)/1000)+" s");
+
+        PopupWindow.infoBox(null,"The following file has been loaded:\n\""+fileName+"\"\n into" +
+                " the helper which contains "+coastlines.size()+" coastlines.\n\n" +
+                "On the next window please select a location and a name for the new osm file.","File loaded");
     }
 
     private static void loadOSM(InputSource inputSource) {
@@ -116,7 +141,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
         Charset charset = Charset.forName("UTF-8");  // unicode encoding
 
         JFileChooser fileChooser = PopupWindow.fileSaver(false,null);
-
+        timer = System.currentTimeMillis();
         if (fileChooser != null) {
             // retrieves path
             File selectedFile = fileChooser.getSelectedFile();
@@ -149,34 +174,36 @@ public final class CoastlineFileGenerator implements ContentHandler {
                 writer.newLine(); writer.newLine();
 
                 // write nodes
-                StringBuilder nodeBuilder = new StringBuilder();
                 for (NodeCarrier node: coastlineNodes.values()) {
-                    nodeBuilder.append(node.toString());
-                    nodeBuilder.append("\n");
+                    writer.write(node.toString());
+                    writer.newLine();
                 }
-                writer.write(nodeBuilder.toString());
                 writer.newLine();
 
                 // write ways
-                StringBuilder wayBuilder = new StringBuilder();
                 for (WayCarrier way: coastlines.values()) {
-                    wayBuilder.append(way.toString());
-                    wayBuilder.append("\n");
+                    writer.write(way.toString());
+                    writer.newLine();
                     if (debugging) System.out.println(way.getInfo());
                 }
-                writer.write(wayBuilder.toString());
                 writer.newLine();
 
                 // footer
                 writer.write("</osm>");
+
+                PopupWindow.infoBox(null,"Coastlines has been saved to \""+file+"\"...\nProgram will now terminate",
+                        "File saved...");
             } catch (IOException x) {
                 System.err.format("IOException: %s%n", x);
             }
 
-            System.out.println("\n... writing complete\n... closing file");
+            System.out.println("\n... writing complete ... closing file");
         } else {
             PopupWindow.errorBox(null,"No file selected!");
         }
+
+        System.out.println("Saving time: "+((System.currentTimeMillis()-timer)/1000)+" s");
+
     }
 
 
@@ -256,7 +283,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
                     addWay(way);
                     break;
                 case COUNTRY_BOUNDARY_LAND:
-                    if (debugging) System.out.println("martitime: "+isMaritime+" boundary: "+
+                    if (debugging) System.out.println("maritime: "+isMaritime+" boundary: "+
                             administrative_boundary+" admin level: "+admin_level_nation);
                     if (!isMaritime && administrative_boundary && admin_level_nation) {
                         // coastLineFix();
@@ -333,13 +360,13 @@ public final class CoastlineFileGenerator implements ContentHandler {
             StringBuilder sb = new StringBuilder();
             sb.append("<way id=\"");
             sb.append(ref);
-            sb.append("\">\n");
+            sb.append("\">");
 
             // add node references
             for (NodeCarrier node: this) {
                 sb.append("<nd ref=\"");
                 sb.append(node.ref);
-                sb.append("\"/>\n");
+                sb.append("\"/>");
             }
 
             // add tags
@@ -348,7 +375,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
                 sb.append(key);
                 sb.append("\" v=\"");
                 sb.append(tags.get(key));
-                sb.append("\"/>\n");
+                sb.append("\"/>");
             }
 
             // end
