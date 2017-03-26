@@ -20,7 +20,7 @@ public class SettingsSouthButtons extends View {
 
     public SettingsSouthButtons() {
         buttons = new ArrayList<>();
-        setPreferredSize(new Dimension(200, 50));
+        setPreferredSize(new Dimension(400, 50));
         createButtons();
         addButtons();
     }

@@ -41,6 +41,11 @@ public abstract class WindowController extends Controller {
 
     }
 
+    @Override
+    public void toggleKeyBindings(boolean status) {
+        //Todo implement
+    }
+
     protected class WindowInteractionHandler extends ComponentAdapter {
 
         protected JPanel content;

@@ -218,6 +218,11 @@ public final class CanvasController extends Controller implements Observer {
         //Todo find out what to do
     }
 
+    @Override
+    public void toggleKeyBindings(boolean status) {
+        //Todo implement
+    }
+
     private class CanvasInteractionHandler extends MouseAdapter {
 
         private int specifiedFocus;

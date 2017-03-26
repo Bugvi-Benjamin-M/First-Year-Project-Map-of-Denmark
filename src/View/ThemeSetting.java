@@ -17,7 +17,7 @@ public class ThemeSetting extends View {
 
     /** Constructor of the Infobar */
     public ThemeSetting() {
-        setPreferredSize(new Dimension(400,400));
+        setPreferredSize(new Dimension(400,200));
 
         themeLabel = new JLabel("Theme:");
 
@@ -25,11 +25,6 @@ public class ThemeSetting extends View {
         themeList = new JComboBox<>(themes);
         add(themeLabel);
         add(themeList);
-
-        // get the selected item:
-        //String theme = (String) themeList.getSelectedItem();
-        //System.out.println("You seleted the theme: " + theme);
-
     }
 
     public String getSelectedTheme() {
@@ -38,6 +33,10 @@ public class ThemeSetting extends View {
 
     public void setSelectedThemeToDefault() {
         themeList.setSelectedIndex(0);
+    }
+
+    public void setSelectedTheme(String theme) {
+        themeList.setSelectedItem(theme);
     }
 
 }

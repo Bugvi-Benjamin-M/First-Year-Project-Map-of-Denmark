@@ -41,6 +41,11 @@ public final class InfobarController extends Controller {
 
     @Override
     public void themeHasChanged() {
+        //Todo fix
+    }
 
+    @Override
+    public void toggleKeyBindings(boolean status) {
+        //Todo fix
     }
 }

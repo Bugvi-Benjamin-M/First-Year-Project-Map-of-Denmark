@@ -96,4 +96,8 @@ public class Window {
     public JFrame getFrame() {
         return window;
     }
+
+    public void setMinimumWindowSize(Dimension dimension){
+        getFrame().setMinimumSize(dimension);
+    }
 }

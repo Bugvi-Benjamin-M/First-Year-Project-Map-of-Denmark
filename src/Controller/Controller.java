@@ -18,4 +18,6 @@ public abstract class Controller {
     }
 
     public abstract void themeHasChanged();
+
+    public abstract void toggleKeyBindings(boolean status);
 }
