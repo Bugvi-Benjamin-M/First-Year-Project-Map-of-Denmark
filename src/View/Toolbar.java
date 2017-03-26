@@ -5,6 +5,7 @@ import Helpers.ThemeHelper;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,8 +43,11 @@ public class Toolbar extends View {
 
         this.setPreferredSize(new Dimension(500,100));
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        setBackGroundColor();
+    }
 
-        this.setBackground(ThemeHelper.getTheme().getToolbarColor());
+    public void setBackGroundColor() {
+        setBackground(ThemeHelper.color("toolbar"));
     }
 
     public void toggleWellOnTool(ToolType type) {
@@ -116,6 +120,10 @@ public class Toolbar extends View {
      */
     public ToolComponent getTool(ToolType type) {
         return tools.get(type);
+    }
+
+    public Map<ToolType, ToolComponent> getAllTools() {
+        return tools;
     }
 
     /** ToolFactory creates the collection of visual components representing the tools */

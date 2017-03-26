@@ -83,8 +83,8 @@ public class FileHandler {
         try {
             XMLReader reader = XMLReaderFactory.createXMLReader();
             reader.setContentHandler(handler);
-            URL url = FileHandler.class.getClass().getResource("/coastlines.zip");
-            ZipInputStream zip = new ZipInputStream(new FileInputStream(url.getFile()));
+            InputStream stream = FileHandler.class.getResourceAsStream("/coastlines.zip");
+            ZipInputStream zip = new ZipInputStream(new BufferedInputStream(stream));
             zip.getNextEntry();
             InputSource source = new InputSource(zip);
             reader.parse(source);

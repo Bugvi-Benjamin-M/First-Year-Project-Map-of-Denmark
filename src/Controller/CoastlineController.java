@@ -47,4 +47,14 @@ public final class CoastlineController extends Controller {
     private void checkIfFactoryIsNull() {
         if (factory == null) throw new RuntimeException("Factory has not been set.");
     }
+
+    @Override
+    public void themeHasChanged() {
+
+    }
+
+    @Override
+    public void toggleKeyBindings(boolean status) {
+
+    }
 }

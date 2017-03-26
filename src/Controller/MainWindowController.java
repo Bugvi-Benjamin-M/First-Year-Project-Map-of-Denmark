@@ -23,16 +23,21 @@ public final class MainWindowController extends WindowController {
 
     public static WindowController getInstance() {
         if(instance == null) {
-            Window window = new Window().title(MAIN_TITLE)
-                    .closeOperation(WindowConstants.EXIT_ON_CLOSE)
-                    .dimension(new Dimension(1200, 1000))
-                    .extendedState(JFrame.MAXIMIZED_BOTH)
-                    .layout(new BorderLayout())
-                    .relativeTo(null)
-                    .show();
-            instance = new MainWindowController(window);
+            Window mainWindow = setupWindow();
+            instance = new MainWindowController(mainWindow);
         }
         return instance;
+    }
+
+    private static Window setupWindow() {
+       Window mainWindow = new Window().title(MAIN_TITLE)
+                .closeOperation(WindowConstants.EXIT_ON_CLOSE)
+                .dimension(new Dimension(1200, 1000))
+                .extendedState(JFrame.MAXIMIZED_BOTH)
+                .layout(new BorderLayout())
+                .relativeTo(null)
+                .show();
+        return mainWindow;
     }
 
     @Override
