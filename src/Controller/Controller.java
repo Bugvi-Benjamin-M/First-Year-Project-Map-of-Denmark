@@ -13,7 +13,6 @@ public abstract class Controller {
 
 
     public Controller(Window window) {
-        this.window = window;
         themeHelper = ThemeHelper.getInstance();
         if(window != null) {
             this.window = window;

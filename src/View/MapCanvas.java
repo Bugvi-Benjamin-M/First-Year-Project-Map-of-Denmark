@@ -47,7 +47,7 @@ public class MapCanvas extends View {
     }
 
     public void setBackgroundColor() {
-        setBackground(ThemeHelper.color("background"));
+        setBackground(ThemeHelper.color("water"));
     }
 
     /**
