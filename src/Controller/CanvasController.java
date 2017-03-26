@@ -1,11 +1,11 @@
 package Controller;
 
 import Model.Coastlines.CoastlineFactory;
+import Model.Element;
 import Model.Model;
-import Helpers.OSDetector;
-import Model.*;
 import View.MapCanvas;
 import View.Window;
+import Helpers.OSDetector;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +47,7 @@ public final class CanvasController extends Controller implements Observer {
 
         coastlineController = CoastlineController.getInstance();
 
-        mapCanvas = new MapCanvas(window.getDimension(), theme);
+        mapCanvas = new MapCanvas(window.getDimension());
         mapCanvas.setWayElements(model.getWayElements());
         mapCanvas.setCoastlines(coastlineController.getCoastlinePaths());
         addInteractionHandlerToCanvas();
@@ -222,6 +222,17 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.pan(-dx, -dy);
         mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
         mapCanvas.pan(dx, dy);
+    }
+
+    @Override
+    public void themeHasChanged() {
+        mapCanvas.setBackgroundColor();
+        //Todo find out what to do
+    }
+
+    @Override
+    public void toggleKeyBindings(boolean status) {
+        //Todo implement
     }
 
     private class CanvasInteractionHandler extends MouseAdapter {

@@ -2,7 +2,6 @@ package Controller;
 
 import Helpers.ThemeHelper;
 import View.Window;
-import Theme.*;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -10,11 +9,17 @@ import Theme.*;
 public abstract class Controller {
 
     protected static Window window;
-    protected static Theme theme;
+    protected static ThemeHelper themeHelper;
 
 
     public Controller(Window window) {
-        if(window != null) this.window = window;
-        this.theme = ThemeHelper.getTheme();
+        themeHelper = ThemeHelper.getInstance();
+        if(window != null) {
+            this.window = window;
+        }
     }
+
+    public abstract void themeHasChanged();
+
+    public abstract void toggleKeyBindings(boolean status);
 }
