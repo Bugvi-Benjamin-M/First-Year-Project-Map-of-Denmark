@@ -121,14 +121,12 @@ public final class SettingsWindowController extends WindowController {
     protected void addInteractionHandlerToWindow() {
         super.addInteractionHandlerToWindow();
         window.getFrame().addWindowListener(new WindowAdapter() {
-
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
                 ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
                 themeSettings.setSelectedTheme(themeHelper.getCurrentTheme());
                 //Todo check if keys are enabled and change the toggle box
-
                 //Todo make sure settings are consistent with the current system settings, even if user just closes window
             }
         });

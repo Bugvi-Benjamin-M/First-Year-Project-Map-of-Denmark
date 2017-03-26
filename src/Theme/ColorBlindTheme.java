@@ -23,6 +23,11 @@ public class ColorBlindTheme implements Theme {
     }
 
     @Override
+    public Color boundary() {
+        return new Color(0xDE00A3);
+    }
+
+    @Override
     public Color water() {
         return new Color(0x0F0DDE);
     }
