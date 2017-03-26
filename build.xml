@@ -41,7 +41,7 @@
     <target name="dist" depends="compile">
         <jar destfile="${dist}/BFST.jar" basedir="${main.build.dir}">
             <manifest>
-                <attribute name="Main-Class" value="Main"/>
+                <attribute name="Main-Class" value="Main.Main"/>
             </manifest>
         </jar>
     </target>
