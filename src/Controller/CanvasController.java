@@ -222,8 +222,9 @@ public final class CanvasController extends Controller implements Observer {
 
     @Override
     public void themeHasChanged() {
-        mapCanvas.setBackgroundColor();
-        //Todo find out what to do
+        mapCanvas.repaint();
+        mapCanvas.revalidate();
+
     }
 
     @Override

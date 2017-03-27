@@ -1,7 +1,6 @@
 package Helpers;
 
-import Theme.DefaultTheme;
-import Theme.Theme;
+import Theme.*;
 
 import java.awt.*;
 import java.lang.reflect.Constructor;
@@ -16,19 +15,7 @@ import java.lang.reflect.Method;
  */
 public final class ThemeHelper {
 
-    private static Theme currentTheme;
-    private static ThemeHelper instance;
-
-    private ThemeHelper() {
-        currentTheme = new DefaultTheme();
-    }
-
-    public static ThemeHelper getInstance() {
-        if (instance == null) {
-            instance = new ThemeHelper();
-        }
-        return instance;
-    }
+    private static Theme currentTheme = new DefaultTheme();
 
     public static String getCurrentTheme() {
         return currentTheme.getName();

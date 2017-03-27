@@ -21,7 +21,7 @@ public class ThemeSetting extends View {
 
         themeLabel = new JLabel("Theme:");
 
-        String[] themes = new String[] {"Default", "Color Blind"};
+        String[] themes = new String[] {"Default", "Night"};
         themeList = new JComboBox<>(themes);
         add(themeLabel);
         add(themeList);

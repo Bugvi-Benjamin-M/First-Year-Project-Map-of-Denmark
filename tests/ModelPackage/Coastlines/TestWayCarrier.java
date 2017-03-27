@@ -33,11 +33,11 @@ public class TestWayCarrier {
     @Test
     public void testToString() throws Exception {
         String emptyWay = way.toString();
-        assertEquals(emptyWay,"<way id=\""+ref+"\">\n</way>");
+        assertEquals(emptyWay,"<way id=\""+ref+"\"></way>");
         way.add(new CoastlineFileGenerator.NodeCarrier(1,0,0));
         String nonEmptyWay = way.toString();
         assertNotEquals(nonEmptyWay,emptyWay);
-        assertEquals(nonEmptyWay,"<way id=\""+ref+"\">\n<nd ref=\""+1+"\"/>\n</way>");
+        assertEquals(nonEmptyWay,"<way id=\""+ref+"\"><nd ref=\""+1+"\"/></way>");
     }
 
 }

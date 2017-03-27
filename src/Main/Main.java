@@ -2,11 +2,9 @@ package Main;
 
 import Controller.*;
 import Helpers.FileHandler;
-import Model.Coastlines.CoastlineFactory;
 import Model.Model;
 import View.PopupWindow;
 
-import java.awt.*;
 import java.io.FileNotFoundException;
 
 /**
@@ -34,5 +32,17 @@ public class Main {
         } catch (FileNotFoundException e) {
             PopupWindow.errorBox(null,"Program was not able to load up \""+DEFAULT_RESOURCE+"\"");
         }
+    }
+
+    public static void notifyThemeChange() {
+        CanvasController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
+        ToolbarController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
+        MainWindowController.getInstance().themeHasChanged();
+        InfobarController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
+        SettingsWindowController.getInstance().themeHasChanged();
+    }
+
+    public static void notifyKeyToggle(boolean status) {
+
     }
 }
