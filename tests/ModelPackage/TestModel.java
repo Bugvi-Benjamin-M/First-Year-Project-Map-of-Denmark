@@ -3,6 +3,7 @@ package ModelPackage;
 import Controller.CanvasController;
 import Controller.MainWindowController;
 import Controller.WindowController;
+import Enums.BoundType;
 import Enums.OSMEnums.WayType;
 import Enums.RoadType;
 import Model.Model;
@@ -90,7 +91,11 @@ public class TestModel {
     @Test
     public void testSetBounds() {
         Model model = Model.getInstance();
-        model.setBounds(2.3f,2.4f,2.5f, 2.6f);
+        float minlat = 2.3f, maxlat = 2.4f, minlon = 2.5f, maxlon = 2.6f;
+        model.setBound(BoundType.MIN_LATITUDE,minlat);
+        model.setBound(BoundType.MAX_LATITUDE,maxlat);
+        model.setBound(BoundType.MIN_LONGITUDE,minlon);
+        model.setBound(BoundType.MAX_LONGITUDE,maxlon);
         assertEquals(2.3f, model.getMinLatitude());
         assertEquals(2.4f, model.getMaxLatitude());
         assertEquals(2.5f, model.getMinLongitude());

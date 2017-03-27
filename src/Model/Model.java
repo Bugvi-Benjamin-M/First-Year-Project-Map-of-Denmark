@@ -3,9 +3,9 @@ import Enums.BoundType;
 import Enums.OSMEnums.NodeType;
 import Enums.OSMEnums.RelationType;
 import Enums.OSMEnums.WayType;
-import Model.Coastlines.Coastline;
 import Model.Coastlines.CoastlineFactory;
 
+import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.*;
 
@@ -22,6 +22,7 @@ public final class Model extends Observable {
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
 
     private BST bst;
+    private CoastlineFactory coastlineFactory;
 
     private EnumMap<BoundType, Float> bounds;
 
@@ -35,11 +36,14 @@ public final class Model extends Observable {
             wayElements.put(type, new ArrayList<>());
         }
         bst = new BST();
+        coastlineFactory = Helpers.FileHandler.loadCoastlines();
     }
 
     public BST getBst(){
         return bst;
     }
+
+    public CoastlineFactory getCoastlineFactory() {return coastlineFactory;}
 
     public static Model getInstance() {
         if(instance == null) {
@@ -54,6 +58,10 @@ public final class Model extends Observable {
 
     public EnumMap<WayType, List<Element>> getWayElements(){
         return wayElements;
+    }
+
+    public List<Path2D> getCoastlines() {
+        return coastlineFactory.getCoastlinePolygons();
     }
 
     public void clear() {

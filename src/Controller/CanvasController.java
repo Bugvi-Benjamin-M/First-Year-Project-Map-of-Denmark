@@ -33,7 +33,6 @@ public final class CanvasController extends Controller implements Observer {
     private static Model model;
     private static CanvasController instance;
 
-    private static CoastlineController coastlineController;
 
     private Point2D lastMousePosition;
     private CanvasInteractionHandler handler;
@@ -43,11 +42,10 @@ public final class CanvasController extends Controller implements Observer {
         model = Model.getInstance();
         model.addObserver(this);
 
-        coastlineController = CoastlineController.getInstance();
 
         mapCanvas = new MapCanvas(window.getDimension());
         mapCanvas.setWayElements(model.getWayElements());
-        mapCanvas.setCoastlines(coastlineController.getCoastlinePaths());
+        mapCanvas.setCoastlines(model.getCoastlines());
         addInteractionHandlerToCanvas();
         window.addComponent(BorderLayout.CENTER,mapCanvas);
     }
