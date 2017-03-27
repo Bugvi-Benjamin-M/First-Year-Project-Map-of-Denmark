@@ -2,20 +2,16 @@ package ControllerPackage;
 
 import Controller.CanvasController;
 import Controller.MainWindowController;
-import Controller.ToolbarController;
 import Controller.WindowController;
-import Helpers.FileHandler;
 import Model.Model;
 import View.MapCanvas;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +37,6 @@ public class TestCanvasController {
         Model.getInstance();
         CanvasController canvasController = CanvasController.getInstance(MainWindowController.getInstance().getWindow());
         CanvasController canvasController2 = CanvasController.getInstance(MainWindowController.getInstance().getWindow());
-        try {
-            FileHandler.loadResource("/testRoad.osm");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         assertTrue(canvasController.equals(canvasController2));
     }
 

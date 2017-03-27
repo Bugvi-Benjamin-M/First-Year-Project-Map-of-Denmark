@@ -6,7 +6,7 @@ import Model.Road;
 import OSM.OSMWay;
 import org.junit.Test;
 
-import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -40,14 +40,11 @@ public class TestRoad {
 
     @Test
     public void testGetPath() {
-        Path2D.Float path = new Path2D.Float();
-        path.moveTo(0f, 0f);
-        path.lineTo(1f, 1f);
-        path.closePath();
-        Road road = new Road(RoadType.PRIMARY, new OSMWay());
-        assertEquals(path, road.getWay());
-        assertTrue(path.getBounds().equals(
-                road.getWay().toPath2D().getBounds()));
+        OSMWay osmWay = new OSMWay();
+        osmWay.add(new Point2D.Float(1,1));
+        Road road = new Road(RoadType.PRIMARY, osmWay);
+        assertEquals(osmWay, road.getWay());
+        assertEquals(osmWay.get(0), road.getWay().get(0));
     }
 
     @Test

@@ -1,11 +1,9 @@
 package Controller;
 
-import Model.Coastlines.CoastlineFactory;
 import Model.Element;
 import Model.Model;
 import View.MapCanvas;
 import View.Window;
-import Helpers.OSDetector;
 
 import javax.swing.*;
 import java.awt.*;
@@ -190,8 +188,6 @@ public final class CanvasController extends Controller implements Observer {
         Point2D mousePosition = event.getPoint();
         Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
         System.out.println(mouseInModel.getX() + " " + mouseInModel.getY());
-        //ArrayList<Element> elements = Model.getInstance().getBst().getSection(mouseInModel.getX(), mouseInModel.getY());
-        //mapCanvas.setCurrentSection(elements);
         mapCanvas.setCurrentPoint(mouseInModel);
         ArrayList<Element> elements = Model.getInstance().getBst().getManySections(mouseInModel.getX(), mouseInModel.getY(), mouseInModel.getX() + 0.3, mouseInModel.getY() + 0.3);
         mapCanvas.setCurrentSection(elements);
@@ -226,8 +222,9 @@ public final class CanvasController extends Controller implements Observer {
 
     @Override
     public void themeHasChanged() {
-        mapCanvas.setBackgroundColor();
-        //Todo find out what to do
+        mapCanvas.repaint();
+        mapCanvas.revalidate();
+
     }
 
     @Override

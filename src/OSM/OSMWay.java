@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * Created by Jakob on 06-03-2017.
  */
 public class OSMWay extends ArrayList<Point2D> {
+
     public Path2D toPath2D(){
         Path2D path = new Path2D.Float();
         Point2D node = get(0);

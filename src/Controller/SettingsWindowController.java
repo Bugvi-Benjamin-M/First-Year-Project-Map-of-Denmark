@@ -1,6 +1,8 @@
 package Controller;
 
 import Enums.ToolType;
+import Helpers.ThemeHelper;
+import Main.Main;
 import View.KeyboardKeysToggle;
 import View.SettingsSouthButtons;
 import View.ThemeSetting;
@@ -64,9 +66,9 @@ public final class SettingsWindowController extends WindowController {
 
     private void addActionsToSettingsWindowButtons() {
         southButtons.addActionToApplyButton(a -> {
-            if(!themeHelper.getCurrentTheme().equals(themeSettings.getSelectedTheme())) {
-                themeHelper.setTheme(themeSettings.getSelectedTheme());
-                notifyThemeChange();
+            if(!ThemeHelper.getCurrentTheme().equals(themeSettings.getSelectedTheme())) {
+                ThemeHelper.setTheme(themeSettings.getSelectedTheme());
+                Main.notifyThemeChange();
             }
             if(!keyboardKeysToggle.isToggleSelected()) {
                 toggleKeyBindings(false);
@@ -77,14 +79,14 @@ public final class SettingsWindowController extends WindowController {
             window.hide();
         });
         southButtons.addActionToDefaultButton(a -> {
-            if(!themeHelper.getCurrentTheme().equals("Default")) {
-                themeHelper.setTheme("Default");
+            if(!ThemeHelper.getCurrentTheme().equals("Default")) {
+                ThemeHelper.setTheme("Default");
                 themeSettings.setSelectedThemeToDefault();
-                notifyThemeChange();
+                Main.notifyThemeChange();
             }
             if(!keyboardKeysToggle.isToggleSelected()) {
                 keyboardKeysToggle.setSelectedStatus(true);
-                notifyKeyboardToggle(true);
+                Main.notifyKeyToggle(true);
             }
 
             ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
@@ -92,26 +94,12 @@ public final class SettingsWindowController extends WindowController {
         });
     }
 
-    private void notifyKeyboardToggle(boolean toggle) {
-        //CanvasController.getInstance(MainWindowController.getInstance().getWindow()).toggleKeyBindings(toggle);
-        //ToolbarController.getInstance(MainWindowController.getInstance().getWindow()).toggleKeyBindings(toggle);
-        //Todo fix and implement properly
-    }
-
-    private void notifyThemeChange() {
-        CanvasController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
-        ToolbarController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
-        MainWindowController.getInstance().themeHasChanged();
-        InfobarController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
-        SettingsWindowController.getInstance().themeHasChanged();
-    }
-
     @Override
     protected void specifyKeyBindings() {
         handler.addKeyBinding(KeyEvent.VK_ESCAPE, KeyEvent.VK_UNDEFINED, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                themeSettings.setSelectedTheme(themeHelper.getCurrentTheme());
+                themeSettings.setSelectedTheme(ThemeHelper.getCurrentTheme());
                 window.hide();
                 ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
             }
@@ -125,7 +113,7 @@ public final class SettingsWindowController extends WindowController {
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
                 ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
-                themeSettings.setSelectedTheme(themeHelper.getCurrentTheme());
+                themeSettings.setSelectedTheme(ThemeHelper.getCurrentTheme());
                 //Todo check if keys are enabled and change the toggle box
                 //Todo make sure settings are consistent with the current system settings, even if user just closes window
             }

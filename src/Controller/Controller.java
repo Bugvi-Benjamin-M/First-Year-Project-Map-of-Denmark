@@ -1,6 +1,5 @@
 package Controller;
 
-import Helpers.ThemeHelper;
 import View.Window;
 
 /**
@@ -9,11 +8,8 @@ import View.Window;
 public abstract class Controller {
 
     protected static Window window;
-    protected static ThemeHelper themeHelper;
-
 
     public Controller(Window window) {
-        themeHelper = ThemeHelper.getInstance();
         if(window != null) {
             this.window = window;
         }
