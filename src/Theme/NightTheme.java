@@ -19,7 +19,7 @@ public class NightTheme implements Theme {
 
     @Override
     public Color toolbar() {
-        return new Color(0x6E7567);
+        return new Color(0x3f3f3f);
     }
 
     @Override

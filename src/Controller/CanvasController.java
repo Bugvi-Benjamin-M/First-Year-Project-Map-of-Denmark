@@ -45,11 +45,8 @@ public final class CanvasController extends Controller implements Observer {
 
         coastlineController = CoastlineController.getInstance();
 
-        mapCanvas = new MapCanvas(window.getDimension());
-        mapCanvas.setWayElements(model.getWayElements());
-        mapCanvas.setCoastlines(coastlineController.getCoastlinePaths());
+        setupCanvas();
         addInteractionHandlerToCanvas();
-        window.addComponent(BorderLayout.CENTER,mapCanvas);
     }
 
     public static CanvasController getInstance(Window window) {
@@ -57,6 +54,14 @@ public final class CanvasController extends Controller implements Observer {
             instance = new CanvasController(window);
         }
         return instance;
+    }
+
+    private void setupCanvas() {
+        mapCanvas = new MapCanvas(window.getDimension());
+        mapCanvas.setWayElements(model.getWayElements());
+        mapCanvas.setCoastlines(coastlineController.getCoastlinePaths());
+        window.addComponent(BorderLayout.CENTER,mapCanvas);
+        mapCanvas.setVisible(true);
     }
 
     private void addInteractionHandlerToCanvas() {
@@ -220,10 +225,9 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.pan(dx, dy);
     }
 
-    @Override
     public void themeHasChanged() {
-        mapCanvas.repaint();
         mapCanvas.revalidate();
+        mapCanvas.repaint();
 
     }
 

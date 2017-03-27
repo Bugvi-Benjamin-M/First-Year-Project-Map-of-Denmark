@@ -2,14 +2,14 @@ package View;
 
 import Enums.OSMEnums.WayType;
 import Helpers.ThemeHelper;
-import Model.Coastlines.Coastline;
 import Model.Element;
 import Model.Model;
 import Model.Road;
 
 import java.awt.*;
 import java.awt.geom.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
 
 
 /**
@@ -41,8 +41,8 @@ public class MapCanvas extends View {
     public MapCanvas(Dimension dimension) {
         transform = new AffineTransform();
         this.dimension = dimension;
-        setPreferredSize(this.dimension);
         setBackgroundColor();
+        setPreferredSize(this.dimension);
         coastlines = new ArrayList<>();
     }
 
@@ -58,6 +58,7 @@ public class MapCanvas extends View {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
         g2D.setTransform(transform);
+        setBackgroundColor();
 
         drawCoastlines(g2D);
 

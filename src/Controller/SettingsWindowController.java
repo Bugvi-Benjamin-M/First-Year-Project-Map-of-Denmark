@@ -27,10 +27,12 @@ public final class SettingsWindowController extends WindowController {
     private ThemeSetting themeSettings;
     private SettingsSouthButtons southButtons;
     private KeyboardKeysToggle keyboardKeysToggle;
+    private boolean keysActive;
 
     private SettingsWindowController(Window window) {
         super(window);
         setupSettingsWindowSpecifics();
+        keysActive = true;
     }
 
     public static SettingsWindowController getInstance() {
@@ -66,32 +68,40 @@ public final class SettingsWindowController extends WindowController {
 
     private void addActionsToSettingsWindowButtons() {
         southButtons.addActionToApplyButton(a -> {
-            if(!ThemeHelper.getCurrentTheme().equals(themeSettings.getSelectedTheme())) {
-                ThemeHelper.setTheme(themeSettings.getSelectedTheme());
-                Main.notifyThemeChange();
-            }
-            if(!keyboardKeysToggle.isToggleSelected()) {
-                toggleKeyBindings(false);
-            } else {
-                toggleKeyBindings(true);
-            }
-            ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
-            window.hide();
+            applyButtonActivated();
         });
         southButtons.addActionToDefaultButton(a -> {
-            if(!ThemeHelper.getCurrentTheme().equals("Default")) {
-                ThemeHelper.setTheme("Default");
-                themeSettings.setSelectedThemeToDefault();
-                Main.notifyThemeChange();
-            }
-            if(!keyboardKeysToggle.isToggleSelected()) {
-                keyboardKeysToggle.setSelectedStatus(true);
-                Main.notifyKeyToggle(true);
-            }
-
-            ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
-            window.hide();
+            defaultButtonActivated();
         });
+    }
+
+    private void defaultButtonActivated() {
+        if(!ThemeHelper.getCurrentTheme().equals("Default")) {
+            ThemeHelper.setTheme("Default");
+            themeSettings.setSelectedThemeToDefault();
+            Main.notifyThemeChange();
+        }
+        if(!keyboardKeysToggle.isToggleSelected()) {
+            keyboardKeysToggle.setSelectedStatus(true);
+            keysActive = true;
+            Main.notifyKeyToggle(true);
+        }
+        setToCurrentSettingsAndClose();
+    }
+
+    private void applyButtonActivated() {
+        if(!ThemeHelper.getCurrentTheme().equals(themeSettings.getSelectedTheme())) {
+            ThemeHelper.setTheme(themeSettings.getSelectedTheme());
+            Main.notifyThemeChange();
+        }
+        if(!keyboardKeysToggle.isToggleSelected()) {
+            toggleKeyBindings(false);
+            keysActive = false;
+        } else {
+            toggleKeyBindings(true);
+            keysActive = true;
+        }
+        setToCurrentSettingsAndClose();
     }
 
     @Override
@@ -99,9 +109,13 @@ public final class SettingsWindowController extends WindowController {
         handler.addKeyBinding(KeyEvent.VK_ESCAPE, KeyEvent.VK_UNDEFINED, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                themeSettings.setSelectedTheme(ThemeHelper.getCurrentTheme());
-                window.hide();
-                ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
+                setToCurrentSettingsAndClose();
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_ENTER, KeyEvent.VK_UNDEFINED, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                applyButtonActivated();
             }
         });
     }
@@ -112,14 +126,27 @@ public final class SettingsWindowController extends WindowController {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
-                ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
-                themeSettings.setSelectedTheme(ThemeHelper.getCurrentTheme());
-                //Todo check if keys are enabled and change the toggle box
-                //Todo make sure settings are consistent with the current system settings, even if user just closes window
+                setToCurrentSettingsAndClose();
             }
         });
     }
 
+
+    /**
+     * Sets the settings to the current settings. This method makes sure that the current settings are
+     * displayed properly the next time the settings window is opened.
+     *
+     */
+    private void setToCurrentSettingsAndClose() {
+        themeSettings.setSelectedTheme(ThemeHelper.getCurrentTheme());
+        keyboardKeysToggle.setSelectedStatus(keysActive);
+        window.hide();
+        ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
+    }
+
+    /**
+     * resets the singleton instance.
+     */
     public void resetInstance() {
         instance = null;
     }

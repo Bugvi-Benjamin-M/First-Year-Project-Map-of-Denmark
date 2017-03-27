@@ -27,7 +27,7 @@ public class TestThemeHelper{
     }
 
     @Test
-    public void getColorFromTheme(){
+    public void testGetColorFromTheme(){
         assertEquals((new DefaultTheme()).park(), ThemeHelper.color("park"));
     }
 

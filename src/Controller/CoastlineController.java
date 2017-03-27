@@ -1,13 +1,12 @@
 package Controller;
 
-import Model.Coastlines.Coastline;
+import Helpers.FileHandler;
 import Model.Coastlines.CoastlineFactory;
-import View.Window;
 import Model.Model;
+import View.Window;
 
 import java.awt.geom.Path2D;
 import java.util.List;
-import Helpers.FileHandler;
 
 /**
  * Class details:
@@ -46,11 +45,6 @@ public final class CoastlineController extends Controller {
 
     private void checkIfFactoryIsNull() {
         if (factory == null) throw new RuntimeException("Factory has not been set.");
-    }
-
-    @Override
-    public void themeHasChanged() {
-
     }
 
     @Override

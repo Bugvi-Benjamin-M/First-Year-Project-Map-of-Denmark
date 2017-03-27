@@ -39,7 +39,6 @@ public final class InfobarController extends Controller {
         instance = null;
     }
 
-    @Override
     public void themeHasChanged() {
         //Todo fix
     }
