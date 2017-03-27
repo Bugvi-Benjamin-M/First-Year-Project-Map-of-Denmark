@@ -1,4 +1,5 @@
 package Model;
+import Enums.BoundType;
 import Enums.OSMEnums.NodeType;
 import Enums.OSMEnums.RelationType;
 import Enums.OSMEnums.WayType;
@@ -6,10 +7,7 @@ import Model.Coastlines.Coastline;
 import Model.Coastlines.CoastlineFactory;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Observable;
+import java.util.*;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -25,10 +23,13 @@ public final class Model extends Observable {
 
     private BST bst;
 
-
-    private float minLatitude, maxLatitude, minLongitude, maxLongitude;
+    private EnumMap<BoundType, Float> bounds;
 
     private Model(){
+        bounds = new EnumMap<>(BoundType.class);
+        for (BoundType type: BoundType.values()) {
+            bounds.put(type,0.0f);
+        }
         wayElements = new EnumMap<>(WayType.class);
         for (WayType type : WayType.values()) {
             wayElements.put(type, new ArrayList<>());
@@ -66,34 +67,32 @@ public final class Model extends Observable {
         notifyObservers();
     }
 
-    public void setBounds(float minLatitude, float maxLatitude, float minLongitude, float maxLongitude) {
-        this.minLatitude = minLatitude;
-        this.maxLatitude = maxLatitude;
-        this.minLongitude = minLongitude;
-        this.maxLongitude = maxLongitude;
+    public void setBound(BoundType type, float value) {
+        bounds.put(type,value);
     }
 
-    public boolean isBoundsSet() {
-        if (minLatitude == 0 && maxLatitude == 0 &&
-                minLongitude == 0 && maxLongitude == 0) {
-            return false;
-        } else return true;
+    @Deprecated
+    public void setBounds(float minLatitude, float maxLatitude, float minLongitude, float maxLongitude) {
+        bounds.put(BoundType.MIN_LONGITUDE,minLongitude);
+        bounds.put(BoundType.MAX_LONGITUDE,maxLongitude);
+        bounds.put(BoundType.MIN_LATITUDE,minLatitude);
+        bounds.put(BoundType.MAX_LATITUDE,maxLatitude);
     }
 
     public float getMinLatitude() {
-        return minLatitude;
+        return bounds.get(BoundType.MIN_LATITUDE);
     }
 
     public float getMaxLatitude() {
-        return maxLatitude;
+        return bounds.get(BoundType.MAX_LATITUDE);
     }
 
     public float getMinLongitude() {
-        return minLongitude;
+        return bounds.get(BoundType.MIN_LONGITUDE);
     }
 
     public float getMaxLongitude() {
-        return maxLongitude;
+        return bounds.get(BoundType.MAX_LONGITUDE);
     }
 
     public ArrayList<Point2D> getMedianpoints() {
