@@ -1,5 +1,6 @@
 package OSM;
 
+import Enums.BoundType;
 import Enums.RoadType;
 import Enums.OSMEnums.WayType;
 import Helpers.LongToPointMap;

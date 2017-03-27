@@ -1,5 +1,6 @@
 package Model.Coastlines;
 
+import Enums.ZoomLevel;
 import OSM.OSMNode;
 import OSM.OSMWay;
 
@@ -17,7 +18,12 @@ import java.util.List;
  */
 public class Coastline extends OSMWay {
 
+    public static ZoomLevel zoomLevel = ZoomLevel.LEVEL_3;
     public static final String OSM_IDENTIFIER = "coastline";
+
+    public static void setZoomLevel(ZoomLevel level) {
+        zoomLevel = level;
+    }
 
     @Override
     public Path2D toPath2D() {
@@ -29,7 +35,7 @@ public class Coastline extends OSMWay {
         Path2D path = new Path2D.Float();
         Point2D node = points.get(0);
         path.moveTo(node.getX(), node.getY());
-        for(int i = 1 ; i < size() ; i++){
+        for(int i = 1 ; i < size() ; i+= zoomLevel.getAmountOfNodesAtLevel(zoomLevel)){
             node = points.get(i);
             path.lineTo(node.getX(), node.getY());
         }
