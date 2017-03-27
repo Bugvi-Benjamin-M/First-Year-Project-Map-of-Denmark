@@ -38,5 +38,4 @@ public class ThemeSetting extends View {
     public void setSelectedTheme(String theme) {
         themeList.setSelectedItem(theme);
     }
-
 }
