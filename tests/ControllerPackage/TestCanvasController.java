@@ -68,8 +68,9 @@ public class TestCanvasController {
 
     @Test
     public void testAdjustToBounds() {
-        //Todo implement properly
-        //Need to find a way to test this properly
+        Model.getInstance();
+        CanvasController.getInstance(MainWindowController.getInstance().getWindow());
+
     }
 
 

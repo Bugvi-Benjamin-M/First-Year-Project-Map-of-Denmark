@@ -5,7 +5,6 @@ import Theme.Theme;
 
 import java.awt.*;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 
@@ -40,15 +39,8 @@ public final class ThemeHelper {
         try {
             Method method = currentTheme.getClass().getDeclaredMethod(input, null);
             return (Color) method.invoke(currentTheme, null);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            return Color.BLACK;
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-            return Color.BLACK;
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return Color.BLACK;
+        } catch (Exception e) {
+            throw new RuntimeException("Color not found" + input);
         }
     }
 
@@ -57,16 +49,8 @@ public final class ThemeHelper {
         try {
             Constructor<?> constructor = Class.forName("Theme." + modInput).getConstructor();
             currentTheme = (Theme) constructor.newInstance();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException("Theme not found" + input + "\n" + "modified input: " + modInput);
         }
     }
 }
