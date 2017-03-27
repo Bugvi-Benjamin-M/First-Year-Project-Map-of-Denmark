@@ -82,7 +82,7 @@
                 <file file="${result.report.file}"/>
             </executiondata>
             <!--  the class files and optional source files ...  -->
-            <structure name="JaCoCo Ant Example">
+            <structure name="BFST: Group D">
                 <classfiles>
                     <fileset dir="${main.build.dir}"/>
                 </classfiles>
