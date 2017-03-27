@@ -1,13 +1,11 @@
 package View;
 
-import Controller.CanvasController;
 import Enums.OSMEnums.WayType;
+import Helpers.ThemeHelper;
 import Model.Coastlines.Coastline;
 import Model.Element;
 import Model.Model;
 import Model.Road;
-import OSM.OSMWay;
-import Theme.Theme;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -33,7 +31,6 @@ public class MapCanvas extends View {
     private AffineTransform transform;
     private EnumMap<WayType, java.util.List<Element>> wayElements;
     private java.util.List<Path2D> coastlines;
-    private Theme theme;
     private ArrayList<Element> currentSection;
     private Point2D currentPoint;
 
@@ -41,13 +38,16 @@ public class MapCanvas extends View {
      * The base Constructor for the MapCanvas.
      * @param dimension The dimension of the component
      */
-    public MapCanvas(Dimension dimension, Theme theme) {
+    public MapCanvas(Dimension dimension) {
         transform = new AffineTransform();
-        this.theme = theme;
         this.dimension = dimension;
         setPreferredSize(this.dimension);
-        this.setBackground(theme.getWaterColor());
+        setBackgroundColor();
         coastlines = new ArrayList<>();
+    }
+
+    public void setBackgroundColor() {
+        setBackground(ThemeHelper.color("water"));
     }
 
     /**
@@ -76,13 +76,13 @@ public class MapCanvas extends View {
         if(currentPoint != null){
             Rectangle2D rectangle = new Rectangle2D.Double(currentPoint.getX(), currentPoint.getY(), 0.3, 0.3);
             g2D.setStroke(new BasicStroke(0.0001f));
-            g.setColor(theme.getBoundaryColor());
+            g.setColor(ThemeHelper.color("boundary"));
             g2D.draw(rectangle);
         }
     }
 
     private void drawCoastlines(Graphics2D g) {
-        g.setColor(theme.getBackgroundColor());
+        g.setColor(ThemeHelper.color("background"));
         for (Path2D path: coastlines) {
             g.fill(path);
         }
@@ -90,7 +90,7 @@ public class MapCanvas extends View {
     }
 
     private void drawRoads(Graphics2D g){
-        g.setColor(theme.getHighwayRoadColor());
+        g.setColor(ThemeHelper.color("highwayroad"));
         g.setStroke(new BasicStroke(0.00001f));
         if(currentSection != null) {
             for (Element e : currentSection) {
@@ -130,7 +130,7 @@ public class MapCanvas extends View {
     }
 
     private void drawBoundaries(Graphics2D g2D) {
-        g2D.setColor(theme.getBoundaryColor());
+        g2D.setColor(ThemeHelper.color("boundary"));
         Path2D boundary = new Path2D.Double();
         boundary.moveTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
         boundary.lineTo(Model.getInstance().getMaxLongitude(), Model.getInstance().getMinLatitude());
@@ -186,7 +186,6 @@ public class MapCanvas extends View {
         }catch(NoninvertibleTransformException e){
             throw new RuntimeException();
         }
-
     }
 
     public void setCurrentSection(ArrayList<Element> currentSection) {

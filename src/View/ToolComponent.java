@@ -13,7 +13,7 @@ import java.awt.*;
  * @author Oracle Team
  * @version 06-03-2017.
  */
-abstract class ToolComponent extends JPanel {
+public abstract class ToolComponent extends JPanel {
 
     private boolean isWellActivated;
     private Color hoverColor;

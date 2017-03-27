@@ -1,5 +1,6 @@
-package Model.Coastlines;
+package ModelPackage.Coastlines;
 
+import Model.Coastlines.CoastlineFileGenerator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

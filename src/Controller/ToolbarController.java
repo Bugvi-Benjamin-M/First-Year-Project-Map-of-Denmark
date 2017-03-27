@@ -6,14 +6,19 @@ import Helpers.FileHandler;
 import Helpers.OSDetector;
 import View.PopupWindow;
 import View.ToolFeature;
+import View.ToolComponent;
 import View.Toolbar;
 import View.Window;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.tools.Tool;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.FileNotFoundException;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Map;
 
 /**
  * Class details:
@@ -58,7 +63,7 @@ public final class ToolbarController extends Controller {
     }
 
     private void addInteractionHandlerToSettingsTool() {
-        new ToolInteractionHandler(ToolType.SETTINGS, KeyEvent.VK_E, OSDetector.getActivationKey());
+        new ToolInteractionHandler(ToolType.SETTINGS, KeyEvent.VK_COMMA, OSDetector.getActivationKey());
     }
 
     private void toolEvent(ToolType type) {
@@ -101,7 +106,7 @@ public final class ToolbarController extends Controller {
 
     private void settingsEvent() {
         toolbar.toggleWellOnTool(ToolType.SETTINGS);
-        WindowController settingsWindowController = SettingsWindowController.getInstance();
+        SettingsWindowController.getInstance();
     }
 
     public Toolbar getToolbar() {
@@ -112,7 +117,17 @@ public final class ToolbarController extends Controller {
         instance = null;
     }
 
-     private class ToolInteractionHandler extends MouseAdapter {
+    @Override
+    public void themeHasChanged() {
+        toolbar.setBackGroundColor();
+    }
+
+    @Override
+    public void toggleKeyBindings(boolean status) {
+        //Todo implement
+    }
+
+    private class ToolInteractionHandler extends MouseAdapter {
 
         private ToolType type;
         private ToolFeature tool;

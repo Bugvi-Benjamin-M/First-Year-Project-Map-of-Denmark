@@ -216,14 +216,15 @@ Notes from meeting:
 Next meeting:
 Friday the 24 of March at 10.00
 
-## Logbook 24/3 (Scribe Blanke is back Bitches)
+## Logbook 24/3 (Scribe Blanke)
 What we will do today:
 - Work on coastlines and datastructure
 
 Impediments:
-- Niclas has gone to the land of Jylland - never to return
+- Niclas has is unavailable today and until Sunday. 
 
 Notes from meeting:
-- N/A
+- Worked on coastlines and the BST datastructure. 
+- Implemented ThemeHelper class to use reflection. 
 
 ## Next logbook...
