@@ -11,5 +11,7 @@ public enum ZoomLevel {
     LEVEL_0,    // close and detailed
     LEVEL_1,
     LEVEL_2,
-    LEVEL_3     // abstract far away
+    LEVEL_3;    // abstract far away
+
+
 }

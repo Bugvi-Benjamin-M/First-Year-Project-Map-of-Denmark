@@ -1,5 +1,6 @@
 package Controller;
 
+import Enums.BoundType;
 import Model.Element;
 import Model.Model;
 import View.MapCanvas;
@@ -10,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -32,7 +34,6 @@ public final class CanvasController extends Controller implements Observer {
     private static MapCanvas mapCanvas;
     private static Model model;
     private static CanvasController instance;
-
 
     private Point2D lastMousePosition;
     private CanvasInteractionHandler handler;
@@ -67,6 +68,13 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.addMouseMotionListener(handler);
         mapCanvas.addMouseWheelListener(handler);
         specifyKeyBindings();
+    }
+
+    public void loadFromCoastlines(){
+        model.loadFromCoastlines();
+        mapCanvas.setCoastlines(model.getCoastlines());
+        adjustToBounds();
+        mapCanvas.repaint();
     }
 
     private void specifyKeyBindings() {
@@ -228,7 +236,6 @@ public final class CanvasController extends Controller implements Observer {
 
     }
 
-    @Override
     public void toggleKeyBindings(boolean status) {
         //Todo implement
     }

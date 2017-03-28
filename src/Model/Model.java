@@ -3,6 +3,7 @@ import Enums.BoundType;
 import Enums.OSMEnums.NodeType;
 import Enums.OSMEnums.RelationType;
 import Enums.OSMEnums.WayType;
+import Enums.ZoomLevel;
 import Model.Coastlines.CoastlineFactory;
 
 import java.awt.geom.Path2D;
@@ -23,6 +24,7 @@ public final class Model extends Observable {
 
     private BST bst;
     private CoastlineFactory coastlineFactory;
+    private ZoomLevel zoom_level;
 
     private EnumMap<BoundType, Float> bounds;
 
@@ -36,14 +38,19 @@ public final class Model extends Observable {
             wayElements.put(type, new ArrayList<>());
         }
         bst = new BST();
+        zoom_level = ZoomLevel.LEVEL_3;
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
     }
+
+    public void changeZoomLevel(ZoomLevel level) {
+        this.zoom_level = level;
+    }
+
+    public ZoomLevel getZoomLevel() {return zoom_level;}
 
     public BST getBst(){
         return bst;
     }
-
-    public CoastlineFactory getCoastlineFactory() {return coastlineFactory;}
 
     public static Model getInstance() {
         if(instance == null) {
@@ -64,6 +71,14 @@ public final class Model extends Observable {
         return coastlineFactory.getCoastlinePolygons();
     }
 
+    public void loadFromCoastlines() {
+        this.setBound(BoundType.MIN_LONGITUDE, coastlineFactory.getBound(BoundType.MIN_LONGITUDE));
+        this.setBound(BoundType.MAX_LONGITUDE, coastlineFactory.getBound(BoundType.MAX_LONGITUDE));
+        this.setBound(BoundType.MIN_LATITUDE, coastlineFactory.getBound(BoundType.MIN_LATITUDE));
+        this.setBound(BoundType.MAX_LATITUDE, coastlineFactory.getBound(BoundType.MAX_LATITUDE));
+        coastlineFactory.setLongitudeFactor();
+    }
+
     public void clear() {
         for(WayType type : WayType.values()){
             wayElements.get(type).clear();
@@ -81,8 +96,8 @@ public final class Model extends Observable {
 
     @Deprecated
     public void setBounds(float minLatitude, float maxLatitude, float minLongitude, float maxLongitude) {
-        bounds.put(BoundType.MIN_LONGITUDE,minLongitude);
-        bounds.put(BoundType.MAX_LONGITUDE,maxLongitude);
+        bounds.put(BoundType.MIN_LONGITUDE,minLongitude*CoastlineFactory.getLongitudeFactor());
+        bounds.put(BoundType.MAX_LONGITUDE,maxLongitude*CoastlineFactory.getLongitudeFactor());
         bounds.put(BoundType.MIN_LATITUDE,minLatitude);
         bounds.put(BoundType.MAX_LATITUDE,maxLatitude);
     }

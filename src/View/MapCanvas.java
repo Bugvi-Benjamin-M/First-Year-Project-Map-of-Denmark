@@ -33,6 +33,7 @@ public class MapCanvas extends View {
     private java.util.List<Path2D> coastlines;
     private ArrayList<Element> currentSection;
     private Point2D currentPoint;
+    private double zoom_value;
 
     /**
      * The base Constructor for the MapCanvas.
@@ -44,6 +45,7 @@ public class MapCanvas extends View {
         setBackgroundColor();
         setPreferredSize(this.dimension);
         coastlines = new ArrayList<>();
+        zoom_value = 0;
     }
 
     public void setBackgroundColor() {
@@ -145,6 +147,7 @@ public class MapCanvas extends View {
      * Zooms in or out upon the elements on the MapCanvas depending on a given factor.
      */
     public void zoom(double factor) {
+        zoom_value += factor;
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         repaint();
     }
@@ -153,6 +156,7 @@ public class MapCanvas extends View {
      * Resets the MapCanvas from being zoomed in or out and panned to one or another position.
      */
     public void resetTransform(){
+        zoom_value = 0;
         transform.setToIdentity();
     }
 

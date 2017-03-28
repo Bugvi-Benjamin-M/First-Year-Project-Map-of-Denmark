@@ -18,21 +18,12 @@ import java.util.List;
  */
 public class Coastline extends OSMWay {
 
-    private static ZoomLevel zoomLevel = ZoomLevel.LEVEL_3;
     public static final String OSM_IDENTIFIER = "coastline";
-
-    public static void setZoomLevel(ZoomLevel level) {
-        zoomLevel = level;
-    }
-
-    public static ZoomLevel getCurrentZoomLevel() {
-        return zoomLevel;
-    }
 
     @Override
     public Path2D toPath2D() {
         List<Point2D> points = new ArrayList<>();
-        double longFactor = CoastlineFactory.getLongitudeFactor();
+        float longFactor = CoastlineFactory.getLongitudeFactor();
         for (Point2D node: this) {
             points.add(new Point2D.Double(node.getX()*longFactor,node.getY()));
         }

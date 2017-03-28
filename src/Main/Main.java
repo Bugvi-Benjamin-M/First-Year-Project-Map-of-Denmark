@@ -3,6 +3,7 @@ package Main;
 import Controller.*;
 import Helpers.FileHandler;
 import Model.Model;
+import View.MapCanvas;
 import View.PopupWindow;
 
 import java.io.FileNotFoundException;
@@ -20,17 +21,35 @@ public class Main {
 
         WindowController windowController = MainWindowController.getInstance();
 
-        CanvasController.getInstance(windowController.getWindow());
+        CanvasController canvasController = CanvasController.getInstance(windowController.getWindow());
         ToolbarController.getInstance(windowController.getWindow());
         InfobarController.getInstance(windowController.getWindow());
 
         try {
+            loadDefaultResource();
+        } catch (Exception e) {
+            PopupWindow.errorBox(null,e.getMessage());
+            Model model = Model.getInstance();
+            System.out.println("Bounds: minlon "+model.getMinLongitude()+" - maxlon "+model.getMaxLongitude() +
+                    "; minlat "+model.getMinLatitude()+ " - maxlat "+model.getMinLatitude());
+            canvasController.loadFromCoastlines();
+            System.out.println("Bounds: minlon "+model.getMinLongitude()+" - maxlon "+model.getMaxLongitude() +
+                    "; minlat "+model.getMinLatitude()+ " - maxlat "+model.getMinLatitude());
+        }
+    }
+
+    private static void loadDefaultResource() throws Exception {
+        try {
+            throw new FileNotFoundException();
+            /*
             long startTime = System.currentTimeMillis();
             FileHandler.loadResource(DEFAULT_RESOURCE);
             long stopTime = System.currentTimeMillis();
             System.out.println("Loading time: " + (stopTime - startTime) + " ms");
+            */
         } catch (FileNotFoundException e) {
-            PopupWindow.errorBox(null,"Program was not able to load up \""+DEFAULT_RESOURCE+"\"");
+            throw new Exception("Program was not able to load default resource \""+DEFAULT_RESOURCE+"\"" +
+                    "\nLoading from coastlines instead.");
         }
     }
 
