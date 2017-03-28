@@ -86,7 +86,6 @@ public class MapCanvas extends View {
         for (Path2D path: coastlines) {
             g.fill(path);
         }
-        System.out.println("Contains "+coastlines.size() + " coastlines");
     }
 
     private void drawRoads(Graphics2D g){
@@ -132,11 +131,12 @@ public class MapCanvas extends View {
     private void drawBoundaries(Graphics2D g2D) {
         g2D.setColor(ThemeHelper.color("boundary"));
         Path2D boundary = new Path2D.Double();
-        boundary.moveTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
-        boundary.lineTo(Model.getInstance().getMaxLongitude(), Model.getInstance().getMinLatitude());
-        boundary.lineTo(Model.getInstance().getMaxLongitude(), Model.getInstance().getMaxLatitude());
-        boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMaxLatitude());
-        boundary.lineTo(Model.getInstance().getMinLongitude(), Model.getInstance().getMinLatitude());
+        Model model = Model.getInstance();
+        boundary.moveTo(model.getMinLongitude(), model.getMinLatitude());
+        boundary.lineTo(model.getMaxLongitude(), model.getMinLatitude());
+        boundary.lineTo(model.getMaxLongitude(), model.getMaxLatitude());
+        boundary.lineTo(model.getMinLongitude(), model.getMaxLatitude());
+        boundary.lineTo(model.getMinLongitude(), model.getMinLatitude());
         g2D.draw(boundary);
     }
 
