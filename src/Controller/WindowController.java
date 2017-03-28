@@ -57,7 +57,7 @@ public abstract class WindowController extends Controller {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
-            //Todo test why nothing is registered
+            //Todo test why nothing is registered<
         }
 
         @Override
