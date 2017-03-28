@@ -2,6 +2,7 @@ package Controller;
 
 import Enums.ToolType;
 import Helpers.ThemeHelper;
+import Helpers.Utilities.DebugWindow;
 import Main.Main;
 import View.KeyboardKeysToggle;
 import View.SettingsSouthButtons;
@@ -73,6 +74,9 @@ public final class SettingsWindowController extends WindowController {
         southButtons.addActionToDefaultButton(a -> {
             defaultButtonActivated();
         });
+        southButtons.addActionToOpenDebugButton(a -> {
+            openDebugActivated();
+        });
     }
 
     private void defaultButtonActivated() {
@@ -102,6 +106,10 @@ public final class SettingsWindowController extends WindowController {
             keysActive = true;
         }
         setToCurrentSettingsAndClose();
+    }
+
+    private void openDebugActivated() {
+        DebugWindow.getInstance().show();
     }
 
     @Override

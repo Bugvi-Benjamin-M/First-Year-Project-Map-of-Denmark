@@ -2,10 +2,14 @@ package View;
 
 import Enums.OSMEnums.WayType;
 import Helpers.ThemeHelper;
+import Helpers.Utilities.DebugWindow;
+import Helpers.Utilities.FPSCounter;
+import Main.Main;
 import Model.Element;
 import Model.Model;
 import Model.Road;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.ArrayList;
@@ -46,6 +50,7 @@ public class MapCanvas extends View {
         setPreferredSize(this.dimension);
         coastlines = new ArrayList<>();
         zoom_value = 0;
+        DebugWindow.getInstance().hide();
     }
 
     public void setBackgroundColor() {
@@ -82,6 +87,9 @@ public class MapCanvas extends View {
             g.setColor(ThemeHelper.color("boundary"));
             g2D.draw(rectangle);
         }
+
+        Main.FPS_COUNTER.interrupt();
+        DebugWindow.getInstance().setFPSLabel();
     }
 
     private void drawCoastlines(Graphics2D g) {

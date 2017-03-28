@@ -2,6 +2,7 @@ package Main;
 
 import Controller.*;
 import Helpers.FileHandler;
+import Helpers.Utilities.FPSCounter;
 import Model.Model;
 import View.MapCanvas;
 import View.PopupWindow;
@@ -12,6 +13,8 @@ import java.io.FileNotFoundException;
  * Created by Jakob on 06-03-2017.
  */
 public class Main {
+
+    public static final FPSCounter FPS_COUNTER = new FPSCounter();
 
     public static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
 
@@ -30,12 +33,11 @@ public class Main {
         } catch (Exception e) {
             PopupWindow.errorBox(null,e.getMessage());
             Model model = Model.getInstance();
-            System.out.println("Bounds: minlon "+model.getMinLongitude()+" - maxlon "+model.getMaxLongitude() +
-                    "; minlat "+model.getMinLatitude()+ " - maxlat "+model.getMinLatitude());
+            System.out.println("Bounds: minlon "+model.getMinLongitude()+" - maxlon "+model.getMaxLongitude());
             canvasController.loadFromCoastlines();
-            System.out.println("Bounds: minlon "+model.getMinLongitude()+" - maxlon "+model.getMaxLongitude() +
-                    "; minlat "+model.getMinLatitude()+ " - maxlat "+model.getMinLatitude());
         }
+
+        FPS_COUNTER.start();
     }
 
     private static void loadDefaultResource() throws Exception {
