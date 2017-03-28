@@ -120,7 +120,11 @@ public final class ToolbarController extends Controller {
     }
 
     public void toggleKeyBindings(boolean status) {
-        //Todo implement
+        for(ToolType type : toolbar.getAllTools().keySet()) {
+            for(Object key : toolbar.getTool(type).getActionMap().keys()) {
+                toolbar.getTool(type).getActionMap().get(key).setEnabled(status);
+            }
+        }
     }
 
     private class ToolInteractionHandler extends MouseAdapter {

@@ -225,12 +225,12 @@ public final class CanvasController extends Controller implements Observer {
     public void themeHasChanged() {
         mapCanvas.revalidate();
         mapCanvas.repaint();
-
     }
 
-    @Override
     public void toggleKeyBindings(boolean status) {
-        //Todo implement
+        for(Object key : mapCanvas.getActionMap().keys()) {
+            mapCanvas.getActionMap().get(key).setEnabled(status);
+        }
     }
 
     private class CanvasInteractionHandler extends MouseAdapter {

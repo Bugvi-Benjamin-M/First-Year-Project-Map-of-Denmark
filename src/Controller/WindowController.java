@@ -37,7 +37,12 @@ public abstract class WindowController extends Controller {
     public abstract void resetInstance();
 
     public void toggleKeyBindings(boolean status) {
-        //Todo implement
+        JPanel content = (JPanel) window.getFrame().getContentPane();
+        for(Object key : content.getActionMap().keys()) {
+            content.getActionMap().get(key).setEnabled(status);
+        }
+        //todo key bindings still active on main window for some reason.
+        //Be sure they don't share window
     }
 
     protected class WindowInteractionHandler extends ComponentAdapter {
@@ -52,11 +57,13 @@ public abstract class WindowController extends Controller {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
+            //Todo test why nothing is registered
         }
 
         @Override
         public void componentHidden(ComponentEvent e) {
             super.componentHidden(e);
+            //Todo maybe use this method instead of window listener in subclass
         }
 
 

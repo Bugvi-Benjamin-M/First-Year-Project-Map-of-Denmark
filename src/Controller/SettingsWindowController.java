@@ -27,12 +27,12 @@ public final class SettingsWindowController extends WindowController {
     private ThemeSetting themeSettings;
     private SettingsSouthButtons southButtons;
     private KeyboardKeysToggle keyboardKeysToggle;
-    private boolean keysActive;
+    private boolean keysActiveStatus;
 
     private SettingsWindowController(Window window) {
         super(window);
         setupSettingsWindowSpecifics();
-        keysActive = true;
+        keysActiveStatus = true;
     }
 
     public static SettingsWindowController getInstance() {
@@ -81,10 +81,9 @@ public final class SettingsWindowController extends WindowController {
             themeSettings.setSelectedThemeToDefault();
             Main.notifyThemeChange();
         }
-        if(!keyboardKeysToggle.isToggleSelected()) {
-            keyboardKeysToggle.setSelectedStatus(true);
-            keysActive = true;
-            Main.notifyKeyToggle(true);
+        if(!keysActiveStatus) {
+            keysActiveStatus = true;
+            Main.notifyKeyToggle(keysActiveStatus);
         }
         setToCurrentSettingsAndClose();
     }
@@ -95,11 +94,11 @@ public final class SettingsWindowController extends WindowController {
             Main.notifyThemeChange();
         }
         if(!keyboardKeysToggle.isToggleSelected()) {
-            toggleKeyBindings(false);
-            keysActive = false;
+            keysActiveStatus = false;
+            Main.notifyKeyToggle(keysActiveStatus);
         } else {
-            toggleKeyBindings(true);
-            keysActive = true;
+            keysActiveStatus = true;
+            Main.notifyKeyToggle(keysActiveStatus);
         }
         setToCurrentSettingsAndClose();
     }
@@ -139,7 +138,7 @@ public final class SettingsWindowController extends WindowController {
      */
     private void setToCurrentSettingsAndClose() {
         themeSettings.setSelectedTheme(ThemeHelper.getCurrentTheme());
-        keyboardKeysToggle.setSelectedStatus(keysActive);
+        keyboardKeysToggle.setSelectedStatus(keysActiveStatus);
         window.hide();
         ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
     }
