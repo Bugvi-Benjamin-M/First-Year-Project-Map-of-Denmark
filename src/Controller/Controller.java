@@ -13,8 +13,4 @@ public abstract class Controller {
             this.window = window;
         }
     }
-
-    public abstract void toggleKeyBindings(boolean status);
-
-
 }

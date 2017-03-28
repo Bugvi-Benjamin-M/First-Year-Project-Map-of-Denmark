@@ -43,7 +43,6 @@ public final class InfobarController extends Controller {
         //Todo fix
     }
 
-    @Override
     public void toggleKeyBindings(boolean status) {
         //Todo fix
     }

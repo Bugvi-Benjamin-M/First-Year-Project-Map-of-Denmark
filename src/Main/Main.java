@@ -41,6 +41,7 @@ public class Main {
     }
 
     public static void notifyKeyToggle(boolean status) {
-
+        CanvasController.getInstance(MainWindowController.getInstance().getWindow()).toggleKeyBindings(status);
+        ToolbarController.getInstance(MainWindowController.getInstance().getWindow()).toggleKeyBindings(status);
     }
 }

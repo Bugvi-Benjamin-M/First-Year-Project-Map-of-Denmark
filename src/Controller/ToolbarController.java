@@ -119,7 +119,6 @@ public final class ToolbarController extends Controller {
         //Todo make icons change
     }
 
-    @Override
     public void toggleKeyBindings(boolean status) {
         //Todo implement
     }

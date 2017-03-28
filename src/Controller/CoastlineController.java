@@ -47,7 +47,6 @@ public final class CoastlineController extends Controller {
         if (factory == null) throw new RuntimeException("Factory has not been set.");
     }
 
-    @Override
     public void toggleKeyBindings(boolean status) {
 
     }
