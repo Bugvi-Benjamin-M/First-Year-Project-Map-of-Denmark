@@ -12,7 +12,7 @@ import java.util.Observer;
  */
 public class FPSCounter extends Thread {
     private long lastInterupt;
-    private int fps;
+    private double fps;
     private boolean stopThread;
 
     private static final long NANO_TO_SECOND = 1000000000;
@@ -26,13 +26,12 @@ public class FPSCounter extends Thread {
         while (!stopThread) {
             lastInterupt = System.nanoTime();
             try {
-                sleep(1000); // longer than one frame
+                sleep(1000); // longer than one frame (one second)
             } catch (InterruptedException e){
-                System.out.println("Thread has been interrupted.");
+                // System.out.println("Thread has been interrupted.");
             }
             //one second(nano) divided by amount of time it takes for one frame to finish
-            fps = (int) (NANO_TO_SECOND / (System.nanoTime() - lastInterupt));
-            lastInterupt = System.nanoTime();
+            fps = NANO_TO_SECOND / (System.nanoTime() - lastInterupt);
         }
     }
 
@@ -40,7 +39,7 @@ public class FPSCounter extends Thread {
         stopThread = true;
     }
 
-    public int getFPS() {
+    public double getFPS() {
         return fps;
     }
 
