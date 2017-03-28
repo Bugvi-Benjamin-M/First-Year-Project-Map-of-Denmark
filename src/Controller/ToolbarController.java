@@ -103,7 +103,11 @@ public final class ToolbarController extends Controller {
 
     private void settingsEvent() {
         toolbar.toggleWellOnTool(ToolType.SETTINGS);
-        SettingsWindowController.getInstance();
+        if(SettingsWindowController.getInstance() == null) {
+            SettingsWindowController.getInstance();
+        } else {
+            SettingsWindowController.getInstance().showSettingsWindow();
+        }
     }
 
     public Toolbar getToolbar() {

@@ -40,6 +40,8 @@ public abstract class WindowController extends Controller {
         JPanel content = (JPanel) window.getFrame().getContentPane();
         for(Object key : content.getActionMap().keys()) {
             content.getActionMap().get(key).setEnabled(status);
+            System.out.println(((JPanel) window.getFrame().getContentPane()).getActionMap().get(key));
+
         }
         //todo key bindings still active on main window for some reason.
         //Be sure they don't share window

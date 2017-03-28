@@ -16,14 +16,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * Created by  on .
- *
- * @author bugvimagnussen
+ * The settings controller class controls the settings window and settings in general. It inherits from WindowController.
+ * @author Búgvi Magnussen
  * @version 20/03/2017
  */
 public final class SettingsWindowController extends WindowController {
 
     private static SettingsWindowController instance;
+
     private ThemeSetting themeSettings;
     private SettingsSouthButtons southButtons;
     private KeyboardKeysToggle keyboardKeysToggle;
@@ -35,15 +35,31 @@ public final class SettingsWindowController extends WindowController {
         keysActiveStatus = true;
     }
 
+    /**
+     * Returns the singleton instance of this class.
+     * @return the singleton object
+     */
     public static SettingsWindowController getInstance() {
         if(instance == null) {
             return instance = new SettingsWindowController(setupWindow());
         }
-        window.relativeTo(null);
-        window.show();
         return instance;
     }
 
+
+    /**
+     * Show the already existing settings window.
+     */
+    public void showSettingsWindow() {
+        window.relativeTo(null);
+        window.show();
+    }
+
+    /**
+     * Sets up a new settings window. In general, this is only done when the singleton instance of this controller
+     * is created.
+     * @return the newly created settings window.
+     */
     private static Window setupWindow() {
         Window settings = new Window().title("Settings")
                 .closeOperation(WindowConstants.DISPOSE_ON_CLOSE)
@@ -56,6 +72,9 @@ public final class SettingsWindowController extends WindowController {
         return settings;
     }
 
+    /**
+     * Creates the layout of the settings window and specifies the location for the different components.
+     */
     private void setupSettingsWindowSpecifics() {
         themeSettings = new ThemeSetting();
         window.addComponent(BorderLayout.NORTH, themeSettings);
@@ -66,6 +85,9 @@ public final class SettingsWindowController extends WindowController {
         addActionsToSettingsWindowButtons();
     }
 
+    /**
+     * Adds actions to the buttons on the settings window.
+     */
     private void addActionsToSettingsWindowButtons() {
         southButtons.addActionToApplyButton(a -> {
             applyButtonActivated();
@@ -75,6 +97,9 @@ public final class SettingsWindowController extends WindowController {
         });
     }
 
+    /**
+     * Method is called when deafault button is pressed. Returns all settings to default.
+     */
     private void defaultButtonActivated() {
         if(!ThemeHelper.getCurrentTheme().equals("Default")) {
             ThemeHelper.setTheme("Default");
@@ -88,6 +113,10 @@ public final class SettingsWindowController extends WindowController {
         setToCurrentSettingsAndClose();
     }
 
+    /**
+     * Method is called when the apply button is pressed. Applies all changed settings and makes sure the settings
+     * window accurately reflects the current settings.
+     */
     private void applyButtonActivated() {
         if(!ThemeHelper.getCurrentTheme().equals(themeSettings.getSelectedTheme())) {
             ThemeHelper.setTheme(themeSettings.getSelectedTheme());
@@ -103,6 +132,9 @@ public final class SettingsWindowController extends WindowController {
         setToCurrentSettingsAndClose();
     }
 
+    /**
+     * Overrides the superclass specifyKeyBindingsMethod. Adds key bindings to the settings window.
+     */
     @Override
     protected void specifyKeyBindings() {
         handler.addKeyBinding(KeyEvent.VK_ESCAPE, KeyEvent.VK_UNDEFINED, new AbstractAction() {
@@ -118,6 +150,11 @@ public final class SettingsWindowController extends WindowController {
             }
         });
     }
+
+    /**
+     * Overrides the superclass' method. Builds on the superclass method by adding a window listener to the settings window
+     * to add further functionality.
+     */
     @Override
     protected void addInteractionHandlerToWindow() {
         super.addInteractionHandlerToWindow();
