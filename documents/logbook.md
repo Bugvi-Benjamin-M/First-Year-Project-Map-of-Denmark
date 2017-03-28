@@ -227,4 +227,22 @@ Notes from meeting:
 - Worked on coastlines and the BST datastructure. 
 - Implemented ThemeHelper class to use reflection. 
 
+## Logbook 27/3 (Scribe Nikolaj)
+What we will do today:
+- Scrum meeting
+- Code review
+- Planning præsentation 
+- Planning the next sprint
+
+Impediments:
+- Jakob is unavailable from 12 pm - 14 pm
+- Meeting with other groups and TA 14 pm - 16 pm
+- Nikolaj has to go at 16 pm
+
+Notes from meeting:
+- Always 2 people per task to start with.
+- Be better to create releases in the future. (With jar files that actually run)
+- If a task is big and important, be sure to have everyone involved with it. (Example kd-tree)
+
+
 ## Next logbook...

@@ -36,12 +36,6 @@ public abstract class WindowController extends Controller {
 
     public abstract void resetInstance();
 
-    @Override
-    public void themeHasChanged() {
-
-    }
-
-    @Override
     public void toggleKeyBindings(boolean status) {
         //Todo implement
     }

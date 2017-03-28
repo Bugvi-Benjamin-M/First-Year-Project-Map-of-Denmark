@@ -37,12 +37,11 @@ public class Main {
     public static void notifyThemeChange() {
         CanvasController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
         ToolbarController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
-        MainWindowController.getInstance().themeHasChanged();
         InfobarController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
-        SettingsWindowController.getInstance().themeHasChanged();
     }
 
     public static void notifyKeyToggle(boolean status) {
-
+        CanvasController.getInstance(MainWindowController.getInstance().getWindow()).toggleKeyBindings(status);
+        ToolbarController.getInstance(MainWindowController.getInstance().getWindow()).toggleKeyBindings(status);
     }
 }

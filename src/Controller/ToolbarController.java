@@ -6,19 +6,16 @@ import Helpers.FileHandler;
 import Helpers.OSDetector;
 import View.PopupWindow;
 import View.ToolFeature;
-import View.ToolComponent;
 import View.Toolbar;
 import View.Window;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.tools.Tool;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Map;
 
 /**
  * Class details:
@@ -117,12 +114,11 @@ public final class ToolbarController extends Controller {
         instance = null;
     }
 
-    @Override
     public void themeHasChanged() {
         toolbar.setBackGroundColor();
+        //Todo make icons change
     }
 
-    @Override
     public void toggleKeyBindings(boolean status) {
         //Todo implement
     }

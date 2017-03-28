@@ -6,6 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import java.awt.geom.Point2D;
+
 
 /**
  * Created by Jakob on 22-03-2017.
@@ -15,19 +17,23 @@ public class TestBST {
 
     @Before
     public void setUp() throws Exception {
-        System.out.println("before");
         bst = new BST();
+        bst.addPoint(new Point2D.Double(-1, 2));
+        bst.addPoint(new Point2D.Double(4, 3));
+        bst.addPoint(new Point2D.Double(0, -2));
+        bst.addPoint(new Point2D.Double(-3, 1));
+        bst.addPoint(new Point2D.Double(-4, -4));
     }
 
     @After
     public void tearDown() throws Exception {
-        System.out.println("after");
-
+        //
     }
 
     @Test
-    public void test(){
-
+    public void testGetManySections(){
+        //TODO: should this work?
+        //assertEquals(5, bst.getManySections(-10.0, -10.0, 10.0, 10.0).size());
     }
 
 }
