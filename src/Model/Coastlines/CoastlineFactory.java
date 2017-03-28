@@ -45,6 +45,21 @@ public class CoastlineFactory {
     }
 
     public List<Path2D> getCoastlinePolygons() {
-        return coastlines.stream().map(Coastline::toPath2D).collect(Collectors.toList());
+        List<Path2D> paths = new ArrayList<>();
+        for (Coastline coast: coastlines) {
+            switch (Coastline.getCurrentZoomLevel()) {
+                case LEVEL_3:
+                    if (coast.size() > 50) paths.add(coast.toPath2D());
+                    break;
+                case LEVEL_2:
+                    if (coast.size() > 30) paths.add(coast.toPath2D());
+                case LEVEL_1:
+                    if (coast.size() > 10) paths.add(coast.toPath2D());
+                default:
+                    paths.add(coast.toPath2D());
+                    break;
+            }
+        }
+        return paths;
     }
 }

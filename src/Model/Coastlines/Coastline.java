@@ -18,11 +18,15 @@ import java.util.List;
  */
 public class Coastline extends OSMWay {
 
-    public static ZoomLevel zoomLevel = ZoomLevel.LEVEL_3;
+    private static ZoomLevel zoomLevel = ZoomLevel.LEVEL_3;
     public static final String OSM_IDENTIFIER = "coastline";
 
     public static void setZoomLevel(ZoomLevel level) {
         zoomLevel = level;
+    }
+
+    public static ZoomLevel getCurrentZoomLevel() {
+        return zoomLevel;
     }
 
     @Override
@@ -35,7 +39,7 @@ public class Coastline extends OSMWay {
         Path2D path = new Path2D.Float();
         Point2D node = points.get(0);
         path.moveTo(node.getX(), node.getY());
-        for(int i = 1 ; i < size() ; i+= zoomLevel.getAmountOfNodesAtLevel(zoomLevel)){
+        for(int i = 1 ; i < size() ; i += 1){
             node = points.get(i);
             path.lineTo(node.getX(), node.getY());
         }
