@@ -10,7 +10,7 @@ public class FontAwesome{
         try {
             InputStream is = FontAwesome.class.getResourceAsStream("/fa.ttf");
             Font font = Font.createFont(Font.TRUETYPE_FONT, is);
-            font = font.deriveFont(Font.PLAIN, 40f);
+            font = font.deriveFont(Font.PLAIN, 38f);
             return font;
         } catch (Exception e) {
             throw new RuntimeException("FontAwesome could not be loaded.");

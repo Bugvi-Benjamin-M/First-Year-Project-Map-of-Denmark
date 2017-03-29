@@ -27,7 +27,7 @@ public class Toolbar extends View {
     private final int MARGIN_LARGE_LEFT = 80;
     private final int MARGIN_SMALL_RIGHT = -20;
     private final int MARGIN_LARGE_RIGHT = -80;
-    private final int MARGIN_TOP = 20;
+    private final int MARGIN_TOP = 15;
 
     /**
      * Constructor for the Toolbar

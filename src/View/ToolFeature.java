@@ -31,7 +31,7 @@ public class ToolFeature extends ToolComponent {
         this.type = type;
         this.icon = icon;
         setupLayout();
-        this.setPreferredSize(new Dimension(50,90));
+        this.setPreferredSize(new Dimension(60,90));
     }
 
     /**
@@ -42,6 +42,8 @@ public class ToolFeature extends ToolComponent {
         label = new JLabel(type.toString());
         label.setForeground(Helpers.ThemeHelper.color("icon"));
         label.setOpaque(false);
+        label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 14));
+
 
         iconLabel = new JLabel(this.icon);
         iconLabel.setFont(Helpers.FontAwesome.getFontAwesome());
