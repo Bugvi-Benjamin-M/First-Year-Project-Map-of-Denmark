@@ -31,10 +31,11 @@ public final class SettingsWindowController extends WindowController {
     private SettingsWindowController(Window window) {
         super(window);
         settings = new Settings();
-        themeSettings = settings.getThemeSetting();
-        keyboardKeysToggle = settings.getKeyboardKeysToggle();
+        themeSettings = new ThemeSetting();
+        keyboardKeysToggle = new KeyboardKeysToggle();
         southButtons = new SettingsButtons();
         setupSettingsWindowSpecifics();
+        addSettings();
         keysActiveStatus = true;
     }
 
@@ -73,6 +74,17 @@ public final class SettingsWindowController extends WindowController {
                 .show();
         settings.setMinimumWindowSize(new Dimension(600, 600));
         return settings;
+    }
+
+
+    /**
+     * adds the individual components to the settings JPanel
+     */
+    private void addSettings() {
+        settings.addSetting(themeSettings);
+        settings.createSpace(new Dimension(0,20));
+        settings.addSetting(keyboardKeysToggle);
+        settings.createSpace(new Dimension(0,480));
     }
 
     /**

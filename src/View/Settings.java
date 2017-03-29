@@ -11,30 +11,19 @@ import java.awt.*;
  */
 public class Settings extends View {
 
-    private KeyboardKeysToggle keyboardKeysToggle;
-
-    private ThemeSetting themeSetting;
-
     public Settings() {
-        keyboardKeysToggle = new KeyboardKeysToggle();
-        themeSetting = new ThemeSetting();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        addSettings();
     }
 
-    private void addSettings() {
-        add(themeSetting);
-        add(Box.createRigidArea(new Dimension(0,20)));
-        add(keyboardKeysToggle);
-        add(Box.createRigidArea(new Dimension(0, 480)));
+    public void addSetting(View view) {
+        add(view);
     }
 
-    public KeyboardKeysToggle getKeyboardKeysToggle() {
-        return keyboardKeysToggle;
+    public void createSpace(Dimension dimension) {
+        add(Box.createRigidArea(dimension));
     }
 
-    public ThemeSetting getThemeSetting() {
-        return themeSetting;
-    }
+
+
 
 }
