@@ -50,11 +50,6 @@ public class Toolbar extends View {
         setBackground(ThemeHelper.color("toolbar"));
     }
 
-    public void toggleWellOnTool(ToolType type) {
-        ToolComponent tool = tools.get(type);
-        tool.toggleWell();
-    }
-
     /**
      * Creates and adds all the tools to the toolbar
      */
@@ -131,9 +126,9 @@ public class Toolbar extends View {
         private Map<ToolType, ToolComponent> setupToolbar() {
             Map<ToolType, ToolComponent> tools = new HashMap<>();
 
-            tools.put(ToolType.LOAD, new ToolFeature("/load.png",ToolType.LOAD));
-            tools.put(ToolType.SAVE, new ToolFeature("/save.png",ToolType.SAVE));
-            tools.put(ToolType.SETTINGS, new ToolFeature("/cogs.png",ToolType.SETTINGS));
+            tools.put(ToolType.LOAD, new ToolFeature("\uf115",ToolType.LOAD));
+            tools.put(ToolType.SAVE, new ToolFeature("\uf0c7",ToolType.SAVE));
+            tools.put(ToolType.SETTINGS, new ToolFeature("\uf085",ToolType.SETTINGS));
             return tools;
         }
     }

@@ -89,6 +89,11 @@ public class Window {
         show();
     }
 
+    public void removeComponent(View component) {
+        window.remove(component);
+        show();
+    }
+
     public Dimension getDimension() {
         return dimension;
     }

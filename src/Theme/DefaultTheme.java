@@ -33,6 +33,11 @@ public class DefaultTheme implements Theme {
     }
 
     @Override
+    public Color icon() {
+        return new Color(0x000000);
+    }
+
+    @Override
     public Color park() {
         return new Color(0xb4d39a);
     }

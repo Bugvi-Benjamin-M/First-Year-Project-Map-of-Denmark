@@ -177,7 +177,6 @@ public final class SettingsWindowController extends WindowController {
         themeSettings.setSelectedTheme(ThemeHelper.getCurrentTheme());
         keyboardKeysToggle.setSelectedStatus(keysActiveStatus);
         window.hide();
-        ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
     }
 
     /**
