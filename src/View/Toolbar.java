@@ -5,7 +5,6 @@ import Helpers.ThemeHelper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +27,7 @@ public class Toolbar extends View {
     private final int MARGIN_LARGE_LEFT = 80;
     private final int MARGIN_SMALL_RIGHT = -20;
     private final int MARGIN_LARGE_RIGHT = -80;
-    private final int MARGIN_TOP = 5;
+    private final int MARGIN_TOP = 20;
 
     /**
      * Constructor for the Toolbar

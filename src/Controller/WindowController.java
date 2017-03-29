@@ -1,5 +1,6 @@
 package Controller;
 
+import View.PopupWindow;
 import View.Window;
 
 import javax.swing.*;
@@ -48,7 +49,6 @@ public abstract class WindowController extends Controller {
 
         protected JPanel content;
 
-
         protected WindowInteractionHandler() {
             this.content = (JPanel) window.getFrame().getContentPane();
         }
@@ -56,6 +56,10 @@ public abstract class WindowController extends Controller {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
+            if(window.getFrame().getWidth() < 600) {
+                PopupWindow.infoBox(null, "Window has reached event size", "Resize");
+                System.out.println("restructure window. Small size reached");
+            }
             //Todo test why nothing is registered<
         }
 
