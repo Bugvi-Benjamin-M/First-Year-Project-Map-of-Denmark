@@ -3,9 +3,7 @@ package Controller;
 import Enums.ToolType;
 import Helpers.ThemeHelper;
 import Main.Main;
-import View.KeyboardKeysToggle;
-import View.SettingsSouthButtons;
-import View.ThemeSetting;
+import View.*;
 import View.Window;
 
 import javax.swing.*;
@@ -25,13 +23,19 @@ public final class SettingsWindowController extends WindowController {
     private static SettingsWindowController instance;
 
     private ThemeSetting themeSettings;
-    private SettingsSouthButtons southButtons;
+    private SettingsButtons southButtons;
     private KeyboardKeysToggle keyboardKeysToggle;
     private boolean keysActiveStatus;
+    private Settings settings;
 
     private SettingsWindowController(Window window) {
         super(window);
+        settings = new Settings();
+        themeSettings = new ThemeSetting();
+        keyboardKeysToggle = new KeyboardKeysToggle();
+        southButtons = new SettingsButtons();
         setupSettingsWindowSpecifics();
+        addSettings();
         keysActiveStatus = true;
     }
 
@@ -72,16 +76,23 @@ public final class SettingsWindowController extends WindowController {
         return settings;
     }
 
+
     /**
-     * Creates the layout of the settings window and specifies the location for the different components.
+     * adds the individual components to the settings JPanel
+     */
+    private void addSettings() {
+        settings.addSetting(themeSettings);
+        settings.createSpace(new Dimension(0,20));
+        settings.addSetting(keyboardKeysToggle);
+        settings.createSpace(new Dimension(0,480));
+    }
+
+    /**
+     * Specifies the location for the different components in the settings window.
      */
     private void setupSettingsWindowSpecifics() {
-        themeSettings = new ThemeSetting();
-        window.addComponent(BorderLayout.NORTH, themeSettings);
-        southButtons = new SettingsSouthButtons();
+        window.addComponent(BorderLayout.CENTER, settings);
         window.addComponent(BorderLayout.SOUTH, southButtons);
-        keyboardKeysToggle = new KeyboardKeysToggle();
-        window.addComponent(BorderLayout.CENTER, keyboardKeysToggle);
         addActionsToSettingsWindowButtons();
     }
 

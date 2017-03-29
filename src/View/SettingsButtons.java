@@ -12,13 +12,13 @@ import java.util.List;
  * @author bugvimagnussen
  * @version 25/03/2017
  */
-public class SettingsSouthButtons extends View {
+public class SettingsButtons extends View {
 
     private JButton apply;
     private JButton defaultSet;
     private List<JButton> buttons;
 
-    public SettingsSouthButtons() {
+    public SettingsButtons() {
         buttons = new ArrayList<>();
         setPreferredSize(new Dimension(400, 50));
         createButtons();
