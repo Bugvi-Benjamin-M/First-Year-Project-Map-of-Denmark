@@ -22,11 +22,11 @@ public class Toolbar extends View {
 
     private static Map<ToolType, ToolComponent> tools;
     private SpringLayout layout;
+    private SearchField field;
+    private JLabel searchLabel;
 
     private final int MARGIN_SMALL_LEFT = 20;
-    private final int MARGIN_LARGE_LEFT = 80;
     private final int MARGIN_SMALL_RIGHT = -20;
-    private final int MARGIN_LARGE_RIGHT = -80;
     private final int MARGIN_TOP = 15;
 
     /**
@@ -38,7 +38,7 @@ public class Toolbar extends View {
         layout = new SpringLayout();
         this.setLayout(layout);
 
-        setupTools();
+        setupToolbarComponents();
 
         this.setPreferredSize(new Dimension(500,100));
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -50,11 +50,29 @@ public class Toolbar extends View {
     }
 
     /**
-     * Creates and adds all the tools to the toolbar
+     * Creates and adds all the components to the toolbar
      */
-    private void setupTools() {
+    private void setupToolbarComponents() {
         addSaveTool(addLoadTool());
         addSettingsTool();
+        addSearchField();
+        addSearchLabel();
+    }
+
+    private void addSearchLabel() {
+        searchLabel = new JLabel("Search:");
+        searchLabel.setFont(new Font(getFont().getName(), getFont().getStyle(), 20));
+        layout.putConstraint(EAST, searchLabel, MARGIN_SMALL_RIGHT, WEST, field);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, searchLabel, 0, SpringLayout.VERTICAL_CENTER, this);
+        add(searchLabel);
+    }
+
+    private SearchField addSearchField() {
+        field = new SearchField();
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, field, 0, SpringLayout.HORIZONTAL_CENTER, this);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, field, 0, SpringLayout.VERTICAL_CENTER, this);
+        this.add(field);
+        return field;
     }
 
     /**

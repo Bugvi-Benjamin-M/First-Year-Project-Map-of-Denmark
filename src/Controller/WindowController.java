@@ -41,7 +41,6 @@ public abstract class WindowController extends Controller {
         JPanel content = (JPanel) window.getFrame().getContentPane();
         for(Object key : content.getActionMap().keys()) {
             content.getActionMap().get(key).setEnabled(status);
-            System.out.println(((JPanel) window.getFrame().getContentPane()).getActionMap().get(key));
         }
     }
 
@@ -56,11 +55,9 @@ public abstract class WindowController extends Controller {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
-            if(window.getFrame().getWidth() < 600) {
+            if(window.getFrame().getWidth() < 1100) {
                 PopupWindow.infoBox(null, "Window has reached event size", "Resize");
-                System.out.println("restructure window. Small size reached");
             }
-            //Todo test why nothing is registered<
         }
 
         @Override
