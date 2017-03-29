@@ -1,5 +1,7 @@
 package View;
 
+import Exceptions.IncorrectLayoutException;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -79,14 +81,28 @@ public class Window {
     }
 
     /**
-     * Adds a visual component to the window in a given layout position
+     * Adds a visual component to the window in a given layout position.
+     * Reminder, this method requires the window to have BorderLayout. If this method
+     * is called and the layout is not BorderLayout, a RuntimeException will be thrown.
      * @param layout A specific BorderLayout constant
      * @param component A visual component that extends the View class
      * @see BorderLayout
      */
     public void addComponent(String layout, View component) {
+        checkLayout("BorderLayout");
         window.add(component,layout);
         show();
+    }
+
+    /**
+     * Checks that the layout of the window matches the parameter. If not, throws
+     * an IncorrectLayout Exception.
+     * @param layout the layout to check for
+     */
+    private void checkLayout(String layout) {
+        if(!window.getLayout().toString().contains(layout)) {
+            throw new IncorrectLayoutException("Layout of the Window is not " + layout);
+        }
     }
 
     public Dimension getDimension() {

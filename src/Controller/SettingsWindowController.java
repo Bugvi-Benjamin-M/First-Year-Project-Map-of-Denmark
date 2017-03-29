@@ -3,9 +3,7 @@ package Controller;
 import Enums.ToolType;
 import Helpers.ThemeHelper;
 import Main.Main;
-import View.KeyboardKeysToggle;
-import View.SettingsSouthButtons;
-import View.ThemeSetting;
+import View.*;
 import View.Window;
 
 import javax.swing.*;
@@ -25,12 +23,17 @@ public final class SettingsWindowController extends WindowController {
     private static SettingsWindowController instance;
 
     private ThemeSetting themeSettings;
-    private SettingsSouthButtons southButtons;
+    private SettingsButtons southButtons;
     private KeyboardKeysToggle keyboardKeysToggle;
     private boolean keysActiveStatus;
+    private Settings settings;
 
     private SettingsWindowController(Window window) {
         super(window);
+        settings = new Settings();
+        themeSettings = settings.getThemeSetting();
+        keyboardKeysToggle = settings.getKeyboardKeysToggle();
+        southButtons = new SettingsButtons();
         setupSettingsWindowSpecifics();
         keysActiveStatus = true;
     }
@@ -73,15 +76,11 @@ public final class SettingsWindowController extends WindowController {
     }
 
     /**
-     * Creates the layout of the settings window and specifies the location for the different components.
+     * Specifies the location for the different components in the settings window.
      */
     private void setupSettingsWindowSpecifics() {
-        themeSettings = new ThemeSetting();
-        window.addComponent(BorderLayout.NORTH, themeSettings);
-        southButtons = new SettingsSouthButtons();
+        window.addComponent(BorderLayout.CENTER, settings);
         window.addComponent(BorderLayout.SOUTH, southButtons);
-        keyboardKeysToggle = new KeyboardKeysToggle();
-        window.addComponent(BorderLayout.CENTER, keyboardKeysToggle);
         addActionsToSettingsWindowButtons();
     }
 

@@ -11,4 +11,5 @@ import javax.swing.*;
  * @version 10/03/2017
  */
 public abstract class View extends JPanel {
+
 }
