@@ -26,12 +26,6 @@ public class Main {
 
         Model.getInstance();
 
-        WindowController windowController = MainWindowController.getInstance();
-
-        CanvasController.getInstance(windowController.getWindow());
-        ToolbarController.getInstance(windowController.getWindow());
-        InfobarController.getInstance(windowController.getWindow());
-
         try {
             long startTime = System.currentTimeMillis();
             FileHandler.loadResource(DEFAULT_RESOURCE);
@@ -43,6 +37,14 @@ public class Main {
 
         splashScreenDestruct();
 
+        WindowController windowController = MainWindowController.getInstance();
+
+        CanvasController.getInstance(windowController.getWindow());
+        ToolbarController.getInstance(windowController.getWindow());
+        InfobarController.getInstance(windowController.getWindow());
+
+        CanvasController.adjustToBounds();
+        CanvasController.resetBounds();
     }
 
     private static void splashScreenDestruct() {

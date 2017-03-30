@@ -67,12 +67,10 @@ public class FileHandler {
     public static void loadOSM(InputSource inputSource) {
         try {
             Model.getInstance().clear();
-            CanvasController.resetBounds();
             XMLReader reader = XMLReaderFactory.createXMLReader();
             reader.setContentHandler(OSMHandler.getInstance());
             reader.parse(inputSource);
             Model.getInstance().modelHasChanged();
-            CanvasController.adjustToBounds();
         } catch (SAXException | IOException e) {
             e.printStackTrace();
         }
