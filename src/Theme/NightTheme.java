@@ -33,6 +33,11 @@ public class NightTheme implements Theme {
     }
 
     @Override
+    public Color border() {
+        return new Color(0x000000);
+    }
+
+    @Override
     public Color water() {
         return new Color(0x515c6d);
     }

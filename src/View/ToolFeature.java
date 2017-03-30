@@ -23,7 +23,7 @@ public class ToolFeature extends ToolComponent {
 
     /**
      * Constructor for a ToolFeature
-     * @param path The string to the icon file
+     * @param icon The string to the icon file
      * @param type The type of this tool
      */
     ToolFeature(String icon, ToolType type) {

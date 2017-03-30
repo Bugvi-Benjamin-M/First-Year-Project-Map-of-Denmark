@@ -118,11 +118,11 @@ public final class ToolbarController extends Controller {
         toolbar = new Toolbar();
         this.window.addComponent(BorderLayout.PAGE_START, toolbar);
         addInteractionHandlersToTools();
-        toolbar.setBackGroundColor();
     }
 
     public void toggleKeyBindings(boolean status) {
         for(ToolType type : toolbar.getAllTools().keySet()) {
+            if(toolbar.getTool(type).getActionMap().keys() == null) continue;
             for(Object key : toolbar.getTool(type).getActionMap().keys()) {
                 toolbar.getTool(type).getActionMap().get(key).setEnabled(status);
             }

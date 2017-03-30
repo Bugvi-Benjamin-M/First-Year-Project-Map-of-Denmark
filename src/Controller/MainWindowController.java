@@ -21,7 +21,7 @@ public final class MainWindowController extends WindowController {
         super(window);
     }
 
-    public static WindowController getInstance() {
+    public static MainWindowController getInstance() {
         if(instance == null) {
             Window mainWindow = setupWindow();
             instance = new MainWindowController(mainWindow);

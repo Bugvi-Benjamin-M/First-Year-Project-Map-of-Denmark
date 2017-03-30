@@ -7,7 +7,8 @@ public enum ToolType {
     SAVE("Save"),
     LOAD("Load"),
     SETTINGS("Settings"),
-    UNKNOWN("unknown");
+    SEARCH("Search"),
+    UNKNOWN("Unknown");
 
     private String tag;
 

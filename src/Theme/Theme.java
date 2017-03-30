@@ -14,6 +14,7 @@ public interface Theme {
     public abstract Color toolbar();
     public abstract Color icon();
     public abstract Color boundary();
+    public abstract Color border();
 
     public abstract Color water();
     public abstract Color park();
