@@ -43,4 +43,8 @@ public class Node extends Point{
     public void makeLeaf(){
         pointers = new ArrayList<>();
     }
+
+    public List<Pointer> getPointers(){
+        return pointers;
+    }
 }

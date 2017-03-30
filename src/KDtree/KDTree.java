@@ -35,6 +35,20 @@ public class KDTree {
     }
 
     private void putPointer(Node currentNode, Pointer pointer){
-
+        if(currentNode.getPointers() == null){
+            if(currentNode.getDepth() % 2 == 0){
+                int compare = pointer.compareToX(currentNode);
+                if(compare <= 0 ) putPointer(currentNode.getLeft(), pointer);
+                else putPointer(currentNode.getRight(), pointer);
+            }
+            else{
+                int compare = pointer.compareToY(currentNode);
+                if(compare <= 0 ) putPointer(currentNode.getLeft(), pointer);
+                else putPointer(currentNode.getRight(), pointer);
+            }
+        }
+        else{
+            currentNode.addPointer(pointer);
+        }
     }
 }
