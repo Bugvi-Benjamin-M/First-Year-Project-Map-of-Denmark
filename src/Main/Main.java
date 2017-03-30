@@ -1,7 +1,10 @@
 package Main;
 
 import Controller.*;
+import Exceptions.FileWasNotFoundException;
+import Helpers.FileHandler;
 import Model.Model;
+import View.PopupWindow;
 
 import javax.swing.*;
 
@@ -21,14 +24,14 @@ public class Main {
 
         Model.getInstance();
 
-        /*try {
+        try {
             long startTime = System.currentTimeMillis();
             FileHandler.loadResource(DEFAULT_RESOURCE);
             long stopTime = System.currentTimeMillis();
             System.out.println("Loading time: " + (stopTime - startTime) + " ms");
         } catch (FileWasNotFoundException e) {
             PopupWindow.errorBox(null,"Program was not able to load up \""+DEFAULT_RESOURCE+"\"");
-        }*/
+        }
 
         splashScreenDestruct();
 

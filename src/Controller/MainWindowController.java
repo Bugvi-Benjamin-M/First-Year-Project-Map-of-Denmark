@@ -6,6 +6,7 @@ import View.Window;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 
 /**
@@ -56,6 +57,18 @@ public final class MainWindowController extends WindowController {
 
     public void resetInstance() {
         instance = null;
+    }
+
+    private class MainWindowInteractionHandler extends MainWindowController.WindowInteractionHandler {
+
+        @Override
+        public void componentResized(ComponentEvent e) {
+            super.componentResized(e);
+            //Todo implement changes
+            //double scaleFactor = window.getDimension().getWidth() / tool.getSearchFieldDimension().getWidth();
+            //tool.setWidth((int) (window.getDimension().width / scaleFactor));
+        }
+
     }
 
 }

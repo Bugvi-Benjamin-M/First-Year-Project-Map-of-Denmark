@@ -1,5 +1,7 @@
 package View;
 
+import Helpers.ThemeHelper;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -16,13 +18,14 @@ public class SearchTool extends ToolComponent {
     private JComboBox<String> field;
     private java.util.List<String> addresses;
     private DefaultComboBoxModel<String> model;
-    private Dimension dimension;
+
+    private Dimension searchFieldDimension;
     private JLabel searchLabel;
 
 
     public SearchTool() {
         field = new JComboBox<>();
-        dimension = new Dimension(600, 40);
+        searchFieldDimension = new Dimension(600, 40);
         setupLayout();
         addSearchLabel();
         add(field);
@@ -30,8 +33,8 @@ public class SearchTool extends ToolComponent {
 
     @Override
     public void setupLayout() {
-        field.setPreferredSize(dimension);
-        field.setMinimumSize(dimension);
+        field.setPreferredSize(searchFieldDimension);
+        field.setMinimumSize(searchFieldDimension);
         field.setEditable(true);
         field.setFont(new Font(field.getFont().getName(), field.getFont().getStyle(), 20));
         field.setRequestFocusEnabled(true);
@@ -56,12 +59,22 @@ public class SearchTool extends ToolComponent {
     }
 
     public void setWidth(int width) {
-        setPreferredSize(dimension = new Dimension(width, (int) dimension.getHeight()));
+        field.setPreferredSize(new Dimension(200, 40));
+        field.setVisible(true);
     }
 
     private void addSearchLabel() {
         searchLabel = new JLabel("Search:");
         searchLabel.setFont(new Font(getFont().getName(), getFont().getStyle(), 20));
         add(searchLabel);
+    }
+
+    public Dimension getSearchFieldDimension() {
+        return searchFieldDimension;
+    }
+
+    public void setBackgroundColor() {
+        field.setBackground(ThemeHelper.color("searchbar"));
+        field.setForeground(ThemeHelper.color("searchtext"));
     }
 }
