@@ -36,7 +36,7 @@ public final class MainWindowController extends WindowController {
                 .extendedState(JFrame.MAXIMIZED_BOTH)
                 .layout(new BorderLayout())
                 .relativeTo(null)
-                .show();
+                .hide();
         return mainWindow;
     }
 
