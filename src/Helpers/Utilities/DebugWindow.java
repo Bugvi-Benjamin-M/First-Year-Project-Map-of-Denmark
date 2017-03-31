@@ -33,14 +33,15 @@ public class DebugWindow extends WindowAdapter {
         window = new Window().title(TITLE)
                 .dimension(new Dimension(640,480))
                 .layout(new BorderLayout())
-                .relativeTo(null)
-                .hide();
-        window.addComponent(BorderLayout.CENTER,container);
+                .relativeTo(null);
+        window.addComponent(BorderLayout.CENTER,container,false);
         this.fpsCounter = fpsCounter;
     }
 
     public static DebugWindow getInstance() {
-        if (instance == null) instance = new DebugWindow(Main.FPS_COUNTER);
+        if (instance == null) {
+            instance = new DebugWindow(Main.FPS_COUNTER);
+        }
         return instance;
     }
 

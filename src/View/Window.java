@@ -88,10 +88,10 @@ public class Window {
      * @param component A visual component that extends the View class
      * @see BorderLayout
      */
-    public void addComponent(String layout, View component) {
+    public void addComponent(String layout, View component, boolean display) {
         checkLayout("BorderLayout");
         window.add(component,layout);
-        show();
+        if (display) show();
     }
 
     public void removeComponent(View component) {

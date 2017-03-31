@@ -15,6 +15,7 @@ import java.util.List;
  *
  * @author Andreas Blanke, blan@itu.dk
  * @version 23-03-2017.
+ *
  * @project BFST
  */
 public class Coastline extends OSMWay {
