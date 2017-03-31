@@ -38,6 +38,11 @@ public class DefaultTheme implements Theme {
     }
 
     @Override
+    public Color searchfield() {
+        return new Color(0xFFF9FC);
+    }
+
+    @Override
     public Color water() {
         return new Color(0x99B3CC);
     }

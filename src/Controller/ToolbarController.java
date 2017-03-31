@@ -116,8 +116,6 @@ public final class ToolbarController extends Controller {
         toolbar = new Toolbar();
         this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
         addInteractionHandlersToTools();
-        SearchTool tool = (SearchTool) toolbar.getTool(ToolType.SEARCH);
-        tool.changeTheme();
     }
 
     public void toggleKeyBindings(boolean status) {

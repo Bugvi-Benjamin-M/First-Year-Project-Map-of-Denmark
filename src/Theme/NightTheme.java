@@ -38,6 +38,11 @@ public class NightTheme implements Theme {
     }
 
     @Override
+    public Color searchfield() {
+        return new Color(0x323236);
+    }
+
+    @Override
     public Color water() {
         return new Color(0x515c6d);
     }

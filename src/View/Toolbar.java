@@ -1,5 +1,6 @@
 package View;
 
+import Controller.MainWindowController;
 import Enums.ToolType;
 import Helpers.ThemeHelper;
 
@@ -70,6 +71,7 @@ public class Toolbar extends View {
         tools.remove(ToolType.SEARCH);
         revalidate();
         repaint();
+        new SearchTool(width);
         tools.put(ToolType.SEARCH, new SearchTool(width));
         addSearchTool();
     }
@@ -145,7 +147,8 @@ public class Toolbar extends View {
             tools.put(ToolType.LOAD, new ToolFeature("\uf115",ToolType.LOAD));
             tools.put(ToolType.SAVE, new ToolFeature("\uf0c7",ToolType.SAVE));
             tools.put(ToolType.SETTINGS, new ToolFeature("\uf085",ToolType.SETTINGS));
-            tools.put(ToolType.SEARCH, new SearchTool((600)));
+            //Todo get rid of coupling here. Toolbar should not use controller
+            tools.put(ToolType.SEARCH, new SearchTool((int) (MainWindowController.getInstance().getWindow().getFrame().getWidth()/3.2)));
             return tools;
         }
     }
