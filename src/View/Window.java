@@ -16,6 +16,8 @@ import java.awt.*;
  */
 public class Window {
 
+    private static final String ICON_PATH = "/icon.png";
+
     private JFrame window;
     private Dimension dimension;
     private LayoutManager layout;
@@ -32,6 +34,15 @@ public class Window {
         //
     }
 
+    public Window icon() {
+        java.net.URL imgURL = getClass().getResource(ICON_PATH);
+        if (imgURL != null) {
+            window.setIconImage(new ImageIcon(imgURL, "OSM Visualizer").getImage());;
+        } else {
+            System.err.println("Couldn't find file: " + ICON_PATH);
+        }
+        return this;
+    }
 
     public Window title(String title){
         this.title = title;
