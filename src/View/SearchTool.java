@@ -40,7 +40,6 @@ public class SearchTool extends ToolComponent {
         field.setFont(new Font(field.getFont().getName(), field.getFont().getStyle(), 20));
         field.setRequestFocusEnabled(true);
         for(Component component : field.getComponents()) if(component instanceof JButton) field.remove(component);
-        //Todo force focus loss
     }
 
     public void addListToSearchField(List<String> list) {

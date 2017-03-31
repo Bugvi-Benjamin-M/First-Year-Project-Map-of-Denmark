@@ -47,6 +47,11 @@ public final class ToolbarController extends Controller {
         addInteractionHandlerToLoadTool();
         addInteractionHandlerToSaveTool();
         addInteractionHandlerToSettingsTool();
+        addInteractionHandlerToToolbar();
+    }
+
+    private void addInteractionHandlerToToolbar() {
+        new ToolbarInteractionHandler();
     }
 
     private void addInteractionHandlerToSaveTool() {
@@ -139,14 +144,6 @@ public final class ToolbarController extends Controller {
         private int keyEvent;
         private int activationKey;
 
-        public ToolInteractionHandler(ToolType type) {
-            this(type, 0, 0);
-        }
-
-       public ToolInteractionHandler(ToolType type, int keyEvent) {
-           this(type, keyEvent, 0);
-       }
-
         public ToolInteractionHandler(ToolType type, int keyEvent, int activationKey) {
             this.type = type;
             this.keyEvent = keyEvent;
@@ -167,7 +164,11 @@ public final class ToolbarController extends Controller {
         @Override
         public void mouseClicked(MouseEvent e) {
             super.mouseClicked(e);
-            toolEvent(type);
+            if(tool == null) toolbar.grabFocus();
+            else {
+                tool.grabFocus();
+                toolEvent(type);
+            }
         }
 
         private void setKeyShortCuts() {
@@ -182,6 +183,23 @@ public final class ToolbarController extends Controller {
             });
         }
 
+    }
+
+    private class ToolbarInteractionHandler extends MouseAdapter {
+
+        public ToolbarInteractionHandler() {
+            addMouseListener();
+        }
+
+        private void addMouseListener() {
+            toolbar.addMouseListener(this);
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            super.mouseClicked(e);
+            toolbar.grabFocus();
+        }
     }
 
 }
