@@ -58,7 +58,7 @@ public final class MainWindowController extends WindowController {
                 }
             }
         });
-        handler.addKeyBinding(KeyEvent.VK_Q, OSDetector.getActivationKey(), new AbstractAction() {
+        handler.addKeyBinding(KeyEvent.VK_D, OSDetector.getActivationKey(), new AbstractAction() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
