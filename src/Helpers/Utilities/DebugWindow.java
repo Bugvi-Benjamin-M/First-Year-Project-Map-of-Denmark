@@ -1,6 +1,9 @@
 package Helpers.Utilities;
 
+import Controller.CanvasController;
+import Controller.MainWindowController;
 import Main.Main;
+import Model.Model;
 import View.Window;
 import View.View;
 import View.TextView;
@@ -51,10 +54,30 @@ public class DebugWindow extends WindowAdapter {
         else retrieved.setText(label);
     }
 
+    public void setZoomLabel(double zoom_factor) {
+        JLabel retrieved = container.getJLabel("zoomlabel");
+        String label = "Zoom factor: " + zoom_factor;
+        if (retrieved == null) container.addJLabel("zoomlabel",label);
+        else retrieved.setText(label);
+    }
+
+    public void setBoundsLabel() {
+        JLabel retrieved = container.getJLabel("boundslabel");
+        Model model = Model.getInstance();
+        String label = "Bounds: minlon: "+model.getMinLongitude()+"; maxlon: "+model.getMaxLongitude()+
+                "\n     minlat: "+model.getMinLatitude()+"; maxlat: "+model.getMaxLatitude();
+        if (retrieved == null) container.addJLabel("boundslabel",label);
+        else retrieved.setText(label);
+    }
+
     @Override
     public void windowOpened(WindowEvent e) {
         super.windowOpened(e);
         fpsCounter.start();
+        setZoomLabel(CanvasController.getInstance(MainWindowController.getInstance().getWindow())
+                .getMapCanvas().getZoomLevel());
+        setFPSLabel();
+        setBoundsLabel();
     }
 
     @Override

@@ -4,6 +4,7 @@ import Enums.OSMEnums.NodeType;
 import Enums.OSMEnums.RelationType;
 import Enums.OSMEnums.WayType;
 import Enums.ZoomLevel;
+import Helpers.Utilities.DebugWindow;
 import Model.Coastlines.CoastlineFactory;
 
 import java.awt.geom.Path2D;
@@ -77,6 +78,7 @@ public final class Model extends Observable {
         this.setBound(BoundType.MIN_LATITUDE, coastlineFactory.getBound(BoundType.MIN_LATITUDE));
         this.setBound(BoundType.MAX_LATITUDE, coastlineFactory.getBound(BoundType.MAX_LATITUDE));
         coastlineFactory.setLongitudeFactor();
+        DebugWindow.getInstance().setBoundsLabel();
     }
 
     public void clear() {

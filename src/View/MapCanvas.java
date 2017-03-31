@@ -38,6 +38,7 @@ public class MapCanvas extends View {
     private ArrayList<Element> currentSection;
     private Point2D currentPoint;
     private double zoom_value;
+    private double zoomLevel;
 
     /**
      * The base Constructor for the MapCanvas.
@@ -158,6 +159,7 @@ public class MapCanvas extends View {
         zoom_value += factor;
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         repaint();
+        DebugWindow.getInstance().setZoomLabel(zoom_value);
     }
 
     /**
@@ -207,5 +209,9 @@ public class MapCanvas extends View {
 
     public void setCurrentPoint(Point2D currentPoint) {
         this.currentPoint = currentPoint;
+    }
+
+    public double getZoomLevel() {
+        return zoomLevel;
     }
 }

@@ -32,10 +32,12 @@ public class Main {
             loadDefaultResource();
         } catch (Exception e) {
             PopupWindow.errorBox(null,e.getMessage());
-            Model model = Model.getInstance();
-            System.out.println("Bounds: minlon "+model.getMinLongitude()+" - maxlon "+model.getMaxLongitude());
             canvasController.loadFromCoastlines();
         }
+
+        Model model = Model.getInstance();
+        System.out.println("Bounds: minlon "+model.getMinLongitude()+" - maxlon "+model.getMaxLongitude());
+        System.out.println("Bounds: minlat "+model.getMinLatitude()+" - maxlat "+model.getMaxLatitude());
 
         FPS_COUNTER.start();
     }
@@ -49,6 +51,7 @@ public class Main {
             long stopTime = System.currentTimeMillis();
             System.out.println("Loading time: " + (stopTime - startTime) + " ms");
             */
+
         } catch (FileNotFoundException e) {
             throw new Exception("Program was not able to load default resource \""+DEFAULT_RESOURCE+"\"" +
                     "\nLoading from coastlines instead.");
