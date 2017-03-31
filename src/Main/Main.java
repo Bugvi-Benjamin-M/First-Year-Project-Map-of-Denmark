@@ -3,10 +3,13 @@ package Main;
 import Controller.*;
 import Exceptions.FileWasNotFoundException;
 import Helpers.FileHandler;
+import Helpers.Utilities.FPSCounter;
 import Model.Model;
+import View.MapCanvas;
 import View.PopupWindow;
 
 import javax.swing.*;
+import java.io.FileNotFoundException;
 
 
 /**
@@ -14,9 +17,10 @@ import javax.swing.*;
  */
 public class Main {
 
-    public static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
-    private static SplashScreen screen;
+    public static final FPSCounter FPS_COUNTER = new FPSCounter();
 
+    private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
+    private static SplashScreen screen;
 
     public static void main(String[] args) {
 
@@ -25,15 +29,13 @@ public class Main {
         Model.getInstance();
 
         try {
-            long startTime = System.currentTimeMillis();
-            FileHandler.loadResource(DEFAULT_RESOURCE);
-            long stopTime = System.currentTimeMillis();
-            System.out.println("Loading time: " + (stopTime - startTime) + " ms");
-        } catch (FileWasNotFoundException e) {
-            PopupWindow.errorBox(null,"Program was not able to load up \""+DEFAULT_RESOURCE+"\"");
+            loadDefaultResource();
+            splashScreenDestruct();
+        } catch (Exception e) {
+            splashScreenDestruct();
+            PopupWindow.errorBox(null,e.getMessage());
+            Model.getInstance().loadFromCoastlines();
         }
-
-        splashScreenDestruct();
 
         MainWindowController.getInstance();
 
@@ -42,7 +44,29 @@ public class Main {
         InfobarController.getInstance(MainWindowController.getInstance().getWindow());
 
         CanvasController.adjustToBounds();
-        Model.getInstance().modelHasChanged();
+        Model model = Model.getInstance();
+        model.modelHasChanged();
+
+        System.out.println("Bounds: minlon "+model.getMinLongitude()+" - maxlon "+model.getMaxLongitude());
+        System.out.println("Bounds: minlat "+model.getMinLatitude()+" - maxlat "+model.getMaxLatitude());
+
+        FPS_COUNTER.start();
+    }
+
+    private static void loadDefaultResource() throws Exception {
+        try {
+            throw new FileNotFoundException();
+            /*
+            long startTime = System.currentTimeMillis();
+            FileHandler.loadResource(DEFAULT_RESOURCE);
+            long stopTime = System.currentTimeMillis();
+            System.out.println("Loading time: " + (stopTime - startTime) + " ms");
+            */
+
+        } catch (FileNotFoundException e) {
+            throw new Exception("Program was not able to load default resource \""+DEFAULT_RESOURCE+"\"" +
+                    "\nLoading from coastlines instead.");
+        }
     }
 
     private static void splashScreenDestruct() {

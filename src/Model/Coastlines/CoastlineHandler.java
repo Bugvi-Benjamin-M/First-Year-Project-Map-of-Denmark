@@ -77,23 +77,27 @@ public class CoastlineHandler implements ContentHandler {
     }
 
     private void handleBounds(Attributes attributes) {
-        double minLatitude, maxLatitude, minLongitude, maxLongitude;
-        minLatitude = Double.parseDouble(attributes.getValue("minlat"));
-        maxLatitude = Double.parseDouble(attributes.getValue("maxlat"));
-        minLongitude = Double.parseDouble(attributes.getValue("minlon"));
-        maxLongitude = Double.parseDouble(attributes.getValue("maxlon"));
-        factory.addBound(BoundType.MIN_LATITUDE,-minLatitude);
-        factory.addBound(BoundType.MAX_LATITUDE,-maxLatitude);
+        float minLatitude, maxLatitude, minLongitude, maxLongitude;
+        minLatitude = Float.parseFloat(attributes.getValue("minlat"));
+        System.out.println("minlat: "+minLatitude);
+        maxLatitude = Float.parseFloat(attributes.getValue("maxlat"));
+        System.out.println("maxlat: "+maxLatitude);
+        minLongitude = Float.parseFloat(attributes.getValue("minlon"));
+        System.out.println("minlon: "+minLongitude);
+        maxLongitude = Float.parseFloat(attributes.getValue("maxlon"));
+        System.out.println("maxlon: "+maxLongitude);
         factory.addBound(BoundType.MIN_LONGITUDE,minLongitude);
         factory.addBound(BoundType.MAX_LONGITUDE,maxLongitude);
         factory.setLongitudeFactor(minLatitude,maxLatitude);
+        factory.addBound(BoundType.MIN_LATITUDE,-minLatitude);
+        factory.addBound(BoundType.MAX_LATITUDE,-maxLatitude);
     }
 
     private void handleNode(Attributes attributes) {
         long id = Long.parseLong(attributes.getValue("id"));
         float latitude = Float.parseFloat(attributes.getValue("lat"));
         float longitude = Float.parseFloat(attributes.getValue("lon"));
-        idToNode.put(id,new Point2D.Double(longitude,-latitude));
+        idToNode.put(id,new Point2D.Float(longitude,-latitude));
     }
 
     private void handleWay(Attributes attributes) {

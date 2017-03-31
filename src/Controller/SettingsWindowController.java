@@ -2,6 +2,7 @@ package Controller;
 
 import Enums.ToolType;
 import Helpers.ThemeHelper;
+import Helpers.Utilities.DebugWindow;
 import Main.Main;
 import View.*;
 import View.Window;
@@ -106,6 +107,9 @@ public final class SettingsWindowController extends WindowController {
         southButtons.addActionToDefaultButton(a -> {
             defaultButtonActivated();
         });
+        southButtons.addActionToOpenDebugButton(a -> {
+            openDebugActivated();
+        });
     }
 
     /**
@@ -141,6 +145,12 @@ public final class SettingsWindowController extends WindowController {
             Main.notifyKeyToggle(keysActiveStatus);
         }
         setToCurrentSettingsAndClose();
+    }
+
+    private void openDebugActivated() {
+        DebugWindow.getInstance().show();
+        window.hide();
+        // ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
     }
 
     /**

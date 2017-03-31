@@ -16,6 +16,7 @@ public class SettingsButtons extends View {
 
     private JButton apply;
     private JButton defaultSet;
+    private JButton openDebug;
     private List<JButton> buttons;
 
     public SettingsButtons() {
@@ -28,6 +29,7 @@ public class SettingsButtons extends View {
     private void createButtons() {
         buttons.add(apply = new JButton("Apply Changes"));
         buttons.add(defaultSet = new JButton("Default Settings"));
+        buttons.add(openDebug = new JButton("Open debug"));
     }
 
     public void addActionToApplyButton(ActionListener e) {
@@ -40,6 +42,10 @@ public class SettingsButtons extends View {
 
         defaultSet.addActionListener(e);
 
+    }
+
+    public void addActionToOpenDebugButton(ActionListener e) {
+        openDebug.addActionListener(e);
     }
 
     private void addButtons() {

@@ -2,6 +2,8 @@ package View;
 
 import Enums.OSMEnums.WayType;
 import Helpers.ThemeHelper;
+import Helpers.Utilities.DebugWindow;
+import Main.Main;
 import Model.Element;
 import Model.Model;
 import Model.Road;
@@ -80,6 +82,9 @@ public class MapCanvas extends View {
             g.setColor(ThemeHelper.color("boundary"));
             g2D.draw(rectangle);
         }
+
+        Main.FPS_COUNTER.interrupt();
+        DebugWindow.getInstance().setFPSLabel();
     }
 
     private void drawCoastlines(Graphics2D g) {
@@ -131,7 +136,7 @@ public class MapCanvas extends View {
 
     private void drawBoundaries(Graphics2D g2D) {
         g2D.setColor(ThemeHelper.color("boundary"));
-        Path2D boundary = new Path2D.Double();
+        Path2D boundary = new Path2D.Float();
         Model model = Model.getInstance();
         boundary.moveTo(model.getMinLongitude(), model.getMinLatitude());
         boundary.lineTo(model.getMaxLongitude(), model.getMinLatitude());
@@ -145,6 +150,7 @@ public class MapCanvas extends View {
      * Zooms in or out upon the elements on the MapCanvas depending on a given factor.
      */
     public void zoom(double factor) {
+        // System.out.println("zoom_value: "+zoom_value+"; zoomed by "+factor);
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         repaint();
     }
@@ -196,4 +202,5 @@ public class MapCanvas extends View {
     public void setCurrentPoint(Point2D currentPoint) {
         this.currentPoint = currentPoint;
     }
+
 }

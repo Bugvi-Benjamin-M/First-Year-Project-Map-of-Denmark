@@ -1,5 +1,7 @@
 package Controller;
 
+import Enums.BoundType;
+import Enums.ZoomLevel;
 import Model.Element;
 import Model.Model;
 import View.MapCanvas;
@@ -10,6 +12,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -19,7 +22,7 @@ import java.util.Observer;
 public final class CanvasController extends Controller implements Observer {
 
     private static final double ZOOM_FACTOR = 0.9;
-    private static final double KEYBOARD_ZOOM_FACTOR = 2.0;
+    private static final double KEYBOARD_ZOOM_FACTOR = 1.0;
     private static final double PAN_FACTOR = 38.5;
 
     private enum PanType {
@@ -33,9 +36,9 @@ public final class CanvasController extends Controller implements Observer {
     private static Model model;
     private static CanvasController instance;
 
-
     private Point2D lastMousePosition;
     private CanvasInteractionHandler handler;
+    private double zoom_value;
 
     private CanvasController(Window window) {
         super(window);
@@ -212,11 +215,13 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void mouseWheelMovedEvent(MouseWheelEvent event) {
-        double factor = Math.pow(ZOOM_FACTOR, event.getWheelRotation());
+        double wheel_rotation = event.getPreciseWheelRotation();
+        double factor = Math.pow(ZOOM_FACTOR, wheel_rotation);
         Point2D currentMousePosition = event.getPoint();
         double dx = currentMousePosition.getX();
         double dy = currentMousePosition.getY();
         mapCanvas.pan(-dx, -dy);
+        changeZoomLevel(wheel_rotation);
         mapCanvas.zoom(factor);
         mapCanvas.pan(dx, dy);
     }
@@ -225,8 +230,21 @@ public final class CanvasController extends Controller implements Observer {
         double dx = mapCanvas.getVisibleRect().getWidth()/2;
         double dy = mapCanvas.getVisibleRect().getHeight()/2;
         mapCanvas.pan(-dx, -dy);
+        changeZoomLevel(keyboardZoomFactor);
         mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
         mapCanvas.pan(dx, dy);
+    }
+
+    private void changeZoomLevel(double zoomFactor) {
+        System.out.println("zoomed in by "+zoomFactor);
+        Model model = Model.getInstance();
+        ZoomLevel lastLevel = model.getZoomLevel();
+        if (zoomFactor != 0.0) zoom_value -= zoomFactor;
+        model.changeZoomLevel(zoom_value);
+        ZoomLevel newLevel = model.getZoomLevel();
+        if (!lastLevel.equals(newLevel)) {
+            mapCanvas.setCoastlines(model.getCoastlines());
+        }
     }
 
     public void themeHasChanged() {
