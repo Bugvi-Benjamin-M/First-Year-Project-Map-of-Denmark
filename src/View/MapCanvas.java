@@ -1,5 +1,6 @@
 package View;
 
+import Enums.OSMEnums.WayType;
 import Enums.ZoomLevel;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
@@ -103,10 +104,8 @@ public class MapCanvas extends View {
             }
         }
 
-
-
         Main.FPS_COUNTER.interrupt();
-        DebugWindow.getInstance().setFPSLabel();
+        DebugWindow.getInstance();
     }
 
     private void drawCoastlines(Graphics2D g) {
@@ -172,7 +171,9 @@ public class MapCanvas extends View {
      * Zooms in or out upon the elements on the MapCanvas depending on a given factor.
      */
     public void zoom(double factor) {
-        // System.out.println("zoom_value: "+zoom_value+"; zoomed by "+factor);
+        DebugWindow.getInstance().setZoomLabel();
+        DebugWindow.getInstance().setZoomFactorLabel();
+        DebugWindow.getInstance().setFPSLabel();
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         repaint();
     }
@@ -193,6 +194,7 @@ public class MapCanvas extends View {
      */
     public void pan(double dx, double dy) {
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
+        DebugWindow.getInstance().setFPSLabel();
         repaint();
     }
 

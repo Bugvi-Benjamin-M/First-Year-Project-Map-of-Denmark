@@ -107,9 +107,6 @@ public final class SettingsWindowController extends WindowController {
         southButtons.addActionToDefaultButton(a -> {
             defaultButtonActivated();
         });
-        southButtons.addActionToOpenDebugButton(a -> {
-            openDebugActivated();
-        });
     }
 
     /**
@@ -145,12 +142,6 @@ public final class SettingsWindowController extends WindowController {
             Main.notifyKeyToggle(keysActiveStatus);
         }
         setToCurrentSettingsAndClose();
-    }
-
-    private void openDebugActivated() {
-        DebugWindow.getInstance().show();
-        window.hide();
-        // ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
     }
 
     /**

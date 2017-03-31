@@ -1,7 +1,6 @@
 package Helpers.Utilities;
 
-import Controller.CanvasController;
-import Controller.MainWindowController;
+import Enums.ZoomLevel;
 import Main.Main;
 import Model.Model;
 import View.Window;
@@ -29,13 +28,27 @@ public class DebugWindow extends WindowAdapter {
     private static final String TITLE = "DEBUG WINDOW";
 
     private DebugWindow(FPSCounter fpsCounter) {
+        this.fpsCounter = fpsCounter;
+
         container = new TextView();
         window = new Window().title(TITLE)
-                .dimension(new Dimension(640,480))
+                .dimension(new Dimension(480,480))
                 .layout(new BorderLayout())
                 .relativeTo(null);
+        window.getFrame().pack();
+        setupWindow();
+    }
+
+    private void setupWindow() {
+        container.reset();
+        container.addJLabel("lonlabel","lonlabel");
+        container.addJLabel("latlabel","latlabel");
+        container.addJLabel("fpscount","fpscount");
+        container.addJLabel("zoomlabel","zoomlabel");
+        container.addJLabel("zoomfactor","zoomfactor");
+
+        window.addWindowAdapter(this);
         window.addComponent(BorderLayout.CENTER,container,false);
-        this.fpsCounter = fpsCounter;
     }
 
     public static DebugWindow getInstance() {
@@ -48,33 +61,63 @@ public class DebugWindow extends WindowAdapter {
     public void setFPSLabel() {
         JLabel retrieved = container.getJLabel("fpscount");
         String label = "FPS: " + fpsCounter.getFPS();
-        if (retrieved == null) container.addJLabel("fpscount",label);
-        else retrieved.setText(label);
+        if(retrieved != null) {
+            retrieved.setText(label);
+        } else {
+            System.out.println("fps label not found");
+        }
     }
 
-    public void setZoomLabel(String zoom_string) {
+    public void setZoomLabel() {
         JLabel retrieved = container.getJLabel("zoomlabel");
-        String label = zoom_string;
-        if (retrieved == null) container.addJLabel("zoomlabel",label);
-        else retrieved.setText(label);
+        String label = ZoomLevel.getZoomLevel().toString();
+        if (retrieved != null)  retrieved.setText(label);
+        else System.out.println("zoom label not found");
     }
 
-    public void setBoundsLabel() {
-        JLabel retrieved = container.getJLabel("boundslabel");
+    public void setZoomFactorLabel() {
+        JLabel retrieved = container.getJLabel("zoomfactor");
+        String label = "Zoom Factor: "+ZoomLevel.getZoomFactor();
+        if (retrieved != null) {
+            retrieved.setText(label);
+        } else {
+            System.out.println("zoom factor label not found");
+        }
+    }
+
+    public void setLongitudeLabel() {
+        JLabel retrieved = container.getJLabel("lonlabel");
         Model model = Model.getInstance();
-        String label = "Bounds: minlon: "+model.getMinLongitude()+"; maxlon: "+model.getMaxLongitude()+
-                "\n     minlat: "+model.getMinLatitude()+"; maxlat: "+model.getMaxLatitude();
-        if (retrieved == null) container.addJLabel("boundslabel",label);
-        else retrieved.setText(label);
+        String label = "Longitude Bounds: Min='"+model.getMinLongitude()+"' Max='"+model.getMaxLongitude()+"'";
+        if (retrieved != null){
+            retrieved.setText(label);
+        } else {
+            System.out.println("lon label not found");
+        }
+    }
+
+    public void setLatitudeLabel() {
+        JLabel retrieved = container.getJLabel("latlabel");
+        Model model = Model.getInstance();
+        String label = "Latitude Bounds: Min='"+model.getMinLatitude()+"' Max='"+model.getMaxLatitude()+"'";
+        if (retrieved != null) {
+            retrieved.setText(label);
+        } else {
+            System.out.println("lat label not found");
+        }
     }
 
     @Override
     public void windowOpened(WindowEvent e) {
         super.windowOpened(e);
-        fpsCounter.start();
-        setZoomLabel(Model.getInstance().getZoomLevel().toString());
+        setupWindow();
+        setLongitudeLabel();
+        setLatitudeLabel();
         setFPSLabel();
-        setBoundsLabel();
+        setZoomLabel();
+        setZoomFactorLabel();
+
+        fpsCounter.start();
     }
 
     @Override

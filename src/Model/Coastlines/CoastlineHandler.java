@@ -79,13 +79,13 @@ public class CoastlineHandler implements ContentHandler {
     private void handleBounds(Attributes attributes) {
         float minLatitude, maxLatitude, minLongitude, maxLongitude;
         minLatitude = Float.parseFloat(attributes.getValue("minlat"));
-        System.out.println("minlat: "+minLatitude);
+        // System.out.println("minlat: "+minLatitude);
         maxLatitude = Float.parseFloat(attributes.getValue("maxlat"));
-        System.out.println("maxlat: "+maxLatitude);
+        // System.out.println("maxlat: "+maxLatitude);
         minLongitude = Float.parseFloat(attributes.getValue("minlon"));
-        System.out.println("minlon: "+minLongitude);
+        // System.out.println("minlon: "+minLongitude);
         maxLongitude = Float.parseFloat(attributes.getValue("maxlon"));
-        System.out.println("maxlon: "+maxLongitude);
+        // System.out.println("maxlon: "+maxLongitude);
         factory.addBound(BoundType.MIN_LONGITUDE,minLongitude);
         factory.addBound(BoundType.MAX_LONGITUDE,maxLongitude);
         factory.setLongitudeFactor(minLatitude,maxLatitude);

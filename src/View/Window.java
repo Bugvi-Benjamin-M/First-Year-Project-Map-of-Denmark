@@ -4,6 +4,7 @@ import Exceptions.IncorrectLayoutException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowListener;
 
 /**
  * Class details:
@@ -35,7 +36,7 @@ public class Window {
     }
 
     public Window icon() {
-        java.net.URL imgURL = getClass().getResource(ICON_PATH);
+        java.net.URL imgURL = this.getClass().getResource(ICON_PATH);
         if (imgURL != null) {
             window.setIconImage(new ImageIcon(imgURL, "OSM Visualizer").getImage());;
         } else {
@@ -130,5 +131,9 @@ public class Window {
 
     public void setMinimumWindowSize(Dimension dimension){
         getFrame().setMinimumSize(dimension);
+    }
+
+    public void addWindowAdapter(WindowListener listener) {
+        window.addWindowListener(listener);
     }
 }

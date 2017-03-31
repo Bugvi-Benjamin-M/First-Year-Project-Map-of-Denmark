@@ -29,7 +29,7 @@ public class CoastlineFactory {
     public void setLongitudeFactor(float minLatitude, float maxLatitude) {
         double avglat = minLatitude + (maxLatitude - minLatitude)/2;
         longitudeFactor = (float) Math.cos(avglat/180*Math.PI);
-        System.out.println("... set longitude factor to "+longitudeFactor);
+        // System.out.println("... set longitude factor to "+longitudeFactor);
     }
 
     public void setLongitudeFactor() {
@@ -45,7 +45,7 @@ public class CoastlineFactory {
     }
 
     public float getBound(BoundType type) {
-        System.out.println(type + ": " + bounds.get(type));
+        // System.out.println(type + ": " + bounds.get(type));
         return bounds.get(type);
     }
 
