@@ -1,6 +1,8 @@
 package Controller;
 
 import Enums.ToolType;
+import Helpers.OSDetector;
+import Helpers.Utilities.DebugWindow;
 import View.PopupWindow;
 import View.SearchTool;
 import View.Window;
@@ -16,7 +18,7 @@ import java.awt.event.KeyEvent;
  */
 public final class MainWindowController extends WindowController {
 
-    private static final String MAIN_TITLE = "OSM Map Viewer v0.2";
+    private static final String MAIN_TITLE = "OSM Map Viewer v0.3";
 
     private static MainWindowController instance;
 
@@ -54,6 +56,13 @@ public final class MainWindowController extends WindowController {
                         "PLease Confirm!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     System.exit(0);
                 }
+            }
+        });
+        handler.addKeyBinding(KeyEvent.VK_Q, OSDetector.getActivationKey(), new AbstractAction() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DebugWindow.getInstance().show();
             }
         });
     }

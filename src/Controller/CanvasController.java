@@ -235,7 +235,7 @@ public final class CanvasController extends Controller implements Observer {
         // System.out.println("zoomed in by "+zoomFactor);
         Model model = Model.getInstance();
         ZoomLevel lastLevel = model.getZoomLevel();
-        if (zoomFactor != 0.0) zoom_value -= zoomFactor;
+        if (zoomFactor != 0.0) zoom_value -= zoomFactor*10;
         model.changeZoomLevel(zoom_value);
         ZoomLevel newLevel = model.getZoomLevel();
         if (!lastLevel.equals(newLevel)) {

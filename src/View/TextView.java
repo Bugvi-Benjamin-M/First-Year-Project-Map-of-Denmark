@@ -1,5 +1,7 @@
 package View;
 
+import Helpers.ThemeHelper;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -38,7 +40,7 @@ public class TextView extends View {
                 WEST,this);
         if (lastInserted == null) {
             layout.putConstraint(NORTH,newLabel,
-                    MARGIN_TOP,
+                    10,
                     NORTH,this);
         } else {
             layout.putConstraint(NORTH,newLabel,
@@ -61,4 +63,8 @@ public class TextView extends View {
         return labels.get(key);
     }
 
+    public void reset() {
+        labels = new HashMap<>();
+        lastInserted = null;
+    }
 }

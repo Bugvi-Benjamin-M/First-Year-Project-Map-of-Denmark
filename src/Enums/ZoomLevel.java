@@ -21,11 +21,11 @@ public enum ZoomLevel {
     }
 
     public static ZoomLevel getZoomLevel() {
-        if (zoom_factor <= 10) {
+        if (zoom_factor <= 100) {
             return ZoomLevel.LEVEL_3;
-        } else if (zoom_factor <= 20) {
+        } else if (zoom_factor <= 200) {
             return ZoomLevel.LEVEL_2;
-        } else if (zoom_factor <= 30) {
+        } else if (zoom_factor <= 300) {
             return ZoomLevel.LEVEL_1;
         } else {
             return ZoomLevel.LEVEL_0;
@@ -47,12 +47,11 @@ public enum ZoomLevel {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("ZoomLevel at ");
+        sb.append("Current Level: ");
         sb.append(this.name());
-        sb.append(", displaying every ");
+        sb.append(" (displaying every ");
         sb.append(nodesAtLevel);
-        sb.append(" nodes. Current zoom_factor: ");
-        sb.append(zoom_factor);
+        sb.append(" nodes)");
         return sb.toString();
     }
 }

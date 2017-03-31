@@ -10,10 +10,7 @@ import Model.Coastlines.CoastlineFactory;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Observable;
+import java.util.*;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -56,7 +53,8 @@ public final class Model extends Observable {
     public void changeZoomLevel(double zoom_factor) {
         ZoomLevel.setZoomFactor(zoom_factor);
         zoom_level = ZoomLevel.getZoomLevel();
-        DebugWindow.getInstance().setZoomLabel(zoom_level.toString());
+        DebugWindow.getInstance().setZoomLabel();
+        DebugWindow.getInstance().setZoomFactorLabel();
     }
 
     public ZoomLevel getZoomLevel() {return zoom_level;}
@@ -91,7 +89,8 @@ public final class Model extends Observable {
         this.setBound(BoundType.MAX_LONGITUDE, coastlineFactory.getBound(BoundType.MAX_LONGITUDE)*lonfactor);
         this.setBound(BoundType.MIN_LATITUDE, coastlineFactory.getBound(BoundType.MIN_LATITUDE));
         this.setBound(BoundType.MAX_LATITUDE, coastlineFactory.getBound(BoundType.MAX_LATITUDE));
-        DebugWindow.getInstance().setBoundsLabel();
+        DebugWindow.getInstance().setLongitudeLabel();
+        DebugWindow.getInstance().setLatitudeLabel();
     }
 
     public void clear() {
