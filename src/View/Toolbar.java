@@ -22,8 +22,6 @@ public class Toolbar extends View {
 
     private static Map<ToolType, ToolComponent> tools;
     private SpringLayout layout;
-    private SearchField field;
-    private JLabel searchLabel;
 
     private final int MARGIN_SMALL_LEFT = 20;
     private final int MARGIN_SMALL_RIGHT = -20;
@@ -41,7 +39,7 @@ public class Toolbar extends View {
         setupToolbarComponents();
 
         this.setPreferredSize(new Dimension(500,100));
-        this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        this.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("border")));
         setBackGroundColor();
     }
 
@@ -55,24 +53,16 @@ public class Toolbar extends View {
     private void setupToolbarComponents() {
         addSaveTool(addLoadTool());
         addSettingsTool();
-        addSearchField();
-        addSearchLabel();
+        addSearchTool();
     }
 
-    private void addSearchLabel() {
-        searchLabel = new JLabel("Search:");
-        searchLabel.setFont(new Font(getFont().getName(), getFont().getStyle(), 20));
-        layout.putConstraint(EAST, searchLabel, MARGIN_SMALL_RIGHT, WEST, field);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER, searchLabel, 0, SpringLayout.VERTICAL_CENTER, this);
-        add(searchLabel);
-    }
 
-    private SearchField addSearchField() {
-        field = new SearchField();
-        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, field, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER, field, 0, SpringLayout.VERTICAL_CENTER, this);
-        this.add(field);
-        return field;
+    private ToolComponent addSearchTool() {
+        ToolComponent tool = tools.get(ToolType.SEARCH);
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, tool, 0, SpringLayout.HORIZONTAL_CENTER, this);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, tool, 0, SpringLayout.VERTICAL_CENTER, this);
+        this.add(tool);
+        return tool;
     }
 
     /**
@@ -146,6 +136,7 @@ public class Toolbar extends View {
             tools.put(ToolType.LOAD, new ToolFeature("\uf115",ToolType.LOAD));
             tools.put(ToolType.SAVE, new ToolFeature("\uf0c7",ToolType.SAVE));
             tools.put(ToolType.SETTINGS, new ToolFeature("\uf085",ToolType.SETTINGS));
+            tools.put(ToolType.SEARCH, new SearchTool());
             return tools;
         }
     }

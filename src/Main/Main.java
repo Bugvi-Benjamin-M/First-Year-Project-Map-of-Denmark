@@ -1,14 +1,12 @@
 package Main;
 
 import Controller.*;
+import Exceptions.FileWasNotFoundException;
 import Helpers.FileHandler;
 import Model.Model;
 import View.PopupWindow;
 
-import java.io.FileNotFoundException;
-
-import javax.swing.UIManager;
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
 
 /**
@@ -31,17 +29,17 @@ public class Main {
             FileHandler.loadResource(DEFAULT_RESOURCE);
             long stopTime = System.currentTimeMillis();
             System.out.println("Loading time: " + (stopTime - startTime) + " ms");
-        } catch (FileNotFoundException e) {
+        } catch (FileWasNotFoundException e) {
             PopupWindow.errorBox(null,"Program was not able to load up \""+DEFAULT_RESOURCE+"\"");
         }
 
         splashScreenDestruct();
 
-        WindowController windowController = MainWindowController.getInstance();
+        MainWindowController.getInstance();
 
-        CanvasController.getInstance(windowController.getWindow());
-        ToolbarController.getInstance(windowController.getWindow());
-        InfobarController.getInstance(windowController.getWindow());
+        CanvasController.getInstance(MainWindowController.getInstance().getWindow());
+        ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
+        InfobarController.getInstance(MainWindowController.getInstance().getWindow());
 
         CanvasController.adjustToBounds();
         Model.getInstance().modelHasChanged();

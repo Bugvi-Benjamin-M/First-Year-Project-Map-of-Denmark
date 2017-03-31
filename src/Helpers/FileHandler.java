@@ -1,7 +1,7 @@
 package Helpers;
 
-import Controller.CanvasController;
 import Enums.FileType;
+import Exceptions.FileWasNotFoundException;
 import Model.Coastlines.CoastlineFactory;
 import Model.Coastlines.CoastlineHandler;
 import Model.Model;
@@ -12,9 +12,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.zip.ZipInputStream;
-import java.net.URL;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -23,7 +25,7 @@ public class FileHandler {
 
     private static String pathStart = OSDetector.getPathPrefix();
 
-    public static void loadResource(String fileName) throws FileNotFoundException {
+    public static void loadResource(String fileName) throws FileWasNotFoundException {
         if(fileExists(fileName) && fileName.endsWith(FileType.OSM.getExtension())) {
             InputStream filename = FileHandler.class.getResourceAsStream(fileName);
             FileHandler.loadOSM(new InputSource(filename));
@@ -37,7 +39,7 @@ public class FileHandler {
             loadOSM(new InputSource(zip));
         }
         else{
-            throw new FileNotFoundException(fileName + " can not be found.");
+            throw new FileWasNotFoundException(fileName + " can not be found.");
         }
     }
 

@@ -1,6 +1,5 @@
 package Controller;
 
-import View.PopupWindow;
 import View.Window;
 
 import javax.swing.*;
@@ -55,9 +54,7 @@ public abstract class WindowController extends Controller {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
-            if(window.getFrame().getWidth() < 1100) {
-                PopupWindow.infoBox(null, "Window has reached event size", "Resize");
-            }
+
         }
 
         @Override

@@ -13,11 +13,6 @@ public class DefaultTheme implements Theme {
     private static String name = "Default";
 
     @Override
-    public Color water() {
-        return new Color(0x99B3CC);
-    }
-
-    @Override
     public Color boundary() {
         return new Color(0xFF1DF2);
     }
@@ -35,6 +30,16 @@ public class DefaultTheme implements Theme {
     @Override
     public Color icon() {
         return new Color(0x000000);
+    }
+
+    @Override
+    public Color border() {
+        return new Color(0x000000);
+    }
+
+    @Override
+    public Color water() {
+        return new Color(0x99B3CC);
     }
 
     @Override
