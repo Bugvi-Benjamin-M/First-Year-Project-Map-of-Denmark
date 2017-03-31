@@ -8,6 +8,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import Enums.ToolType;
+import Controller.ToolbarController;
+import View.ToolComponent;
+import View.SearchTool;
 
 /**
  * Created by Búgvi Magnussen on 14-03-2017.
@@ -65,8 +69,10 @@ public final class MainWindowController extends WindowController {
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
             //Todo implement changes
-            //double scaleFactor = window.getDimension().getWidth() / tool.getSearchFieldDimension().getWidth();
-            //tool.setWidth((int) (window.getDimension().width / scaleFactor));
+            System.out.println("Resize");
+            SearchTool tool = (SearchTool)ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCH);
+            double scaleFactor = window.getDimension().getWidth() / tool.getSize().width;
+            tool.setWidth((int)(window.getDimension().width / scaleFactor));
         }
 
     }
