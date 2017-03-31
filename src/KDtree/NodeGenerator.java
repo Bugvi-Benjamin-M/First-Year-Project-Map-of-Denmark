@@ -31,6 +31,10 @@ public class NodeGenerator {
         points = new Point2D.Float[amountOfNodes];
     }
 
+    public void setupTree(KDTree tree) {
+        for(int i = 0 ; i < medians.size() ; i++) tree.putNode(medians.get(i));
+    }
+
     public void initialise() {
         initialise(null, 0, amountOfNodes-1);
     }

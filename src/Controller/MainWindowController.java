@@ -1,6 +1,8 @@
 package Controller;
 
+import Enums.ToolType;
 import View.PopupWindow;
+import View.SearchTool;
 import View.Window;
 
 import javax.swing.*;
@@ -8,10 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
-import Enums.ToolType;
-import Controller.ToolbarController;
-import View.ToolComponent;
-import View.SearchTool;
 
 /**
  * Created by Búgvi Magnussen on 14-03-2017.
@@ -57,6 +55,11 @@ public final class MainWindowController extends WindowController {
                 }
             }
         });
+    }
+    @Override
+    protected void addInteractionHandlerToWindow() {
+        super.addInteractionHandlerToWindow();
+        //window.getFrame().addComponentListener((ComponentListener)MainWindowInteractionHandler);
     }
 
     public void resetInstance() {
