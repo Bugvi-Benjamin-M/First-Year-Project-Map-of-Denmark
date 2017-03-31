@@ -30,20 +30,20 @@ public abstract class Point {
 
     public int compareToX(Point point){
         if(x < point.getX()) return -1;
-        if(x > point.getX()) return 1;
+        else if(x > point.getX()) return 1;
         else{
             if(y < point.getY()) return -1;
-            if(y > point.getY()) return 1;
+            else if(y > point.getY()) return 1;
             else return 0;
         }
     }
 
     public int compareToY(Point point){
         if(y < point.getY()) return -1;
-        if(y > point.getY()) return 1;
+        else if(y > point.getY()) return 1;
         else{
             if(x < point.getX()) return -1;
-            if(x > point.getX()) return 1;
+            else if(x > point.getX()) return 1;
             else return 0;
         }
     }

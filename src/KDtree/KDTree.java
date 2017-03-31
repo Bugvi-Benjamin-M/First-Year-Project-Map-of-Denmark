@@ -69,11 +69,13 @@ public class KDTree {
         if(parent == null) return nodeToPut;
 
         if(parent.getDepth() % 2 == 0){
+            System.out.println(parent.getDepth());
             int compare = nodeToPut.compareToX(parent);
             if(compare <= 0) parent.setLeft(putNode(parent.getLeft(), nodeToPut));
             if(compare > 0) parent.setRight(putNode(parent.getRight(), nodeToPut));
         }
         else{
+            System.out.println(parent.getDepth());
             int compare = nodeToPut.compareToY(parent);
             if(compare <= 0) parent.setLeft(putNode(parent.getLeft(), nodeToPut));
             if(compare > 0) parent.setRight(putNode(parent.getRight(), nodeToPut));
