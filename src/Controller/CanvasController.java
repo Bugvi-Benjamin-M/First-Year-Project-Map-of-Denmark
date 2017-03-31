@@ -142,6 +142,13 @@ public final class CanvasController extends Controller implements Observer {
                 keyboardZoomEvent(KEYBOARD_ZOOM_FACTOR);
             }
         });
+        handler.addKeyBinding(KeyEvent.VK_0, Helpers.OSDetector.getActivationKey(), new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CanvasController.adjustToBounds();
+                Model.getInstance().modelHasChanged();
+            }
+        });
     }
 
     private void panEvent(PanType type) {
@@ -173,7 +180,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.zoom(mapCanvas.getWidth()/(model.getMaxLongitude()- model.getMinLongitude()));
     }
 
-    public static void resetBounds(){
+    public static void ds(){
         mapCanvas.resetTransform();
     }
 
