@@ -16,41 +16,41 @@ public class KDTree {
 
     }
 
-    public HashSet<Element> getManyPointers(float minX, float minY, float maxX,float maxY){
+    public HashSet<Element> getManyElements(float minX, float minY, float maxX, float maxY){
         elementsToReturn = new HashSet<>();
 
         if(root != null) {
-            getManyPointers(root, minX, minY, maxX, maxY);
+            getManyElements(root, minX, minY, maxX, maxY);
             return elementsToReturn;
         }
         //TODO ?make null return value to an exception?
         return null;
     }
 
-    private void getManyPointers(Node currentNode, float minX, float minY, float maxX, float maxY){
+    private void getManyElements(Node currentNode, float minX, float minY, float maxX, float maxY){
         if(currentNode.getPointers() == null){
             if(currentNode.getDepth() % 2 == 0){
                 if(currentNode.getX() > minX && currentNode.getX() > maxX){
-                    getManyPointers(currentNode.getLeft(), minX, minY, maxX, maxY);
+                    getManyElements(currentNode.getLeft(), minX, minY, maxX, maxY);
                 }
                 else if (currentNode.getX() < minX && currentNode.getX() < maxX){
-                    getManyPointers(currentNode.getRight(), minX, minY, maxX, maxY);
+                    getManyElements(currentNode.getRight(), minX, minY, maxX, maxY);
                 }
                 else{
-                    getManyPointers(currentNode.getLeft(), minX, minY, currentNode.getX(), maxY);
-                    getManyPointers(currentNode.getRight(), currentNode.getX(), minY, maxX, maxY);
+                    getManyElements(currentNode.getLeft(), minX, minY, currentNode.getX(), maxY);
+                    getManyElements(currentNode.getRight(), currentNode.getX(), minY, maxX, maxY);
                 }
             }
             else{
                 if(currentNode.getY() > minY && currentNode.getY() > maxY){
-                    getManyPointers(currentNode.getLeft(), minX, minY, maxX, maxY);
+                    getManyElements(currentNode.getLeft(), minX, minY, maxX, maxY);
                 }
                 else if (currentNode.getY() < minY && currentNode.getY() < maxY){
-                    getManyPointers(currentNode.getRight(), minX, minY, maxX, maxY);
+                    getManyElements(currentNode.getRight(), minX, minY, maxX, maxY);
                 }
                 else{
-                    getManyPointers(currentNode.getLeft(), minX, minY, maxX, currentNode.getY());
-                    getManyPointers(currentNode.getRight(), minX, currentNode.getY(), maxX, maxY);
+                    getManyElements(currentNode.getLeft(), minX, minY, maxX, currentNode.getY());
+                    getManyElements(currentNode.getRight(), minX, currentNode.getY(), maxX, maxY);
                 }
             }
         }

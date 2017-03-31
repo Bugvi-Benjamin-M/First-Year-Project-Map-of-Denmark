@@ -1,10 +1,14 @@
 package OSM;
 
 import Enums.BoundType;
-import Enums.RoadType;
 import Enums.OSMEnums.WayType;
+import Enums.RoadType;
+import Enums.ZoomLevel;
 import Helpers.LongToPointMap;
-import Model.*;
+import KDtree.NodeGenerator;
+import KDtree.Pointer;
+import Model.Model;
+import Model.Road;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -12,7 +16,6 @@ import org.xml.sax.SAXException;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +24,7 @@ import java.util.Map;
  */
 public final class OSMHandler implements ContentHandler {
     private static OSMHandler handler;
+    private NodeGenerator nodeGenerator;
 
     private LongToPointMap idToNode;
     private Map<Long, OSMWay> idToWay;
@@ -38,6 +42,7 @@ public final class OSMHandler implements ContentHandler {
         idToNode = new LongToPointMap(22);
         idToWay = new HashMap<>();
         model = Model.getInstance();
+        nodeGenerator = new NodeGenerator();
     }
 
     public float getLongitudeFactor(){
@@ -111,9 +116,7 @@ public final class OSMHandler implements ContentHandler {
                 float latitude = Float.parseFloat(atts.getValue("lat"));
                 float longitude = Float.parseFloat(atts.getValue("lon"));
                 idToNode.put(id, longitude * longitudeFactor, -latitude);
-
-                model.getBst().addPoint(new Point2D.Float(longitude * longitudeFactor, -latitude));
-
+                nodeGenerator.addPoint(new Point2D.Float(longitude * longitudeFactor, -latitude));
                 loadednodes++;
                 if ((loadednodes & 0xFFFF) == 0) {
                     System.out.println("Numnodes: " + loadednodes);
@@ -121,9 +124,13 @@ public final class OSMHandler implements ContentHandler {
                 break;
             case "way":
                 if(!initialized){
-                    Model.getInstance().getBst().initialize();
+                    nodeGenerator.initialise();
+                    for (ZoomLevel level : ZoomLevel.values()) {
+                        nodeGenerator.setupTree(model.getRoads().get(level));
+                    }
                     initialized = true;
                 }
+
                 way = new OSMWay();
                 id = Long.parseLong(atts.getValue("id"));
                 wayType = WayType.UNKNOWN;
@@ -151,13 +158,10 @@ public final class OSMHandler implements ContentHandler {
     }
 
     private void determineHighway(String value) {
-        roadType = roadType.UNKNOWN; // STH I HAVE TO EXPLAIN (Nikolaj)
+        roadType = roadType.UNKNOWN;
         switch (value){
             case "service":
                 roadType = RoadType.SERVICE;
-                break;
-            case "highway":
-                roadType = RoadType.HIGHWAY;
                 break;
             case "primary":
                 roadType = RoadType.PRIMARY;
@@ -178,21 +182,31 @@ public final class OSMHandler implements ContentHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName){
             case "way":
-                Path2D path = way.toPath2D();
                 switch (wayType){
                     case ROAD:
-                        if(roadType == RoadType.SERVICE) {
-                            Road road = new Road(roadType, way);
-                            //model.addWayElement(wayType, road);
-                            model.getBst().putElement(road);
-                        }
-                        break;
+                        switch (roadType) {
+                            case SERVICE:
+                                addRoad(ZoomLevel.LEVEL_0);
+                                break;
+                            case PRIMARY:
+                                addRoad(ZoomLevel.LEVEL_3);
+                                break;
+                        } break;
+
                     case UNKNOWN:
-                        UnknownWay unknownWay = new UnknownWay(path);
+                        //UnknownWay unknownWay = new UnknownWay(path);
                         //model.addWayElement(wayType, unknownWay);
                         break;
-                }
-                break;
+                } break;
+        }
+    }
+
+    private void addRoad(ZoomLevel level) {
+        Path2D path = way.toPath2D();
+        Road road = new Road(roadType, path);
+        for (int i = 0; i < way.size(); i++) {
+            Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), road);
+            model.getRoads().get(level).putPointer(p);
         }
     }
 

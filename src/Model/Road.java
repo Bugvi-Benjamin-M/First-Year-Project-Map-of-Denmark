@@ -1,8 +1,6 @@
 package Model;
 
-import Enums.DrawType;
 import Enums.RoadType;
-import OSM.OSMWay;
 
 import java.awt.geom.Path2D;
 
@@ -12,15 +10,15 @@ import java.awt.geom.Path2D;
 public class Road implements Element {
     private RoadType roadType;
     private String name;
-    private OSMWay way;
+    private Path2D path;
 
-    public Road(RoadType roadType, OSMWay way, String name){
+    public Road(RoadType roadType, Path2D path, String name){
         this.roadType = roadType;
         this.name = name;
-        this.way = way;
+        this.path = path;
     }
-    public Road(RoadType roadType, OSMWay way){
-        this(roadType, way, "");
+    public Road(RoadType roadType, Path2D path){
+        this(roadType, path, "");
     }
 
     public RoadType getRoadType() {
@@ -31,7 +29,7 @@ public class Road implements Element {
         return name;
     }
 
-    public OSMWay getWay(){
-        return way;
+    public Path2D getPath(){
+        return path;
     }
 }

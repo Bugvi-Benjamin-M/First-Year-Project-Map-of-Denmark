@@ -1,8 +1,9 @@
 package View;
 
-import Enums.OSMEnums.WayType;
+import Enums.ZoomLevel;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
+import KDtree.KDTree;
 import Main.Main;
 import Model.Element;
 import Model.Model;
@@ -12,6 +13,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashSet;
 
 
 /**
@@ -31,10 +33,11 @@ public class MapCanvas extends View {
 
     private Dimension dimension;
     private AffineTransform transform;
-    private EnumMap<WayType, java.util.List<Element>> wayElements;
     private java.util.List<Path2D> coastlines;
-    private ArrayList<Element> currentSection;
+    private HashSet<Element> currentSection;
     private Point2D currentPoint;
+    private Rectangle2D currentRectangle;
+    private EnumMap<ZoomLevel, KDTree> roads;
 
     /**
      * The base Constructor for the MapCanvas.
@@ -52,6 +55,15 @@ public class MapCanvas extends View {
         setBackground(ThemeHelper.color("water"));
     }
 
+    private void setCurrentRectangle() {
+        Rectangle2D rectangle = getVisibleRect();
+        Point2D point = toModelCoords(new Point2D.Double(10, 10));
+        Point2D factor = toModelCoords(new Point2D.Double(rectangle.getWidth()-10, rectangle.getHeight()-10));
+        double xBounds = factor.getX() - point.getX();
+        double yBounds = factor.getY() - point.getY();
+        currentRectangle = new Rectangle2D.Double(point.getX(), point.getY(), xBounds, yBounds);
+    }
+
     /**
      * Paints the MapCanvas with all the shapes that should be displayed.
      */
@@ -62,26 +74,36 @@ public class MapCanvas extends View {
         g2D.setTransform(transform);
         setBackgroundColor();
 
+        setCurrentRectangle();
+
         drawCoastlines(g2D);
+
+        g2D.setColor(Color.black);
+        g2D.setStroke(new BasicStroke(0.00001f));
+        g2D.draw(currentRectangle);
+
 
         drawRoads(g2D);
 
-        drawBoundaries(g2D);
+        //drawBoundaries(g2D);
 
-        ArrayList<Point2D> medianpoints = Model.getInstance().getMedianpoints();
-        if(medianpoints != null) {
-            for (Point2D median : medianpoints) {
-                g2D.fill(new Ellipse2D.Double(median.getX(), median.getY(), 0.01f, 0.01f));
+        if(ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_3) {
+            currentSection = roads.get(ZoomLevel.LEVEL_3).getManyElements(
+                (float) currentRectangle.getMinX(),
+                (float) currentRectangle.getMinY(),
+                (float) currentRectangle.getMaxX(),
+                (float) currentRectangle.getMaxY());
+        }
+        if(currentSection != null) {
+            for (Element element : currentSection) {
+                Road r = (Road) element;
+                g2D.setColor(Color.black);
+                g2D.setStroke(new BasicStroke(0.00001f));
+                g2D.draw(r.getPath());
             }
         }
 
-        //Rectangle
-        if(currentPoint != null){
-            Rectangle2D rectangle = new Rectangle2D.Double(currentPoint.getX(), currentPoint.getY(), 0.3, 0.3);
-            g2D.setStroke(new BasicStroke(0.0001f));
-            g.setColor(ThemeHelper.color("boundary"));
-            g2D.draw(rectangle);
-        }
+
 
         Main.FPS_COUNTER.interrupt();
         DebugWindow.getInstance().setFPSLabel();
@@ -100,7 +122,7 @@ public class MapCanvas extends View {
         if(currentSection != null) {
             for (Element e : currentSection) {
                 Road r = (Road) e;
-                g.draw(r.getWay().toPath2D());
+                g.draw(r.getPath());
             }
         }
 
@@ -174,14 +196,6 @@ public class MapCanvas extends View {
         repaint();
     }
 
-    /**
-     * Lets other objects add an EnumMap to the MapCanvas
-     * @param wayElements
-     */
-    public void setWayElements(EnumMap wayElements){
-        this.wayElements = wayElements;
-    }
-
     public void setCoastlines(java.util.List<Path2D> coastlines) {
         this.coastlines = coastlines;
     }
@@ -195,7 +209,11 @@ public class MapCanvas extends View {
         }
     }
 
-    public void setCurrentSection(ArrayList<Element> currentSection) {
+    public void setRoads(EnumMap<ZoomLevel, KDTree> map) {
+        roads = map;
+    }
+
+    public void setCurrentSection(HashSet<Element> currentSection) {
         this.currentSection = currentSection;
     }
 

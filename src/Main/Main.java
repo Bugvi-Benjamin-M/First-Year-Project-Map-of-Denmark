@@ -5,11 +5,9 @@ import Exceptions.FileWasNotFoundException;
 import Helpers.FileHandler;
 import Helpers.Utilities.FPSCounter;
 import Model.Model;
-import View.MapCanvas;
 import View.PopupWindow;
 
 import javax.swing.*;
-import java.io.FileNotFoundException;
 
 
 /**
@@ -55,15 +53,13 @@ public class Main {
 
     private static void loadDefaultResource() throws Exception {
         try {
-            throw new FileNotFoundException();
-            /*
             long startTime = System.currentTimeMillis();
             FileHandler.loadResource(DEFAULT_RESOURCE);
             long stopTime = System.currentTimeMillis();
             System.out.println("Loading time: " + (stopTime - startTime) + " ms");
-            */
 
-        } catch (FileNotFoundException e) {
+
+        } catch (FileWasNotFoundException e) {
             throw new Exception("Program was not able to load default resource \""+DEFAULT_RESOURCE+"\"" +
                     "\nLoading from coastlines instead.");
         }

@@ -4,14 +4,16 @@ import Enums.OSMEnums.NodeType;
 import Enums.OSMEnums.RelationType;
 import Enums.OSMEnums.WayType;
 import Enums.ZoomLevel;
-import KDtree.KDTree;
-import Enums.ZoomLevel;
 import Helpers.Utilities.DebugWindow;
+import KDtree.KDTree;
 import Model.Coastlines.CoastlineFactory;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -27,7 +29,6 @@ public final class Model extends Observable {
     private static Model instance;
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
 
-    private BST bst;
     private CoastlineFactory coastlineFactory;
     private ZoomLevel zoom_level;
 
@@ -48,7 +49,6 @@ public final class Model extends Observable {
             roads.put(level, new KDTree());
         }
         //Todo remember to clean up the constructor
-        bst = new BST();
         zoom_level = ZoomLevel.LEVEL_3;
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
     }
@@ -61,15 +61,15 @@ public final class Model extends Observable {
 
     public ZoomLevel getZoomLevel() {return zoom_level;}
 
-    public BST getBst(){
-        return bst;
-    }
-
     public static Model getInstance() {
         if(instance == null) {
             instance = new Model();
         }
         return instance;
+    }
+
+    public EnumMap<ZoomLevel, KDTree> getRoads() {
+        return roads;
     }
 
     public void addWayElement(WayType type, Element element){

@@ -1,8 +1,6 @@
 package Controller;
 
-import Enums.BoundType;
 import Enums.ZoomLevel;
-import Model.Element;
 import Model.Model;
 import View.MapCanvas;
 import View.Window;
@@ -11,8 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -58,7 +54,7 @@ public final class CanvasController extends Controller implements Observer {
 
     private void setupCanvas() {
         mapCanvas = new MapCanvas(window.getDimension());
-        mapCanvas.setWayElements(model.getWayElements());
+        mapCanvas.setRoads(model.getRoads());
         mapCanvas.setCoastlines(model.getCoastlines());
         window.addComponent(BorderLayout.CENTER,mapCanvas);
         mapCanvas.setVisible(true);
@@ -183,7 +179,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.zoom(mapCanvas.getWidth()/(model.getMaxLongitude()- model.getMinLongitude()));
     }
 
-    public static void ds(){
+    public static void resetBounds(){
         mapCanvas.resetTransform();
     }
 
@@ -201,8 +197,8 @@ public final class CanvasController extends Controller implements Observer {
         Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
         System.out.println(mouseInModel.getX() + " " + mouseInModel.getY());
         mapCanvas.setCurrentPoint(mouseInModel);
-        ArrayList<Element> elements = Model.getInstance().getBst().getManySections(mouseInModel.getX(), mouseInModel.getY(), mouseInModel.getX() + 0.3, mouseInModel.getY() + 0.3);
-        mapCanvas.setCurrentSection(elements);
+        //ArrayList<Element> elements = Model.getInstance().getBst().getManySections(mouseInModel.getX(), mouseInModel.getY(), mouseInModel.getX() + 0.3, mouseInModel.getY() + 0.3);
+        //mapCanvas.setCurrentSection(elements);
         mapCanvas.repaint();
     }
 
