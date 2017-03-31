@@ -66,6 +66,8 @@ public class KDTree {
     }
 
     private Node putNode(Node parent, Node nodeToPut){
+        if(parent == null) return nodeToPut;
+
         if(parent.getDepth() % 2 == 0){
             int compare = nodeToPut.compareToX(parent);
             if(compare <= 0) parent.setLeft(putNode(parent.getLeft(), nodeToPut));

@@ -31,6 +31,7 @@ public class Main {
             splashScreenDestruct();
         } catch (Exception e) {
             splashScreenDestruct();
+            e.printStackTrace();
             PopupWindow.warningBox(null,e.getMessage());
             Model.getInstance().loadFromCoastlines();
         }
