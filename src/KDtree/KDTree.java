@@ -66,7 +66,10 @@ public class KDTree {
     }
 
     private Node putNode(Node parent, Node nodeToPut){
-        if(parent == null) return nodeToPut;
+        if(parent == null) {
+            System.out.println("Lortet er lig med null");
+            return nodeToPut;
+        }
 
         if(parent.getDepth() % 2 == 0){
             System.out.println(parent.getDepth());
