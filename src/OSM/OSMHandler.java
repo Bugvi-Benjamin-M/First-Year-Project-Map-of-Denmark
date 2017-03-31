@@ -186,7 +186,7 @@ public final class OSMHandler implements ContentHandler {
                     case ROAD:
                         switch (roadType) {
                             case SERVICE:
-                                addRoad(ZoomLevel.LEVEL_0);
+                                addRoad(ZoomLevel.LEVEL_1);
                                 break;
                             case PRIMARY:
                                 addRoad(ZoomLevel.LEVEL_3);

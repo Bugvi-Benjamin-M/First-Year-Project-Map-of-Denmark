@@ -51,13 +51,13 @@ public class Main {
 
     private static void loadDefaultResource() throws FileWasNotFoundException {
         try {
-            throw new FileWasNotFoundException("");
-            /*
+            //throw new FileWasNotFoundException("");
+
             long startTime = System.currentTimeMillis();
             FileHandler.loadResource(DEFAULT_RESOURCE);
             long stopTime = System.currentTimeMillis();
             System.out.println("Loading time: " + (stopTime - startTime) + " ms");
-            */
+
         } catch (FileWasNotFoundException e) {
             throw new FileWasNotFoundException("Program was not able to load default resource \""+DEFAULT_RESOURCE+"\"" +
                     "\nLoading from coastlines instead.");

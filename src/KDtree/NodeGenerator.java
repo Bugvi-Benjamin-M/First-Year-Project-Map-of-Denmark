@@ -57,18 +57,20 @@ public class NodeGenerator {
         }
         float floatX = (float) median.getX();
         float floatY = (float) median.getY();
-        Node medianNode = new Node(floatX, floatY, medianDepth);
+        Node medianNode = null;
         if(medianDepth < depth) {
             for(ZoomLevel level : ZoomLevel.values()){
+                medianNode = new Node(floatX, floatY, medianDepth);
                 Model.getInstance().getRoads().get(level).putNode(medianNode);
             }
-            //medians.add(medianNode);
+            medians.add(medianNode);
             initialise(medianNode, low, ((low+high)/2) - 1);
             initialise(medianNode, ((low+high)/2) + 1, high);
         } else if(medianDepth == depth) {
-            medianNode.makeLeaf();
-            //medians.add(medianNode);
+            medians.add(medianNode);
             for(ZoomLevel level : ZoomLevel.values()){
+                medianNode = new Node(floatX, floatY, medianDepth);
+                medianNode.makeLeaf();
                 Model.getInstance().getRoads().get(level).putNode(medianNode);
             }
 

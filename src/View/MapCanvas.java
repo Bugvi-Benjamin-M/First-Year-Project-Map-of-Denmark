@@ -88,22 +88,6 @@ public class MapCanvas extends View {
 
         //drawBoundaries(g2D);
 
-        if(ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_3) {
-            currentSection = roads.get(ZoomLevel.LEVEL_3).getManyElements(
-                (float) currentRectangle.getMinX(),
-                (float) currentRectangle.getMinY(),
-                (float) currentRectangle.getMaxX(),
-                (float) currentRectangle.getMaxY());
-        }
-        if(currentSection != null) {
-            for (Element element : currentSection) {
-                Road r = (Road) element;
-                g2D.setColor(Color.black);
-                g2D.setStroke(new BasicStroke(0.00001f));
-                g2D.draw(r.getPath());
-            }
-        }
-
         Main.FPS_COUNTER.interrupt();
         DebugWindow.getInstance();
     }
@@ -116,14 +100,24 @@ public class MapCanvas extends View {
     }
 
     private void drawRoads(Graphics2D g){
-        g.setColor(ThemeHelper.color("highwayroad"));
-        g.setStroke(new BasicStroke(0.00001f));
-        if(currentSection != null) {
-            for (Element e : currentSection) {
-                Road r = (Road) e;
-                g.draw(r.getPath());
-            }
+        switch(ZoomLevel.getZoomLevel()){
+            case LEVEL_0:
+                drawLevelOne(g);
+                drawLevelThree(g);
+                break;
+            case LEVEL_1:
+                drawLevelOne(g);
+                drawLevelThree(g);
+                break;
+            case LEVEL_2:
+                drawLevelThree(g);
+                break;
+            case LEVEL_3:
+                drawLevelThree(g);
+                break;
+
         }
+
 
         /*java.util.List<Element> roads = wayElements.get(WayType.ROAD);
         for(Element element : roads){
@@ -153,6 +147,40 @@ public class MapCanvas extends View {
             }
 
         }*/
+    }
+
+    private void drawLevelZero(Graphics2D g){
+    }
+
+    private void drawLevelOne(Graphics2D g){
+        currentSection = roads.get(ZoomLevel.LEVEL_1).getManyElements(
+                (float) currentRectangle.getMinX(),
+                (float) currentRectangle.getMinY(),
+                (float) currentRectangle.getMaxX(),
+                (float) currentRectangle.getMaxY());
+        for (Element element : currentSection) {
+            Road r = (Road) element;
+            g.setColor(Color.black);
+            g.setStroke(new BasicStroke(0.00001f));
+            g.draw(r.getPath());
+        }
+    }
+
+    private void drawLevelTwo(Graphics2D g){
+    }
+
+    private void drawLevelThree(Graphics2D g){
+        currentSection = roads.get(ZoomLevel.LEVEL_3).getManyElements(
+                (float) currentRectangle.getMinX(),
+                (float) currentRectangle.getMinY(),
+                (float) currentRectangle.getMaxX(),
+                (float) currentRectangle.getMaxY());
+        for (Element element : currentSection) {
+            Road r = (Road) element;
+            g.setColor(Color.black);
+            g.setStroke(new BasicStroke(0.00001f));
+            g.draw(r.getPath());
+        }
     }
 
     private void drawBoundaries(Graphics2D g2D) {
