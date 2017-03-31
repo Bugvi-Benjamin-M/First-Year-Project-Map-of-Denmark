@@ -56,7 +56,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas = new MapCanvas(window.getDimension());
         mapCanvas.setRoads(model.getRoads());
         mapCanvas.setCoastlines(model.getCoastlines());
-        window.addComponent(BorderLayout.CENTER,mapCanvas);
+        window.addComponent(BorderLayout.CENTER,mapCanvas,true);
         mapCanvas.setVisible(true);
     }
 
@@ -195,7 +195,7 @@ public final class CanvasController extends Controller implements Observer {
     private void mouseClickedEvent(MouseEvent event) {
         Point2D mousePosition = event.getPoint();
         Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
-        System.out.println(mouseInModel.getX() + " " + mouseInModel.getY());
+        // System.out.println(mouseInModel.getX() + " " + mouseInModel.getY());
         mapCanvas.setCurrentPoint(mouseInModel);
         //ArrayList<Element> elements = Model.getInstance().getBst().getManySections(mouseInModel.getX(), mouseInModel.getY(), mouseInModel.getX() + 0.3, mouseInModel.getY() + 0.3);
         //mapCanvas.setCurrentSection(elements);
@@ -232,7 +232,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void changeZoomLevel(double zoomFactor) {
-        System.out.println("zoomed in by "+zoomFactor);
+        // System.out.println("zoomed in by "+zoomFactor);
         Model model = Model.getInstance();
         ZoomLevel lastLevel = model.getZoomLevel();
         if (zoomFactor != 0.0) zoom_value -= zoomFactor;

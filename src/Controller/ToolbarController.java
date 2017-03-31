@@ -34,7 +34,7 @@ public final class ToolbarController extends Controller {
         super(window);
         this.window = window;
         toolbar = new Toolbar();
-        this.window.addComponent(BorderLayout.PAGE_START, toolbar);
+        this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
         addInteractionHandlersToTools();
     }
 
@@ -116,7 +116,7 @@ public final class ToolbarController extends Controller {
     public void themeHasChanged() {
         this.window.removeComponent(toolbar);
         toolbar = new Toolbar();
-        this.window.addComponent(BorderLayout.PAGE_START, toolbar);
+        this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
         addInteractionHandlersToTools();
     }
 

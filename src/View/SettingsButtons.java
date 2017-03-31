@@ -29,7 +29,7 @@ public class SettingsButtons extends View {
     private void createButtons() {
         buttons.add(apply = new JButton("Apply Changes"));
         buttons.add(defaultSet = new JButton("Default Settings"));
-        buttons.add(openDebug = new JButton("Open debug"));
+        buttons.add(openDebug = new JButton(""));
     }
 
     public void addActionToApplyButton(ActionListener e) {

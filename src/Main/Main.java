@@ -31,7 +31,7 @@ public class Main {
             splashScreenDestruct();
         } catch (Exception e) {
             splashScreenDestruct();
-            PopupWindow.errorBox(null,e.getMessage());
+            PopupWindow.warningBox(null,e.getMessage());
             Model.getInstance().loadFromCoastlines();
         }
 
@@ -44,9 +44,6 @@ public class Main {
         CanvasController.adjustToBounds();
         Model model = Model.getInstance();
         model.modelHasChanged();
-
-        System.out.println("Bounds: minlon "+model.getMinLongitude()+" - maxlon "+model.getMaxLongitude());
-        System.out.println("Bounds: minlat "+model.getMinLatitude()+" - maxlat "+model.getMaxLatitude());
 
         FPS_COUNTER.start();
     }

@@ -55,6 +55,10 @@ public class PopupWindow {
         JOptionPane.showMessageDialog(relativeTo,message,"Error occured!",JOptionPane.ERROR_MESSAGE);
     }
 
+    public static void warningBox(JFrame relativeTo,String message) {
+        JOptionPane.showMessageDialog(relativeTo,message,"Warning",JOptionPane.WARNING_MESSAGE);
+    }
+
     public static int confirmBox(JFrame relativeTo, String message, String title, int options) {
         return JOptionPane.showConfirmDialog(relativeTo, message, title, options);
     }
