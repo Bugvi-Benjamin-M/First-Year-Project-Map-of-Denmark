@@ -16,22 +16,22 @@ import java.awt.*;
  */
 public class ToolFeature extends ToolComponent {
 
-    private ImageIcon icon;
+    private String icon;
     private ToolType type;
-    private JPanel label;
-    private JPanel iconLabel;
+    private JLabel label;
+    private JLabel iconLabel;
 
     /**
      * Constructor for a ToolFeature
-     * @param path The path to the icon file
+     * @param icon The string to the icon file
      * @param type The type of this tool
      */
-    ToolFeature(String path, ToolType type) {
+    ToolFeature(String icon, ToolType type) {
         super();
         this.type = type;
-        icon = createImageIcon(path, this.type.toString());
+        this.icon = icon;
         setupLayout();
-        this.setPreferredSize(new Dimension(50,90));
+        this.setPreferredSize(new Dimension(60,90));
     }
 
     /**
@@ -39,26 +39,21 @@ public class ToolFeature extends ToolComponent {
      */
     @Override
     void setupLayout() {
-        iconLabel = new JPanel();
-        iconLabel.add(new JLabel(icon));
-        label = new JPanel();
-            label.add(new JLabel(type.toString()));
+        label = new JLabel(type.toString());
+        label.setForeground(Helpers.ThemeHelper.color("icon"));
+        label.setOpaque(false);
+        label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 14));
+
+
+        iconLabel = new JLabel(this.icon);
+        iconLabel.setFont(Helpers.FontAwesome.getFontAwesome());
+        iconLabel.setForeground(Helpers.ThemeHelper.color("icon"));
+        iconLabel.setOpaque(false);
 
         this.setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
+        this.setOpaque(false);
         this.add(iconLabel);
         this.add(label);
-    }
-
-    @Override
-    public void toggleWell() {
-        if(!isWellActivated()) {
-            label.setBackground(getHoverColor());
-            iconLabel.setBackground(getHoverColor());
-        } else {
-            label.setBackground(getDefaultColor());
-            iconLabel.setBackground(getDefaultColor());
-        }
-        super.toggleWell();
     }
 
     public ToolType getType() {

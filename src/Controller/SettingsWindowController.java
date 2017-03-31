@@ -4,9 +4,7 @@ import Enums.ToolType;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
 import Main.Main;
-import View.KeyboardKeysToggle;
-import View.SettingsSouthButtons;
-import View.ThemeSetting;
+import View.*;
 import View.Window;
 
 import javax.swing.*;
@@ -17,34 +15,56 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * Created by  on .
- *
- * @author bugvimagnussen
+ * The settings controller class controls the settings window and settings in general. It inherits from WindowController.
+ * @author Búgvi Magnussen
  * @version 20/03/2017
  */
 public final class SettingsWindowController extends WindowController {
 
     private static SettingsWindowController instance;
+
     private ThemeSetting themeSettings;
-    private SettingsSouthButtons southButtons;
+    private SettingsButtons southButtons;
     private KeyboardKeysToggle keyboardKeysToggle;
-    private boolean keysActive;
+    private boolean keysActiveStatus;
+    private Settings settings;
 
     private SettingsWindowController(Window window) {
         super(window);
+        settings = new Settings();
+        themeSettings = new ThemeSetting();
+        keyboardKeysToggle = new KeyboardKeysToggle();
+        southButtons = new SettingsButtons();
         setupSettingsWindowSpecifics();
-        keysActive = true;
+        addSettings();
+        keysActiveStatus = true;
     }
 
+    /**
+     * Returns the singleton instance of this class.
+     * @return the singleton object
+     */
     public static SettingsWindowController getInstance() {
         if(instance == null) {
             return instance = new SettingsWindowController(setupWindow());
         }
-        window.relativeTo(null);
-        window.show();
         return instance;
     }
 
+
+    /**
+     * Show the already existing settings window.
+     */
+    public void showSettingsWindow() {
+        window.relativeTo(null);
+        window.show();
+    }
+
+    /**
+     * Sets up a new settings window. In general, this is only done when the singleton instance of this controller
+     * is created.
+     * @return the newly created settings window.
+     */
     private static Window setupWindow() {
         Window settings = new Window().title("Settings")
                 .closeOperation(WindowConstants.DISPOSE_ON_CLOSE)
@@ -57,16 +77,29 @@ public final class SettingsWindowController extends WindowController {
         return settings;
     }
 
+
+    /**
+     * adds the individual components to the settings JPanel
+     */
+    private void addSettings() {
+        settings.addSetting(themeSettings);
+        settings.createSpace(new Dimension(0,20));
+        settings.addSetting(keyboardKeysToggle);
+        settings.createSpace(new Dimension(0,480));
+    }
+
+    /**
+     * Specifies the location for the different components in the settings window.
+     */
     private void setupSettingsWindowSpecifics() {
-        themeSettings = new ThemeSetting();
-        window.addComponent(BorderLayout.NORTH, themeSettings);
-        southButtons = new SettingsSouthButtons();
+        window.addComponent(BorderLayout.CENTER, settings);
         window.addComponent(BorderLayout.SOUTH, southButtons);
-        keyboardKeysToggle = new KeyboardKeysToggle();
-        window.addComponent(BorderLayout.CENTER, keyboardKeysToggle);
         addActionsToSettingsWindowButtons();
     }
 
+    /**
+     * Adds actions to the buttons on the settings window.
+     */
     private void addActionsToSettingsWindowButtons() {
         southButtons.addActionToApplyButton(a -> {
             applyButtonActivated();
@@ -79,31 +112,37 @@ public final class SettingsWindowController extends WindowController {
         });
     }
 
+    /**
+     * Method is called when deafault button is pressed. Returns all settings to default.
+     */
     private void defaultButtonActivated() {
         if(!ThemeHelper.getCurrentTheme().equals("Default")) {
             ThemeHelper.setTheme("Default");
             themeSettings.setSelectedThemeToDefault();
             Main.notifyThemeChange();
         }
-        if(!keyboardKeysToggle.isToggleSelected()) {
-            keyboardKeysToggle.setSelectedStatus(true);
-            keysActive = true;
-            Main.notifyKeyToggle(true);
+        if(!keysActiveStatus) {
+            keysActiveStatus = true;
+            Main.notifyKeyToggle(keysActiveStatus);
         }
         setToCurrentSettingsAndClose();
     }
 
+    /**
+     * Method is called when the apply button is pressed. Applies all changed settings and makes sure the settings
+     * window accurately reflects the current settings.
+     */
     private void applyButtonActivated() {
         if(!ThemeHelper.getCurrentTheme().equals(themeSettings.getSelectedTheme())) {
             ThemeHelper.setTheme(themeSettings.getSelectedTheme());
             Main.notifyThemeChange();
         }
         if(!keyboardKeysToggle.isToggleSelected()) {
-            toggleKeyBindings(false);
-            keysActive = false;
+            keysActiveStatus = false;
+            Main.notifyKeyToggle(keysActiveStatus);
         } else {
-            toggleKeyBindings(true);
-            keysActive = true;
+            keysActiveStatus = true;
+            Main.notifyKeyToggle(keysActiveStatus);
         }
         setToCurrentSettingsAndClose();
     }
@@ -114,6 +153,9 @@ public final class SettingsWindowController extends WindowController {
         ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
     }
 
+    /**
+     * Overrides the superclass specifyKeyBindingsMethod. Adds key bindings to the settings window.
+     */
     @Override
     protected void specifyKeyBindings() {
         handler.addKeyBinding(KeyEvent.VK_ESCAPE, KeyEvent.VK_UNDEFINED, new AbstractAction() {
@@ -129,6 +171,11 @@ public final class SettingsWindowController extends WindowController {
             }
         });
     }
+
+    /**
+     * Overrides the superclass' method. Builds on the superclass method by adding a window listener to the settings window
+     * to add further functionality.
+     */
     @Override
     protected void addInteractionHandlerToWindow() {
         super.addInteractionHandlerToWindow();
@@ -149,9 +196,8 @@ public final class SettingsWindowController extends WindowController {
      */
     private void setToCurrentSettingsAndClose() {
         themeSettings.setSelectedTheme(ThemeHelper.getCurrentTheme());
-        keyboardKeysToggle.setSelectedStatus(keysActive);
+        keyboardKeysToggle.setSelectedStatus(keysActiveStatus);
         window.hide();
-        ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
     }
 
     /**

@@ -6,6 +6,7 @@ import View.Window;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 
 /**
@@ -21,7 +22,7 @@ public final class MainWindowController extends WindowController {
         super(window);
     }
 
-    public static WindowController getInstance() {
+    public static MainWindowController getInstance() {
         if(instance == null) {
             Window mainWindow = setupWindow();
             instance = new MainWindowController(mainWindow);
@@ -36,7 +37,7 @@ public final class MainWindowController extends WindowController {
                 .extendedState(JFrame.MAXIMIZED_BOTH)
                 .layout(new BorderLayout())
                 .relativeTo(null)
-                .show();
+                .hide();
         return mainWindow;
     }
 
@@ -56,6 +57,18 @@ public final class MainWindowController extends WindowController {
 
     public void resetInstance() {
         instance = null;
+    }
+
+    private class MainWindowInteractionHandler extends MainWindowController.WindowInteractionHandler {
+
+        @Override
+        public void componentResized(ComponentEvent e) {
+            super.componentResized(e);
+            //Todo implement changes
+            //double scaleFactor = window.getDimension().getWidth() / tool.getSearchFieldDimension().getWidth();
+            //tool.setWidth((int) (window.getDimension().width / scaleFactor));
+        }
+
     }
 
 }

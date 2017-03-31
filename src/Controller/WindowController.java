@@ -37,13 +37,15 @@ public abstract class WindowController extends Controller {
     public abstract void resetInstance();
 
     public void toggleKeyBindings(boolean status) {
-        //Todo implement
+        JPanel content = (JPanel) window.getFrame().getContentPane();
+        for(Object key : content.getActionMap().keys()) {
+            content.getActionMap().get(key).setEnabled(status);
+        }
     }
 
     protected class WindowInteractionHandler extends ComponentAdapter {
 
         protected JPanel content;
-
 
         protected WindowInteractionHandler() {
             this.content = (JPanel) window.getFrame().getContentPane();
@@ -52,11 +54,13 @@ public abstract class WindowController extends Controller {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
+
         }
 
         @Override
         public void componentHidden(ComponentEvent e) {
             super.componentHidden(e);
+            //Todo maybe use this method instead of window listener in subclass
         }
 
 

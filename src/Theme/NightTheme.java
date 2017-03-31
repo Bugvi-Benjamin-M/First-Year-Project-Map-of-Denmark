@@ -23,8 +23,18 @@ public class NightTheme implements Theme {
     }
 
     @Override
+    public Color icon() {
+        return new Color(0xFFFFFF);
+    }
+
+    @Override
     public Color boundary() {
         return new Color(0xFF1DF2);
+    }
+
+    @Override
+    public Color border() {
+        return new Color(0x000000);
     }
 
     @Override

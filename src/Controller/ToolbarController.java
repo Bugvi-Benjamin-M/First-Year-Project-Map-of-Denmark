@@ -78,7 +78,6 @@ public final class ToolbarController extends Controller {
     }
 
     private void loadEvent() {
-        toolbar.toggleWellOnTool(ToolType.LOAD);
         FileNameExtensionFilter[] filters = new FileNameExtensionFilter[]{
                 new FileNameExtensionFilter("OSM Files", FileType.OSM.toString()),
                 new FileNameExtensionFilter("ZIP Files", FileType.ZIP.toString())
@@ -92,18 +91,18 @@ public final class ToolbarController extends Controller {
                 e.printStackTrace();
             }
         }
-        toolbar.toggleWellOnTool(ToolType.LOAD);
     }
 
     private void saveEvent() {
-        toolbar.toggleWellOnTool(ToolType.SAVE);
         PopupWindow.infoBox(null, "You activated save tool","Tool activated");
-        toolbar.toggleWellOnTool(ToolType.SAVE);
     }
 
     private void settingsEvent() {
-        toolbar.toggleWellOnTool(ToolType.SETTINGS);
-        SettingsWindowController.getInstance();
+        if(SettingsWindowController.getInstance() == null) {
+            SettingsWindowController.getInstance();
+        } else {
+            SettingsWindowController.getInstance().showSettingsWindow();
+        }
     }
 
     public Toolbar getToolbar() {
@@ -115,12 +114,19 @@ public final class ToolbarController extends Controller {
     }
 
     public void themeHasChanged() {
-        toolbar.setBackGroundColor();
-        //Todo make icons change
+        this.window.removeComponent(toolbar);
+        toolbar = new Toolbar();
+        this.window.addComponent(BorderLayout.PAGE_START, toolbar);
+        addInteractionHandlersToTools();
     }
 
     public void toggleKeyBindings(boolean status) {
-        //Todo implement
+        for(ToolType type : toolbar.getAllTools().keySet()) {
+            if(toolbar.getTool(type).getActionMap().keys() == null) continue;
+            for(Object key : toolbar.getTool(type).getActionMap().keys()) {
+                toolbar.getTool(type).getActionMap().get(key).setEnabled(status);
+            }
+        }
     }
 
     private class ToolInteractionHandler extends MouseAdapter {
