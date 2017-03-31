@@ -125,9 +125,9 @@ public final class OSMHandler implements ContentHandler {
             case "way":
                 if(!initialized){
                     nodeGenerator.initialise();
-                    for (ZoomLevel level : ZoomLevel.values()) {
+                    /*for (ZoomLevel level : ZoomLevel.values()) {
                         nodeGenerator.setupTree(model.getRoads().get(level));
-                    }
+                    }*/
                     initialized = true;
                 }
 

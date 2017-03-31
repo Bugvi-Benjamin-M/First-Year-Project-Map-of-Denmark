@@ -1,5 +1,8 @@
 package KDtree;
 
+import Enums.ZoomLevel;
+import Model.Model;
+
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,12 +59,15 @@ public class NodeGenerator {
         float floatY = (float) median.getY();
         Node medianNode = new Node(floatX, floatY, medianDepth);
         if(medianDepth < depth) {
-            medians.add(medianNode);
+            for(ZoomLevel level : ZoomLevel.values()){
+                Model.getInstance().getRoads().get(level).putNode(medianNode);
+            }
+            //medians.add(medianNode);
             initialise(medianNode, low, ((low+high)/2) - 1);
             initialise(medianNode, ((low+high)/2) + 1, high);
         } else if(medianDepth == depth) {
             medianNode.makeLeaf();
-            medians.add(medianNode);
+            //medians.add(medianNode);
         }
     }
 
