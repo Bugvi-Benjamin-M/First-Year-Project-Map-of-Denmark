@@ -9,8 +9,7 @@ import java.util.HashSet;
  */
 public class KDTree {
     private Node root;
-    private static final int AMOUNT_OF_NODES_DEFAULT = 18788597;
-    private static final int DEPTH_DEFAULT = 14;
+
     private HashSet<Element> elementsToReturn;
 
     public KDTree(){

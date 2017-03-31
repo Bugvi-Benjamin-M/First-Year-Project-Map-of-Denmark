@@ -33,6 +33,8 @@ public class SearchTool extends ToolComponent {
 
     @Override
     public void setupLayout() {
+        //Todo dimension should be proportional to the screen size
+        //Use scaleFactor 3.2
         field.setPreferredSize(searchFieldDimension);
         field.setMinimumSize(searchFieldDimension);
         field.setEditable(true);
@@ -44,8 +46,14 @@ public class SearchTool extends ToolComponent {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 Rectangle r = field.getBounds();
-                if(r.contains(e.getPoint())) field.getEditor().getEditorComponent().setEnabled(true);
-                else field.getEditor().getEditorComponent().setEnabled(false);
+                if(r.contains(e.getPoint())) {
+                    field.getEditor().getEditorComponent().setEnabled(true);
+                    field.setFocusable(true);
+                }
+                else {
+                    field.getEditor().getEditorComponent().setEnabled(false);
+                    field.setFocusable(false);
+                }
             //Todo this only works sometimes. Fix
             }
         });*/

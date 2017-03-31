@@ -4,6 +4,8 @@ import Enums.OSMEnums.NodeType;
 import Enums.OSMEnums.RelationType;
 import Enums.OSMEnums.WayType;
 import Enums.ZoomLevel;
+import KDtree.KDTree;
+import Enums.ZoomLevel;
 import Helpers.Utilities.DebugWindow;
 import Model.Coastlines.CoastlineFactory;
 
@@ -19,6 +21,8 @@ public final class Model extends Observable {
     private EnumMap<WayType, List<Element>> wayElements;
     private EnumMap<NodeType, List<Element>> nodeElements;
     private EnumMap<RelationType, List<Element>> relationElements;
+
+    private EnumMap<ZoomLevel, KDTree> roads;
 
     private static Model instance;
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
@@ -38,6 +42,12 @@ public final class Model extends Observable {
         for (WayType type : WayType.values()) {
             wayElements.put(type, new ArrayList<>());
         }
+
+        roads = new EnumMap<>(ZoomLevel.class);
+        for(ZoomLevel level : ZoomLevel.values()) {
+            roads.put(level, new KDTree());
+        }
+        //Todo remember to clean up the constructor
         bst = new BST();
         zoom_level = ZoomLevel.LEVEL_3;
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
