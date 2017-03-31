@@ -42,7 +42,7 @@ public class Main {
         InfobarController.getInstance(MainWindowController.getInstance().getWindow());
 
         CanvasController.adjustToBounds();
-        CanvasController.resetBounds();
+        Model.getInstance().modelHasChanged();
     }
 
     private static void splashScreenDestruct() {
