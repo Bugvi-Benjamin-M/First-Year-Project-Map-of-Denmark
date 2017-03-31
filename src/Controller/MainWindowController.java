@@ -1,10 +1,8 @@
 package Controller;
 
-import Enums.ToolType;
 import Helpers.OSDetector;
 import Helpers.Utilities.DebugWindow;
 import View.PopupWindow;
-import View.SearchTool;
 import View.Window;
 
 import javax.swing.*;
@@ -69,7 +67,8 @@ public final class MainWindowController extends WindowController {
     @Override
     protected void addInteractionHandlerToWindow() {
         super.addInteractionHandlerToWindow();
-        //window.getFrame().addComponentListener((ComponentListener)MainWindowInteractionHandler);
+        MainWindowInteractionHandler handler = new MainWindowInteractionHandler();
+        window.getFrame().addComponentListener(handler);
     }
 
     public void resetInstance() {
@@ -81,11 +80,8 @@ public final class MainWindowController extends WindowController {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
-            //Todo implement changes
-            System.out.println("Resize");
-            SearchTool tool = (SearchTool)ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCH);
-            double scaleFactor = window.getDimension().getWidth() / tool.getSize().width;
-            tool.setWidth((int)(window.getDimension().width / scaleFactor));
+            ToolbarController.getInstance(window).resizeSearchbar();
+
         }
 
     }

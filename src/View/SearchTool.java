@@ -23,9 +23,10 @@ public class SearchTool extends ToolComponent {
     private JLabel searchLabel;
 
 
-    public SearchTool() {
+
+    public SearchTool(int width) {
         field = new JComboBox<>();
-        searchFieldDimension = new Dimension(600, 40);
+        searchFieldDimension = new Dimension(width, 40);
         setupLayout();
         addSearchLabel();
         add(field);
@@ -33,30 +34,12 @@ public class SearchTool extends ToolComponent {
 
     @Override
     public void setupLayout() {
-        //Todo dimension should be proportional to the screen size
-        //Use scaleFactor 3.2
         field.setPreferredSize(searchFieldDimension);
-        field.setMinimumSize(searchFieldDimension);
         field.setEditable(true);
         field.setFont(new Font(field.getFont().getName(), field.getFont().getStyle(), 20));
         field.setRequestFocusEnabled(true);
         for(Component component : field.getComponents()) if(component instanceof JButton) field.remove(component);
-        /*field.getEditor().getEditorComponent().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                Rectangle r = field.getBounds();
-                if(r.contains(e.getPoint())) {
-                    field.getEditor().getEditorComponent().setEnabled(true);
-                    field.setFocusable(true);
-                }
-                else {
-                    field.getEditor().getEditorComponent().setEnabled(false);
-                    field.setFocusable(false);
-                }
-            //Todo this only works sometimes. Fix
-            }
-        });*/
+
         //Todo force focus loss
         //Todo add implementation for theme change
     }
@@ -66,23 +49,16 @@ public class SearchTool extends ToolComponent {
         model = new DefaultComboBoxModel(list.toArray());
     }
 
-    public void setWidth(int width) {
-        field.setPreferredSize(new Dimension(200, 40));
-        field.setVisible(true);
-    }
-
     private void addSearchLabel() {
         searchLabel = new JLabel("Search:");
         searchLabel.setFont(new Font(getFont().getName(), getFont().getStyle(), 20));
         add(searchLabel);
     }
 
-    public Dimension getSearchFieldDimension() {
-        return searchFieldDimension;
-    }
-
-    public void setBackgroundColor() {
-        field.setBackground(ThemeHelper.color("searchbar"));
-        field.setForeground(ThemeHelper.color("searchtext"));
+    public void changeTheme() {
+        setBackground(ThemeHelper.color("toolbar"));
+        //setForeground(ThemeHelper.color());
+        //field.setBackground(ThemeHelper.color("searchbar"));
+        //field.setForeground(ThemeHelper.color("searchtext"));
     }
 }

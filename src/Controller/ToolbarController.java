@@ -4,9 +4,7 @@ import Enums.FileType;
 import Enums.ToolType;
 import Helpers.FileHandler;
 import Helpers.OSDetector;
-import View.PopupWindow;
-import View.ToolFeature;
-import View.Toolbar;
+import View.*;
 import View.Window;
 
 import javax.swing.*;
@@ -26,13 +24,13 @@ import java.awt.event.MouseEvent;
  */
 public final class ToolbarController extends Controller {
 
+    private static final double SEARCHFIELD_SCALEFACTOR = 3.2;
+
     private Toolbar toolbar;
     private static ToolbarController instance;
-    private Window window;
 
     private ToolbarController(Window window) {
         super(window);
-        this.window = window;
         toolbar = new Toolbar();
         this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
         addInteractionHandlersToTools();
@@ -118,6 +116,8 @@ public final class ToolbarController extends Controller {
         toolbar = new Toolbar();
         this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
         addInteractionHandlersToTools();
+        SearchTool tool = (SearchTool) toolbar.getTool(ToolType.SEARCH);
+        tool.changeTheme();
     }
 
     public void toggleKeyBindings(boolean status) {
@@ -127,6 +127,11 @@ public final class ToolbarController extends Controller {
                 toolbar.getTool(type).getActionMap().get(key).setEnabled(status);
             }
         }
+    }
+
+    public void resizeSearchbar() {
+        int scaleFactor = (int) (window.getFrame().getWidth() / SEARCHFIELD_SCALEFACTOR);
+        toolbar.rebuildSearchTool(scaleFactor);
     }
 
     private class ToolInteractionHandler extends MouseAdapter {

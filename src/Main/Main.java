@@ -2,7 +2,6 @@ package Main;
 
 import Controller.*;
 import Exceptions.FileWasNotFoundException;
-import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Model;

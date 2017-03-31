@@ -1,6 +1,5 @@
 package View;
 
-import Enums.OSMEnums.WayType;
 import Enums.ZoomLevel;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
@@ -161,7 +160,7 @@ public class MapCanvas extends View {
                 (float) currentRectangle.getMaxY());
         for (Element element : currentSection) {
             Road r = (Road) element;
-            g.setColor(Color.black);
+            g.setColor(ThemeHelper.color("border"));
             g.setStroke(new BasicStroke(0.00001f));
             g.draw(r.getPath());
         }
@@ -178,7 +177,7 @@ public class MapCanvas extends View {
                 (float) currentRectangle.getMaxY());
         for (Element element : currentSection) {
             Road r = (Road) element;
-            g.setColor(Color.black);
+            g.setColor(ThemeHelper.color("border"));
             g.setStroke(new BasicStroke(0.00001f));
             g.draw(r.getPath());
         }

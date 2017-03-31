@@ -22,6 +22,7 @@ public class Toolbar extends View {
 
     private static Map<ToolType, ToolComponent> tools;
     private SpringLayout layout;
+    private Window window;
 
     private final int MARGIN_SMALL_LEFT = 20;
     private final int MARGIN_SMALL_RIGHT = -20;
@@ -32,7 +33,6 @@ public class Toolbar extends View {
      */
     public Toolbar() {
         tools = new ToolFactory().setupToolbar();
-
         layout = new SpringLayout();
         this.setLayout(layout);
 
@@ -63,6 +63,15 @@ public class Toolbar extends View {
         layout.putConstraint(SpringLayout.VERTICAL_CENTER, tool, 0, SpringLayout.VERTICAL_CENTER, this);
         this.add(tool);
         return tool;
+    }
+
+    public void rebuildSearchTool(int width) {
+        remove(tools.get(ToolType.SEARCH));
+        tools.remove(ToolType.SEARCH);
+        revalidate();
+        repaint();
+        tools.put(ToolType.SEARCH, new SearchTool(width));
+        addSearchTool();
     }
 
     /**
@@ -136,7 +145,7 @@ public class Toolbar extends View {
             tools.put(ToolType.LOAD, new ToolFeature("\uf115",ToolType.LOAD));
             tools.put(ToolType.SAVE, new ToolFeature("\uf0c7",ToolType.SAVE));
             tools.put(ToolType.SETTINGS, new ToolFeature("\uf085",ToolType.SETTINGS));
-            tools.put(ToolType.SEARCH, new SearchTool());
+            tools.put(ToolType.SEARCH, new SearchTool((600)));
             return tools;
         }
     }

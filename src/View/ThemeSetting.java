@@ -15,7 +15,7 @@ public class ThemeSetting extends View {
     private JLabel themeLabel;
     private JComboBox<String> themeList;
 
-    /** Constructor of the Infobar */
+    /** Constructor of the ThemeSetting */
     public ThemeSetting() {
         setPreferredSize(new Dimension(400,200));
 
