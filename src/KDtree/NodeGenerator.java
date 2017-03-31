@@ -28,17 +28,38 @@ public class NodeGenerator {
         this.amountOfNodes = amountOfNodes;
         this.depth = depth;
         pointsIndex = 0;
-        pointsIndex = 0;
         points = new Point2D.Float[amountOfNodes];
     }
 
     public void initialise() {
-
+        initialise(null, 0, amountOfNodes-1);
     }
 
     private void initialise(Node parent, int low, int high) {
-
+        Point2D.Float median;
+        int medianDepth = 0;
+        if(parent == null || parent.getDepth() % 2 == 1) {
+            median = findMedianX(low, high);
+            if(parent == null) medianDepth = 0;
+            else medianDepth = parent.getDepth() + 1;
+        } else {
+            median = findMedianY(low, high);
+            medianDepth = parent.getDepth() + 1;
+        }
+        float floatX = (float) median.getX();
+        float floatY = (float) median.getY();
+        Node medianNode = new Node(floatX, floatY, medianDepth);
+        if(medianDepth < depth) {
+            medians.add(medianNode);
+            initialise(medianNode, low, ((low+high)/2) - 1);
+            initialise(medianNode, ((low+high)/2) + 1, high);
+        } else if(medianDepth == depth) {
+            medianNode.makeLeaf();
+            medians.add(medianNode);
+        }
     }
+
+
 
     public void addPoint(Point2D.Float point) {
         points[pointsIndex] = point;
