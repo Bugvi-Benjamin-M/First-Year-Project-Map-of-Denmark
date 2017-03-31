@@ -36,7 +36,7 @@ public class CoastlineFactory {
         setLongitudeFactor(bounds.get(BoundType.MIN_LATITUDE),bounds.get(BoundType.MAX_LATITUDE));
     }
 
-    public static float getLongitudeFactor() {
+    public float getLongitudeFactor() {
         return longitudeFactor;
     }
 
@@ -60,14 +60,14 @@ public class CoastlineFactory {
         for (Coastline coast: coastlines) {
             switch (Model.getInstance().getZoomLevel()) {
                 case LEVEL_3:
-                    if (coast.size() > 50) paths.add(coast.toPath2D());
+                    if (coast.size() > 50) paths.add(coast.toPath2D(longitudeFactor));
                     break;
                 case LEVEL_2:
-                    if (coast.size() > 30) paths.add(coast.toPath2D());
+                    if (coast.size() > 30) paths.add(coast.toPath2D(longitudeFactor));
                 case LEVEL_1:
-                    if (coast.size() > 10) paths.add(coast.toPath2D());
+                    if (coast.size() > 10) paths.add(coast.toPath2D(longitudeFactor));
                 default:
-                    paths.add(coast.toPath2D());
+                    paths.add(coast.toPath2D(longitudeFactor));
                     break;
             }
         }

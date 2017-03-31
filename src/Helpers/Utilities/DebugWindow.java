@@ -5,16 +5,12 @@ import Controller.MainWindowController;
 import Main.Main;
 import Model.Model;
 import View.Window;
-import View.View;
 import View.TextView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.TextEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Class details:
@@ -37,7 +33,8 @@ public class DebugWindow extends WindowAdapter {
         window = new Window().title(TITLE)
                 .dimension(new Dimension(640,480))
                 .layout(new BorderLayout())
-                .relativeTo(null);
+                .relativeTo(null)
+                .hide();
         window.addComponent(BorderLayout.CENTER,container);
         this.fpsCounter = fpsCounter;
     }
@@ -54,9 +51,9 @@ public class DebugWindow extends WindowAdapter {
         else retrieved.setText(label);
     }
 
-    public void setZoomLabel(double zoom_factor) {
+    public void setZoomLabel(String zoom_string) {
         JLabel retrieved = container.getJLabel("zoomlabel");
-        String label = "Zoom factor: " + zoom_factor;
+        String label = zoom_string;
         if (retrieved == null) container.addJLabel("zoomlabel",label);
         else retrieved.setText(label);
     }
@@ -74,8 +71,7 @@ public class DebugWindow extends WindowAdapter {
     public void windowOpened(WindowEvent e) {
         super.windowOpened(e);
         fpsCounter.start();
-        setZoomLabel(CanvasController.getInstance(MainWindowController.getInstance().getWindow())
-                .getMapCanvas().getZoomLevel());
+        setZoomLabel(Model.getInstance().getZoomLevel().toString());
         setFPSLabel();
         setBoundsLabel();
     }

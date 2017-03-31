@@ -9,6 +9,7 @@ import View.MapCanvas;
 import View.PopupWindow;
 
 import javax.swing.*;
+import java.io.FileNotFoundException;
 
 
 /**
@@ -18,9 +19,8 @@ public class Main {
 
     public static final FPSCounter FPS_COUNTER = new FPSCounter();
 
-    public static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
+    private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
     private static SplashScreen screen;
-
 
     public static void main(String[] args) {
 
@@ -30,12 +30,23 @@ public class Main {
 
         try {
             loadDefaultResource();
+            splashScreenDestruct();
         } catch (Exception e) {
+            splashScreenDestruct();
             PopupWindow.errorBox(null,e.getMessage());
-            canvasController.loadFromCoastlines();
+            Model.getInstance().loadFromCoastlines();
         }
 
+        MainWindowController.getInstance();
+
+        CanvasController.getInstance(MainWindowController.getInstance().getWindow());
+        ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
+        InfobarController.getInstance(MainWindowController.getInstance().getWindow());
+
+        CanvasController.adjustToBounds();
         Model model = Model.getInstance();
+        model.modelHasChanged();
+
         System.out.println("Bounds: minlon "+model.getMinLongitude()+" - maxlon "+model.getMaxLongitude());
         System.out.println("Bounds: minlat "+model.getMinLatitude()+" - maxlat "+model.getMaxLatitude());
 
@@ -56,17 +67,6 @@ public class Main {
             throw new Exception("Program was not able to load default resource \""+DEFAULT_RESOURCE+"\"" +
                     "\nLoading from coastlines instead.");
         }
-
-        splashScreenDestruct();
-
-        MainWindowController.getInstance();
-
-        CanvasController.getInstance(MainWindowController.getInstance().getWindow());
-        ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
-        InfobarController.getInstance(MainWindowController.getInstance().getWindow());
-
-        CanvasController.adjustToBounds();
-        Model.getInstance().modelHasChanged();
     }
 
     private static void splashScreenDestruct() {

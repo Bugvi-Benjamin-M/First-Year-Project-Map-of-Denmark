@@ -43,8 +43,10 @@ public final class Model extends Observable {
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
     }
 
-    public void changeZoomLevel(ZoomLevel level) {
-        this.zoom_level = level;
+    public void changeZoomLevel(double zoom_factor) {
+        ZoomLevel.setZoomFactor(zoom_factor);
+        zoom_level = ZoomLevel.getZoomLevel();
+        DebugWindow.getInstance().setZoomLabel(zoom_level.toString());
     }
 
     public ZoomLevel getZoomLevel() {return zoom_level;}
@@ -73,11 +75,12 @@ public final class Model extends Observable {
     }
 
     public void loadFromCoastlines() {
-        this.setBound(BoundType.MIN_LONGITUDE, coastlineFactory.getBound(BoundType.MIN_LONGITUDE));
-        this.setBound(BoundType.MAX_LONGITUDE, coastlineFactory.getBound(BoundType.MAX_LONGITUDE));
+        coastlineFactory.setLongitudeFactor();
+        float lonfactor = coastlineFactory.getLongitudeFactor();
+        this.setBound(BoundType.MIN_LONGITUDE, coastlineFactory.getBound(BoundType.MIN_LONGITUDE)*lonfactor);
+        this.setBound(BoundType.MAX_LONGITUDE, coastlineFactory.getBound(BoundType.MAX_LONGITUDE)*lonfactor);
         this.setBound(BoundType.MIN_LATITUDE, coastlineFactory.getBound(BoundType.MIN_LATITUDE));
         this.setBound(BoundType.MAX_LATITUDE, coastlineFactory.getBound(BoundType.MAX_LATITUDE));
-        coastlineFactory.setLongitudeFactor();
         DebugWindow.getInstance().setBoundsLabel();
     }
 
@@ -94,14 +97,6 @@ public final class Model extends Observable {
 
     public void setBound(BoundType type, float value) {
         bounds.put(type,value);
-    }
-
-    @Deprecated
-    public void setBounds(float minLatitude, float maxLatitude, float minLongitude, float maxLongitude) {
-        bounds.put(BoundType.MIN_LONGITUDE,minLongitude*CoastlineFactory.getLongitudeFactor());
-        bounds.put(BoundType.MAX_LONGITUDE,maxLongitude*CoastlineFactory.getLongitudeFactor());
-        bounds.put(BoundType.MIN_LATITUDE,minLatitude);
-        bounds.put(BoundType.MAX_LATITUDE,maxLatitude);
     }
 
     public float getMinLatitude() {

@@ -101,7 +101,10 @@ public final class OSMHandler implements ContentHandler {
                 maxLongitude *= longitudeFactor;
                 minLatitude = -minLatitude;
                 maxLatitude = -maxLatitude;
-                model.setBounds(minLatitude, maxLatitude, minLongitude, maxLongitude);
+                model.setBound(BoundType.MIN_LONGITUDE,minLongitude);
+                model.setBound(BoundType.MAX_LONGITUDE,maxLongitude);
+                model.setBound(BoundType.MIN_LATITUDE,minLatitude);
+                model.setBound(BoundType.MAX_LATITUDE,maxLatitude);
                 break;
             case "node":
                 long id = Long.parseLong(atts.getValue("id"));

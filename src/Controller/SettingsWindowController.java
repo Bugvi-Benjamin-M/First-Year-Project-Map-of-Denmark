@@ -150,7 +150,7 @@ public final class SettingsWindowController extends WindowController {
     private void openDebugActivated() {
         DebugWindow.getInstance().show();
         window.hide();
-        ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
+        // ToolbarController.getInstance(window).getToolbar().toggleWellOnTool(ToolType.SETTINGS);
     }
 
     /**

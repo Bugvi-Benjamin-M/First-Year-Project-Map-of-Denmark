@@ -3,13 +3,11 @@ package View;
 import Enums.OSMEnums.WayType;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
-import Helpers.Utilities.FPSCounter;
 import Main.Main;
 import Model.Element;
 import Model.Model;
 import Model.Road;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.ArrayList;
@@ -37,8 +35,6 @@ public class MapCanvas extends View {
     private java.util.List<Path2D> coastlines;
     private ArrayList<Element> currentSection;
     private Point2D currentPoint;
-    private double zoom_value;
-    private double zoomLevel;
 
     /**
      * The base Constructor for the MapCanvas.
@@ -50,8 +46,6 @@ public class MapCanvas extends View {
         setBackgroundColor();
         setPreferredSize(this.dimension);
         coastlines = new ArrayList<>();
-        zoom_value = 0;
-        DebugWindow.getInstance().hide();
     }
 
     public void setBackgroundColor() {
@@ -142,7 +136,7 @@ public class MapCanvas extends View {
 
     private void drawBoundaries(Graphics2D g2D) {
         g2D.setColor(ThemeHelper.color("boundary"));
-        Path2D boundary = new Path2D.Double();
+        Path2D boundary = new Path2D.Float();
         Model model = Model.getInstance();
         boundary.moveTo(model.getMinLongitude(), model.getMinLatitude());
         boundary.lineTo(model.getMaxLongitude(), model.getMinLatitude());
@@ -156,17 +150,15 @@ public class MapCanvas extends View {
      * Zooms in or out upon the elements on the MapCanvas depending on a given factor.
      */
     public void zoom(double factor) {
-        zoom_value += factor;
+        // System.out.println("zoom_value: "+zoom_value+"; zoomed by "+factor);
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         repaint();
-        DebugWindow.getInstance().setZoomLabel(zoom_value);
     }
 
     /**
      * Resets the MapCanvas from being zoomed in or out and panned to one or another position.
      */
     public void resetTransform(){
-        zoom_value = 0;
         transform.setToIdentity();
     }
 
@@ -211,7 +203,4 @@ public class MapCanvas extends View {
         this.currentPoint = currentPoint;
     }
 
-    public double getZoomLevel() {
-        return zoomLevel;
-    }
 }
