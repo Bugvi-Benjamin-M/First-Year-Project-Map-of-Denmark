@@ -18,6 +18,7 @@ public abstract class ToolComponent extends JPanel {
     private Color defaultColor;
 
     ToolComponent() {
+        super();
         defaultColor = Helpers.ThemeHelper.color("toolbar");
     }
 
