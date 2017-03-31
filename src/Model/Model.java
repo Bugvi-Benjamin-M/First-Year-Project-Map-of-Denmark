@@ -135,4 +135,8 @@ public final class Model extends Observable {
     public void resetInstance() {
         instance = null;
     }
+
+    public CoastlineFactory getCoastlineFactory() {
+        return coastlineFactory;
+    }
 }

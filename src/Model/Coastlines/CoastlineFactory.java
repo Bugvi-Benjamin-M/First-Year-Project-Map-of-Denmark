@@ -55,6 +55,18 @@ public class CoastlineFactory {
         coastlines.add(object);
     }
 
+    public int getNumberOfCoastlines() {
+        return coastlines.size();
+    }
+
+    public int getNumberOfCoastlinePoints() {
+        int size = 0;
+        for (Coastline way: coastlines) {
+            size += way.size();
+        }
+        return size;
+    }
+
     public List<Path2D> getCoastlinePolygons() {
         List<Path2D> paths = new ArrayList<>();
         for (Coastline coast: coastlines) {

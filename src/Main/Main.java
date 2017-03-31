@@ -17,11 +17,15 @@ import javax.swing.*;
 public class Main {
 
     public static final FPSCounter FPS_COUNTER = new FPSCounter();
-
     private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
+
     private static SplashScreen screen;
+    private static boolean programLoadedDefault;
 
     public static void main(String[] args) {
+
+
+        long startTime = System.currentTimeMillis();
 
         splashScreenInit();
 
@@ -30,11 +34,12 @@ public class Main {
         try {
             loadDefaultResource();
             splashScreenDestruct();
+            programLoadedDefault = true;
         } catch (FileWasNotFoundException e) {
             splashScreenDestruct();
-            e.printStackTrace();
             PopupWindow.warningBox(null,e.getMessage());
             model.loadFromCoastlines();
+            programLoadedDefault = false;
         }
 
         MainWindowController.getInstance();
@@ -46,18 +51,17 @@ public class Main {
         CanvasController.adjustToBounds();
         model.modelHasChanged();
 
-        DebugWindow.getInstance();
+        long stopTime = System.currentTimeMillis();
+        DebugWindow.getInstance().setLoadtimeLabel(stopTime - startTime);
     }
 
     private static void loadDefaultResource() throws FileWasNotFoundException {
         try {
-            //throw new FileWasNotFoundException("");
-
             long startTime = System.currentTimeMillis();
-            FileHandler.loadResource(DEFAULT_RESOURCE);
+            // FileHandler.loadResource(DEFAULT_RESOURCE);
             long stopTime = System.currentTimeMillis();
-            System.out.println("Loading time: " + (stopTime - startTime) + " ms");
-
+            System.out.println("Loading time: "+(stopTime-startTime)+" ms");
+            throw new FileWasNotFoundException("");
         } catch (FileWasNotFoundException e) {
             throw new FileWasNotFoundException("Program was not able to load default resource \""+DEFAULT_RESOURCE+"\"" +
                     "\nLoading from coastlines instead.");
@@ -89,5 +93,9 @@ public class Main {
         SettingsWindowController.getInstance().toggleKeyBindings(status);
         MainWindowController.getInstance().toggleKeyBindings(status);
         InfobarController.getInstance(MainWindowController.getInstance().getWindow()).toggleKeyBindings(status);
+    }
+
+    public static boolean didTheProgramLoadDefault() {
+        return programLoadedDefault;
     }
 }

@@ -2,6 +2,7 @@ package Helpers.Utilities;
 
 import Enums.ZoomLevel;
 import Main.Main;
+import Model.Coastlines.CoastlineFactory;
 import Model.Model;
 import View.Window;
 import View.TextView;
@@ -41,11 +42,13 @@ public class DebugWindow extends WindowAdapter {
 
     private void setupWindow() {
         container.reset();
+        container.addJLabel("loadtime","loadtime");
         container.addJLabel("lonlabel","lonlabel");
         container.addJLabel("latlabel","latlabel");
         container.addJLabel("fpscount","fpscount");
         container.addJLabel("zoomlabel","zoomlabel");
         container.addJLabel("zoomfactor","zoomfactor");
+        container.addJLabel("coastlines","coastlines");
 
         window.addWindowAdapter(this);
         window.addComponent(BorderLayout.CENTER,container,false);
@@ -107,15 +110,45 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
+    public void setLoadtimeLabel(long loadtime) {
+        JLabel retrieved = container.getJLabel("loadtime");
+        /*
+        int loadtimeMilliseconds = (int) loadtime;
+        int loadtimeSeconds = loadtimeMilliseconds / 1000;
+        int loadtimeMinutes = loadtimeSeconds / 60;
+        String label = "Load time: "+loadtimeMinutes+" m, "
+                +loadtimeSeconds+" s, "+loadtimeMilliseconds+ " ms";*/
+        String label = "Load time: "+loadtime+ "ms";
+        if (retrieved != null) {
+            retrieved.setText(label);
+        } else {
+            System.out.println("loadtime label not found");
+        }
+    }
+
+    public void setCoastlineLabel() {
+        JLabel retrieved = container.getJLabel("coastlines");
+        CoastlineFactory factory = Model.getInstance().getCoastlineFactory();
+        String label = "Total coastlines: "+factory.getNumberOfCoastlines()+
+                " with "+factory.getNumberOfCoastlinePoints()+" points";
+        if (retrieved != null) {
+            retrieved.setText(label);
+        } else {
+            System.out.println("coastlines label not found");
+        }
+    }
+
     @Override
     public void windowOpened(WindowEvent e) {
         super.windowOpened(e);
         setupWindow();
+        setLoadtimeLabel(0);
         setLongitudeLabel();
         setLatitudeLabel();
         setFPSLabel();
         setZoomLabel();
         setZoomFactorLabel();
+        setCoastlineLabel();
 
         fpsCounter.start();
     }

@@ -83,8 +83,9 @@ public class MapCanvas extends View {
         g2D.setStroke(new BasicStroke(0.00001f));
         g2D.draw(currentRectangle);
 
-
-        drawRoads(g2D);
+        if (Main.didTheProgramLoadDefault()) {
+            drawRoads(g2D);
+        }
 
         //drawBoundaries(g2D);
 
@@ -115,7 +116,6 @@ public class MapCanvas extends View {
             case LEVEL_3:
                 drawLevelThree(g);
                 break;
-
         }
 
 
@@ -150,6 +150,7 @@ public class MapCanvas extends View {
     }
 
     private void drawLevelZero(Graphics2D g){
+
     }
 
     private void drawLevelOne(Graphics2D g){
