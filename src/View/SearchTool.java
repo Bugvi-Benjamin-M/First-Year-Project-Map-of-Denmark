@@ -41,7 +41,6 @@ public class SearchTool extends ToolComponent {
         field.setRequestFocusEnabled(true);
         for(Component component : field.getComponents()) if(component instanceof JButton) field.remove(component);
         //Todo force focus loss
-        //Todo add implementation for theme change
     }
 
     public void addListToSearchField(List<String> list) {
@@ -60,8 +59,5 @@ public class SearchTool extends ToolComponent {
         searchLabel.setForeground(ThemeHelper.color("icon"));
         field.getEditor().getEditorComponent().setBackground(ThemeHelper.color("searchfield"));
         field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
-        //setForeground(ThemeHelper.color());
-        //field.setBackground(ThemeHelper.color("searchbar"));
-        //field.setForeground(ThemeHelper.color("searchtext"));
     }
 }
