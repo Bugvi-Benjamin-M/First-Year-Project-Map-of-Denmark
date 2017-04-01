@@ -61,7 +61,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void addInteractionHandlerToCanvas() {
-        handler = new CanvasInteractionHandler(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        handler = new CanvasInteractionHandler(JComponent.WHEN_FOCUSED);
         mapCanvas.addMouseListener(handler);
         mapCanvas.addMouseMotionListener(handler);
         mapCanvas.addMouseWheelListener(handler);
