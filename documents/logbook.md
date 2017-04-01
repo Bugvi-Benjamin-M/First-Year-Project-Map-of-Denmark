@@ -231,7 +231,7 @@ Notes from meeting:
 What we will do today:
 - Scrum meeting
 - Code review
-- Planning præsentation 
+- Planning presentation 
 - Planning the next sprint
 
 Impediments:
@@ -243,6 +243,44 @@ Notes from meeting:
 - Always 2 people per task to start with.
 - Be better to create releases in the future. (With jar files that actually run)
 - If a task is big and important, be sure to have everyone involved with it. (Example kd-tree)
+
+## Logbook 29/3 (Scribe Nikolaj)
+What we will do today:
+- Work on Coastlines, datastructure and refactoring
+
+Impediments:
+- We have a submission in another course that also has to be worked on today.
+
+Notes from meeting:
+- Jakob and Nikolaj plan to implement the datastructure on the develop branch. 
+- Búgvi would like to get a better understanding of the datastructure - so he's going to help Jakob and Nikolaj.
+
+## Logbook 30/3 (Scribe Nikolaj)
+What we will do today:
+- Start with combining the Coastline feature with the new kd-tree datastructure.
+- Work on GUI
+
+Impediments:
+- A computer died, which ended costing us some time.
+- Jakob has to go at 16 pm.
+
+Notes from meeting:
+- We managed to get halfway through the process of finishing the implementation of the datastructure.
+- Changing themes now works flawless.
+- It is going to be a hard Friday.
+
+## Logbook 31/3 (Scribe Nikolaj)
+What we will do today:
+- Finish the implementation of the datastructure and (hopefully) get it to work. 
+- Work on GUI
+- Work on Coastlines
+
+Impediments:
+- Jakob has to go at 17.30 pm
+
+Notes from meeting:
+- It works now!
+- We have to think about how we want to save all Elements (EnumMaps)
 
 
 ## Next logbook...
