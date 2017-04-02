@@ -49,6 +49,7 @@ public class MapCanvas extends View {
         setBackgroundColor();
         setPreferredSize(this.dimension);
         coastlines = new ArrayList<>();
+        grabFocus();
     }
 
     public void setBackgroundColor() {

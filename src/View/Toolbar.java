@@ -2,6 +2,7 @@ package View;
 
 import Controller.MainWindowController;
 import Enums.ToolType;
+import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
@@ -23,7 +24,6 @@ public class Toolbar extends View {
 
     private static Map<ToolType, ToolComponent> tools;
     private SpringLayout layout;
-    private Window window;
 
     private final int MARGIN_SMALL_LEFT = 20;
     private final int MARGIN_SMALL_RIGHT = -20;
@@ -148,7 +148,7 @@ public class Toolbar extends View {
             tools.put(ToolType.SAVE, new ToolFeature("\uf0c7",ToolType.SAVE));
             tools.put(ToolType.SETTINGS, new ToolFeature("\uf085",ToolType.SETTINGS));
             //Todo get rid of coupling here. Toolbar should not use controller
-            tools.put(ToolType.SEARCH, new SearchTool((int) (MainWindowController.getInstance().getWindow().getFrame().getWidth()/3.2)));
+            tools.put(ToolType.SEARCH, new SearchTool(GlobalValue.getSearchFieldSize()));
             return tools;
         }
     }

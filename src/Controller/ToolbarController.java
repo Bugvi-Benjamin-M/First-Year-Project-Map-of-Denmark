@@ -3,6 +3,7 @@ package Controller;
 import Enums.FileType;
 import Enums.ToolType;
 import Helpers.FileHandler;
+import Helpers.GlobalValue;
 import Helpers.OSDetector;
 import View.*;
 import View.Window;
@@ -23,8 +24,6 @@ import java.awt.event.MouseEvent;
  * @project BFST
  */
 public final class ToolbarController extends Controller {
-
-    private static final double SEARCHFIELD_SCALEFACTOR = 3.2;
 
     private Toolbar toolbar;
     private static ToolbarController instance;
@@ -133,8 +132,8 @@ public final class ToolbarController extends Controller {
     }
 
     public void resizeSearchbar() {
-        int scaleFactor = (int) (window.getFrame().getWidth() / SEARCHFIELD_SCALEFACTOR);
-        toolbar.rebuildSearchTool(scaleFactor);
+        toolbar.rebuildSearchTool(GlobalValue.getSearchFieldSize());
+        SearchController.getInstance(window).searchFieldResized();
     }
 
     private class ToolInteractionHandler extends MouseAdapter {
