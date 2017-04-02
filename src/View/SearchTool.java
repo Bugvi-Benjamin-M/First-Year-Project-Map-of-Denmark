@@ -22,19 +22,18 @@ public class SearchTool extends ToolComponent {
     private static final String defaultText = " - - Search for points of interest - - ";
 
     private JComboBox<String> field;
-    private java.util.List<String> history;
 
     private Dimension searchFieldDimension;
     private JLabel searchLabel;
 
-
+    //Todo fix why search bar is not being set up properly when theme is changed
     public SearchTool(int width) {
         field = new JComboBox<>();
         searchFieldDimension = new Dimension(width, 40);
         setupLayout();
         addSearchLabel();
         applyTheme();
-        field.getEditor().setItem(defaultText);
+        setDefaultText(defaultText);
         add(field);
     }
 
@@ -60,18 +59,25 @@ public class SearchTool extends ToolComponent {
         field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
     }
 
+    public void setDefaultText(String text) {
+        field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("defaulttext"));
+        field.getEditor().setItem(text);
+    }
+
     public void addFocusListener() {
         field.getEditor().getEditorComponent().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
-                field.getEditor().setItem("");
+                field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
+                setDefaultText("");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                field.getEditor().setItem(defaultText);
+                field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("defaulttext"));
+                setDefaultText(defaultText);
             }
         });
     }

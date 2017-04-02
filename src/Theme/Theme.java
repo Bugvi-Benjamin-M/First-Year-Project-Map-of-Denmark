@@ -16,6 +16,7 @@ public interface Theme {
     public abstract Color boundary();
     public abstract Color border();
     public abstract Color searchfield();
+    public abstract Color defaulttext();
 
     public abstract Color water();
     public abstract Color park();

@@ -118,6 +118,7 @@ public final class ToolbarController extends Controller {
     public void themeHasChanged() {
         this.window.removeComponent(toolbar);
         toolbar = new Toolbar();
+        //Todo, what happens here. The search bar is not setup properly
         this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
         addInteractionHandlersToTools();
     }

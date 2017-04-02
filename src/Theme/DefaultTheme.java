@@ -43,6 +43,11 @@ public class DefaultTheme implements Theme {
     }
 
     @Override
+    public Color defaulttext() {
+        return new Color(0xA0A39F);
+    }
+
+    @Override
     public Color water() {
         return new Color(0x99B3CC);
     }
