@@ -1,6 +1,7 @@
 package Controller;
 
 import Enums.ToolType;
+import Helpers.GlobalValue;
 import View.SearchTool;
 import View.Toolbar;
 import View.Window;
@@ -34,7 +35,7 @@ public final class SearchController extends Controller {
     }
 
 
-    public void searchFieldResized() {
+    public void updateSearchField() {
         searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCH);
         searchTool.addFocusListener();
     }

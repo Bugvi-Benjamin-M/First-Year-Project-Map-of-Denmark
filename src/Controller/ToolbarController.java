@@ -118,7 +118,8 @@ public final class ToolbarController extends Controller {
     public void themeHasChanged() {
         this.window.removeComponent(toolbar);
         toolbar = new Toolbar();
-        //Todo, what happens here. The search bar is not setup properly
+        updateSearchTool();
+        //Todo, what happens here. The search bar is not setup properly. Call to updateSearchTool should be unecesary
         this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
         addInteractionHandlersToTools();
     }
@@ -132,9 +133,9 @@ public final class ToolbarController extends Controller {
         }
     }
 
-    public void resizeSearchbar() {
+    public void updateSearchTool() {
         toolbar.rebuildSearchTool(GlobalValue.getSearchFieldSize());
-        SearchController.getInstance(window).searchFieldResized();
+        SearchController.getInstance(window).updateSearchField();
     }
 
     private class ToolInteractionHandler extends MouseAdapter {

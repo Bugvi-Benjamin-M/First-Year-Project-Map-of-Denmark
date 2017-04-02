@@ -69,16 +69,20 @@ public class SearchTool extends ToolComponent {
             @Override
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
-                field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
                 setDefaultText("");
+                field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("defaulttext"));
                 setDefaultText(defaultText);
             }
         });
     }
+
+    public static String getDefaultText() {
+        return defaultText;
+    }
+
 }
