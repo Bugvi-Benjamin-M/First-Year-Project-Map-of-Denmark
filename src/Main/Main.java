@@ -50,6 +50,7 @@ public class Main {
 
         CanvasController.adjustToBounds();
         model.modelHasChanged();
+        CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas().grabFocus();
 
         long stopTime = System.currentTimeMillis();
         DebugWindow.getInstance().setLoadtimeLabel(stopTime - startTime);
@@ -85,6 +86,7 @@ public class Main {
         CanvasController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
         ToolbarController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
         InfobarController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
+        CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas().grabFocus();
     }
 
     public static void notifyKeyToggle(boolean status) {

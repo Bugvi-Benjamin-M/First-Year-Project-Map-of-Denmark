@@ -3,12 +3,11 @@ package View;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.List;
+import java.awt.event.FocusListener;
 
 
 /**
@@ -43,7 +42,15 @@ public class SearchTool extends ToolComponent {
         field.setEditable(true);
         field.setFont(new Font(field.getFont().getName(), field.getFont().getStyle(), 20));
         field.setRequestFocusEnabled(true);
-        for (Component component : field.getComponents()) if (component instanceof JButton) field.remove(component);
+        for (Component component : field.getComponents()) if (component instanceof JButton) {
+            for(ActionListener act : ((JButton) component).getActionListeners()) {
+                ((JButton) component).removeActionListener(act);
+            }
+            for(FocusListener foc : component.getFocusListeners()) {
+                component.removeFocusListener(foc);
+            }
+            field.remove(component);
+        }
     }
 
     private void addSearchLabel() {
