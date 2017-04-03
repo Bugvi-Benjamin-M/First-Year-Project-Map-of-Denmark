@@ -123,10 +123,9 @@ public class MapCanvas extends View {
     private void drawLevelZero(Graphics2D g){
         setCurrentSection(WayType.SERVICE_ROAD);
         for (Element element : currentSection) {
-            Road r = (Road) element;
             g.setColor(ThemeHelper.color("border"));
             g.setStroke(new BasicStroke(0.00001f));
-            g.draw(r.getPath());
+            g.draw(element.getShape());
         }
     }
 
@@ -140,10 +139,9 @@ public class MapCanvas extends View {
     private void drawLevelThree(Graphics2D g){
         setCurrentSection(WayType.PRIMARY_ROAD);
         for (Element element : currentSection) {
-            Road r = (Road) element;
             g.setColor(ThemeHelper.color("border"));
             g.setStroke(new BasicStroke(0.00001f));
-            g.draw(r.getPath());
+            g.draw(element.getShape());
         }
     }
 
