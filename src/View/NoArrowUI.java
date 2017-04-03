@@ -16,6 +16,11 @@ public class NoArrowUI extends BasicComboBoxUI {
 
     @Override
     protected JButton createArrowButton() {
-        return null;
+        JButton button = new JButton();
+        button.setEnabled(false);
+        button.setBorderPainted( false );
+        button.setFocusPainted( false );
+        button.setBackground(ThemeHelper.color("toolbar"));
+        return button;
     }
 }
