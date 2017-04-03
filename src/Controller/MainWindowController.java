@@ -19,9 +19,11 @@ public final class MainWindowController extends WindowController {
     private static final String MAIN_TITLE = "OSM Map Viewer v0.3";
 
     private static MainWindowController instance;
+    private boolean maxStateReached;
 
     private MainWindowController(Window window) {
         super(window);
+        maxStateReached = false;
     }
 
     public static MainWindowController getInstance() {

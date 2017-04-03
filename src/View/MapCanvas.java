@@ -8,7 +8,6 @@ import KDtree.KDTree;
 import Main.Main;
 import Model.Elements.Element;
 import Model.Model;
-import Model.Elements.Road;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -61,6 +60,7 @@ public class MapCanvas extends View {
 
     public void toggleAntiAliasing(boolean status) {
         antiAliasing = status;
+        repaint();
     }
 
     private void setCurrentRectangle() {
@@ -80,6 +80,8 @@ public class MapCanvas extends View {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
         g2D.setTransform(transform);
+        if(antiAliasing) g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        else g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         setBackgroundColor();
 
         setCurrentRectangle();

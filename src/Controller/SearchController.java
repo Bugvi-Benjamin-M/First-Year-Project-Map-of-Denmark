@@ -55,6 +55,8 @@ public final class SearchController extends Controller {
         searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCH);
         searchTool.addFocusListener();
         setToCurrentText();
+        toolbar.revalidate();
+        toolbar.repaint();
     }
 
 

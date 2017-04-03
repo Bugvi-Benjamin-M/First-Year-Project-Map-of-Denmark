@@ -257,7 +257,6 @@ public final class CanvasController extends Controller implements Observer {
 
     public void toggleAntiAliasing(boolean status) {
         mapCanvas.toggleAntiAliasing(status);
-        mapCanvas.repaint();
     }
 
     public MapCanvas getMapCanvas(){

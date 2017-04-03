@@ -122,6 +122,7 @@ public final class ToolbarController extends Controller {
         toolbar = new Toolbar();
         SearchController.getInstance(window).searchToolThemeChangeEvent();
         this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
+
         addInteractionHandlersToTools();
     }
 
