@@ -17,11 +17,7 @@ import java.util.*;
  */
 public final class Model extends Observable {
 
-    private EnumMap<WayType, List<Element>> wayElements;
-    private EnumMap<NodeType, List<Element>> nodeElements;
-    private EnumMap<RelationType, List<Element>> relationElements;
-
-    private EnumMap<ZoomLevel, KDTree> roads;
+    private EnumMap<WayType, KDTree> elements;
 
     private static Model instance;
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
@@ -36,24 +32,14 @@ public final class Model extends Observable {
         for (BoundType type: BoundType.values()) {
             bounds.put(type,0.0f);
         }
-        wayElements = new EnumMap<>(WayType.class);
-        for (WayType type : WayType.values()) {
-            wayElements.put(type, new ArrayList<>());
-        }
 
-        roads = new EnumMap<>(ZoomLevel.class);
-        for(ZoomLevel level : ZoomLevel.values()) {
-            roads.put(level, new KDTree());
+        elements = new EnumMap<>(WayType.class);
+        for(WayType type : WayType.values()) {
+            elements.put(type, new KDTree());
         }
         //Todo remember to clean up the constructor
         zoom_level = ZoomLevel.LEVEL_3;
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
-    }
-
-    public void putNodesIntoKDTrees(Node node){
-        for(ZoomLevel level : ZoomLevel.values()){
-            roads.get(level).putNode(new Node(node.getX(), node.getY(), node.getDepth()));
-        }
     }
 
     public void changeZoomLevel(double zoom_factor) {
@@ -72,16 +58,12 @@ public final class Model extends Observable {
         return instance;
     }
 
-    public EnumMap<ZoomLevel, KDTree> getRoads() {
-        return roads;
+    public EnumMap<WayType, KDTree> getElements() {
+        return elements;
     }
 
-    public void addWayElement(WayType type, Element element){
-        wayElements.get(type).add(element);
-    }
-
-    public EnumMap<WayType, List<Element>> getWayElements(){
-        return wayElements;
+    public void addWayElement(WayType type, Pointer pointer){
+        elements.get(type).putPointer(pointer);
     }
 
     public List<Path2D> getCoastlines() {
@@ -101,7 +83,7 @@ public final class Model extends Observable {
 
     public void clear() {
         for(WayType type : WayType.values()){
-            wayElements.get(type).clear();
+            elements.get(type).clear();
         }
     }
 

@@ -7,28 +7,28 @@ public abstract class Point {
     private float x;
     private float y;
 
-    public Point(float x, float y){
+    protected Point(float x, float y){
         this.x = x;
         this.y = y;
     }
 
-    public float getY() {
+    protected float getY() {
         return y;
     }
 
-    public void setY(float y) {
+    protected void setY(float y) {
         this.y = y;
     }
 
-    public float getX() {
+    protected float getX() {
         return x;
     }
 
-    public void setX(float x) {
+    protected void setX(float x) {
         this.x = x;
     }
 
-    public int compareToX(Point point){
+    protected int compareToX(Point point){
         if(x < point.getX()) return -1;
         else if(x > point.getX()) return 1;
         else{
@@ -38,7 +38,7 @@ public abstract class Point {
         }
     }
 
-    public int compareToY(Point point){
+    protected int compareToY(Point point){
         if(y < point.getY()) return -1;
         else if(y > point.getY()) return 1;
         else{

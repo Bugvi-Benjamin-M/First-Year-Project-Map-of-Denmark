@@ -16,9 +16,7 @@ public class NodeGenerator {
     private static final int DEPTH_DEFAULT = 14;
     private int depth;
     private int amountOfNodes;
-
     private Point2D.Float[] points;
-
     private List<Node> medians;
     private int pointsIndex;
 
@@ -62,14 +60,8 @@ public class NodeGenerator {
         }
         float floatX = (float) median.getX();
         float floatY = (float) median.getY();
-        Node medianNode = null;
+        Node medianNode;
         if(medianDepth < depth) {
-            /*
-            for(ZoomLevel level : ZoomLevel.values()){
-                medianNode = new Node(floatX, floatY, medianDepth);
-                Model.getInstance().getRoads().get(level).putNode(medianNode);
-            }
-            */
             medianNode = new Node(floatX, floatY, medianDepth);
             medians.add(medianNode);
             initialise(medianNode, low, ((low+high)/2) - 1);
@@ -78,17 +70,8 @@ public class NodeGenerator {
             medianNode = new Node(floatX, floatY, medianDepth);
             medianNode.makeLeaf();
             medians.add(medianNode);
-            /*
-            for(ZoomLevel level : ZoomLevel.values()){
-                medianNode = new Node(floatX, floatY, medianDepth);
-                medianNode.makeLeaf();
-                Model.getInstance().getRoads().get(level).putNode(medianNode);
-            }
-            */
         }
     }
-
-
 
     public void addPoint(Point2D.Float point) {
         points[pointsIndex] = point;

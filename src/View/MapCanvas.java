@@ -1,13 +1,14 @@
 package View;
 
+import Enums.OSMEnums.WayType;
 import Enums.ZoomLevel;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
 import KDtree.KDTree;
 import Main.Main;
-import Model.Element;
+import Model.Elements.Element;
 import Model.Model;
-import Model.Road;
+import Model.Elements.Road;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -24,9 +25,9 @@ import java.util.HashSet;
  *
  * @author Andreas Blanke, blan@itu.dk
  * @author Niclas Hedam, nhed@itu.dk
- * @author Nikolaj Bl, nibl@itu.dk
+ * @author Nikolaj Bläser, nibl@itu.dk
  * @author Búgvi Magnussen, buma@itu.dk
- * @author Jacob Mollerup, jmol@itu.dk
+ * @author Jakob Mollerup, jmol@itu.dk
  * @version 06-03-2017
  */
 public class MapCanvas extends View {
@@ -37,7 +38,7 @@ public class MapCanvas extends View {
     private HashSet<Element> currentSection;
     private Point2D currentPoint;
     private Rectangle2D currentRectangle;
-    private EnumMap<ZoomLevel, KDTree> roads;
+    private EnumMap<WayType, KDTree> elements;
     private boolean antiAliasing;
 
     /**
@@ -106,14 +107,14 @@ public class MapCanvas extends View {
         }
     }
 
+    //TODO tænk over rækkefølgen elementerne bliver tegnet i (Jakob Nikolaj)
     private void drawRoads(Graphics2D g){
         switch(ZoomLevel.getZoomLevel()){
             case LEVEL_0:
-                drawLevelOne(g);
+                drawLevelZero(g);
                 drawLevelThree(g);
                 break;
             case LEVEL_1:
-                drawLevelOne(g);
                 drawLevelThree(g);
                 break;
             case LEVEL_2:
@@ -123,71 +124,39 @@ public class MapCanvas extends View {
                 drawLevelThree(g);
                 break;
         }
-
-
-        /*java.util.List<Element> roads = wayElements.get(WayType.ROAD);
-        for(Element element : roads){
-            Road road = (Road) element;
-            switch(road.getRoadType()){
-                case SERVICE:
-                    g.setColor(theme.getWaterColor());
-                    g.setStroke(new BasicStroke(0.00001f));
-                    OSMWay way = road.getWay();
-                    g.draw(way.toPath2D());
-                    break;
-                case TERTIARY:
-                    g.setColor(theme.getSandColor());
-                    g.setStroke(new BasicStroke(0.00001f));
-                    //g.draw(road.getPath());
-                    break;
-                case UNCLASSIFIED:
-                    g.setColor(theme.getParkColor());
-                    g.setStroke(new BasicStroke(0.00001f));
-                    //g.draw(road.getPath());
-                    break;
-                case UNKNOWN:
-                    g.setColor(theme.getWaterColor());
-                    g.setStroke(new BasicStroke(0.00001f));
-                    //g.draw(road.getPath());
-
-            }
-
-        }*/
     }
 
     private void drawLevelZero(Graphics2D g){
-
+        setCurrentSection(WayType.SERVICE_ROAD);
+        for (Element element : currentSection) {
+            g.setColor(ThemeHelper.color("border"));
+            g.setStroke(new BasicStroke(0.00001f));
+            g.draw(element.getShape());
+        }
     }
 
     private void drawLevelOne(Graphics2D g){
-        currentSection = roads.get(ZoomLevel.LEVEL_1).getManyElements(
-                (float) currentRectangle.getMinX(),
-                (float) currentRectangle.getMinY(),
-                (float) currentRectangle.getMaxX(),
-                (float) currentRectangle.getMaxY());
-        for (Element element : currentSection) {
-            Road r = (Road) element;
-            g.setColor(ThemeHelper.color("border"));
-            g.setStroke(new BasicStroke(0.00001f));
-            g.draw(r.getPath());
-        }
+
     }
 
     private void drawLevelTwo(Graphics2D g){
     }
 
     private void drawLevelThree(Graphics2D g){
-        currentSection = roads.get(ZoomLevel.LEVEL_3).getManyElements(
+        setCurrentSection(WayType.PRIMARY_ROAD);
+        for (Element element : currentSection) {
+            g.setColor(ThemeHelper.color("border"));
+            g.setStroke(new BasicStroke(0.00001f));
+            g.draw(element.getShape());
+        }
+    }
+
+    private void setCurrentSection(WayType wayType){
+        currentSection = elements.get(wayType).getManyElements(
                 (float) currentRectangle.getMinX(),
                 (float) currentRectangle.getMinY(),
                 (float) currentRectangle.getMaxX(),
                 (float) currentRectangle.getMaxY());
-        for (Element element : currentSection) {
-            Road r = (Road) element;
-            g.setColor(ThemeHelper.color("border"));
-            g.setStroke(new BasicStroke(0.00001f));
-            g.draw(r.getPath());
-        }
     }
 
     private void drawBoundaries(Graphics2D g2D) {
@@ -246,8 +215,8 @@ public class MapCanvas extends View {
         }
     }
 
-    public void setRoads(EnumMap<ZoomLevel, KDTree> map) {
-        roads = map;
+    public void setElements(EnumMap<WayType, KDTree> map) {
+        elements = map;
     }
 
     public void setCurrentSection(HashSet<Element> currentSection) {

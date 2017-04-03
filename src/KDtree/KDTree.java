@@ -1,7 +1,6 @@
 package KDtree;
 
-import Model.Element;
-
+import Model.Elements.Element;
 import java.util.HashSet;
 
 /**
@@ -9,11 +8,22 @@ import java.util.HashSet;
  */
 public class KDTree {
     private Node root;
-
     private HashSet<Element> elementsToReturn;
 
-    public KDTree(){
+    //TODO remember to test this!
+    public void clear(){
+        if(root != null)
+        clear(root);
+    }
 
+    private void clear(Node node){
+        if(node.getPointers() == null){
+            clear(node.getLeft());
+            clear(node.getRight());
+        }
+        else{
+            node.getPointers().clear();
+        }
     }
 
     public HashSet<Element> getManyElements(float minX, float minY, float maxX, float maxY){

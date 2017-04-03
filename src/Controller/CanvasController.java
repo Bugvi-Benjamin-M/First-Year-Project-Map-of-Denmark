@@ -54,7 +54,7 @@ public final class CanvasController extends Controller implements Observer {
 
     private void setupCanvas() {
         mapCanvas = new MapCanvas(window.getDimension());
-        mapCanvas.setRoads(model.getRoads());
+        mapCanvas.setElements(model.getElements());
         mapCanvas.setCoastlines(model.getCoastlines());
         window.addComponent(BorderLayout.CENTER,mapCanvas,true);
         mapCanvas.setVisible(true);

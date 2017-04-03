@@ -11,40 +11,40 @@ public class Node extends Point{
     private Node left;
     private Node right;
 
-    public Node(float x, float y, int depth){
+    protected Node(float x, float y, int depth){
         super(x, y);
         this.depth = depth;
     }
 
-    public Node getLeft() {
+    protected Node getLeft() {
         return left;
     }
 
-    public void setLeft(Node left) {
+    protected void setLeft(Node left) {
         this.left = left;
     }
 
-    public Node getRight() {
+    protected Node getRight() {
         return right;
     }
 
-    public void setRight(Node right) {
+    protected void setRight(Node right) {
         this.right = right;
     }
 
-    public int getDepth() {
+    protected int getDepth() {
         return depth;
     }
 
-    public void addPointer(Pointer pointer){
+    protected void addPointer(Pointer pointer){
         pointers.add(pointer);
     }
 
-    public void makeLeaf(){
+    protected void makeLeaf(){
         pointers = new ArrayList<>();
     }
 
-    public List<Pointer> getPointers(){
+    protected List<Pointer> getPointers(){
         return pointers;
     }
 }

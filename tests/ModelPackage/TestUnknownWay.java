@@ -1,7 +1,7 @@
 package ModelPackage;
 
-import Model.Element;
-import Model.UnknownWay;
+import Model.Elements.Element;
+import Model.Elements.UnknownWay;
 import org.junit.Test;
 
 import java.awt.geom.Path2D;
