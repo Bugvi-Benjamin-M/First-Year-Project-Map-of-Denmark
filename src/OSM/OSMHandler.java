@@ -2,7 +2,6 @@ package OSM;
 
 import Enums.BoundType;
 import Enums.OSMEnums.WayType;
-import Enums.RoadType;
 import Enums.ZoomLevel;
 import Helpers.LongToPointMap;
 import KDtree.NodeGenerator;
@@ -32,7 +31,6 @@ public final class OSMHandler implements ContentHandler {
     private OSMRelation relation;
     private OSMNode node;
     private WayType wayType;
-    private RoadType roadType;
     private float longitudeFactor;
     private Model model;
     private int loadednodes, loadedRelations, loadedWays;
@@ -125,8 +123,8 @@ public final class OSMHandler implements ContentHandler {
             case "way":
                 if(!initialized){
                     nodeGenerator.initialise();
-                    for (ZoomLevel level : ZoomLevel.values()) {
-                        nodeGenerator.setupTree(model.getRoads().get(level));
+                    for (WayType type : WayType.values()) {
+                        nodeGenerator.setupTree(model.getElements().get(type));
                     }
                     initialized = true;
                 }
@@ -149,7 +147,6 @@ public final class OSMHandler implements ContentHandler {
                 String v = atts.getValue("v");
                 switch (k){
                     case "highway":
-                        wayType = WayType.ROAD;
                         determineHighway(v);
                         break;
                 }
@@ -158,22 +155,22 @@ public final class OSMHandler implements ContentHandler {
     }
 
     private void determineHighway(String value) {
-        roadType = roadType.UNKNOWN;
+        wayType = WayType.UNKNOWN;
         switch (value){
             case "service":
-                roadType = RoadType.SERVICE;
+                wayType = WayType.SERVICE_ROAD;
                 break;
             case "primary":
-                roadType = RoadType.PRIMARY;
+                wayType = WayType.PRIMARY_ROAD;
                 break;
             case "secondary":
-                roadType = RoadType.SECONDARY;
+                wayType = WayType.SECONDARY_ROAD;
                 break;
             case "tertiary":
-                roadType = RoadType.TERTIARY;
+                wayType = WayType.TERTIARY_ROAD;
                 break;
             case "unclassified":
-                roadType = RoadType.UNCLASSIFIED;
+                wayType = WayType.UNCLASSIFIED_ROAD;
                 break;
         }
     }
@@ -183,16 +180,12 @@ public final class OSMHandler implements ContentHandler {
         switch (qName){
             case "way":
                 switch (wayType){
-                    case ROAD:
-                        switch (roadType) {
-                            case SERVICE:
-                                addRoad(ZoomLevel.LEVEL_1);
-                                break;
-                            case PRIMARY:
-                                addRoad(ZoomLevel.LEVEL_3);
-                                break;
-                        } break;
-
+                    case PRIMARY_ROAD:
+                        addRoad(wayType);
+                        break;
+                    case SERVICE_ROAD:
+                        addRoad(wayType);
+                        break;
                     case UNKNOWN:
                         //UnknownWay unknownWay = new UnknownWay(path);
                         //model.addWayElement(wayType, unknownWay);
@@ -201,12 +194,12 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    private void addRoad(ZoomLevel level) {
+    private void addRoad(WayType type) {
         Path2D path = way.toPath2D();
-        Road road = new Road(roadType, path);
+        Road road = new Road(path);
         for (int i = 0; i < way.size(); i++) {
             Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), road);
-            model.getRoads().get(level).putPointer(p);
+            model.getElements().get(type).putPointer(p);
         }
     }
 

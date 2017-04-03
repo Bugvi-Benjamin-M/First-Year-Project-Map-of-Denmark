@@ -16,6 +16,22 @@ public class KDTree {
 
     }
 
+    //TODO remember to test this!
+    public void clear(){
+        if(root != null)
+        clear(root);
+    }
+
+    private void clear(Node node){
+        if(node.getPointers() == null){
+            clear(node.getLeft());
+            clear(node.getRight());
+        }
+        else{
+            node.getPointers().clear();
+        }
+    }
+
     public HashSet<Element> getManyElements(float minX, float minY, float maxX, float maxY){
         elementsToReturn = new HashSet<>();
 
