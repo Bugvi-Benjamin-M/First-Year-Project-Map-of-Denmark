@@ -4,11 +4,8 @@ import Helpers.ThemeHelper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import javax.swing.JComboBox;
 
 
 
@@ -86,8 +83,13 @@ public class SearchTool extends ToolComponent {
     }
 
     public void setText(String text) {
-        field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
-        field.getEditor().setItem(text);
+        if(text.equals(defaultText)) {
+            field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("defaulttext"));
+            field.getEditor().setItem(text);
+        } else {
+            field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
+            field.getEditor().setItem(text);
+        }
     }
 
     public String getText() {
