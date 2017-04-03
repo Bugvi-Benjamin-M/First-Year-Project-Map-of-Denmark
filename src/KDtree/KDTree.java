@@ -1,7 +1,6 @@
 package KDtree;
 
 import Model.Element;
-
 import java.util.HashSet;
 
 /**
@@ -9,12 +8,7 @@ import java.util.HashSet;
  */
 public class KDTree {
     private Node root;
-
     private HashSet<Element> elementsToReturn;
-
-    public KDTree(){
-
-    }
 
     //TODO remember to test this!
     public void clear(){
