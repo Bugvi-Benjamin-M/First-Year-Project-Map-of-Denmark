@@ -3,9 +3,10 @@ package Controller;
 import Enums.FileType;
 import Enums.ToolType;
 import Helpers.FileHandler;
-import Helpers.GlobalValue;
 import Helpers.OSDetector;
-import View.*;
+import View.PopupWindow;
+import View.ToolFeature;
+import View.Toolbar;
 import View.Window;
 
 import javax.swing.*;
@@ -117,8 +118,9 @@ public final class ToolbarController extends Controller {
 
     public void themeHasChanged() {
         this.window.removeComponent(toolbar);
+        SearchController.getInstance(window).saveCurrentText();
         toolbar = new Toolbar();
-        searchToolThemeChangeEvent();
+        SearchController.getInstance(window).searchToolThemeChangeEvent();
         this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
         addInteractionHandlersToTools();
     }
@@ -130,15 +132,6 @@ public final class ToolbarController extends Controller {
                 toolbar.getTool(type).getActionMap().get(key).setEnabled(status);
             }
         }
-    }
-
-    private void searchToolThemeChangeEvent() {
-        SearchController.getInstance(window).updateSearchField();
-    }
-
-    public void searchToolResizeEvent() {
-        toolbar.rebuildSearchTool(GlobalValue.getSearchFieldSize());
-        SearchController.getInstance(window).updateSearchField();
     }
 
     private class ToolInteractionHandler extends MouseAdapter {

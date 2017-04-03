@@ -18,7 +18,7 @@ import java.awt.event.FocusListener;
  */
 public class SearchTool extends ToolComponent {
 
-    private static final String defaultText = " - - Search for points of interest - - ";
+    private static final String defaultText = "Addresses, points of interest...";
 
     private JComboBox<String> field;
 
@@ -76,20 +76,28 @@ public class SearchTool extends ToolComponent {
             @Override
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
-                setDefaultText("");
-                field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
+                if(!((field.getEditor().getItem().equals(defaultText)))) return;
+                else {
+                    setDefaultText("");
+                    field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
+                }
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                setDefaultText(defaultText);
+                if(field.getEditor().getItem().equals("")) setDefaultText(defaultText);
             }
         });
     }
 
-    public static String getDefaultText() {
-        return defaultText;
+    public void setText(String text) {
+        field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
+        field.getEditor().setItem(text);
+    }
+
+    public String getText() {
+        return field.getEditor().getItem().toString();
     }
 
 }

@@ -80,7 +80,7 @@ public final class MainWindowController extends WindowController {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
-            ToolbarController.getInstance(window).searchToolResizeEvent();
+            SearchController.getInstance(window).searchToolResizeEvent();
 
         }
 
