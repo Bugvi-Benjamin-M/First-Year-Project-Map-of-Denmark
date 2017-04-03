@@ -282,5 +282,26 @@ Notes from meeting:
 - It works now!
 - We have to think about how we want to save all Elements (EnumMaps)
 
+## Logbook 3/4 (Scribe MC Blanke is back, biiiiiiiiiiitch)
+What we did since last:
+- Work on resizing window and searchbar
+- Work on datastructure and data storage
+- Work on Coastlines
+
+What we will do to today:
+- Extending documentation
+- Test, test, test
+- Expanding data structure
+- Coastline generalization (Douglas-Peucker Algorithm)
+
+Impediments:
+- Blanke has to go before noon
+- Nikolaj has to go before 15
+- Bugvi hasn't slept and several others has slept bad
+
+Notes from meeting:
+- Det bår dæjli
+
+Next time: Wednesday at 10 o'clock
 
 ## Next logbook...
