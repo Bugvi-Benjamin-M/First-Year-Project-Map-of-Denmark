@@ -255,6 +255,19 @@ public final class CanvasController extends Controller implements Observer {
         }
     }
 
+    public void toggleAntiAliasing(boolean status) {
+        mapCanvas.toggleAntiAliasing(status);
+        mapCanvas.repaint();
+    }
+
+    public MapCanvas getMapCanvas(){
+        return mapCanvas;
+    }
+
+    public void resetInstance() {
+        instance = null;
+    }
+
     private class CanvasInteractionHandler extends MouseAdapter {
 
         private int specifiedFocus;
@@ -289,14 +302,6 @@ public final class CanvasController extends Controller implements Observer {
         public void mouseWheelMoved(MouseWheelEvent e) {
             mouseWheelMovedEvent(e);
         }
-    }
-
-    public MapCanvas getMapCanvas(){
-        return mapCanvas;
-    }
-
-    public void resetInstance() {
-        instance = null;
     }
 
 }

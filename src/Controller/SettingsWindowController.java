@@ -1,8 +1,6 @@
 package Controller;
 
-import Enums.ToolType;
 import Helpers.ThemeHelper;
-import Helpers.Utilities.DebugWindow;
 import Main.Main;
 import View.*;
 import View.Window;
@@ -25,8 +23,10 @@ public final class SettingsWindowController extends WindowController {
 
     private ThemeSetting themeSettings;
     private SettingsButtons southButtons;
-    private KeyboardKeysToggle keyboardKeysToggle;
+    private Toggle keyboardKeysToggle;
+    private Toggle antiAliasingToggle;
     private boolean keysActiveStatus;
+    private boolean antiAliasingStatus;
     private Settings settings;
 
     private SettingsWindowController(Window window) {
@@ -35,9 +35,11 @@ public final class SettingsWindowController extends WindowController {
         themeSettings = new ThemeSetting();
         keyboardKeysToggle = new KeyboardKeysToggle();
         southButtons = new SettingsButtons();
+        antiAliasingToggle = new AntiAliasingToggle();
         setupSettingsWindowSpecifics();
         addSettings();
         keysActiveStatus = true;
+        antiAliasingStatus = false;
     }
 
     /**
@@ -85,7 +87,9 @@ public final class SettingsWindowController extends WindowController {
         settings.addSetting(themeSettings);
         settings.createSpace(new Dimension(0,20));
         settings.addSetting(keyboardKeysToggle);
-        settings.createSpace(new Dimension(0,480));
+        settings.createSpace(new Dimension(0,20));
+        settings.addSetting(antiAliasingToggle);
+        settings.createSpace(new Dimension(0,460));
     }
 
     /**
@@ -122,6 +126,10 @@ public final class SettingsWindowController extends WindowController {
             keysActiveStatus = true;
             Main.notifyKeyToggle(keysActiveStatus);
         }
+        if(antiAliasingStatus) {
+            antiAliasingStatus = false;
+            Main.notifyAntiAliasingToggle(antiAliasingStatus);
+        }
         setToCurrentSettingsAndClose();
     }
 
@@ -140,6 +148,13 @@ public final class SettingsWindowController extends WindowController {
         } else {
             keysActiveStatus = true;
             Main.notifyKeyToggle(keysActiveStatus);
+        }
+        if(antiAliasingToggle.isToggleSelected()) {
+            antiAliasingStatus = true;
+            Main.notifyAntiAliasingToggle(antiAliasingStatus);
+        } else {
+            antiAliasingStatus = false;
+            Main.notifyAntiAliasingToggle(antiAliasingStatus);
         }
         setToCurrentSettingsAndClose();
     }
@@ -188,6 +203,7 @@ public final class SettingsWindowController extends WindowController {
     private void setToCurrentSettingsAndClose() {
         themeSettings.setSelectedTheme(ThemeHelper.getCurrentTheme());
         keyboardKeysToggle.setSelectedStatus(keysActiveStatus);
+        antiAliasingToggle.setSelectedStatus(antiAliasingStatus);
         window.hide();
     }
 

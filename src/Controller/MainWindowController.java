@@ -81,7 +81,6 @@ public final class MainWindowController extends WindowController {
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
             SearchController.getInstance(window).searchToolResizeEvent();
-
         }
 
     }

@@ -38,6 +38,7 @@ public class MapCanvas extends View {
     private Point2D currentPoint;
     private Rectangle2D currentRectangle;
     private EnumMap<ZoomLevel, KDTree> roads;
+    private boolean antiAliasing;
 
     /**
      * The base Constructor for the MapCanvas.
@@ -49,11 +50,16 @@ public class MapCanvas extends View {
         setBackgroundColor();
         setPreferredSize(this.dimension);
         coastlines = new ArrayList<>();
+        antiAliasing = false;
         grabFocus();
     }
 
     public void setBackgroundColor() {
         setBackground(ThemeHelper.color("water"));
+    }
+
+    public void toggleAntiAliasing(boolean status) {
+        antiAliasing = status;
     }
 
     private void setCurrentRectangle() {
