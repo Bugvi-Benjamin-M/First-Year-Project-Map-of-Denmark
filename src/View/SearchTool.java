@@ -3,6 +3,7 @@ package View;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -45,6 +46,8 @@ public class SearchTool extends ToolComponent {
         field.setEditable(true);
         field.setFont(new Font(field.getFont().getName(), field.getFont().getStyle(), 20));
         field.setRequestFocusEnabled(true);
+        UIManager.put("ComboBox.background", new ColorUIResource(ThemeHelper.color("primaryroad")));
+
     }
 
     private void addSearchLabel() {
