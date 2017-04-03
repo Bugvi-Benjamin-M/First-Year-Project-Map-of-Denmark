@@ -1,7 +1,6 @@
 package KDtree;
 
-import Model.Element;
-import com.sun.org.apache.xml.internal.serializer.ElemDesc;
+import Model.Elements.Element;
 
 /**
  * Created by Jakob on 30-03-2017.

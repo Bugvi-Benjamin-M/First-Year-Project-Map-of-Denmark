@@ -1,4 +1,7 @@
-package Model;
+package Model.Elements;
+
+import Model.Elements.Element;
+import Model.Model;
 
 import java.awt.geom.Path2D;
 

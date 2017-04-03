@@ -6,9 +6,9 @@ import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
 import KDtree.KDTree;
 import Main.Main;
-import Model.Element;
+import Model.Elements.Element;
 import Model.Model;
-import Model.Road;
+import Model.Elements.Road;
 
 import java.awt.*;
 import java.awt.geom.*;

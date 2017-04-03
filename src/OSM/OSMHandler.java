@@ -2,12 +2,11 @@ package OSM;
 
 import Enums.BoundType;
 import Enums.OSMEnums.WayType;
-import Enums.ZoomLevel;
 import Helpers.LongToPointMap;
 import KDtree.NodeGenerator;
 import KDtree.Pointer;
 import Model.Model;
-import Model.Road;
+import Model.Elements.Road;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;

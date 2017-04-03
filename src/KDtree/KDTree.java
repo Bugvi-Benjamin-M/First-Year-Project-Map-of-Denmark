@@ -1,6 +1,6 @@
 package KDtree;
 
-import Model.Element;
+import Model.Elements.Element;
 import java.util.HashSet;
 
 /**
