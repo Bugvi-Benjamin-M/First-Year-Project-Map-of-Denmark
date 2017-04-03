@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import javax.swing.JComboBox;
+
 
 
 /**
@@ -38,19 +40,11 @@ public class SearchTool extends ToolComponent {
 
     @Override
     public void setupLayout() {
+        field.setUI(NoArrowUI.createUI(field));
         field.setPreferredSize(searchFieldDimension);
         field.setEditable(true);
         field.setFont(new Font(field.getFont().getName(), field.getFont().getStyle(), 20));
         field.setRequestFocusEnabled(true);
-        for (Component component : field.getComponents()) if (component instanceof JButton) {
-            for(ActionListener act : ((JButton) component).getActionListeners()) {
-                ((JButton) component).removeActionListener(act);
-            }
-            for(FocusListener foc : component.getFocusListeners()) {
-                component.removeFocusListener(foc);
-            }
-            field.remove(component);
-        }
     }
 
     private void addSearchLabel() {
@@ -99,5 +93,4 @@ public class SearchTool extends ToolComponent {
     public String getText() {
         return field.getEditor().getItem().toString();
     }
-
 }
