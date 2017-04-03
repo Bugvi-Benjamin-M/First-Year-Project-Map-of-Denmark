@@ -62,25 +62,68 @@ public class DefaultTheme implements Theme {
         return new Color(0xfcf99a);
     }
 
-    @Override
-    public Color highwayroad(){
-        return new Color(0xf15d00);
+    //Roads:
+    public Color motorway() {
+        return new Color(0xF100C8);
+    }
+    public Color trunkRoad() {
+        return new Color(0xF13400);
+    }
+    public Color primaryRoad(){
+        return new Color(0xF18C03);
+    }
+    public Color secondaryRoad(){
+        return new Color(0xF1D108);
+    }
+    public Color tertiaryRoad(){
+        return new Color(0xE4F136);
+    }
+    public Color unclassifiedRoad(){
+        return new Color(0x9F99F1);
+    }
+    public Color residentialRoad(){
+        return new Color(0x9F99F1);
+    }
+    public Color livingStreet(){
+        return new Color(0x9F99F1);
+    }
+    public Color serviceRoad(){
+        return new Color(0x9F99F1);
+    }
+    public Color busGuideway(){
+        return new Color(0x9F99F1);
+    }
+    public Color escape(){
+        return new Color(0x9F99F1);
+    }
+    public Color raceway(){
+        return new Color(0x9F99F1);
+    }
+    public Color pedestrianStreet(){
+        return new Color(0x9F99F1);
+    }
+    public Color track(){
+        return new Color(0xF17205);
+    }
+    public Color steps(){
+        return new Color(0xF10000);
+    }
+    public Color footway(){
+        return new Color(0xF10000);
+    }
+    public Color bridleway(){
+        return new Color(0x9F99F1);
+    }
+    public Color cycleway(){
+        return new Color(0x040BF1);
+    }
+    public Color path(){
+        return new Color(0x9F99F1);
+    }
+    public Color road(){
+        return new Color(0x9F99F1);
     }
 
-    @Override
-    public Color primaryroad(){
-        return new Color(0xD4A23F);
-    }
-
-    @Override
-    public Color secondaryroad(){
-        return new Color(0xFCF99A);
-    }
-
-    @Override
-    public Color tertiaryroad(){
-        return new Color(0xFFFFFF);
-    }
 
     @Override
     public String getName() {

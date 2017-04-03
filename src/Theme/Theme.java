@@ -22,10 +22,28 @@ public interface Theme {
     public abstract Color park();
     public abstract Color sand();
 
-    public abstract Color highwayroad();
-    public abstract Color primaryroad();
-    public abstract Color secondaryroad();
-    public abstract Color tertiaryroad();
+    //Roads
+    public abstract Color motorway();
+    public abstract Color trunkRoad();
+    public abstract Color primaryRoad();
+    public abstract Color secondaryRoad();
+    public abstract Color tertiaryRoad();
+    public abstract Color unclassifiedRoad();
+    public abstract Color residentialRoad();
+    public abstract Color livingStreet();
+    public abstract Color serviceRoad();
+    public abstract Color busGuideway();
+    public abstract Color escape();
+    public abstract Color raceway();
+    public abstract Color pedestrianStreet();
+    public abstract Color track();
+    public abstract Color steps();
+    public abstract Color footway();
+    public abstract Color bridleway();
+    public abstract Color cycleway();
+    public abstract Color path();
+    public abstract Color road();
+
 
     public abstract String getName();
 }

@@ -62,24 +62,66 @@ public class NightTheme implements Theme {
         return new Color(0x2f3948);
     }
 
-    @Override
-    public Color highwayroad() {
+    //Roads
+    public Color motorway(){
         return new Color(0x1f2835);
     }
-
-    @Override
-    public Color primaryroad() {
+    public Color trunkRoad(){
         return new Color(0x1f2835);
     }
-
-    @Override
-    public Color secondaryroad() {
-        return new Color(0x212a37);
+    public Color primaryRoad(){
+        return new Color(0x1f2835);
     }
-
-    @Override
-    public Color tertiaryroad() {
-        return new Color(0x212a37);
+    public Color secondaryRoad(){
+        return new Color(0x1f2835);
+    }
+    public Color tertiaryRoad(){
+        return new Color(0x1f2835);
+    }
+    public Color unclassifiedRoad(){
+        return new Color(0x1f2835);
+    }
+    public Color residentialRoad(){
+        return new Color(0x1f2835);
+    }
+    public Color livingStreet(){
+        return new Color(0x1f2835);
+    }
+    public Color serviceRoad(){
+        return new Color(0x1f2835);
+    }
+    public Color busGuideway(){
+        return new Color(0x1f2835);
+    }
+    public Color escape(){
+        return new Color(0x1f2835);
+    }
+    public Color raceway(){
+        return new Color(0x1f2835);
+    }
+    public Color pedestrianStreet(){
+        return new Color(0x1f2835);
+    }
+    public Color track(){
+        return new Color(0x1f2835);
+    }
+    public Color steps(){
+        return new Color(0x1f2835);
+    }
+    public Color footway(){
+        return new Color(0x1f2835);
+    }
+    public Color bridleway(){
+        return new Color(0x1f2835);
+    }
+    public Color cycleway(){
+        return new Color(0x1f2835);
+    }
+    public Color path(){
+        return new Color(0x1f2835);
+    }
+    public Color road(){
+        return new Color(0x1f2835);
     }
 
     @Override

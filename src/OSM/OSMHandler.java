@@ -285,6 +285,7 @@ public final class OSMHandler implements ContentHandler {
             Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), road);
             model.getElements().get(type).putPointer(p);
         }
+        System.out.println(name + " Added :)");
     }
 
     @Override
