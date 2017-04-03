@@ -11,7 +11,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
@@ -30,6 +29,7 @@ public final class OSMHandler implements ContentHandler {
     private OSMRelation relation;
     private OSMNode node;
     private WayType wayType;
+    private String name;
     private float longitudeFactor;
     private Model model;
     private int loadednodes, loadedRelations, loadedWays;
@@ -148,6 +148,9 @@ public final class OSMHandler implements ContentHandler {
                     case "highway":
                         determineHighway(v);
                         break;
+                    case "name":
+                        name = v;
+                        break;
                 }
                 break;
         }
@@ -156,20 +159,80 @@ public final class OSMHandler implements ContentHandler {
     private void determineHighway(String value) {
         wayType = WayType.UNKNOWN;
         switch (value){
-            case "service":
-                wayType = WayType.SERVICE_ROAD;
+            case "motorway":
+                wayType = WayType.MOTORWAY;
+                break;
+            case "motorway_link":
+                wayType = WayType.MOTORWAY_LINK;
+                break;
+            case "trunk":
+                wayType = WayType.TRUNK_ROAD;
+                break;
+            case "trunk_link":
+                wayType = WayType.TRUNK_ROAD_LINK;
                 break;
             case "primary":
                 wayType = WayType.PRIMARY_ROAD;
                 break;
+            case "primary_link":
+                wayType = WayType.PRIMARY_ROAD_LINK;
+                break;
             case "secondary":
                 wayType = WayType.SECONDARY_ROAD;
+                break;
+            case "seconday_link":
+                wayType = WayType.SECONDARY_ROAD_LINK;
                 break;
             case "tertiary":
                 wayType = WayType.TERTIARY_ROAD;
                 break;
+            case "tertiary_link":
+                wayType = WayType.TERTIARY_ROAD_LINK;
+                break;
             case "unclassified":
                 wayType = WayType.UNCLASSIFIED_ROAD;
+                break;
+            case "residential":
+                wayType = WayType.RESIDENTIAL_ROAD;
+                break;
+            case "living_street":
+                wayType = WayType.LIVING_STREET;
+                break;
+            case "service":
+                wayType = WayType.SERVICE_ROAD;
+                break;
+            case "bus_guideway":
+                wayType = WayType.BUS_GUIDEWAY;
+                break;
+            case "escape":
+                wayType = WayType.ESCAPE;
+                break;
+            case "raceway":
+                wayType = WayType.RACEWAY;
+                break;
+            case "pedestrian":
+                wayType = WayType.PEDESTRIAN_STERET;
+                break;
+            case "track":
+                wayType = WayType.TRACK;
+                break;
+            case "steps":
+                wayType = WayType.STEPS;
+                break;
+            case "footway":
+                wayType = WayType.FOOTWAY;
+                break;
+            case "bridleway":
+                wayType = WayType.BRIDLEWAY;
+                break;
+            case "cycleway":
+                wayType = WayType.CYCLEWAY;
+                break;
+            case "path":
+                wayType = WayType.PATH;
+                break;
+            case "road":
+                wayType = WayType.ROAD;
                 break;
         }
     }
@@ -179,11 +242,33 @@ public final class OSMHandler implements ContentHandler {
         switch (qName){
             case "way":
                 switch (wayType){
+                    case MOTORWAY:
+                    case MOTORWAY_LINK:
+                    case TRUNK_ROAD:
+                    case TRUNK_ROAD_LINK:
                     case PRIMARY_ROAD:
-                        addRoad(wayType);
-                        break;
+                    case PRIMARY_ROAD_LINK:
+                    case SECONDARY_ROAD:
+                    case SECONDARY_ROAD_LINK:
+                    case TERTIARY_ROAD:
+                    case TERTIARY_ROAD_LINK:
+                    case UNCLASSIFIED_ROAD:
+                    case RESIDENTIAL_ROAD:
+                    case LIVING_STREET:
                     case SERVICE_ROAD:
+                    case BUS_GUIDEWAY:
+                    case ESCAPE:
+                    case RACEWAY:
+                    case PEDESTRIAN_STERET:
+                    case TRACK:
+                    case STEPS:
+                    case FOOTWAY:
+                    case BRIDLEWAY:
+                    case CYCLEWAY:
+                    case PATH:
+                    case ROAD:
                         addRoad(wayType);
+                        name = "";
                         break;
                     case UNKNOWN:
                         //UnknownWay unknownWay = new UnknownWay(path);
@@ -195,11 +280,12 @@ public final class OSMHandler implements ContentHandler {
 
     private void addRoad(WayType type) {
         Path2D path = way.toPath2D();
-        Road road = new Road(path);
+        Road road = new Road(path, name);
         for (int i = 0; i < way.size(); i++) {
             Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), road);
             model.getElements().get(type).putPointer(p);
         }
+        System.out.println(name + " Added :)");
     }
 
     @Override
