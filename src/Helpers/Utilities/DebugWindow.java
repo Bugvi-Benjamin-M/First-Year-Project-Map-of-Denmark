@@ -110,15 +110,16 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
-    public void setLoadtimeLabel(long loadtime) {
+    public void setLoadtimeLabel() {
         JLabel retrieved = container.getJLabel("loadtime");
-        /*
-        int loadtimeMilliseconds = (int) loadtime;
-        int loadtimeSeconds = loadtimeMilliseconds / 1000;
-        int loadtimeMinutes = loadtimeSeconds / 60;
+        long loadtime = Main.LOAD_TIME;
+        long loadtimeMilliseconds = loadtime / 1000000;
+        long loadtimeSeconds = loadtimeMilliseconds / 1000;
+        long loadtimeMinutes = loadtimeSeconds / 60;
         String label = "Load time: "+loadtimeMinutes+" m, "
-                +loadtimeSeconds+" s, "+loadtimeMilliseconds+ " ms";*/
-        String label = "Load time: "+loadtime+ "ms";
+                +(loadtimeSeconds - (loadtimeMinutes * 60))+" s, "
+                +(loadtimeMilliseconds - (loadtimeSeconds * 1000))+ " ms";
+        // System.out.println(label);
         if (retrieved != null) {
             retrieved.setText(label);
         } else {
@@ -142,7 +143,7 @@ public class DebugWindow extends WindowAdapter {
     public void windowOpened(WindowEvent e) {
         super.windowOpened(e);
         setupWindow();
-        setLoadtimeLabel(0);
+        setLoadtimeLabel();
         setLongitudeLabel();
         setLatitudeLabel();
         setFPSLabel();
