@@ -118,6 +118,7 @@ public final class ToolbarController extends Controller {
 
     public void themeHasChanged() {
         this.window.removeComponent(toolbar);
+        toolbar = null;
         SearchController.getInstance(window).saveCurrentText();
         toolbar = new Toolbar();
         SearchController.getInstance(window).searchToolThemeChangeEvent();

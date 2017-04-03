@@ -3,7 +3,6 @@ package Controller;
 import Enums.ToolType;
 import Helpers.GlobalValue;
 import View.SearchTool;
-import View.Toolbar;
 import View.Window;
 
 /**
@@ -13,14 +12,12 @@ public final class SearchController extends Controller {
 
     private static SearchController instance;
     private SearchTool searchTool;
-    private Toolbar toolbar;
     private String currentText;
 
     private SearchController(Window window) {
         super(window);
         searchTool = (SearchTool) ToolbarController.getInstance(this.window).getToolbar().getTool(ToolType.SEARCH);
         searchTool.addFocusListener();
-        toolbar = ToolbarController.getInstance(MainWindowController.getInstance().getWindow()).getToolbar();
     }
 
     public static SearchController getInstance(Window window) {
@@ -43,7 +40,6 @@ public final class SearchController extends Controller {
     }
 
     public void searchToolThemeChangeEvent() {
-        toolbar = ToolbarController.getInstance(window).getToolbar();
         searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCH);
         searchTool.addFocusListener();
         setToCurrentText();
@@ -51,12 +47,12 @@ public final class SearchController extends Controller {
 
     public void searchToolResizeEvent() {
         saveCurrentText();
-        toolbar.rebuildSearchTool(GlobalValue.getSearchFieldSize());
+        ToolbarController.getInstance(window).getToolbar().rebuildSearchTool(GlobalValue.getSearchFieldSize());
         searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCH);
         searchTool.addFocusListener();
         setToCurrentText();
-        toolbar.revalidate();
-        toolbar.repaint();
+        ToolbarController.getInstance(window).getToolbar().revalidate();
+        ToolbarController.getInstance(window).getToolbar().repaint();
     }
 
 
