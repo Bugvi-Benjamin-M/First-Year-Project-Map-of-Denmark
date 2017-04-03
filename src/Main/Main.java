@@ -2,6 +2,7 @@ package Main;
 
 import Controller.*;
 import Exceptions.FileWasNotFoundException;
+import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Model;
@@ -59,10 +60,10 @@ public class Main {
     private static void loadDefaultResource() throws FileWasNotFoundException {
         try {
             long startTime = System.currentTimeMillis();
-            // FileHandler.loadResource(DEFAULT_RESOURCE);
+            FileHandler.loadResource(DEFAULT_RESOURCE);
             long stopTime = System.currentTimeMillis();
             System.out.println("Loading time: "+(stopTime-startTime)+" ms");
-            throw new FileWasNotFoundException("");
+            //throw new FileWasNotFoundException("");
         } catch (FileWasNotFoundException e) {
             throw new FileWasNotFoundException("Program was not able to load default resource \""+DEFAULT_RESOURCE+"\"" +
                     "\nLoading from coastlines instead.");
