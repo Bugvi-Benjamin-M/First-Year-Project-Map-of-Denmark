@@ -35,7 +35,12 @@ public class NodeGenerator {
     }
 
     public void setupTree(KDTree tree) {
-        for(int i = 0 ; i < medians.size() ; i++) tree.putNode(medians.get(i));
+        for(int i = 0 ; i < medians.size() ; i++){
+            Node median = medians.get(i);
+            Node node = new Node(median.getX(), median.getY(), median.getDepth());
+            if(median.getPointers() != null) node.makeLeaf();
+            tree.putNode(node);
+        }
     }
 
     public void initialise() {
@@ -59,21 +64,27 @@ public class NodeGenerator {
         float floatY = (float) median.getY();
         Node medianNode = null;
         if(medianDepth < depth) {
+            /*
             for(ZoomLevel level : ZoomLevel.values()){
                 medianNode = new Node(floatX, floatY, medianDepth);
                 Model.getInstance().getRoads().get(level).putNode(medianNode);
             }
+            */
+            medianNode = new Node(floatX, floatY, medianDepth);
             medians.add(medianNode);
             initialise(medianNode, low, ((low+high)/2) - 1);
             initialise(medianNode, ((low+high)/2) + 1, high);
         } else if(medianDepth == depth) {
+            medianNode = new Node(floatX, floatY, medianDepth);
+            medianNode.makeLeaf();
             medians.add(medianNode);
+            /*
             for(ZoomLevel level : ZoomLevel.values()){
                 medianNode = new Node(floatX, floatY, medianDepth);
                 medianNode.makeLeaf();
                 Model.getInstance().getRoads().get(level).putNode(medianNode);
             }
-
+            */
         }
     }
 

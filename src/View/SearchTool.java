@@ -3,6 +3,7 @@ package View;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;

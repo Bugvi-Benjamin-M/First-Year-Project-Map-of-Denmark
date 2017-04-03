@@ -2,6 +2,7 @@ package Main;
 
 import Controller.*;
 import Exceptions.FileWasNotFoundException;
+import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Model;
@@ -18,13 +19,16 @@ public class Main {
     public static final FPSCounter FPS_COUNTER = new FPSCounter();
     private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
 
+    private static final boolean DEBUG_MODE_ACTIVE = true;  // CHANGE ME TO PREVENT LOADING DEFAULT
+
+    public static long LOAD_TIME;
     private static SplashScreen screen;
     private static boolean programLoadedDefault;
 
     public static void main(String[] args) {
 
 
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
 
         splashScreenInit();
 
@@ -52,17 +56,18 @@ public class Main {
         model.modelHasChanged();
         CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas().grabFocus();
 
-        long stopTime = System.currentTimeMillis();
-        DebugWindow.getInstance().setLoadtimeLabel(stopTime - startTime);
+        LOAD_TIME = System.nanoTime() - startTime;
+        System.out.println("System loadtime: "+(LOAD_TIME / 1000000) + " ms");
+        DebugWindow.getInstance().setLoadtimeLabel();
     }
 
     private static void loadDefaultResource() throws FileWasNotFoundException {
         try {
             long startTime = System.currentTimeMillis();
-            // FileHandler.loadResource(DEFAULT_RESOURCE);
+            if (!DEBUG_MODE_ACTIVE) FileHandler.loadResource(DEFAULT_RESOURCE);
             long stopTime = System.currentTimeMillis();
-            System.out.println("Loading time: "+(stopTime-startTime)+" ms");
-            throw new FileWasNotFoundException("");
+            System.out.println("Resource load time: "+(stopTime-startTime)+" ms");
+            if (DEBUG_MODE_ACTIVE) throw new FileWasNotFoundException("");
         } catch (FileWasNotFoundException e) {
             throw new FileWasNotFoundException("Program was not able to load default resource \""+DEFAULT_RESOURCE+"\"" +
                     "\nLoading from coastlines instead.");

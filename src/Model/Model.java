@@ -5,7 +5,7 @@ import Enums.OSMEnums.RelationType;
 import Enums.OSMEnums.WayType;
 import Enums.ZoomLevel;
 import Helpers.Utilities.DebugWindow;
-import KDtree.KDTree;
+import KDtree.*;
 import Model.Coastlines.CoastlineFactory;
 
 import java.awt.geom.Path2D;
@@ -48,6 +48,12 @@ public final class Model extends Observable {
         //Todo remember to clean up the constructor
         zoom_level = ZoomLevel.LEVEL_3;
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
+    }
+
+    public void putNodesIntoKDTrees(Node node){
+        for(ZoomLevel level : ZoomLevel.values()){
+            roads.get(level).putNode(new Node(node.getX(), node.getY(), node.getDepth()));
+        }
     }
 
     public void changeZoomLevel(double zoom_factor) {
