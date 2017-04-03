@@ -37,5 +37,5 @@ public enum WayType {  //TODO Change name to ElementType
     BRIDLEWAY, //Ridesti
     CYCLEWAY,
     PATH, //Temporary setting
-    //ROAD //Temporary setting
+    ROAD //Temporary setting
 }
