@@ -46,7 +46,6 @@ public class SearchTool extends ToolComponent {
         field.setEditable(true);
         field.setFont(new Font(field.getFont().getName(), field.getFont().getStyle(), 20));
         field.setRequestFocusEnabled(true);
-
     }
 
     private void addSearchLabel() {

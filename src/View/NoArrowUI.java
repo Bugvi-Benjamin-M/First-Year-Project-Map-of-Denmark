@@ -23,4 +23,9 @@ public class NoArrowUI extends BasicComboBoxUI {
         button.setBackground(ThemeHelper.color("toolbar"));
         return button;
     }
+
+    @Override
+    public void configureArrowButton(){
+        //
+    }
 }
