@@ -1,7 +1,6 @@
 package Controller;
 
 import Enums.ToolType;
-import Helpers.GlobalValue;
 import View.SearchTool;
 import View.Window;
 
@@ -46,13 +45,10 @@ public final class SearchController extends Controller {
     }
 
     public void searchToolResizeEvent() {
-        saveCurrentText();
-        ToolbarController.getInstance(window).getToolbar().rebuildSearchTool(GlobalValue.getSearchFieldSize());
         searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCH);
         searchTool.addFocusListener();
+        if(currentText.equals("")) currentText = searchTool.getDefaultText();
         setToCurrentText();
-        ToolbarController.getInstance(window).getToolbar().revalidate();
-        ToolbarController.getInstance(window).getToolbar().repaint();
     }
 
 

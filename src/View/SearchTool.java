@@ -32,7 +32,7 @@ public class SearchTool extends ToolComponent {
         setupLayout();
         addSearchLabel();
         applyTheme();
-        setDefaultText(defaultText);
+        setDefaultText();
         add(field);
     }
 
@@ -58,9 +58,9 @@ public class SearchTool extends ToolComponent {
         field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
     }
 
-    public void setDefaultText(String text) {
+    public void setDefaultText() {
         field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("defaulttext"));
-        field.getEditor().setItem(text);
+        field.getEditor().setItem(defaultText);
     }
 
     public void addFocusListener() {
@@ -70,7 +70,7 @@ public class SearchTool extends ToolComponent {
                 super.focusGained(e);
                 if (!((field.getEditor().getItem().equals(defaultText)))) return;
                 else {
-                    setDefaultText("");
+                    setText("");
                     field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
                 }
             }
@@ -78,7 +78,7 @@ public class SearchTool extends ToolComponent {
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                if (field.getEditor().getItem().equals("")) setDefaultText(defaultText);
+                if (field.getEditor().getItem().equals("")) setDefaultText();
             }
         });
     }
@@ -95,6 +95,10 @@ public class SearchTool extends ToolComponent {
 
     public String getText() {
         return field.getEditor().getItem().toString();
+    }
+
+    public static String getDefaultText() {
+        return defaultText;
     }
 
     private static class NoArrowUI extends BasicComboBoxUI {
