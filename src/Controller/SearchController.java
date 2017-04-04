@@ -1,13 +1,21 @@
 package Controller;
 
 import Enums.ToolType;
+import Helpers.ThemeHelper;
 import View.SearchTool;
 import View.Window;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 /**
  * Created by Búgvi Magnussen on 02-04-2017.
  */
 public final class SearchController extends Controller {
+
+    private static final String defaultText = "Addresses, points of interest...";
 
     private static SearchController instance;
     private SearchTool searchTool;
@@ -16,7 +24,8 @@ public final class SearchController extends Controller {
     private SearchController(Window window) {
         super(window);
         searchTool = (SearchTool) ToolbarController.getInstance(this.window).getToolbar().getTool(ToolType.SEARCH);
-        searchTool.addFocusListener();
+        addFocusListenerToSearchTool();
+        setToDefaultText();
     }
 
     public static SearchController getInstance(Window window) {
@@ -35,22 +44,60 @@ public final class SearchController extends Controller {
     }
 
     public void setToCurrentText() {
-        searchTool.setText(currentText);
+        if(currentText.equals(defaultText)) setToDefaultText();
+        else searchTool.setText(currentText);
     }
 
     public void searchToolThemeChangeEvent() {
         searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCH);
-        searchTool.addFocusListener();
+        addFocusListenerToSearchTool();
         setToCurrentText();
     }
 
     public void searchToolResizeEvent() {
         searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCH);
-        searchTool.addFocusListener();
-        if(currentText.equals("")) currentText = searchTool.getDefaultText();
+        addFocusListenerToSearchTool();
+        if(currentText.equals("")) currentText = defaultText;
         setToCurrentText();
     }
 
+    public void setToDefaultText() {
+        searchTool.setDefaultText(defaultText);
+    }
+
+    private void addFocusListenerToSearchTool() {
+        searchTool.getField().getEditor().getEditorComponent().addFocusListener(new SearchToolFocusHandler());
+    }
 
 
+    private class SearchToolFocusHandler extends FocusAdapter {
+
+        private JComboBox<String> field;
+        private ComboBoxEditor editor;
+        private Component editorComponent;
+
+        private SearchToolFocusHandler() {
+            field = searchTool.getField();
+            editor = field.getEditor();
+            editorComponent = editor.getEditorComponent();
+        }
+
+        @Override
+        public void focusGained(FocusEvent e) {
+            super.focusGained(e);
+            if (!((editor.getItem().equals(defaultText)))) return;
+            else {
+                searchTool.setText("");
+                editorComponent.setForeground(ThemeHelper.color("icon"));
+            }
+        }
+
+        @Override
+            public void focusLost(FocusEvent e) {
+            super.focusLost(e);
+            if (editor.getItem().equals("")) setToDefaultText();
+        }
+    }
 }
+
+
