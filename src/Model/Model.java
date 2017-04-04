@@ -23,7 +23,6 @@ public final class Model extends Observable {
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
 
     private CoastlineFactory coastlineFactory;
-    private ZoomLevel zoom_level;
 
     private EnumMap<BoundType, Float> bounds;
 
@@ -38,18 +37,8 @@ public final class Model extends Observable {
             elements.put(type, new KDTree());
         }
         //Todo remember to clean up the constructor
-        zoom_level = ZoomLevel.LEVEL_3;
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
     }
-
-    public void changeZoomLevel(double zoom_factor) {
-        ZoomLevel.setZoomFactor(zoom_factor);
-        zoom_level = ZoomLevel.getZoomLevel();
-        DebugWindow.getInstance().setZoomLabel();
-        DebugWindow.getInstance().setZoomFactorLabel();
-    }
-
-    public ZoomLevel getZoomLevel() {return zoom_level;}
 
     public static Model getInstance() {
         if(instance == null) {

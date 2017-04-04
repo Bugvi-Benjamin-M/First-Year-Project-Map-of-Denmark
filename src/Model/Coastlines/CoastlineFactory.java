@@ -1,6 +1,7 @@
 package Model.Coastlines;
 
 import Enums.BoundType;
+import Helpers.GlobalValue;
 import Model.Model;
 
 import java.awt.geom.Path2D;
@@ -70,7 +71,7 @@ public class CoastlineFactory {
     public List<Path2D> getCoastlinePolygons() {
         List<Path2D> paths = new ArrayList<>();
         for (Coastline coast: coastlines) {
-            switch (Model.getInstance().getZoomLevel()) {
+            switch (GlobalValue.getZoomLevel()) {
                 case LEVEL_3:
                     if (coast.size() > 50) paths.add(coast.toPath2D(longitudeFactor));
                     break;
