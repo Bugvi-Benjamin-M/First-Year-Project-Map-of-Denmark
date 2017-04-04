@@ -44,21 +44,23 @@ public class Main {
             model.loadFromCoastlines();
             programLoadedDefault = false;
         }
+        SwingUtilities.invokeLater(() -> {
 
-        MainWindowController.getInstance();
+            MainWindowController.getInstance();
 
-        CanvasController.getInstance(MainWindowController.getInstance().getWindow());
-        ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
-        SearchController.getInstance(MainWindowController.getInstance().getWindow());
-        InfobarController.getInstance(MainWindowController.getInstance().getWindow());
+            CanvasController.getInstance(MainWindowController.getInstance().getWindow());
+            ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
+            SearchController.getInstance(MainWindowController.getInstance().getWindow());
+            InfobarController.getInstance(MainWindowController.getInstance().getWindow());
 
-        CanvasController.adjustToBounds();
-        model.modelHasChanged();
-        CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas().grabFocus();
+            CanvasController.adjustToBounds();
+            model.modelHasChanged();
+            CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas().grabFocus();
 
-        LOAD_TIME = System.nanoTime() - startTime;
-        System.out.println("System loadtime: "+(LOAD_TIME / 1000000) + " ms");
-        DebugWindow.getInstance().setLoadtimeLabel();
+            LOAD_TIME = System.nanoTime() - startTime;
+            System.out.println("System loadtime: "+(LOAD_TIME / 1000000) + " ms");
+            DebugWindow.getInstance().setLoadtimeLabel();
+        });
     }
 
     private static void loadDefaultResource() throws FileWasNotFoundException {

@@ -1,11 +1,11 @@
 package ControllerPackage;
 
+import Model.Model;
 import Controller.CanvasController;
 import Controller.MainWindowController;
 import Controller.ToolbarController;
 import Controller.WindowController;
 import Enums.ToolType;
-import Model.Model;
 import View.Toolbar;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import org.junit.Test;
 import javax.swing.*;
 import java.awt.event.MouseListener;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -23,6 +23,11 @@ import static org.junit.Assert.assertTrue;
  * @version 23/03/2017
  */
 public class TestToolbarController {
+
+    @Test
+    public void test() {
+        assertEquals(true, true);
+    }
 
     @Before
     public void buildUp() {
@@ -56,6 +61,8 @@ public class TestToolbarController {
         ToolbarController toolbarController2 = ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
         assertTrue(toolbarController.equals(toolbarController2));
     }
+
+
 
 
 }
