@@ -7,8 +7,12 @@ import Controller.MainWindowController;
  */
 public class GlobalValue {
 
-    public static int getSearchFieldSize() {
+    public static int getSearchFieldLargeSize() {
         return (int) (MainWindowController.getInstance().getWindow().getFrame().getWidth() / 3.2);
+    }
+
+    public static int getSearchFieldSmallSize() {
+        return (int) (MainWindowController.getInstance().getWindow().getFrame().getWidth() / 1.7);
     }
 
 }

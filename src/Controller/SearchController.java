@@ -48,7 +48,7 @@ public final class SearchController extends Controller {
         else searchTool.setText(currentText);
     }
 
-    public void searchToolThemeChangeEvent() {
+    public void searchToolReplacedEvent() {
         searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCH);
         addFocusListenerToSearchTool();
         setToCurrentText();

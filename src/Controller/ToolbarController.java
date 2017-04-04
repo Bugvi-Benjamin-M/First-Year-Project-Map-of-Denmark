@@ -27,6 +27,8 @@ import static javax.swing.SpringLayout.*;
  */
 public final class ToolbarController extends Controller {
 
+    private static final int SMALL_LARGE_EVENT_WIDTH = 700;
+
     private Toolbar toolbar;
     private SpringLayout toolbarLayout;
     private static ToolbarController instance;
@@ -47,6 +49,7 @@ public final class ToolbarController extends Controller {
         this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
         type = ToolbarType.LARGE;
         setupLargeToolbar();
+        addInteractionHandlersToTools();
     }
 
     public static ToolbarController getInstance(Window window) {
@@ -61,32 +64,59 @@ public final class ToolbarController extends Controller {
         addSaveToolToLargeToolbar(addLoadToolToLargeToolbar());
         addSettingsToolToLargeToolbar();
         addSearchToolToLargeToolbar();
-        addInteractionHandlersToTools();
+        type = ToolbarType.LARGE;
     }
 
     private void setupSmallToolbar() {
         removeAllComponentsFromToolbar();
-
-
+        addActionToolToSmallToolbar();
+        addSearchToolToSmallToolbar();
+        //Todo continue work with smallToolbar
         type = ToolbarType.SMALL;
-        addInteractionHandlersToTools();
     }
 
     public void resizeEvent() {
-       if(type == ToolbarType.LARGE && MainWindowController.getInstance().getWindow().getFrame().getWidth() < 600) {
+        if(type == ToolbarType.LARGE && MainWindowController.getInstance().getWindow().getFrame().getWidth() < SMALL_LARGE_EVENT_WIDTH) {
+            SearchController.getInstance(window).saveCurrentText();
             setupSmallToolbar();
-       }
-       if(type == ToolbarType.SMALL && MainWindowController.getInstance().getWindow().getFrame().getWidth() >= 600) {
-           setupLargeToolbar();
-       }
+            return;
+        }
+        if(type == ToolbarType.SMALL && MainWindowController.getInstance().getWindow().getFrame().getWidth() >= SMALL_LARGE_EVENT_WIDTH) {
+            SearchController.getInstance(window).saveCurrentText();
+            setupLargeToolbar();
+            return;
+        }
+        if(type == ToolbarType.LARGE) searchToolResizeEvent();
     }
 
     private void removeAllComponentsFromToolbar() {
-        //todo check if this is ok
         if(toolbar.getComponents().length == 0) return;
         for(Component component : toolbar.getComponents()) {
             toolbar.remove(component);
         }
+    }
+
+    private ToolComponent addActionToolToSmallToolbar() {
+        ToolComponent actions = toolbar.getTool(ToolType.ACTIONS);
+        toolbarLayout.putConstraint(WEST, actions,
+                MARGIN_SMALL_LEFT,
+                WEST, toolbar);
+        putNorthConstraints(actions);
+        toolbar.add(actions);
+        return actions;
+    }
+
+    private ToolComponent addSearchToolToSmallToolbar() {
+        toolbar.getAllTools().remove(ToolType.SEARCH);
+        toolbar.getAllTools().put(ToolType.SEARCH, new SearchTool(GlobalValue.getSearchFieldSmallSize()));
+        SearchController.getInstance(window).searchToolReplacedEvent();
+        ToolComponent search = toolbar.getTool(ToolType.SEARCH);
+        toolbarLayout.putConstraint(EAST, search,
+                MARGIN_SMALL_RIGHT,
+                EAST, toolbar);
+        toolbarLayout.putConstraint(SpringLayout.VERTICAL_CENTER, search, 0, SpringLayout.VERTICAL_CENTER, toolbar);
+        toolbar.add(search);
+        return search;
     }
 
     private ToolComponent addLoadToolToLargeToolbar() {
@@ -94,44 +124,44 @@ public final class ToolbarController extends Controller {
         toolbarLayout.putConstraint(WEST, load,
                 MARGIN_SMALL_LEFT,
                 WEST, toolbar);
-        toolbarLayout.putConstraint(NORTH, load,
-                MARGIN_TOP,
-                NORTH, toolbar);
+        putNorthConstraints(load);
         toolbar.add(load);
         return load;
     }
 
     private ToolComponent addSaveToolToLargeToolbar(ToolComponent tool) {
-        ToolComponent next = toolbar.getTool(ToolType.SAVE);
-        toolbarLayout.putConstraint(WEST, next,
+        ToolComponent save = toolbar.getTool(ToolType.SAVE);
+        toolbarLayout.putConstraint(WEST, save,
                 MARGIN_SMALL_LEFT,
                 EAST, tool);
-        toolbarLayout.putConstraint(NORTH, next,
-                MARGIN_TOP,
-                NORTH, toolbar);
-        tool = next;
+        putNorthConstraints(save);
+        tool = save;
         toolbar.add(tool);
         return tool;
     }
 
     private ToolComponent addSettingsToolToLargeToolbar() {
-        ToolComponent tool = toolbar.getTool(ToolType.SETTINGS);
-        toolbarLayout.putConstraint(EAST, tool,
+        ToolComponent settings = toolbar.getTool(ToolType.SETTINGS);
+        toolbarLayout.putConstraint(EAST, settings,
                 MARGIN_SMALL_RIGHT,
                 EAST, toolbar);
-        toolbarLayout.putConstraint(NORTH, tool,
-                MARGIN_TOP,
-                NORTH, toolbar);
-        toolbar.add(tool);
-        return tool;
+        putNorthConstraints(settings);
+        toolbar.add(settings);
+        return settings;
     }
 
     private ToolComponent addSearchToolToLargeToolbar() {
-        ToolComponent tool = toolbar.getTool(ToolType.SEARCH);
-        toolbarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, tool, 0, SpringLayout.HORIZONTAL_CENTER, toolbar);
-        toolbarLayout.putConstraint(SpringLayout.VERTICAL_CENTER, tool, 0, SpringLayout.VERTICAL_CENTER, toolbar);
-        toolbar.add(tool);
-        return tool;
+        ToolComponent search = toolbar.getTool(ToolType.SEARCH);
+        toolbarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, search, 0, SpringLayout.HORIZONTAL_CENTER, toolbar);
+        toolbarLayout.putConstraint(SpringLayout.VERTICAL_CENTER, search, 0, SpringLayout.VERTICAL_CENTER, toolbar);
+        toolbar.add(search);
+        return search;
+    }
+
+    private void putNorthConstraints(ToolComponent tool) {
+        toolbarLayout.putConstraint(NORTH, tool,
+                MARGIN_TOP,
+                NORTH, toolbar);
     }
 
     public void searchToolResizeEvent() {
@@ -140,17 +170,15 @@ public final class ToolbarController extends Controller {
     }
 
     private void rebuildSearchTool() {
-        if(type == ToolbarType.LARGE) {
-            toolbar.remove(toolbar.getTool(ToolType.SEARCH));
-            toolbar.getAllTools().remove(ToolType.SEARCH);
-            toolbar.revalidate();
-            toolbar.repaint();
-            toolbar.getAllTools().put(ToolType.SEARCH, new SearchTool(GlobalValue.getSearchFieldSize()));
-            addSearchToolToLargeToolbar();
-            SearchController.getInstance(window).searchToolResizeEvent();
-            toolbar.revalidate();
-            toolbar.repaint();
-        }
+        toolbar.remove(toolbar.getTool(ToolType.SEARCH));
+        toolbar.getAllTools().remove(ToolType.SEARCH);
+        toolbar.revalidate();
+        toolbar.repaint();
+        toolbar.getAllTools().put(ToolType.SEARCH, new SearchTool(GlobalValue.getSearchFieldLargeSize()));
+        addSearchToolToLargeToolbar();
+        SearchController.getInstance(window).searchToolResizeEvent();
+        toolbar.revalidate();
+        toolbar.repaint();
     }
     private void addInteractionHandlersToTools() {
         addInteractionHandlerToLoadTool();
@@ -228,7 +256,7 @@ public final class ToolbarController extends Controller {
     public void themeHasChanged() {
         SearchController.getInstance(window).saveCurrentText();
         resetToolbar();
-        SearchController.getInstance(window).searchToolThemeChangeEvent();
+        SearchController.getInstance(window).searchToolReplacedEvent();
         window.addComponent(BorderLayout.PAGE_START, toolbar,true);
         if(type == ToolbarType.LARGE) setupLargeToolbar();
         else if(type == ToolbarType.SMALL) setupSmallToolbar();
@@ -239,6 +267,7 @@ public final class ToolbarController extends Controller {
         toolbar = null;
         toolbar = new Toolbar();
         toolbarLayout = toolbar.getLayout();
+        addInteractionHandlersToTools();
     }
 
     public void toggleKeyBindings(boolean status) {
