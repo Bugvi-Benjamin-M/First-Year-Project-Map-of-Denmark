@@ -3,7 +3,7 @@ package View;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -68,7 +68,7 @@ public class SearchTool extends ToolComponent {
             @Override
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
-                if(!((field.getEditor().getItem().equals(defaultText)))) return;
+                if (!((field.getEditor().getItem().equals(defaultText)))) return;
                 else {
                     setDefaultText("");
                     field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
@@ -78,13 +78,13 @@ public class SearchTool extends ToolComponent {
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                if(field.getEditor().getItem().equals("")) setDefaultText(defaultText);
+                if (field.getEditor().getItem().equals("")) setDefaultText(defaultText);
             }
         });
     }
 
     public void setText(String text) {
-        if(text.equals(defaultText)) {
+        if (text.equals(defaultText)) {
             field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("defaulttext"));
             field.getEditor().setItem(text);
         } else {
@@ -95,5 +95,27 @@ public class SearchTool extends ToolComponent {
 
     public String getText() {
         return field.getEditor().getItem().toString();
+    }
+
+    private static class NoArrowUI extends BasicComboBoxUI {
+
+        public static NoArrowUI createUI(JComponent c) {
+            return new NoArrowUI();
+        }
+
+        @Override
+        protected JButton createArrowButton() {
+            JButton button = new JButton();
+            button.setEnabled(false);
+            button.setBorderPainted(false);
+            button.setFocusPainted(false);
+            button.setBackground(ThemeHelper.color("toolbar"));
+            return button;
+        }
+
+        @Override
+        public void configureArrowButton() {
+            //
+        }
     }
 }

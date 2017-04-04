@@ -31,7 +31,6 @@ public final class ToolbarController extends Controller {
 
     private ToolbarController(Window window) {
         super(window);
-        System.out.println("ToolbarController created");
         toolbar = new Toolbar();
         this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
         addInteractionHandlersToTools();
