@@ -93,7 +93,7 @@ public final class ToolbarController extends Controller {
             setupLargeToolbar();
             return;
         }
-        if(type == ToolbarType.LARGE) searchToolResizeEvent();
+        if(type == ToolbarType.LARGE && MainWindowController.getInstance().getWindow().getFrame().getWidth() % 2 == 0) searchToolResizeEvent();
     }
 
     private void removeAllComponentsFromToolbar() {
