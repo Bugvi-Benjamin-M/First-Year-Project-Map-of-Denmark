@@ -32,15 +32,22 @@ public final class ToolbarController extends Controller {
     private Toolbar toolbar;
     private SpringLayout toolbarLayout;
     private static ToolbarController instance;
+
     private enum ToolbarType {
         LARGE,
         SMALL
     }
     private ToolbarType type;
+    private ToolMenu popupMenu;
 
     private final int MARGIN_SMALL_LEFT = 20;
     private final int MARGIN_SMALL_RIGHT = -20;
-    private final int MARGIN_TOP = 15;
+    private final int MARGIN_TOP = 20;
+    private final int POPUP_MARGIN_LEFT = 10;
+    private final int POPUP_MARGIN_HEIGHT = 205;
+    private final int POPUP_MARGIN_WIDTH = 60;
+    private final int POPUP_MARGIN_TOP = 10;
+    private final int POPUP_MARGIN_BETWEEN_TOOLS = 63;
 
     private ToolbarController(Window window) {
         super(window);
@@ -69,7 +76,7 @@ public final class ToolbarController extends Controller {
 
     private void setupSmallToolbar() {
         removeAllComponentsFromToolbar();
-        addActionToolToSmallToolbar();
+        addMenuToolToSmallToolbar();
         addSearchToolToSmallToolbar();
         //Todo continue work with smallToolbar
         type = ToolbarType.SMALL;
@@ -96,14 +103,15 @@ public final class ToolbarController extends Controller {
         }
     }
 
-    private ToolComponent addActionToolToSmallToolbar() {
-        ToolComponent actions = toolbar.getTool(ToolType.Menu);
-        toolbarLayout.putConstraint(WEST, actions,
+    private ToolComponent addMenuToolToSmallToolbar() {
+        ToolComponent menu = toolbar.getTool(ToolType.MENU);
+        toolbarLayout.putConstraint(WEST, menu,
                 MARGIN_SMALL_LEFT,
                 WEST, toolbar);
-        putNorthConstraints(actions);
-        toolbar.add(actions);
-        return actions;
+        putNorthConstraints(menu);
+        toolbar.add(menu);
+        setupMenuToolPopupMenu();
+        return menu;
     }
 
     private ToolComponent addSearchToolToSmallToolbar() {
@@ -164,6 +172,24 @@ public final class ToolbarController extends Controller {
                 NORTH, toolbar);
     }
 
+    private void setupMenuToolPopupMenu() {
+        popupMenu = new ToolMenu();
+        ToolComponent load = toolbar.getTool(ToolType.LOAD);
+        popupMenu.getLayout().putConstraint(WEST, load, POPUP_MARGIN_LEFT, WEST, popupMenu.getPopupMenu());
+        popupMenu.getLayout().putConstraint(NORTH, load, POPUP_MARGIN_TOP, NORTH, popupMenu.getPopupMenu());
+        popupMenu.addTool(load);
+        ToolComponent save = toolbar.getTool(ToolType.SAVE);
+        popupMenu.getLayout().putConstraint(WEST, save, POPUP_MARGIN_LEFT, WEST, popupMenu.getPopupMenu());
+        popupMenu.getLayout().putConstraint(NORTH, save, POPUP_MARGIN_BETWEEN_TOOLS, NORTH, load);
+        popupMenu.addTool(toolbar.getTool(ToolType.SAVE));
+        ToolComponent settings = toolbar.getTool(ToolType.SETTINGS);
+        popupMenu.getLayout().putConstraint(WEST, settings, POPUP_MARGIN_LEFT, WEST, popupMenu.getPopupMenu());
+        popupMenu.getLayout().putConstraint(NORTH, settings, POPUP_MARGIN_BETWEEN_TOOLS, NORTH, save);
+        popupMenu.addTool(toolbar.getTool(ToolType.SETTINGS));
+        toolbar.getTool(ToolType.MENU).add(popupMenu.getPopupMenu());
+        popupMenu.getPopupMenu().setPopupSize(POPUP_MARGIN_WIDTH, POPUP_MARGIN_HEIGHT);
+    }
+
     public void searchToolResizeEvent() {
         SearchController.getInstance(window).saveCurrentText();
         rebuildSearchTool();
@@ -184,7 +210,12 @@ public final class ToolbarController extends Controller {
         addInteractionHandlerToLoadTool();
         addInteractionHandlerToSaveTool();
         addInteractionHandlerToSettingsTool();
+        addInteractionHandlerToMenuTool();
         addInteractionHandlerToToolbar();
+    }
+
+    private void addInteractionHandlerToMenuTool() {
+        new ToolInteractionHandler(ToolType.MENU, KeyEvent.VK_M, OSDetector.getActivationKey());
     }
 
     private void addInteractionHandlerToToolbar() {
@@ -214,13 +245,21 @@ public final class ToolbarController extends Controller {
             case SETTINGS:
                 settingsEvent();
                 break;
+            case MENU:
+                menuEvent();
         }
+    }
+
+    private void menuEvent() {
+        if(popupMenu.isVisible()) popupMenu.hidePopupMenu();
+        else popupMenu.showPopupMenu();
+        popupMenu.setLocation(new Point(toolbar.getX() + 10,toolbar.getY() + toolbar.getHeight()));
     }
 
     private void loadEvent() {
         FileNameExtensionFilter[] filters = new FileNameExtensionFilter[]{
-                new FileNameExtensionFilter("OSM Files", FileType.OSM.toString()),
-                new FileNameExtensionFilter("ZIP Files", FileType.ZIP.toString())
+            new FileNameExtensionFilter("OSM Files", FileType.OSM.toString()),
+            new FileNameExtensionFilter("ZIP Files", FileType.ZIP.toString())
         };
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {

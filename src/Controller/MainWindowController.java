@@ -2,7 +2,6 @@ package Controller;
 
 import Helpers.OSDetector;
 import Helpers.Utilities.DebugWindow;
-import View.MapCanvas;
 import View.PopupWindow;
 import View.Window;
 
@@ -42,6 +41,7 @@ public final class MainWindowController extends WindowController {
                 .relativeTo(null)
                 .icon()
                 .hide();
+        mainWindow.setMinimumWindowSize(new Dimension(600, 500));
         return mainWindow;
     }
 

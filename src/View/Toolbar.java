@@ -64,7 +64,7 @@ public class Toolbar extends View {
             tools.put(ToolType.LOAD, new ToolFeature("\uf115",ToolType.LOAD));
             tools.put(ToolType.SAVE, new ToolFeature("\uf0c7",ToolType.SAVE));
             tools.put(ToolType.SETTINGS, new ToolFeature("\uf085",ToolType.SETTINGS));
-            tools.put(ToolType.Menu, new ToolFeature("\uf0c9", ToolType.Menu));
+            tools.put(ToolType.MENU, new ToolFeature("\uf0c9", ToolType.MENU));
             tools.put(ToolType.SEARCH, new SearchTool(GlobalValue.getSearchFieldLargeSize()));
             return tools;
         }
