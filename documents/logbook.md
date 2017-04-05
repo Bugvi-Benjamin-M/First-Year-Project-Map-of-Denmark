@@ -321,7 +321,7 @@ Impediments:
 - One member has not shown up at agreed upon time (revoked voting rights today)
 
 Notes from meeting:
-- We're having vacation next week from friday to sunday
+- We're having vacation next week from wednesday to sunday
 
 Next time:
 - Thursday at 10
