@@ -316,7 +316,7 @@ public final class OSMHandler implements ContentHandler {
         if(!isRelation) {
             path = way.toPath2D();
             Road road = new Road(path, name);
-            for (int i = 0; i < way.size(); i++) {
+            for (int i = 0; i < way.size(); i+=5) {
                 Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
             }
@@ -325,33 +325,35 @@ public final class OSMHandler implements ContentHandler {
             path = relation.toPath2D();
             Road road = new Road(path, name);
             for (int i = 0; i < relation.size(); i++){
+                for (int j = 0; i < relation.get(i).size(); j+=5){
                     Pointer p = new Pointer((float) relation.get(i).get(0).getX(), (float) relation.get(i).get(0).getY(), road);
                     model.getElements().get(type).putPointer(p);
-
+                }
             }
         }
         //System.out.println(name + " Added :)");
     }
 
-    private void addWater(WayType type, Boolean isRelation){
+    private void addWater(WayType type, Boolean isRelation) {
         Path2D path;
-        if(!isRelation) {
+        if (!isRelation) {
             path = way.toPath2D();
             Water water = new Water(path, name);
-            for (int i = 0; i < way.size(); i++) {
+            for (int i = 0; i < way.size(); i += 5) {
                 Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), water);
                 model.getElements().get(type).putPointer(p);
             }
-        }
-        else {
+        } else {
             path = relation.toPath2D();
             Water water = new Water(path, name);
-            for (int i = 0; i < relation.size(); i++){
-                    Pointer p = new Pointer((float) relation.get(i).get(0).getX(), (float) relation.get(i).get(0).getY(), water);
+            for (int i = 0; i < relation.size(); i++) {
+                for (int j = 0; j < relation.get(i).size(); j += 5) {
+                    Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), water);
                     model.getElements().get(type).putPointer(p);
                 }
             }
         }
+    }
 
 
     @Override
