@@ -24,27 +24,25 @@ public class Coastline extends OSMWay {
 
     public static final String OSM_IDENTIFIER = "coastline";
 
-    public Path2D toPath2D(float longFactor) {
+    public Path2D toPath2D() {
         Path2D path = new Path2D.Float();
         Point2D node = this.getFromNode();
-        path.moveTo(node.getX()*longFactor, node.getY());
+        path.moveTo(node.getX(), node.getY());
 
         // Draws all points
-        for(int i = 1 ; i < size() ; i += ZoomLevel.getNodesAtMaxLevel()){
+        for (int i = 0; i < size(); i += ZoomLevel.LEVEL_2.getNodesAtLevel()) {
             node = this.get(i);
             boolean isNear = isNodeNearCamera(node);
-            while(isNear) {
-                path.lineTo(node.getX()*longFactor, node.getY());
-                int modifier = GlobalValue.getZoomLevel().getNodesAtLevel();
-                i += modifier;
-                if (i >= size()) break;
-                node = this.get(i);
-                isNear = isNodeNearCamera(node);
-            }
-            path.lineTo(node.getX()*longFactor, node.getY());
+            if (isNear) path.lineTo(node.getX(), node.getY());
         }
+
+        /*
+        for(int i = 1 ; i < size() ; i += GlobalValue.getZoomLevel().getNodesAtLevel()){
+            node = this.get(i);
+            path.lineTo(node.getX()*longFactor, node.getY());
+        }*/
         node = this.getFromNode();
-        path.lineTo(node.getX()*longFactor, node.getY());
+        path.lineTo(node.getX(), node.getY());
         return path;
     }
 
@@ -61,7 +59,7 @@ public class Coastline extends OSMWay {
             nodeIsNear = true;
         }
 
-        if(nodeIsNear) {
+        if(false) {
             System.out.println("minlon: "+minlon+" maxlon: "+maxlon);
             System.out.println("minlat: "+minlat+" maxlat: "+maxlat);
             System.out.println("Node at x=" + node.getX() + " y= " + node.getY() + " is near=" + nodeIsNear);

@@ -73,9 +73,9 @@ public class MapCanvas extends View {
         currentRectangle = new Rectangle2D.Double(point.getX(), point.getY(), xBounds, yBounds);
         Model model = Model.getInstance();
         model.setCameraBound(BoundType.MIN_LONGITUDE, (float) point.getX());
-        model.setCameraBound(BoundType.MAX_LONGITUDE, (float) (xBounds + point.getX()));
+        model.setCameraBound(BoundType.MAX_LONGITUDE, (float) factor.getX());
         model.setCameraBound(BoundType.MAX_LATITUDE, (float) point.getY());
-        model.setCameraBound(BoundType.MIN_LATITUDE, (float) (yBounds + point.getY()));
+        model.setCameraBound(BoundType.MIN_LATITUDE, (float) factor.getY());
         DebugWindow.getInstance().setCameraBoundsLabel();
     }
 
@@ -330,6 +330,7 @@ public class MapCanvas extends View {
         DebugWindow.getInstance().setZoomLabel();
         DebugWindow.getInstance().setZoomFactorLabel();
         DebugWindow.getInstance().setFPSLabel();
+        setCoastlines(Model.getInstance().getCoastlines());
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         repaint();
     }
@@ -349,6 +350,7 @@ public class MapCanvas extends View {
      *           centered and the current center point
      */
     public void pan(double dx, double dy) {
+        setCoastlines(Model.getInstance().getCoastlines());
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
         DebugWindow.getInstance().setFPSLabel();
         repaint();

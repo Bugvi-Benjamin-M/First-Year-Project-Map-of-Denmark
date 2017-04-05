@@ -73,14 +73,14 @@ public class CoastlineFactory {
         for (Coastline coast: coastlines) {
             switch (GlobalValue.getZoomLevel()) {
                 case LEVEL_3:
-                    if (coast.size() > 50) paths.add(coast.toPath2D(longitudeFactor));
+                    if (coast.size() > 50) paths.add(coast.toPath2D());
                     break;
                 case LEVEL_2:
-                    if (coast.size() > 30) paths.add(coast.toPath2D(longitudeFactor));
+                    if (coast.size() > 30) paths.add(coast.toPath2D());
                 case LEVEL_1:
-                    if (coast.size() > 10) paths.add(coast.toPath2D(longitudeFactor));
+                    if (coast.size() > 10) paths.add(coast.toPath2D());
                 default:
-                    paths.add(coast.toPath2D(longitudeFactor));
+                    paths.add(coast.toPath2D());
                     break;
             }
         }

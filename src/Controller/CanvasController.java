@@ -241,6 +241,7 @@ public final class CanvasController extends Controller implements Observer {
         GlobalValue.setZoomLevel(zoom_value);
         ZoomLevel newLevel = GlobalValue.getZoomLevel();
         if (!lastLevel.equals(newLevel)) {
+            System.out.println("changed level: "+newLevel.toString());
             mapCanvas.setCoastlines(model.getCoastlines());
         }
     }
