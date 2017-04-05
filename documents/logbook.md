@@ -304,4 +304,26 @@ Notes from meeting:
 
 Next time: Wednesday at 10 o'clock
 
+## Logbook 5/4 (Scribe Blanke)
+What we did since last:
+- Window resizing
+- Coastlines generalization
+- Data structure complete
+
+What we will do until next time:
+- Loading coastlines faster (within a view)
+- Binary saving of current version
+- Window resizing finish up
+- Load function needs to work again
+
+Impediments:
+- Two (maybe three) team members has to go to exercise class at 12
+- One member has not shown up at agreed upon time (revoked voting rights today)
+
+Notes from meeting:
+- We're having vacation next week from friday to sunday
+
+Next time:
+- Thursday at 10
+
 ## Next logbook...

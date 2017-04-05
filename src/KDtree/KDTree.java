@@ -10,7 +10,6 @@ public class KDTree {
     private Node root;
     private HashSet<Element> elementsToReturn;
 
-    //TODO remember to test this!
     public void clear(){
         if(root != null)
         clear(root);

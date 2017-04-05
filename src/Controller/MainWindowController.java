@@ -2,6 +2,7 @@ package Controller;
 
 import Helpers.OSDetector;
 import Helpers.Utilities.DebugWindow;
+import View.MapCanvas;
 import View.PopupWindow;
 import View.Window;
 
@@ -19,11 +20,9 @@ public final class MainWindowController extends WindowController {
     private static final String MAIN_TITLE = "OSM Map Viewer v0.3";
 
     private static MainWindowController instance;
-    private boolean maxStateReached;
 
     private MainWindowController(Window window) {
         super(window);
-        maxStateReached = false;
     }
 
     public static MainWindowController getInstance() {
@@ -70,7 +69,7 @@ public final class MainWindowController extends WindowController {
     protected void addInteractionHandlerToWindow() {
         super.addInteractionHandlerToWindow();
         MainWindowInteractionHandler handler = new MainWindowInteractionHandler();
-        window.getFrame().addComponentListener(handler);
+        window.getFrame().getContentPane().addComponentListener(handler); //THINK THIS THROUGH
     }
 
     public void resetInstance() {
@@ -82,7 +81,7 @@ public final class MainWindowController extends WindowController {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
-            SearchController.getInstance(window).searchToolResizeEvent();
+            ToolbarController.getInstance(window).resizeEvent();
         }
     }
 }

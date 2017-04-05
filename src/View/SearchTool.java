@@ -3,10 +3,8 @@ package View;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 
 
@@ -18,21 +16,16 @@ import java.awt.event.FocusEvent;
  */
 public class SearchTool extends ToolComponent {
 
-    private static final String defaultText = "Addresses, points of interest...";
-
     private JComboBox<String> field;
-
     private Dimension searchFieldDimension;
     private JLabel searchLabel;
 
-    //Todo fix why search bar is not being set up properly when theme is changed
     public SearchTool(int width) {
         field = new JComboBox<>();
         searchFieldDimension = new Dimension(width, 40);
         setupLayout();
         addSearchLabel();
         applyTheme();
-        setDefaultText(defaultText);
         add(field);
     }
 
@@ -63,37 +56,39 @@ public class SearchTool extends ToolComponent {
         field.getEditor().setItem(text);
     }
 
-    public void addFocusListener() {
-        field.getEditor().getEditorComponent().addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                super.focusGained(e);
-                if(!((field.getEditor().getItem().equals(defaultText)))) return;
-                else {
-                    setDefaultText("");
-                    field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e);
-                if(field.getEditor().getItem().equals("")) setDefaultText(defaultText);
-            }
-        });
+    public JComboBox<String> getField() {
+        return field;
     }
 
+
     public void setText(String text) {
-        if(text.equals(defaultText)) {
-            field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("defaulttext"));
-            field.getEditor().setItem(text);
-        } else {
-            field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
-            field.getEditor().setItem(text);
-        }
+        field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
+        field.getEditor().setItem(text);
     }
 
     public String getText() {
         return field.getEditor().getItem().toString();
+    }
+
+    private static class NoArrowUI extends BasicComboBoxUI {
+
+        public static NoArrowUI createUI(JComponent c) {
+            return new NoArrowUI();
+        }
+
+        @Override
+        protected JButton createArrowButton() {
+            JButton button = new JButton();
+            button.setEnabled(false);
+            button.setBorderPainted(false);
+            button.setFocusPainted(false);
+            button.setBackground(ThemeHelper.color("toolbar"));
+            return button;
+        }
+
+        @Override
+        public void configureArrowButton() {
+            //
+        }
     }
 }
