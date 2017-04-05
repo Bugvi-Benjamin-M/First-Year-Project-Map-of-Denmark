@@ -1,5 +1,6 @@
 package View;
 
+import Enums.BoundType;
 import Enums.OSMEnums.WayType;
 import Enums.ZoomLevel;
 import Helpers.ThemeHelper;
@@ -70,6 +71,12 @@ public class MapCanvas extends View {
         double xBounds = factor.getX() - point.getX();
         double yBounds = factor.getY() - point.getY();
         currentRectangle = new Rectangle2D.Double(point.getX(), point.getY(), xBounds, yBounds);
+        Model model = Model.getInstance();
+        model.setCameraBound(BoundType.MIN_LONGITUDE, (float) point.getX());
+        model.setCameraBound(BoundType.MAX_LONGITUDE, (float) factor.getX());
+        model.setCameraBound(BoundType.MAX_LATITUDE, (float) point.getY());
+        model.setCameraBound(BoundType.MIN_LATITUDE, (float) factor.getY());
+        DebugWindow.getInstance().setCameraBoundsLabel();
     }
 
     /**
@@ -103,6 +110,7 @@ public class MapCanvas extends View {
     }
 
     private void drawCoastlines(Graphics2D g) {
+        coastlines = Model.getInstance().getCoastlines();
         g.setColor(ThemeHelper.color("background"));
         for (Path2D path: coastlines) {
             g.fill(path);
