@@ -9,7 +9,7 @@ public enum ToolType {
     SETTINGS("Settings"),
     SEARCH("Search"),
     UNKNOWN("Unknown"),
-    ACTIONS("Actions");
+    Menu("Menu");
 
     private String tag;
 

@@ -97,7 +97,7 @@ public final class ToolbarController extends Controller {
     }
 
     private ToolComponent addActionToolToSmallToolbar() {
-        ToolComponent actions = toolbar.getTool(ToolType.ACTIONS);
+        ToolComponent actions = toolbar.getTool(ToolType.Menu);
         toolbarLayout.putConstraint(WEST, actions,
                 MARGIN_SMALL_LEFT,
                 WEST, toolbar);
