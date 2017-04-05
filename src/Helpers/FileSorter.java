@@ -24,7 +24,7 @@ public class FileSorter {
         if (args.length != 1) throw new RuntimeException("Requires file name as parameter.");
         try {
             ArrayList<Integer> input = new ArrayList<>();
-            Path file = Paths.get("./Resources/" + args[0]);
+            Path file = Paths.get("./resources/" + args[0]);
             try (InputStream in = Files.newInputStream(file);
                  BufferedReader reader =
                          new BufferedReader(new InputStreamReader(in))) {
