@@ -44,6 +44,10 @@ public enum ZoomLevel {
         return nodesAtLevel;
     }
 
+    public static int getNodesAtMaxLevel() {
+        return ZoomLevel.LEVEL_3.getNodesAtLevel();
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

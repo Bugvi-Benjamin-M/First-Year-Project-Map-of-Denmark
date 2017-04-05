@@ -23,14 +23,16 @@ public final class Model extends Observable {
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
 
     private CoastlineFactory coastlineFactory;
-    private ZoomLevel zoom_level;
 
     private EnumMap<BoundType, Float> bounds;
+    private EnumMap<BoundType,Float> camera_bounds;
 
     private Model(){
         bounds = new EnumMap<>(BoundType.class);
+        camera_bounds = new EnumMap<>(BoundType.class);
         for (BoundType type: BoundType.values()) {
             bounds.put(type,0.0f);
+            camera_bounds.put(type,0.0f);
         }
 
         elements = new EnumMap<>(WayType.class);
@@ -38,18 +40,8 @@ public final class Model extends Observable {
             elements.put(type, new KDTree());
         }
         //Todo remember to clean up the constructor
-        zoom_level = ZoomLevel.LEVEL_3;
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
     }
-
-    public void changeZoomLevel(double zoom_factor) {
-        ZoomLevel.setZoomFactor(zoom_factor);
-        zoom_level = ZoomLevel.getZoomLevel();
-        DebugWindow.getInstance().setZoomLabel();
-        DebugWindow.getInstance().setZoomFactorLabel();
-    }
-
-    public ZoomLevel getZoomLevel() {return zoom_level;}
 
     public static Model getInstance() {
         if(instance == null) {
@@ -95,6 +87,12 @@ public final class Model extends Observable {
     public void setBound(BoundType type, float value) {
         bounds.put(type,value);
     }
+
+    public void setCameraBound(BoundType type, float value) {
+        camera_bounds.put(type,value);
+    }
+
+    public float getCameraBound(BoundType type) {return camera_bounds.get(type);}
 
     public float getMinLatitude() {
         return bounds.get(BoundType.MIN_LATITUDE);

@@ -1,6 +1,7 @@
 package Controller;
 
 import Enums.ZoomLevel;
+import Helpers.GlobalValue;
 import Model.Model;
 import View.MapCanvas;
 import View.Window;
@@ -235,11 +236,12 @@ public final class CanvasController extends Controller implements Observer {
     private void changeZoomLevel(double zoomFactor) {
         // System.out.println("zoomed in by "+zoomFactor);
         Model model = Model.getInstance();
-        ZoomLevel lastLevel = model.getZoomLevel();
+        ZoomLevel lastLevel = GlobalValue.getZoomLevel();
         if (zoomFactor != 0.0) zoom_value -= zoomFactor*10;
-        model.changeZoomLevel(zoom_value);
-        ZoomLevel newLevel = model.getZoomLevel();
+        GlobalValue.setZoomLevel(zoom_value);
+        ZoomLevel newLevel = GlobalValue.getZoomLevel();
         if (!lastLevel.equals(newLevel)) {
+            System.out.println("changed level: "+newLevel.toString());
             mapCanvas.setCoastlines(model.getCoastlines());
         }
     }

@@ -8,8 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-
-import static javax.swing.SpringLayout.*;
+import Controller.MainWindowController;
 
 /**
  * Class details:
@@ -24,22 +23,17 @@ public class Toolbar extends View {
     private static Map<ToolType, ToolComponent> tools;
     private SpringLayout layout;
 
-    private final int MARGIN_SMALL_LEFT = 20;
-    private final int MARGIN_SMALL_RIGHT = -20;
-    private final int MARGIN_TOP = 15;
-
     /**
      * Constructor for the Toolbar
      */
     public Toolbar() {
         tools = new ToolFactory().setupToolbar();
         layout = new SpringLayout();
-        this.setLayout(layout);
+        setLayout(layout);
 
-        setupToolbarComponents();
-
-        this.setPreferredSize(new Dimension(500,100));
-        this.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("border")));
+        int width = MainWindowController.getInstance().getWindow().getFrame().getBounds().width;
+        setPreferredSize(new Dimension(width, 100));
+        setBorder(BorderFactory.createLineBorder(ThemeHelper.color("border")));
         setBackGroundColor();
     }
 
@@ -47,81 +41,8 @@ public class Toolbar extends View {
         setBackground(ThemeHelper.color("toolbar"));
     }
 
-    /**
-     * Creates and adds all the components to the toolbar
-     */
-    private void setupToolbarComponents() {
-        addSaveTool(addLoadTool());
-        addSettingsTool();
-        addSearchTool();
-    }
-
-
-    private ToolComponent addSearchTool() {
-        ToolComponent tool = tools.get(ToolType.SEARCH);
-        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, tool, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER, tool, 0, SpringLayout.VERTICAL_CENTER, this);
-        this.add(tool);
-        return tool;
-    }
-
-    public void rebuildSearchTool(int width) {
-        remove(tools.get(ToolType.SEARCH));
-        tools.remove(ToolType.SEARCH);
-        revalidate();
-        repaint();
-        tools.put(ToolType.SEARCH, new SearchTool(width));
-        addSearchTool();
-    }
-
-    /**
-     * Creates the LoadTool and set up the position of the tool
-     * @return loadTool reference to be used for positioning
-     */
-    private ToolComponent addLoadTool() {
-        ToolComponent tool = tools.get(ToolType.LOAD);
-        layout.putConstraint(WEST, tool,
-                MARGIN_SMALL_LEFT,
-                WEST, this);
-        layout.putConstraint(NORTH, tool,
-                MARGIN_TOP,
-                NORTH, this);
-        this.add(tool);
-        return tool;
-    }
-
-    /**
-     * Creates the SaveTool, positions it and adds it to the toolbar
-     * @param tool the reference to the tool so that this tool can
-     *             be positioned to the right of that tool
-     */
-    private ToolComponent addSaveTool(ToolComponent tool) {
-        ToolComponent next = tools.get(ToolType.SAVE);
-        layout.putConstraint(WEST, next,
-                MARGIN_SMALL_LEFT,
-                EAST, tool);
-        layout.putConstraint(NORTH, next,
-                MARGIN_TOP,
-                NORTH, this);
-        tool = next;
-        this.add( tool);
-        return tool;
-    }
-
-    /**
-     * Creates the settings tool, positions it and adds it to the toolbar
-     *
-     */
-    private ToolComponent addSettingsTool() {
-        ToolComponent tool = tools.get(ToolType.SETTINGS);
-        layout.putConstraint(EAST, tool,
-                MARGIN_SMALL_RIGHT,
-                EAST, this);
-        layout.putConstraint(NORTH, tool,
-                MARGIN_TOP,
-                NORTH, this);
-        this.add( tool);
-        return tool;
+    public SpringLayout getLayout() {
+        return layout;
     }
 
     /**
@@ -145,7 +66,8 @@ public class Toolbar extends View {
             tools.put(ToolType.LOAD, new ToolFeature("\uf115",ToolType.LOAD));
             tools.put(ToolType.SAVE, new ToolFeature("\uf0c7",ToolType.SAVE));
             tools.put(ToolType.SETTINGS, new ToolFeature("\uf085",ToolType.SETTINGS));
-            tools.put(ToolType.SEARCH, new SearchTool(GlobalValue.getSearchFieldSize()));
+            tools.put(ToolType.Menu, new ToolFeature("\uf0c9", ToolType.Menu));
+            tools.put(ToolType.SEARCH, new SearchTool(GlobalValue.getSearchFieldLargeSize()));
             return tools;
         }
     }

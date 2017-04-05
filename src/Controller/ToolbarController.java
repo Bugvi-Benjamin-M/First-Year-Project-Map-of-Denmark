@@ -3,10 +3,9 @@ package Controller;
 import Enums.FileType;
 import Enums.ToolType;
 import Helpers.FileHandler;
+import Helpers.GlobalValue;
 import Helpers.OSDetector;
-import View.PopupWindow;
-import View.ToolFeature;
-import View.Toolbar;
+import View.*;
 import View.Window;
 
 import javax.swing.*;
@@ -17,6 +16,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static javax.swing.SpringLayout.*;
+
 /**
  * Class details:
  *
@@ -26,13 +27,28 @@ import java.awt.event.MouseEvent;
  */
 public final class ToolbarController extends Controller {
 
+    private static final int SMALL_LARGE_EVENT_WIDTH = 700;
+
     private Toolbar toolbar;
+    private SpringLayout toolbarLayout;
     private static ToolbarController instance;
+    private enum ToolbarType {
+        LARGE,
+        SMALL
+    }
+    private ToolbarType type;
+
+    private final int MARGIN_SMALL_LEFT = 20;
+    private final int MARGIN_SMALL_RIGHT = -20;
+    private final int MARGIN_TOP = 15;
 
     private ToolbarController(Window window) {
         super(window);
         toolbar = new Toolbar();
+        toolbarLayout = toolbar.getLayout();
         this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
+        type = ToolbarType.LARGE;
+        setupLargeToolbar();
         addInteractionHandlersToTools();
     }
 
@@ -43,6 +59,127 @@ public final class ToolbarController extends Controller {
         return instance;
     }
 
+    private void setupLargeToolbar() {
+        removeAllComponentsFromToolbar();
+        addSaveToolToLargeToolbar(addLoadToolToLargeToolbar());
+        addSettingsToolToLargeToolbar();
+        addSearchToolToLargeToolbar();
+        type = ToolbarType.LARGE;
+    }
+
+    private void setupSmallToolbar() {
+        removeAllComponentsFromToolbar();
+        addActionToolToSmallToolbar();
+        addSearchToolToSmallToolbar();
+        //Todo continue work with smallToolbar
+        type = ToolbarType.SMALL;
+    }
+
+    public void resizeEvent() {
+        if(type == ToolbarType.LARGE && MainWindowController.getInstance().getWindow().getFrame().getWidth() < SMALL_LARGE_EVENT_WIDTH) {
+            SearchController.getInstance(window).saveCurrentText();
+            setupSmallToolbar();
+            return;
+        }
+        if(type == ToolbarType.SMALL && MainWindowController.getInstance().getWindow().getFrame().getWidth() >= SMALL_LARGE_EVENT_WIDTH) {
+            SearchController.getInstance(window).saveCurrentText();
+            setupLargeToolbar();
+            return;
+        }
+        if(type == ToolbarType.LARGE) searchToolResizeEvent();
+    }
+
+    private void removeAllComponentsFromToolbar() {
+        if(toolbar.getComponents().length == 0) return;
+        for(Component component : toolbar.getComponents()) {
+            toolbar.remove(component);
+        }
+    }
+
+    private ToolComponent addActionToolToSmallToolbar() {
+        ToolComponent actions = toolbar.getTool(ToolType.Menu);
+        toolbarLayout.putConstraint(WEST, actions,
+                MARGIN_SMALL_LEFT,
+                WEST, toolbar);
+        putNorthConstraints(actions);
+        toolbar.add(actions);
+        return actions;
+    }
+
+    private ToolComponent addSearchToolToSmallToolbar() {
+        toolbar.getAllTools().remove(ToolType.SEARCH);
+        toolbar.getAllTools().put(ToolType.SEARCH, new SearchTool(GlobalValue.getSearchFieldSmallSize()));
+        SearchController.getInstance(window).searchToolReplacedEvent();
+        ToolComponent search = toolbar.getTool(ToolType.SEARCH);
+        toolbarLayout.putConstraint(EAST, search,
+                MARGIN_SMALL_RIGHT,
+                EAST, toolbar);
+        toolbarLayout.putConstraint(SpringLayout.VERTICAL_CENTER, search, 0, SpringLayout.VERTICAL_CENTER, toolbar);
+        toolbar.add(search);
+        return search;
+    }
+
+    private ToolComponent addLoadToolToLargeToolbar() {
+        ToolComponent load = toolbar.getTool(ToolType.LOAD);
+        toolbarLayout.putConstraint(WEST, load,
+                MARGIN_SMALL_LEFT,
+                WEST, toolbar);
+        putNorthConstraints(load);
+        toolbar.add(load);
+        return load;
+    }
+
+    private ToolComponent addSaveToolToLargeToolbar(ToolComponent tool) {
+        ToolComponent save = toolbar.getTool(ToolType.SAVE);
+        toolbarLayout.putConstraint(WEST, save,
+                MARGIN_SMALL_LEFT,
+                EAST, tool);
+        putNorthConstraints(save);
+        tool = save;
+        toolbar.add(tool);
+        return tool;
+    }
+
+    private ToolComponent addSettingsToolToLargeToolbar() {
+        ToolComponent settings = toolbar.getTool(ToolType.SETTINGS);
+        toolbarLayout.putConstraint(EAST, settings,
+                MARGIN_SMALL_RIGHT,
+                EAST, toolbar);
+        putNorthConstraints(settings);
+        toolbar.add(settings);
+        return settings;
+    }
+
+    private ToolComponent addSearchToolToLargeToolbar() {
+        ToolComponent search = toolbar.getTool(ToolType.SEARCH);
+        toolbarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, search, 0, SpringLayout.HORIZONTAL_CENTER, toolbar);
+        toolbarLayout.putConstraint(SpringLayout.VERTICAL_CENTER, search, 0, SpringLayout.VERTICAL_CENTER, toolbar);
+        toolbar.add(search);
+        return search;
+    }
+
+    private void putNorthConstraints(ToolComponent tool) {
+        toolbarLayout.putConstraint(NORTH, tool,
+                MARGIN_TOP,
+                NORTH, toolbar);
+    }
+
+    public void searchToolResizeEvent() {
+        SearchController.getInstance(window).saveCurrentText();
+        rebuildSearchTool();
+    }
+
+    private void rebuildSearchTool() {
+        toolbar.remove(toolbar.getTool(ToolType.SEARCH));
+        toolbar.getAllTools().remove(ToolType.SEARCH);
+        toolbar.revalidate();
+        toolbar.repaint();
+        toolbar.getAllTools().put(ToolType.SEARCH, new SearchTool(GlobalValue.getSearchFieldLargeSize()));
+        addSearchToolToLargeToolbar();
+        SearchController.getInstance(window).searchToolResizeEvent();
+        toolbar.revalidate();
+        toolbar.repaint();
+    }
     private void addInteractionHandlersToTools() {
         addInteractionHandlerToLoadTool();
         addInteractionHandlerToSaveTool();
@@ -117,13 +254,19 @@ public final class ToolbarController extends Controller {
     }
 
     public void themeHasChanged() {
-        this.window.removeComponent(toolbar);
-        toolbar = null;
         SearchController.getInstance(window).saveCurrentText();
-        toolbar = new Toolbar();
-        SearchController.getInstance(window).searchToolThemeChangeEvent();
-        this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
+        resetToolbar();
+        SearchController.getInstance(window).searchToolReplacedEvent();
+        window.addComponent(BorderLayout.PAGE_START, toolbar,true);
+        if(type == ToolbarType.LARGE) setupLargeToolbar();
+        else if(type == ToolbarType.SMALL) setupSmallToolbar();
+    }
 
+    private void resetToolbar() {
+        window.removeComponent(toolbar);
+        toolbar = null;
+        toolbar = new Toolbar();
+        toolbarLayout = toolbar.getLayout();
         addInteractionHandlersToTools();
     }
 
@@ -197,6 +340,12 @@ public final class ToolbarController extends Controller {
         @Override
         public void mouseClicked(MouseEvent e) {
             super.mouseClicked(e);
+            toolbar.grabFocus();
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            super.mouseDragged(e);
             toolbar.grabFocus();
         }
     }

@@ -20,11 +20,9 @@ public final class MainWindowController extends WindowController {
     private static final String MAIN_TITLE = "OSM Map Viewer v0.3";
 
     private static MainWindowController instance;
-    private boolean maxStateReached;
 
     private MainWindowController(Window window) {
         super(window);
-        maxStateReached = false;
     }
 
     public static MainWindowController getInstance() {
@@ -83,8 +81,7 @@ public final class MainWindowController extends WindowController {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
-            SearchController.getInstance(window).searchToolResizeEvent();
-            CanvasController.getInstance(window).getMapCanvas().repaint();
+            ToolbarController.getInstance(window).resizeEvent();
         }
     }
 }
