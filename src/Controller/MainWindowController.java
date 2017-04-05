@@ -2,6 +2,7 @@ package Controller;
 
 import Helpers.OSDetector;
 import Helpers.Utilities.DebugWindow;
+import View.MapCanvas;
 import View.PopupWindow;
 import View.Window;
 
@@ -68,7 +69,7 @@ public final class MainWindowController extends WindowController {
     protected void addInteractionHandlerToWindow() {
         super.addInteractionHandlerToWindow();
         MainWindowInteractionHandler handler = new MainWindowInteractionHandler();
-        window.getFrame().addComponentListener(handler);
+        window.getFrame().getContentPane().addComponentListener(handler); //THINK THIS THROUGH
     }
 
     public void resetInstance() {

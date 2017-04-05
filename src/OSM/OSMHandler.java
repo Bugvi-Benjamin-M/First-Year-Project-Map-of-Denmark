@@ -6,7 +6,7 @@ import Helpers.LongToPointMap;
 import KDtree.NodeGenerator;
 import KDtree.Pointer;
 import Model.Model;
-import Model.Elements.Road;
+import Model.Elements.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -119,6 +119,14 @@ public final class OSMHandler implements ContentHandler {
                     System.out.println("Numnodes: " + loadednodes);
                 }
                 break;
+            case "relation":
+                relation = new OSMRelation();
+                wayType = WayType.UNKNOWN;
+                loadedRelations++;
+                if ((loadedRelations & 0xFF) == 0) {
+                    System.out.println("Numrelations: " + loadedRelations);
+                }
+                break;
             case "way":
                 if(!initialized){
                     nodeGenerator.initialise();
@@ -133,7 +141,7 @@ public final class OSMHandler implements ContentHandler {
                 wayType = WayType.UNKNOWN;
                 idToWay.put(id, way);
                 loadedWays++;
-                if ((loadedWays & 0xFFFF) == 0) {
+                if ((loadedWays & 0xFF) == 0) {
                     System.out.println("Numways: " + loadedWays);
                 }
                 break;
@@ -151,7 +159,23 @@ public final class OSMHandler implements ContentHandler {
                     case "name":
                         name = v;
                         break;
+                    case "natural":
+                        determineWater(v);
+                        break;
                 }
+                break;
+            case "member":
+                ref = Long.parseLong(atts.getValue("ref"));
+                relation.add(idToWay.get(ref));
+                break;
+        }
+    }
+
+    private void determineWater(String value){
+        wayType = wayType.UNKNOWN;
+        switch(value){
+            case "water":
+                wayType = WayType.WATER;
                 break;
         }
     }
@@ -267,26 +291,70 @@ public final class OSMHandler implements ContentHandler {
                     case CYCLEWAY:
                     case PATH:
                     case ROAD:
-                        addRoad(wayType);
+                        addRoad(wayType, false);
                         name = "";
+                        break;
+                    case WATER:
+                        addWater(wayType, false);
                         break;
                     case UNKNOWN:
                         //UnknownWay unknownWay = new UnknownWay(path);
                         //model.addWayElement(wayType, unknownWay);
                         break;
                 } break;
+            case "relation":
+                switch(wayType){
+                    case WATER:
+                        addWater(wayType, true);
+                }
+                break;
         }
     }
 
-    private void addRoad(WayType type) {
-        Path2D path = way.toPath2D();
-        Road road = new Road(path, name);
-        for (int i = 0; i < way.size(); i++) {
-            Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), road);
-            model.getElements().get(type).putPointer(p);
+    private void addRoad(WayType type, Boolean isRelation) {
+        Path2D path;
+        if(!isRelation) {
+            path = way.toPath2D();
+            Road road = new Road(path, name);
+            for (int i = 0; i < way.size(); i+=5) {
+                Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), road);
+                model.getElements().get(type).putPointer(p);
+            }
         }
-        System.out.println(name + " Added :)");
+        else {
+            path = relation.toPath2D();
+            Road road = new Road(path, name);
+            for (int i = 0; i < relation.size(); i++){
+                for (int j = 0; i < relation.get(i).size(); j+=5){
+                    Pointer p = new Pointer((float) relation.get(i).get(0).getX(), (float) relation.get(i).get(0).getY(), road);
+                    model.getElements().get(type).putPointer(p);
+                }
+            }
+        }
+        //System.out.println(name + " Added :)");
     }
+
+    private void addWater(WayType type, Boolean isRelation) {
+        Path2D path;
+        if (!isRelation) {
+            path = way.toPath2D();
+            Water water = new Water(path, name);
+            for (int i = 0; i < way.size(); i += 5) {
+                Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), water);
+                model.getElements().get(type).putPointer(p);
+            }
+        } else {
+            path = relation.toPath2D();
+            Water water = new Water(path, name);
+            for (int i = 0; i < relation.size(); i++) {
+                for (int j = 0; j < relation.get(i).size(); j += 5) {
+                    Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), water);
+                    model.getElements().get(type).putPointer(p);
+                }
+            }
+        }
+    }
+
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {

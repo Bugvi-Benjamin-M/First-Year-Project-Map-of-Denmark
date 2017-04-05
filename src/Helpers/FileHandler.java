@@ -12,10 +12,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -26,10 +23,10 @@ public class FileHandler {
     private static String pathStart = OSDetector.getPathPrefix();
 
     public static void loadResource(String fileName) throws FileWasNotFoundException {
-        if(fileExists(fileName) && fileName.endsWith(FileType.OSM.getExtension())) {
+        if (fileExists(fileName) && fileName.endsWith(FileType.OSM.getExtension())) {
             InputStream filename = FileHandler.class.getResourceAsStream(fileName);
             FileHandler.loadOSM(new InputSource(filename));
-        }else if(fileExists(fileName) && fileName.endsWith(FileType.ZIP.getExtension())){
+        } else if (fileExists(fileName) && fileName.endsWith(FileType.ZIP.getExtension())) {
             ZipInputStream zip = new ZipInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(fileName)));
             try {
                 zip.getNextEntry();
@@ -37,8 +34,9 @@ public class FileHandler {
                 e.printStackTrace();
             }
             loadOSM(new InputSource(zip));
-        }
-        else{
+        } else if(fileExists(fileName) && fileName.endsWith(FileType.BIN.getExtension())){
+            loadBin(fileName);
+        }else{
             throw new FileWasNotFoundException(fileName + " can not be found.");
         }
     }
@@ -48,6 +46,21 @@ public class FileHandler {
             return true;
         }
         return false;
+    }
+
+    public static void loadBin(String filename){
+        try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(filename)))) {
+            long time = -System.nanoTime();
+            //Model.getInstance().setBst((BST) in.readObject());
+            //Model.getInstance().setBounds(in.readFloat(), in.readFloat(), in.readFloat(), in.readFloat());
+            time += System.nanoTime();
+            System.out.printf("Object deserialization: %f s\n", time / 1000000 / 1000d);
+            Model.getInstance().modelHasChanged();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void fileChooserLoad(String fileName) {

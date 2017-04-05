@@ -12,6 +12,8 @@ public enum WayType {  //TODO Change name to ElementType
 
     UNKNOWN, //ukendte elementer
 
+    WATER, //Søer og lign.
+
     //ROADS
     MOTORWAY, //Motorvej
     MOTORWAY_LINK,

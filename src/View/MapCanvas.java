@@ -134,6 +134,12 @@ public class MapCanvas extends View {
     }
 
     private void drawLevelZero(Graphics2D g){
+        setCurrentSection(WayType.WATER);
+        for (Element element : currentSection) {
+            g.setColor(ThemeHelper.color("water"));
+            g.setStroke(new BasicStroke(0.00001f));
+            g.fill(element.getShape());
+        }
         setCurrentSection(WayType.PEDESTRIAN_STERET);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("pedestrianStreet"));
