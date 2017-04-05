@@ -330,7 +330,6 @@ public class MapCanvas extends View {
         DebugWindow.getInstance().setZoomLabel();
         DebugWindow.getInstance().setZoomFactorLabel();
         DebugWindow.getInstance().setFPSLabel();
-        setCoastlines(Model.getInstance().getCoastlines());
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         repaint();
     }
@@ -350,7 +349,6 @@ public class MapCanvas extends View {
      *           centered and the current center point
      */
     public void pan(double dx, double dy) {
-        setCoastlines(Model.getInstance().getCoastlines());
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
         DebugWindow.getInstance().setFPSLabel();
         repaint();

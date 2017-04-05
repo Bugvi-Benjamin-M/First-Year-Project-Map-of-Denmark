@@ -30,10 +30,22 @@ public class Coastline extends OSMWay {
         path.moveTo(node.getX(), node.getY());
 
         // Draws all points
-        for (int i = 0; i < size(); i += ZoomLevel.LEVEL_2.getNodesAtLevel()) {
+        for (int i = 0; i < size(); i += ZoomLevel.getZoomLevel().getNodesAtLevel()) {
             node = this.get(i);
             boolean isNear = isNodeNearCamera(node);
             if (isNear) path.lineTo(node.getX(), node.getY());
+            else {
+                while (!isNear) {
+                    path.lineTo(node.getX(), node.getY());
+                    i += ZoomLevel.getNodesAtMaxLevel();
+                    if (i < size()) {
+                        node = this.get(i);
+                        isNear = isNodeNearCamera(node);
+                    } else {
+                        isNear = true;
+                    }
+                }
+            }
         }
 
         /*
