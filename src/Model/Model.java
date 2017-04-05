@@ -25,11 +25,14 @@ public final class Model extends Observable {
     private CoastlineFactory coastlineFactory;
 
     private EnumMap<BoundType, Float> bounds;
+    private EnumMap<BoundType,Float> camera_bounds;
 
     private Model(){
         bounds = new EnumMap<>(BoundType.class);
+        camera_bounds = new EnumMap<>(BoundType.class);
         for (BoundType type: BoundType.values()) {
             bounds.put(type,0.0f);
+            camera_bounds.put(type,0.0f);
         }
 
         elements = new EnumMap<>(WayType.class);
@@ -84,6 +87,12 @@ public final class Model extends Observable {
     public void setBound(BoundType type, float value) {
         bounds.put(type,value);
     }
+
+    public void setCameraBound(BoundType type, float value) {
+        camera_bounds.put(type,value);
+    }
+
+    public float getCameraBound(BoundType type) {return camera_bounds.get(type);}
 
     public float getMinLatitude() {
         return bounds.get(BoundType.MIN_LATITUDE);

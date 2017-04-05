@@ -24,7 +24,7 @@
         <mkdir dir="${main.build.dir}"/>
         <javac srcdir="${main.src.dir}" destdir="${main.build.dir}" includeantruntime="false"/>
         <copy todir="${main.build.dir}" overwrite="true">
-            <fileset dir="${main.resources}"/>
+            <fileset dir="resources"/>
         </copy>
     </target>
 

@@ -1,5 +1,6 @@
 package Model.Coastlines;
 
+import Enums.BoundType;
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
 import Model.Model;
@@ -27,8 +28,19 @@ public class Coastline extends OSMWay {
         Path2D path = new Path2D.Float();
         Point2D node = this.getFromNode();
         path.moveTo(node.getX()*longFactor, node.getY());
-        for(int i = 1 ; i < size() ; i += GlobalValue.getZoomLevel().getNodesAtLevel()){
+
+        // Draws all points
+        for(int i = 1 ; i < size() ; i += ZoomLevel.getNodesAtMaxLevel()){
             node = this.get(i);
+            boolean isNear = isNodeNearCamera(node);
+            while(isNear) {
+                path.lineTo(node.getX()*longFactor, node.getY());
+                int modifier = GlobalValue.getZoomLevel().getNodesAtLevel();
+                i += modifier;
+                if (i >= size()) break;
+                node = this.get(i);
+                isNear = isNodeNearCamera(node);
+            }
             path.lineTo(node.getX()*longFactor, node.getY());
         }
         node = this.getFromNode();
@@ -36,5 +48,26 @@ public class Coastline extends OSMWay {
         return path;
     }
 
+    private boolean isNodeNearCamera(Point2D node) {
+        boolean nodeIsNear = false;
+        Model model = Model.getInstance();
+        float minlon = model.getCameraBound(BoundType.MIN_LONGITUDE);
+        float maxlon = model.getCameraBound(BoundType.MAX_LONGITUDE);
+        float minlat = model.getCameraBound(BoundType.MIN_LATITUDE);
+        float maxlat = model.getCameraBound(BoundType.MAX_LATITUDE);
+
+        if (minlon <= node.getX() && maxlon >= node.getX() &&
+                minlat >= node.getY() && maxlat <= node.getY()) {
+            nodeIsNear = true;
+        }
+
+        if(nodeIsNear) {
+            System.out.println("minlon: "+minlon+" maxlon: "+maxlon);
+            System.out.println("minlat: "+minlat+" maxlat: "+maxlat);
+            System.out.println("Node at x=" + node.getX() + " y= " + node.getY() + " is near=" + nodeIsNear);
+        }
+
+        return nodeIsNear;
+    }
 
 }
