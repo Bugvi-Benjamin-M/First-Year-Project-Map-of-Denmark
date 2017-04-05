@@ -8,7 +8,8 @@ public enum ToolType {
     LOAD("Load"),
     SETTINGS("Settings"),
     SEARCH("Search"),
-    UNKNOWN("Unknown");
+    UNKNOWN("Unknown"),
+    Menu("Menu");
 
     private String tag;
 
