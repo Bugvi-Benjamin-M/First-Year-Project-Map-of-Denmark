@@ -41,7 +41,7 @@ public final class MainWindowController extends WindowController {
                 .relativeTo(null)
                 .icon()
                 .hide();
-        mainWindow.setMinimumWindowSize(new Dimension(600, 500));
+        mainWindow.setMinimumWindowSize(new Dimension(650, 500));
         return mainWindow;
     }
 
