@@ -36,11 +36,6 @@ public class Coastline extends OSMWay {
             if (isNear) path.lineTo(node.getX(), node.getY());
         }
 
-        /*
-        for(int i = 1 ; i < size() ; i += GlobalValue.getZoomLevel().getNodesAtLevel()){
-            node = this.get(i);
-            path.lineTo(node.getX()*longFactor, node.getY());
-        }*/
         node = this.getFromNode();
         path.lineTo(node.getX(), node.getY());
         return path;
@@ -58,12 +53,6 @@ public class Coastline extends OSMWay {
         if (minlon <= node.getX() && maxlon >= node.getX() &&
                 minlat >= node.getY() && maxlat <= node.getY()) {
             nodeIsNear = true;
-        }
-
-        if(false) {
-            System.out.println("minlon: "+minlon+" maxlon: "+maxlon);
-            System.out.println("minlat: "+minlat+" maxlat: "+maxlat);
-            System.out.println("Node at x=" + node.getX() + " y= " + node.getY() + " is near=" + nodeIsNear);
         }
 
         return nodeIsNear;
