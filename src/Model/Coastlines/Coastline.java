@@ -35,20 +35,28 @@ public class Coastline extends OSMWay {
             boolean isNear = isNodeNearCamera(node);
             if (isNear) path.lineTo(node.getX(), node.getY());
             else {
-                while (!isNear) {
-                    path.lineTo(node.getX(), node.getY());
-                    i += ZoomLevel.getNodesAtMaxLevel();
-                    if (i < size()) {
-                        node = this.get(i);
-                        isNear = isNodeNearCamera(node);
-                    } else {
-                        isNear = true;
-                    }
-                }
+                path = addOutOfViewNodes( i, node, path);
             }
         }
         node = this.getFromNode();
         path.lineTo(node.getX(), node.getY());
+        return path;
+    }
+
+    private Path2D addOutOfViewNodes(int i, Point2D node, Path2D path) {
+        boolean isNear = false;
+        int j = 0;
+        while (!isNear) {
+            j++;
+            i += ZoomLevel.getNodesAtMaxLevel()/4;
+            if (i < size()) {
+                node = this.get(i);
+                isNear = isNodeNearCamera(node);
+            } else {
+                isNear = true;
+            }
+            if (j % 4 == 0) path.lineTo(node.getX(), node.getY());
+        }
         return path;
     }
 

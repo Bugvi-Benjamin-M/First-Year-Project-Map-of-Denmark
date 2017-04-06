@@ -27,7 +27,7 @@ public class HelperFunctions {
         int end = points.size();
         for (int i = 1; i < end - 1; i++) {
             double d = distanceBetweenPointAndPath(points.get(0),points.get(end-1),points.get(i));
-            System.out.println("d: "+d);
+            // System.out.println("d: "+d);
             if (d > dmax) {
                 index = i;
                 dmax = d;
@@ -38,10 +38,10 @@ public class HelperFunctions {
 
         // if max distance is greater than epsilon, recursively simplify
         if (dmax > epsilon) {
-            System.out.println("recursive call");
+            // System.out.println("recursive call");
             // Recursive call
             List<Point2D> firstSection = new ArrayList<>(), secondSection = new ArrayList<>();
-            for (int i = 0; i < index; i++) {
+            for (int i = 1; i < index; i++) {
                 firstSection.add(points.get(i));
             }
             for (int i = index; i < end; i++) {
@@ -51,10 +51,14 @@ public class HelperFunctions {
             secondSection = pathGeneralization(secondSection,epsilon);
 
             // Build the result list
-            result.addAll(firstSection);
-            result.addAll(secondSection);
+            for (int i = 1; i < firstSection.size()-2; i++) {
+                result.add(firstSection.get(i));
+            }
+            for (int i = 1; i < secondSection.size()-1; i++) {
+                result.add(secondSection.get(i));
+            }
         } else {
-            System.out.println("add all");
+            // System.out.println("add all");
             result.addAll(points);
         }
 

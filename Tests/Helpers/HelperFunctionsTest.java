@@ -4,8 +4,7 @@ import KDtree.Point;
 import org.junit.Test;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -27,26 +26,30 @@ public class HelperFunctionsTest {
     @Test
     public void pathGeneralization() throws Exception {
         List<Point2D> points = new ArrayList<>();
-        points.add(new Point2D.Double(-10,3));
-        points.add(new Point2D.Double(-8.96,3.59));
-        points.add(new Point2D.Double(-7.91,2.55));
-        points.add(new Point2D.Double(-7,3));
-        points.add(new Point2D.Double(-5.95,3.36));
-        points.add(new Point2D.Double(-5,3));
-        points.add(new Point2D.Double(-4.98,2.17));
-        points.add(new Point2D.Double(-5.01,1.13));
-        points.add(new Point2D.Double(-6,0.67));
-        points.add(new Point2D.Double(-7.03,0.75));
-        points.add(new Point2D.Double(-8,0.29));
-        points.add(new Point2D.Double(-9.04,0.71));
-        points.add(new Point2D.Double(-10.02,0.55));
+
+        int maxValue = 100000;
+        for (int i = 0; i < maxValue; i++) {
+            double x = Math.random();
+            double y = Math.random();
+            points.add(new Point2D.Double(x,y));
+        }
 
         System.out.println(points.size());
-        List<Point2D> result = HelperFunctions.pathGeneralization(points,2);
-        System.out.println(result.size());
-        for (int i = 0; i < result.size(); i++) {
-            assertEquals(points.get(i),result.get(i));
+        HashMap<Integer,Double> values = new HashMap<>();
+        for (double i = 0.01; i < 1; i += 0.01) {
+            List<Point2D> result = HelperFunctions.pathGeneralization(points,i);
+            values.put(result.size(),i);
         }
+
+        List<String> results = new ArrayList<>();
+        for (Integer size: values.keySet()) {
+            String res = ""+size+ " "+values.get(size);
+            double compared = ((double) size / (double) maxValue);
+            res += " "+ compared;
+            results.add(res);
+        }
+        Collections.sort(results);
+        results.forEach(System.out::println);
     }
 
     @Test
