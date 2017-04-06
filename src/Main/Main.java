@@ -66,7 +66,12 @@ public class Main {
     private static void loadDefaultResource() throws FileWasNotFoundException {
         try {
             long startTime = System.currentTimeMillis();
-            if (!DEBUG_MODE_ACTIVE) FileHandler.loadResource(DEFAULT_RESOURCE);
+            if (!DEBUG_MODE_ACTIVE) {
+                FileHandler.loadResource(DEFAULT_RESOURCE);
+                //FileHandler.saveBin("/Users/Nik/IdeaProjects/Danmarkskort/Resources/Bst.bin");
+                //FileHandler.loadBin("/Bst.bin");
+                //CanvasController.getInstance(windowController.getWindow()).adjustToBounds();
+            }
             long stopTime = System.currentTimeMillis();
             System.out.println("Resource load time: "+(stopTime-startTime)+" ms");
             if (DEBUG_MODE_ACTIVE) throw new FileWasNotFoundException("");
