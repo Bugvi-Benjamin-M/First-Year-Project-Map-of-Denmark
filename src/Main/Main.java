@@ -50,7 +50,7 @@ public class Main {
 
             CanvasController.getInstance(MainWindowController.getInstance().getWindow());
             ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
-            SearchController.getInstance(MainWindowController.getInstance().getWindow());
+            SearchToolController.getInstance(MainWindowController.getInstance().getWindow());
             InfobarController.getInstance(MainWindowController.getInstance().getWindow());
 
             CanvasController.adjustToBounds();

@@ -13,24 +13,24 @@ import java.awt.event.FocusEvent;
 /**
  * Created by Búgvi Magnussen on 02-04-2017.
  */
-public final class SearchController extends Controller {
+public final class SearchToolController extends Controller {
 
     private static final String defaultText = "Addresses, points of interest...";
 
-    private static SearchController instance;
+    private static SearchToolController instance;
     private SearchTool searchTool;
     private String currentText;
 
-    private SearchController(Window window) {
+    private SearchToolController(Window window) {
         super(window);
         searchTool = (SearchTool) ToolbarController.getInstance(this.window).getToolbar().getTool(ToolType.SEARCH);
         addFocusListenerToSearchTool();
         setToDefaultText();
     }
 
-    public static SearchController getInstance(Window window) {
+    public static SearchToolController getInstance(Window window) {
         if (instance == null) {
-            instance = new SearchController(window);
+            instance = new SearchToolController(window);
         }
         return instance;
     }

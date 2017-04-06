@@ -9,12 +9,17 @@ import java.awt.*;
  * @author bugvimagnussen
  * @version 05/04/2017
  */
-public class ToolMenu extends View {
+public class MenuTool extends ToolComponent {
 
     private JPopupMenu popupMenu;
     private SpringLayout layout;
 
-    public ToolMenu() {
+    public MenuTool() {
+        setupLayout();
+    }
+
+    @Override
+    void setupLayout() {
         popupMenu = new JPopupMenu();
         layout = new SpringLayout();
         popupMenu.setLayout(layout);
@@ -46,6 +51,14 @@ public class ToolMenu extends View {
 
     public SpringLayout getLayout() {
         return layout;
+    }
+
+    public void setBackGroundColor(Color color) {
+        popupMenu.setBackground(color);
+    }
+
+    public void setForeGroundColor(Color color) {
+        popupMenu.setForeground(color);
     }
 
 }
