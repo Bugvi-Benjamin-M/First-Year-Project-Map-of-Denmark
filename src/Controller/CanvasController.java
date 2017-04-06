@@ -182,6 +182,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.zoom(factor);
         if(dynamic) {
             double newfactor = (model.getMaxLongitude(!dynamic)- model.getMinLongitude(!dynamic)) / (model.getMaxLongitude(dynamic)- model.getMinLongitude(dynamic));
+            changeZoomLevel(0.0);
             changeZoomLevel((Math.log(newfactor) / Math.log(ZOOM_FACTOR))/3);
         }
     }

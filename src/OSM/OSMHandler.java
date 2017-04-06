@@ -365,11 +365,13 @@ public final class OSMHandler implements ContentHandler {
         } else {
             path = relation.toPath2D();
             Water water = new Water(path, name);
-            for (int i = 0; i < relation.size(); i++) {
-                for (int j = 0; j < relation.get(i).size(); j += 5) {
-                    Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), water);
-                    model.getElements().get(type).putPointer(p);
-                }
+            for (int i = 0; i < relation.size()-1; i++) {
+                if(relation.get(i) != null) {
+                    for (int j = 0; j < relation.get(i).size(); j += 5) {
+                        Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), water);
+                        model.getElements().get(type).putPointer(p);
+                    }
+                }else continue;
             }
         }
     }

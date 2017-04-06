@@ -33,6 +33,7 @@ public class FileHandler {
                 if(isLoadingFromStart){
                     FileHandler.loadOSM(new InputSource(FileHandler.class.getResourceAsStream(fileName)));
                 }else {
+                    OSMHandler.getInstance().parseDefault(false);
                     FileHandler.loadOSM(new InputSource(pathStart + fileName));
                     CanvasController.resetBounds();
                     CanvasController.adjustToBounds(true);
@@ -42,6 +43,7 @@ public class FileHandler {
                 if(isLoadingFromStart){
                     zip = new ZipInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(fileName)));
                 }else {
+                    OSMHandler.getInstance().parseDefault(false);
                     zip = new ZipInputStream(new FileInputStream(fileName));
                 }
                 try {
@@ -76,6 +78,7 @@ public class FileHandler {
             if(isLoadingFromStart){
                 in = new ObjectInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(filename)));
             }else {
+                OSMHandler.getInstance().parseDefault(false);
                 in = new ObjectInputStream(new FileInputStream(filename));
             }
             long time = -System.nanoTime();
