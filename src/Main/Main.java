@@ -19,7 +19,7 @@ public class Main {
     public static final FPSCounter FPS_COUNTER = new FPSCounter();
     private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
 
-    private static final boolean DEBUG_MODE_ACTIVE = true;  // CHANGE ME TO PREVENT LOADING DEFAULT
+    private static final boolean DEBUG_MODE_ACTIVE = false;  // CHANGE ME TO PREVENT LOADING DEFAULT
 
     public static long LOAD_TIME;
     private static SplashScreen screen;
@@ -53,7 +53,7 @@ public class Main {
             SearchController.getInstance(MainWindowController.getInstance().getWindow());
             InfobarController.getInstance(MainWindowController.getInstance().getWindow());
 
-            CanvasController.adjustToBounds();
+            CanvasController.adjustToBounds(false);
             model.modelHasChanged();
             CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas().grabFocus();
 
@@ -67,10 +67,10 @@ public class Main {
         try {
             long startTime = System.currentTimeMillis();
             if (!DEBUG_MODE_ACTIVE) {
-                FileHandler.loadResource(DEFAULT_RESOURCE);
-                //FileHandler.saveBin("/Users/Nik/IdeaProjects/Danmarkskort/Resources/Bst.bin");
-                //FileHandler.loadBin("/Bst.bin");
-                //CanvasController.getInstance(windowController.getWindow()).adjustToBounds();
+                //FileHandler.loadResource(DEFAULT_RESOURCE, true);
+                //FileHandler.saveBin("/Users/Nik/IdeaProjects/Danmarkskort/Resources/Bst.bin", true);
+                FileHandler.loadBin("/Bst.bin", true);
+                //CanvasController.adjustToBounds();
             }
             long stopTime = System.currentTimeMillis();
             System.out.println("Resource load time: "+(stopTime-startTime)+" ms");

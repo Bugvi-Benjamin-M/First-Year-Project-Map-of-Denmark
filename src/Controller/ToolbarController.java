@@ -220,7 +220,8 @@ public final class ToolbarController extends Controller {
     private void loadEvent() {
         FileNameExtensionFilter[] filters = new FileNameExtensionFilter[]{
                 new FileNameExtensionFilter("OSM Files", FileType.OSM.toString()),
-                new FileNameExtensionFilter("ZIP Files", FileType.ZIP.toString())
+                new FileNameExtensionFilter("ZIP Files", FileType.ZIP.toString()),
+                new FileNameExtensionFilter("BIN Files", FileType.BIN.toString())
         };
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {
@@ -234,7 +235,19 @@ public final class ToolbarController extends Controller {
     }
 
     private void saveEvent() {
-        PopupWindow.infoBox(null, "You activated save tool","Tool activated");
+        FileNameExtensionFilter[] filters = new FileNameExtensionFilter[]{
+                new FileNameExtensionFilter("BIN Files", FileType.BIN.toString())
+        };
+        JFileChooser chooser = PopupWindow.fileSaver(false, filters);
+        if (chooser != null) {
+            FileHandler.fileChooserSave(chooser.getSelectedFile().toString());
+            try {
+                FileHandler.fileChooserSave(chooser.getSelectedFile().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //PopupWindow.infoBox(null, "You activated save tool","Tool activated");
     }
 
     private void settingsEvent() {

@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -35,7 +36,7 @@ public final class CanvasController extends Controller implements Observer {
 
     private Point2D lastMousePosition;
     private CanvasInteractionHandler handler;
-    private double zoom_value;
+    private static double zoom_value;
 
     private CanvasController(Window window) {
         super(window);
@@ -145,7 +146,7 @@ public final class CanvasController extends Controller implements Observer {
         handler.addKeyBinding(KeyEvent.VK_0, Helpers.OSDetector.getActivationKey(), new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CanvasController.adjustToBounds();
+                CanvasController.adjustToBounds(false);
                 Model.getInstance().modelHasChanged();
             }
         });
@@ -175,9 +176,14 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.pan(dx, dy);
     }
 
-    public static void adjustToBounds() {
-        mapCanvas.pan(-model.getMinLongitude(), -model.getMaxLatitude());
-        mapCanvas.zoom(mapCanvas.getWidth()/(model.getMaxLongitude()- model.getMinLongitude()));
+    public static void adjustToBounds(boolean dynamic) {
+        mapCanvas.pan(-model.getMinLongitude(dynamic), -model.getMaxLatitude(dynamic));
+        double factor = mapCanvas.getWidth()/(model.getMaxLongitude(dynamic)- model.getMinLongitude(dynamic));
+        mapCanvas.zoom(factor);
+        if(dynamic) {
+            double newfactor = (model.getMaxLongitude(!dynamic)- model.getMinLongitude(!dynamic)) / (model.getMaxLongitude(dynamic)- model.getMinLongitude(dynamic));
+            changeZoomLevel((Math.log(newfactor) / Math.log(ZOOM_FACTOR))/3);
+        }
     }
 
     public static void resetBounds(){
@@ -233,7 +239,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.pan(dx, dy);
     }
 
-    private void changeZoomLevel(double zoomFactor) {
+    private static void changeZoomLevel(double zoomFactor) {
         // System.out.println("zoomed in by "+zoomFactor);
         Model model = Model.getInstance();
         ZoomLevel lastLevel = GlobalValue.getZoomLevel();

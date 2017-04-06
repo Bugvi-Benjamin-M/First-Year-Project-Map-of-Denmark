@@ -33,6 +33,7 @@ public final class OSMHandler implements ContentHandler {
     private float longitudeFactor;
     private Model model;
     private int loadednodes, loadedRelations, loadedWays;
+    private boolean defaultMode;
     private boolean initialized;
 
     private OSMHandler() {
@@ -40,6 +41,10 @@ public final class OSMHandler implements ContentHandler {
         idToWay = new HashMap<>();
         model = Model.getInstance();
         nodeGenerator = new NodeGenerator();
+    }
+
+    public void parseDefault(Boolean mode){
+        defaultMode = mode;
     }
 
     public float getLongitudeFactor(){
@@ -97,23 +102,37 @@ public final class OSMHandler implements ContentHandler {
                 maxLatitude = Float.parseFloat(atts.getValue("maxlat"));
                 minLongitude = Float.parseFloat(atts.getValue("minlon"));
                 maxLongitude = Float.parseFloat(atts.getValue("maxlon"));
-                float avglat = minLatitude + (maxLatitude - minLatitude)/2;
-                longitudeFactor = (float) Math.cos(avglat/180*Math.PI);
+                if(defaultMode == true) {
+                float avglat = minLatitude + (maxLatitude - minLatitude) / 2;
+                    longitudeFactor = (float) Math.cos(avglat / 180 * Math.PI);
+                }else{
+                    float avglat = model.getMinLatitude(false) + (model.getMaxLatitude(false) - model.getMinLatitude(false))/2;
+                    longitudeFactor = (float) Math.cos(avglat / 180 * Math.PI);
+                }
                 minLongitude *= longitudeFactor;
                 maxLongitude *= longitudeFactor;
                 minLatitude = -minLatitude;
                 maxLatitude = -maxLatitude;
-                model.setBound(BoundType.MIN_LONGITUDE,minLongitude);
-                model.setBound(BoundType.MAX_LONGITUDE,maxLongitude);
-                model.setBound(BoundType.MIN_LATITUDE,minLatitude);
-                model.setBound(BoundType.MAX_LATITUDE,maxLatitude);
+                if(defaultMode == true) {
+                    model.setBound(BoundType.MIN_LONGITUDE, minLongitude);
+                    model.setBound(BoundType.MAX_LONGITUDE, maxLongitude);
+                    model.setBound(BoundType.MIN_LATITUDE, minLatitude);
+                    model.setBound(BoundType.MAX_LATITUDE, maxLatitude);
+                }
+                model.setDynamicBound(BoundType.MIN_LONGITUDE, minLongitude);
+                model.setDynamicBound(BoundType.MAX_LONGITUDE, maxLongitude);
+                model.setDynamicBound(BoundType.MIN_LATITUDE, minLatitude);
+                model.setDynamicBound(BoundType.MAX_LATITUDE, maxLatitude);
+
                 break;
             case "node":
                 long id = Long.parseLong(atts.getValue("id"));
                 float latitude = Float.parseFloat(atts.getValue("lat"));
                 float longitude = Float.parseFloat(atts.getValue("lon"));
                 idToNode.put(id, longitude * longitudeFactor, -latitude);
-                nodeGenerator.addPoint(new Point2D.Float(longitude * longitudeFactor, -latitude));
+                if(defaultMode == true) {
+                    nodeGenerator.addPoint(new Point2D.Float(longitude * longitudeFactor, -latitude));
+                }
                 loadednodes++;
                 if ((loadednodes & 0xFFFF) == 0) {
                     System.out.println("Numnodes: " + loadednodes);
@@ -128,7 +147,7 @@ public final class OSMHandler implements ContentHandler {
                 }
                 break;
             case "way":
-                if(!initialized){
+                if(!initialized && defaultMode == true){
                     nodeGenerator.initialise();
                     for (WayType type : WayType.values()) {
                         nodeGenerator.setupTree(model.getElements().get(type));

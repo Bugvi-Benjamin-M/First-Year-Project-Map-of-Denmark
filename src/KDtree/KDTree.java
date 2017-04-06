@@ -1,12 +1,14 @@
 package KDtree;
 
 import Model.Elements.Element;
+
+import java.io.Serializable;
 import java.util.HashSet;
 
 /**
  * Created by Jakob on 30-03-2017.
  */
-public class KDTree {
+public class KDTree implements Serializable{
     private Node root;
     private HashSet<Element> elementsToReturn;
 
