@@ -7,9 +7,11 @@ import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
 import KDtree.KDTree;
 import Main.Main;
+import Model.Elements.CityName;
 import Model.Elements.Element;
 import Model.Model;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.ArrayList;
@@ -303,6 +305,43 @@ public class MapCanvas extends View {
             g.setColor(ThemeHelper.color("primaryRoad"));
             g.setStroke(new BasicStroke(0.00001f));
             g.draw(element.getShape());
+        }
+        setCurrentSection(WayType.CITYNAME);
+        for(Element element : currentSection){
+            CityName cityName = (CityName) element;
+            g.setColor(ThemeHelper.color("border"));
+            //g.setStroke(new BasicStroke(0.00001f));
+            //Font f = new Font("TimesRoman", Font.PLAIN, 20);
+            //f.deriveFont();
+            //g.setFont(f);
+            //g.drawString(cityName.getName(), cityName.getX(), cityName.getY());
+
+
+            Font font = new Font("Arial", Font.BOLD, 12);
+            FontMetrics fm = g.getFontMetrics(font);
+
+            Rectangle2D visibleRect = currentRectangle;
+
+            //float xScale = (float) (visibleRect.getWidth() / fm.stringWidth(cityName.getName()));
+            float xScale = (float) (visibleRect.getWidth() / fm.stringWidth("København"));
+            float yScale = (float) (visibleRect.getHeight() / fm.getHeight());
+
+            float scale = 0f;
+            if (xScale > yScale) {
+                scale = yScale / 12;
+            } else {
+                scale = xScale / 12;
+            }
+
+            //g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scale, scale)));
+            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scale, scale)));
+
+            fm = g.getFontMetrics();
+
+            //int x = 0;
+            //int y = ((int) visibleRect.getWidth() - fm.getHeight()) + fm.getAscent();
+            g.drawString(cityName.getName(), cityName.getX(), cityName.getY());
+            System.out.println(xScale + ", " + yScale + ", sclae used: " + scale);
         }
     }
 
