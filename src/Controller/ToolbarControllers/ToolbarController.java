@@ -275,6 +275,7 @@ public final class ToolbarController extends Controller {
     }
 
     private void searchButtonEvent() {
+        //Todo maybe check if other parts of the program have focus here
         SearchToolController.getInstance(window).searchActivatedEvent();
     }
 

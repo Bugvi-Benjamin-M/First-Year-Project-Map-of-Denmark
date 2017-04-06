@@ -72,8 +72,13 @@ public final class SearchToolController extends Controller {
     }
 
     protected void searchActivatedEvent() {
-        if(allowSearch) System.out.println("hello");
-        else return;
+        if(searchTool.getField().getEditor().getItem().equals("")) {
+            searchTool.getField().requestFocus();
+            return;
+        }
+        //Todo notice the request focus call. This might be the solution.
+        //Todo get this to work with focus
+        System.out.println("search");
     }
 
 
