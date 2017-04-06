@@ -82,6 +82,7 @@ public final class MainWindowController extends WindowController {
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
             ToolbarController.getInstance(window).resizeEvent();
+            CanvasController.getInstance(window).resizeEvent();
         }
     }
 }

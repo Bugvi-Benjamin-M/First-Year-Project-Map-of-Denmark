@@ -32,7 +32,6 @@ import java.util.HashSet;
  */
 public class MapCanvas extends View {
 
-    private Dimension dimension;
     private AffineTransform transform;
     private java.util.List<Path2D> coastlines;
     private HashSet<Element> currentSection;
@@ -45,11 +44,9 @@ public class MapCanvas extends View {
      * The base Constructor for the MapCanvas.
      * @param dimension The dimension of the component
      */
-    public MapCanvas(Dimension dimension) {
+    public MapCanvas() {
         transform = new AffineTransform();
-        this.dimension = dimension;
         setBackgroundColor();
-        setPreferredSize(this.dimension);
         coastlines = new ArrayList<>();
         antiAliasing = false;
         grabFocus();
