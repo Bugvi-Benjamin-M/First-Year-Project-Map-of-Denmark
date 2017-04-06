@@ -324,7 +324,6 @@ public final class ToolbarController extends Controller {
                 }
             });
         }
-
     }
 
     private class ToolbarInteractionHandler extends MouseAdapter {
@@ -349,5 +348,4 @@ public final class ToolbarController extends Controller {
             toolbar.grabFocus();
         }
     }
-
 }

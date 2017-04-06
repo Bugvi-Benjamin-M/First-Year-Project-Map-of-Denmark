@@ -18,9 +18,7 @@ import java.awt.event.KeyEvent;
 public final class MainWindowController extends WindowController {
 
     private static final String MAIN_TITLE = "OSM Map Viewer v0.3";
-
     private static MainWindowController instance;
-
     private MainWindowController(Window window) {
         super(window);
     }
