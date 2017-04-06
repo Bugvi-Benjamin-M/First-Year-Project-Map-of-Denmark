@@ -1,5 +1,6 @@
-package Controller;
+package Controller.ToolbarControllers;
 
+import Controller.Controller;
 import Enums.ToolType;
 import Helpers.ThemeHelper;
 import View.SearchTool;
@@ -20,10 +21,11 @@ public final class SearchToolController extends Controller {
     private static SearchToolController instance;
     private SearchTool searchTool;
     private String currentText;
+    private boolean allowSearch;
 
     private SearchToolController(Window window) {
         super(window);
-        searchTool = (SearchTool) ToolbarController.getInstance(this.window).getToolbar().getTool(ToolType.SEARCH);
+        searchTool = (SearchTool) ToolbarController.getInstance(this.window).getToolbar().getTool(ToolType.SEARCHBAR);
         addFocusListenerToSearchTool();
         setToDefaultText();
     }
@@ -39,34 +41,39 @@ public final class SearchToolController extends Controller {
         instance = null;
     }
 
-    public void saveCurrentText() {
+    protected void saveCurrentText() {
         currentText = searchTool.getText();
     }
 
-    public void setToCurrentText() {
+    protected void setToCurrentText() {
         if(currentText.equals(defaultText)) setToDefaultText();
         else searchTool.setText(currentText);
     }
 
-    public void searchToolReplacedEvent() {
-        searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCH);
+    protected void searchToolReplacedEvent() {
+        searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCHBAR);
         addFocusListenerToSearchTool();
         setToCurrentText();
     }
 
-    public void searchToolResizeEvent() {
-        searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCH);
+    protected void searchToolResizeEvent() {
+        searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCHBAR);
         addFocusListenerToSearchTool();
         if(currentText.equals("")) currentText = defaultText;
         setToCurrentText();
     }
 
-    public void setToDefaultText() {
+    protected void setToDefaultText() {
         searchTool.setDefaultText(defaultText);
     }
 
     private void addFocusListenerToSearchTool() {
         searchTool.getField().getEditor().getEditorComponent().addFocusListener(new SearchToolFocusHandler());
+    }
+
+    protected void searchActivatedEvent() {
+        if(allowSearch) System.out.println("hello");
+        else return;
     }
 
 
@@ -90,14 +97,18 @@ public final class SearchToolController extends Controller {
                 searchTool.setText("");
                 editorComponent.setForeground(ThemeHelper.color("icon"));
             }
+            allowSearch = true;
         }
 
         @Override
-            public void focusLost(FocusEvent e) {
+        public void focusLost(FocusEvent e) {
             super.focusLost(e);
             if (editor.getItem().equals("")) setToDefaultText();
+            allowSearch = false;
         }
     }
+
+
 }
 
 

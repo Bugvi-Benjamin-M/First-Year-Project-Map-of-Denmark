@@ -1,4 +1,4 @@
-package Controller;
+package Controller.ToolbarControllers;
 
 import Enums.ToolType;
 import Helpers.OSDetector;
@@ -7,10 +7,15 @@ import View.MenuTool;
 import View.ToolComponent;
 import View.Toolbar;
 import View.Window;
+import Controller.*;
+
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
 
 import static javax.swing.SpringLayout.NORTH;
 import static javax.swing.SpringLayout.WEST;
@@ -21,7 +26,7 @@ import static javax.swing.SpringLayout.WEST;
  * @author bugvimagnussen
  * @version 05/04/2017
  */
-public final class ToolMenuController extends Controller {
+public final class MenuToolController extends Controller {
 
     private final int POPUP_MARGIN_LEFT = 10;
     private final int POPUP_MARGIN_HEIGHT = 205;
@@ -31,25 +36,33 @@ public final class ToolMenuController extends Controller {
     private final int POPUPMENU_LEFT_OFFSET = 10;
     private final int POPUPMENU_YAXIS_OFFSET = 15;
 
-    private static ToolMenuController instance;
+    private static MenuToolController instance;
     private MenuTool popupMenu;
     private Toolbar toolbar;
 
-    private ToolMenuController(Window window) {
+    private MenuToolController(Window window) {
         super(window);
         toolbar = ToolbarController.getInstance(window).getToolbar();
     }
 
-    public static ToolMenuController getInstance(Window window) {
+    public static MenuToolController getInstance(Window window) {
         if(instance == null) {
-            instance = new ToolMenuController(window);
+            instance = new MenuToolController(window);
         }
         return instance;
     }
 
-    public void setupMenuTool() {
+    protected void setupMenuTool() {
+        toolbar = ToolbarController.getInstance(window).getToolbar();
         if(popupMenu != null && popupMenu.isVisible()) popupMenu.hidePopupMenu();
         popupMenu = new MenuTool();
+        setupLayoutForMenuTool();
+        setToCurrentTheme();
+        addFocusListener();
+        addActionsToToolsMenu();
+    }
+
+    private void setupLayoutForMenuTool() {
         ToolComponent load = toolbar.getTool(ToolType.LOAD);
         popupMenu.getLayout().putConstraint(WEST, load, POPUP_MARGIN_LEFT, WEST, popupMenu.getPopupMenu());
         popupMenu.getLayout().putConstraint(NORTH, load, POPUP_MARGIN_TOP, NORTH, popupMenu.getPopupMenu());
@@ -64,9 +77,8 @@ public final class ToolMenuController extends Controller {
         popupMenu.addTool(toolbar.getTool(ToolType.SETTINGS));
         toolbar.getTool(ToolType.MENU).add(popupMenu.getPopupMenu());
         popupMenu.getPopupMenu().setPopupSize(POPUP_MARGIN_WIDTH, POPUP_MARGIN_HEIGHT);
-        setToCurrentTheme();
-        addFocusListener();
-        addActionsToToolsMenu();
+        popupMenu.showPopupMenu();
+        popupMenu.hidePopupMenu();
     }
 
     private void setToCurrentTheme() {
@@ -94,7 +106,6 @@ public final class ToolMenuController extends Controller {
             }
         });
     }
-    //Todo figure out why behaviour is inconsitent regarding when key shortcuts work
 
     private void addAction(int key, int activationKey, AbstractAction action) {
         toolbar.getTool(ToolType.MENU).getInputMap(JComponent.WHEN_FOCUSED)
@@ -103,7 +114,7 @@ public final class ToolMenuController extends Controller {
                 .put(action.toString(), action);
     }
 
-    public void menuToolActivated() {
+    protected void menuToolActivated() {
         if(!popupMenu.isVisible()) {
             popupMenu.showPopupMenu();
             toolbar.getTool(ToolType.MENU).grabFocus();
@@ -118,11 +129,11 @@ public final class ToolMenuController extends Controller {
        toolbar.getTool(ToolType.MENU).addFocusListener(new MenuToolFocusHandler());
     }
 
-    public void windowResizedEvent() {
+    protected void windowResizedEvent() {
         if(popupMenu.isVisible()) popupMenu.setLocation(calculatePosition());
     }
 
-    public void windowMovedEvent() {
+    protected void windowMovedEvent() {
         if(popupMenu.isVisible()) popupMenu.setLocation(calculatePosition());
     }
 

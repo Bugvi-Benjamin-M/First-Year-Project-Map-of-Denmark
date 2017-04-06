@@ -3,7 +3,7 @@ package ControllerPackage;
 import Model.Model;
 import Controller.CanvasController;
 import Controller.MainWindowController;
-import Controller.ToolbarController;
+import Controller.ToolbarControllers.ToolbarController;
 import Controller.WindowController;
 import Enums.ToolType;
 import View.Toolbar;

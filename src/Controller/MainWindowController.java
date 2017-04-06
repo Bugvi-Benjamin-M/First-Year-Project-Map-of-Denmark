@@ -4,6 +4,7 @@ import Helpers.OSDetector;
 import Helpers.Utilities.DebugWindow;
 import View.PopupWindow;
 import View.Window;
+import Controller.ToolbarControllers.ToolbarController;
 
 import javax.swing.*;
 import java.awt.*;

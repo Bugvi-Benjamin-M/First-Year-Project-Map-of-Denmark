@@ -1,6 +1,7 @@
 package Main;
 
 import Controller.*;
+import Controller.ToolbarControllers.ToolbarController;
 import Exceptions.FileWasNotFoundException;
 import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
@@ -50,7 +51,6 @@ public class Main {
 
             CanvasController.getInstance(MainWindowController.getInstance().getWindow());
             ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
-            SearchToolController.getInstance(MainWindowController.getInstance().getWindow());
             InfobarController.getInstance(MainWindowController.getInstance().getWindow());
 
             CanvasController.adjustToBounds();
