@@ -14,6 +14,8 @@ public enum WayType {  //TODO Change name to ElementType
 
     WATER, //Søer og lign.
 
+    CITYNAME, //navne på byer
+
     //ROADS
     MOTORWAY, //Motorvej
     MOTORWAY_LINK,

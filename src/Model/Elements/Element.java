@@ -11,7 +11,7 @@ public abstract class Element {
 
     private Shape shape;
 
-    Element(Shape shape){
+    public Element(Shape shape){
         this.shape = shape;
     }
 

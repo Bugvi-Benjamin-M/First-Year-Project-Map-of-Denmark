@@ -41,7 +41,6 @@ public final class CanvasController extends Controller implements Observer {
         super(window);
         model = Model.getInstance();
         model.addObserver(this);
-
         setupCanvas();
         addInteractionHandlerToCanvas();
     }
@@ -275,7 +274,6 @@ public final class CanvasController extends Controller implements Observer {
     private class CanvasInteractionHandler extends MouseAdapter {
 
         private int specifiedFocus;
-
         private CanvasInteractionHandler(int specifiedFocus) {
             this.specifiedFocus = specifiedFocus;
         }
