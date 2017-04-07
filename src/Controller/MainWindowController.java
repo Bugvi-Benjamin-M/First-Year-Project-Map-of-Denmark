@@ -69,7 +69,6 @@ public final class MainWindowController extends WindowController {
         super.addInteractionHandlerToWindow();
         MainWindowInteractionHandler handler = new MainWindowInteractionHandler();
         window.getFrame().addComponentListener(handler);
-        //Todo listener skal ligge på frame og ikke contentpane
     }
 
     public void resetInstance() {
@@ -81,14 +80,14 @@ public final class MainWindowController extends WindowController {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
-            ToolbarController.getInstance(window).resizeEvent();
-            CanvasController.getInstance(window).resizeEvent();
+            ToolbarController.getInstance().resizeEvent();
+            CanvasController.getInstance().resizeEvent();
         }
 
         @Override
         public void componentMoved(ComponentEvent e) {
             super.componentMoved(e);
-            ToolbarController.getInstance(window).moveEvent();
+            ToolbarController.getInstance().moveEvent();
         }
     }
 }

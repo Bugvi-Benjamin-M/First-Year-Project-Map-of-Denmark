@@ -11,7 +11,6 @@ import Model.Elements.CityName;
 import Model.Elements.Element;
 import Model.Model;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.ArrayList;
@@ -76,6 +75,7 @@ public class MapCanvas extends View {
         model.setCameraBound(BoundType.MIN_LATITUDE, (float) factor.getY());
         DebugWindow.getInstance().setCameraBoundsLabel();
     }
+
 
     /**
      * Paints the MapCanvas with all the shapes that should be displayed.

@@ -1,7 +1,6 @@
 package Controller;
 
 import View.Infobar;
-import View.Window;
 
 import java.awt.*;
 
@@ -17,16 +16,16 @@ public final class InfobarController extends Controller {
     private Infobar infobar;
     private static InfobarController instance;
 
-    private InfobarController(Window window) {
-        super(window);
+    private InfobarController() {
+        super(MainWindowController.getInstance().getWindow());
         infobar = new Infobar();
         window.addComponent(BorderLayout.LINE_START,infobar,true);
         toggleVisibility();
     }
 
-    public static InfobarController getInstance(Window window) {
+    public static InfobarController getInstance() {
         if(instance == null) {
-            return new InfobarController(window);
+            return new InfobarController();
         }
         return instance;
     }

@@ -1,11 +1,10 @@
 package Controller;
 
+import Enums.BoundType;
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
-import KDtree.*;
 import Model.Model;
 import View.MapCanvas;
-import View.Window;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +13,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -40,23 +38,26 @@ public final class CanvasController extends Controller implements Observer {
     private CanvasInteractionHandler handler;
     private static double zoom_value;
 
-    private CanvasController(Window window) {
-        super(window);
+    private CanvasController() {
+        super(MainWindowController.getInstance().getWindow());
         model = Model.getInstance();
         model.addObserver(this);
         setupCanvas();
         addInteractionHandlerToCanvas();
     }
 
-    public static CanvasController getInstance(Window window) {
+    public static CanvasController getInstance() {
         if(instance == null) {
-            instance = new CanvasController(window);
+            instance = new CanvasController();
         }
         return instance;
     }
 
-    public void resizeEvent(){
-        //
+    public void resizeEvent() {
+        System.out.println("MaxLat " + Model.getInstance().getCameraBound(BoundType.MAX_LATITUDE));
+        System.out.println("MaxLon " + Model.getInstance().getCameraBound(BoundType.MAX_LONGITUDE));
+        System.out.println("MinLat " + Model.getInstance().getCameraBound(BoundType.MIN_LATITUDE));
+        System.out.println("MinLon " + Model.getInstance().getCameraBound(BoundType.MIN_LONGITUDE));
     }
 
     private void setupCanvas() {
@@ -260,7 +261,6 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private static void changeZoomLevel(double zoomFactor) {
-        // System.out.println("zoomed in by "+zoomFactor);
         Model model = Model.getInstance();
         ZoomLevel lastLevel = GlobalValue.getZoomLevel();
         if (zoomFactor != 0.0) zoom_value -= zoomFactor*10;

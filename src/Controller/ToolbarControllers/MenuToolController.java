@@ -1,14 +1,13 @@
 package Controller.ToolbarControllers;
 
+import Controller.Controller;
+import Controller.MainWindowController;
 import Enums.ToolType;
 import Helpers.OSDetector;
 import Helpers.ThemeHelper;
 import View.MenuTool;
 import View.ToolComponent;
 import View.Toolbar;
-import View.Window;
-import Controller.*;
-
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,20 +39,20 @@ public final class MenuToolController extends Controller {
     private MenuTool popupMenu;
     private Toolbar toolbar;
 
-    private MenuToolController(Window window) {
-        super(window);
-        toolbar = ToolbarController.getInstance(window).getToolbar();
+    private MenuToolController() {
+        super(MainWindowController.getInstance().getWindow());
+        toolbar = ToolbarController.getInstance().getToolbar();
     }
 
-    public static MenuToolController getInstance(Window window) {
+    public static MenuToolController getInstance() {
         if(instance == null) {
-            instance = new MenuToolController(window);
+            instance = new MenuToolController();
         }
         return instance;
     }
 
     protected void setupMenuTool() {
-        toolbar = ToolbarController.getInstance(window).getToolbar();
+        toolbar = ToolbarController.getInstance().getToolbar();
         if(popupMenu != null && popupMenu.isVisible()) popupMenu.hidePopupMenu();
         popupMenu = new MenuTool();
         setupLayoutForMenuTool();
@@ -90,19 +89,19 @@ public final class MenuToolController extends Controller {
         addAction(KeyEvent.VK_L, OSDetector.getActivationKey(), new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(popupMenu.isVisible()) ToolbarController.getInstance(window).toolEvent(ToolType.LOAD);
+                if(popupMenu.isVisible()) ToolbarController.getInstance().toolEvent(ToolType.LOAD);
             }
         });
         addAction(KeyEvent.VK_S, OSDetector.getActivationKey(), new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(popupMenu.isVisible()) ToolbarController.getInstance(window).toolEvent(ToolType.SAVE);
+                if(popupMenu.isVisible()) ToolbarController.getInstance().toolEvent(ToolType.SAVE);
             }
         });
         addAction(KeyEvent.VK_COMMA, OSDetector.getActivationKey(), new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(popupMenu.isVisible()) ToolbarController.getInstance(window).toolEvent(ToolType.SETTINGS);
+                if(popupMenu.isVisible()) ToolbarController.getInstance().toolEvent(ToolType.SETTINGS);
             }
         });
     }

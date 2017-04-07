@@ -29,8 +29,8 @@ public final class SettingsWindowController extends WindowController {
     private boolean antiAliasingStatus;
     private Settings settings;
 
-    private SettingsWindowController(Window window) {
-        super(window);
+    private SettingsWindowController() {
+        super(setupWindow());
         settings = new Settings();
         themeSettings = new ThemeSetting();
         keyboardKeysToggle = new KeyboardKeysToggle();
@@ -48,7 +48,7 @@ public final class SettingsWindowController extends WindowController {
      */
     public static SettingsWindowController getInstance() {
         if(instance == null) {
-            return instance = new SettingsWindowController(setupWindow());
+            return instance = new SettingsWindowController();
         }
         return instance;
     }
