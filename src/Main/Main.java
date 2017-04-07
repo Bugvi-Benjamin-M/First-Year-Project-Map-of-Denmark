@@ -27,7 +27,7 @@ public class Main {
     private static boolean programLoadedDefault;
 
     public static void main(String[] args) {
-
+        SwingUtilities.invokeLater(() -> {
 
         long startTime = System.nanoTime();
 
@@ -45,13 +45,11 @@ public class Main {
             model.loadFromCoastlines();
             programLoadedDefault = false;
         }
-        SwingUtilities.invokeLater(() -> {
-
             MainWindowController.getInstance();
 
-            CanvasController.getInstance(MainWindowController.getInstance().getWindow());
             ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
             InfobarController.getInstance(MainWindowController.getInstance().getWindow());
+            CanvasController.getInstance(MainWindowController.getInstance().getWindow());
 
             CanvasController.adjustToBounds();
             model.modelHasChanged();
@@ -66,7 +64,12 @@ public class Main {
     private static void loadDefaultResource() throws FileWasNotFoundException {
         try {
             long startTime = System.currentTimeMillis();
-            if (!DEBUG_MODE_ACTIVE) FileHandler.loadResource(DEFAULT_RESOURCE);
+            if (!DEBUG_MODE_ACTIVE) {
+                FileHandler.loadResource(DEFAULT_RESOURCE, true);
+                //FileHandler.saveBin("/Users/Nik/IdeaProjects/Danmarkskort/Resources/Bst.bin", true);
+                //FileHandler.loadBin("/Denmark.bin", true);
+                //CanvasController.adjustToBounds();
+            }
             long stopTime = System.currentTimeMillis();
             System.out.println("Resource load time: "+(stopTime-startTime)+" ms");
             if (DEBUG_MODE_ACTIVE) throw new FileWasNotFoundException("");

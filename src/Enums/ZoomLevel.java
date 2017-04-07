@@ -36,12 +36,20 @@ public enum ZoomLevel {
         zoom_factor = zoomFactor;
     }
 
+    public static void resetZoomFactor(){
+        zoom_factor = 0;
+    }
+
     public static double getZoomFactor() {
         return zoom_factor;
     }
 
     public int getNodesAtLevel() {
         return nodesAtLevel;
+    }
+
+    public static int getNodesAtMaxLevel() {
+        return ZoomLevel.LEVEL_3.getNodesAtLevel();
     }
 
     @Override

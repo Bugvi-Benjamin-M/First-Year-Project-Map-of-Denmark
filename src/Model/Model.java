@@ -23,14 +23,18 @@ public final class Model extends Observable {
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
 
     private CoastlineFactory coastlineFactory;
-    private ZoomLevel zoom_level;
 
     private EnumMap<BoundType, Float> bounds;
+    private EnumMap<BoundType, Float> dynamicBounds;
+    private EnumMap<BoundType,Float> camera_bounds;
 
     private Model(){
         bounds = new EnumMap<>(BoundType.class);
+        dynamicBounds = new EnumMap<>(BoundType.class);
+        camera_bounds = new EnumMap<>(BoundType.class);
         for (BoundType type: BoundType.values()) {
             bounds.put(type,0.0f);
+            camera_bounds.put(type,0.0f);
         }
 
         elements = new EnumMap<>(WayType.class);
@@ -38,18 +42,8 @@ public final class Model extends Observable {
             elements.put(type, new KDTree());
         }
         //Todo remember to clean up the constructor
-        zoom_level = ZoomLevel.LEVEL_3;
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
     }
-
-    public void changeZoomLevel(double zoom_factor) {
-        ZoomLevel.setZoomFactor(zoom_factor);
-        zoom_level = ZoomLevel.getZoomLevel();
-        DebugWindow.getInstance().setZoomLabel();
-        DebugWindow.getInstance().setZoomFactorLabel();
-    }
-
-    public ZoomLevel getZoomLevel() {return zoom_level;}
 
     public static Model getInstance() {
         if(instance == null) {
@@ -60,6 +54,10 @@ public final class Model extends Observable {
 
     public EnumMap<WayType, KDTree> getElements() {
         return elements;
+    }
+
+    public void setElements(EnumMap<WayType, KDTree> elements){
+        this.elements = elements;
     }
 
     public void addWayElement(WayType type, Pointer pointer){
@@ -96,20 +94,34 @@ public final class Model extends Observable {
         bounds.put(type,value);
     }
 
-    public float getMinLatitude() {
-        return bounds.get(BoundType.MIN_LATITUDE);
+    public void setDynamicBound(BoundType type, float value){
+        dynamicBounds.put(type, value);
     }
 
-    public float getMaxLatitude() {
-        return bounds.get(BoundType.MAX_LATITUDE);
+    public void setCameraBound(BoundType type, float value) {
+        camera_bounds.put(type,value);
     }
 
-    public float getMinLongitude() {
-        return bounds.get(BoundType.MIN_LONGITUDE);
+    public float getCameraBound(BoundType type) {return camera_bounds.get(type);}
+
+    public float getMinLatitude(boolean dynamic) {
+        if(dynamic) return dynamicBounds.get(BoundType.MIN_LATITUDE);
+        else return bounds.get(BoundType.MIN_LATITUDE);
     }
 
-    public float getMaxLongitude() {
-        return bounds.get(BoundType.MAX_LONGITUDE);
+    public float getMaxLatitude(boolean dynamic) {
+        if(dynamic) return dynamicBounds.get(BoundType.MAX_LATITUDE);
+        else return bounds.get(BoundType.MAX_LATITUDE);
+    }
+
+    public float getMinLongitude(boolean dynamic) {
+        if(dynamic) return dynamicBounds.get(BoundType.MIN_LONGITUDE);
+        else return bounds.get(BoundType.MIN_LONGITUDE);
+    }
+
+    public float getMaxLongitude(boolean dynamic) {
+        if(dynamic) return dynamicBounds.get(BoundType.MAX_LONGITUDE);
+        else return bounds.get(BoundType.MAX_LONGITUDE);
     }
 
     public ArrayList<Point2D> getMedianpoints() {

@@ -4,6 +4,7 @@ import Enums.BoundType;
 import Enums.OSMEnums.WayType;
 import Helpers.LongToPointMap;
 import KDtree.NodeGenerator;
+import KDtree.Point;
 import KDtree.Pointer;
 import Model.Model;
 import Model.Elements.*;
@@ -13,6 +14,7 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,16 +32,26 @@ public final class OSMHandler implements ContentHandler {
     private OSMNode node;
     private WayType wayType;
     private String name;
+    private boolean isCity;
     private float longitudeFactor;
     private Model model;
     private int loadednodes, loadedRelations, loadedWays;
+    private boolean defaultMode;
     private boolean initialized;
+    private float latitude;
+    private float longitude;
+    private ArrayList<Pointer> cityNames;
 
     private OSMHandler() {
         idToNode = new LongToPointMap(22);
         idToWay = new HashMap<>();
         model = Model.getInstance();
         nodeGenerator = new NodeGenerator();
+        cityNames = new ArrayList<>();
+    }
+
+    public void parseDefault(Boolean mode){
+        defaultMode = mode;
     }
 
     public float getLongitudeFactor(){
@@ -97,23 +109,42 @@ public final class OSMHandler implements ContentHandler {
                 maxLatitude = Float.parseFloat(atts.getValue("maxlat"));
                 minLongitude = Float.parseFloat(atts.getValue("minlon"));
                 maxLongitude = Float.parseFloat(atts.getValue("maxlon"));
-                float avglat = minLatitude + (maxLatitude - minLatitude)/2;
-                longitudeFactor = (float) Math.cos(avglat/180*Math.PI);
+                if(defaultMode == true) {
+                float avglat = minLatitude + (maxLatitude - minLatitude) / 2;
+                    longitudeFactor = (float) Math.cos(avglat / 180 * Math.PI);
+                }else{
+                    float avglat = model.getMinLatitude(false) + (model.getMaxLatitude(false) - model.getMinLatitude(false))/2;
+                    longitudeFactor = (float) Math.cos(avglat / 180 * Math.PI);
+                }
                 minLongitude *= longitudeFactor;
                 maxLongitude *= longitudeFactor;
                 minLatitude = -minLatitude;
                 maxLatitude = -maxLatitude;
-                model.setBound(BoundType.MIN_LONGITUDE,minLongitude);
-                model.setBound(BoundType.MAX_LONGITUDE,maxLongitude);
-                model.setBound(BoundType.MIN_LATITUDE,minLatitude);
-                model.setBound(BoundType.MAX_LATITUDE,maxLatitude);
+                if(defaultMode == true) {
+                    model.setBound(BoundType.MIN_LONGITUDE, minLongitude);
+                    model.setBound(BoundType.MAX_LONGITUDE, maxLongitude);
+                    model.setBound(BoundType.MIN_LATITUDE, minLatitude);
+                    model.setBound(BoundType.MAX_LATITUDE, maxLatitude);
+                }
+                model.setDynamicBound(BoundType.MIN_LONGITUDE, minLongitude);
+                model.setDynamicBound(BoundType.MAX_LONGITUDE, maxLongitude);
+                model.setDynamicBound(BoundType.MIN_LATITUDE, minLatitude);
+                model.setDynamicBound(BoundType.MAX_LATITUDE, maxLatitude);
+
                 break;
             case "node":
                 long id = Long.parseLong(atts.getValue("id"));
-                float latitude = Float.parseFloat(atts.getValue("lat"));
-                float longitude = Float.parseFloat(atts.getValue("lon"));
+                latitude = Float.parseFloat(atts.getValue("lat"));
+                longitude = Float.parseFloat(atts.getValue("lon"));
                 idToNode.put(id, longitude * longitudeFactor, -latitude);
-                nodeGenerator.addPoint(new Point2D.Float(longitude * longitudeFactor, -latitude));
+
+                if(defaultMode == true) {
+                    nodeGenerator.addPoint(new Point2D.Float(longitude * longitudeFactor, -latitude));
+                }
+
+                name = "";
+                isCity = false;
+
                 loadednodes++;
                 if ((loadednodes & 0xFFFF) == 0) {
                     System.out.println("Numnodes: " + loadednodes);
@@ -128,18 +159,23 @@ public final class OSMHandler implements ContentHandler {
                 }
                 break;
             case "way":
-                if(!initialized){
+                if(!initialized && defaultMode == true){
                     nodeGenerator.initialise();
                     for (WayType type : WayType.values()) {
                         nodeGenerator.setupTree(model.getElements().get(type));
                     }
                     initialized = true;
+
+                    for(Pointer p : cityNames){
+                        model.getElements().get(WayType.CITYNAME).putPointer(p);
+                    }
                 }
 
                 way = new OSMWay();
                 id = Long.parseLong(atts.getValue("id"));
                 wayType = WayType.UNKNOWN;
                 idToWay.put(id, way);
+                name = "";
                 loadedWays++;
                 if ((loadedWays & 0xFF) == 0) {
                     System.out.println("Numways: " + loadedWays);
@@ -161,6 +197,9 @@ public final class OSMHandler implements ContentHandler {
                         break;
                     case "natural":
                         determineWater(v);
+                        break;
+                    case "place":
+                        if(v.equals("city")) isCity = true;
                         break;
                 }
                 break;
@@ -264,6 +303,12 @@ public final class OSMHandler implements ContentHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName){
+            case "node":
+                if(isCity) {
+                    addCityName();
+                    System.out.println(name + " added.");
+                }
+                break;
             case "way":
                 switch (wayType){
                     case MOTORWAY:
@@ -292,7 +337,6 @@ public final class OSMHandler implements ContentHandler {
                     case PATH:
                     case ROAD:
                         addRoad(wayType, false);
-                        name = "";
                         break;
                     case WATER:
                         addWater(wayType, false);
@@ -309,6 +353,12 @@ public final class OSMHandler implements ContentHandler {
                 }
                 break;
         }
+    }
+
+    private void addCityName(){
+        CityName cityName = new CityName(longitude * longitudeFactor, -latitude, name);
+        Pointer p = new Pointer(longitude * longitudeFactor, -latitude, cityName);
+        cityNames.add(p);
     }
 
     private void addRoad(WayType type, Boolean isRelation) {
@@ -346,11 +396,13 @@ public final class OSMHandler implements ContentHandler {
         } else {
             path = relation.toPath2D();
             Water water = new Water(path, name);
-            for (int i = 0; i < relation.size(); i++) {
-                for (int j = 0; j < relation.get(i).size(); j += 5) {
-                    Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), water);
-                    model.getElements().get(type).putPointer(p);
-                }
+            for (int i = 0; i < relation.size()-1; i++) {
+                if(relation.get(i) != null) {
+                    for (int j = 0; j < relation.get(i).size(); j += 5) {
+                        Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), water);
+                        model.getElements().get(type).putPointer(p);
+                    }
+                }else continue;
             }
         }
     }

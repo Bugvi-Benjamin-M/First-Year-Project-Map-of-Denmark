@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import Controller.MainWindowController;
 
 /**
  * Class details:
@@ -30,7 +31,8 @@ public class Toolbar extends View {
         layout = new SpringLayout();
         setLayout(layout);
 
-        setPreferredSize(new Dimension(500,100));
+        int width = MainWindowController.getInstance().getWindow().getFrame().getBounds().width;
+        setPreferredSize(new Dimension(width, 100));
         setBorder(BorderFactory.createLineBorder(ThemeHelper.color("border")));
         setBackGroundColor();
     }

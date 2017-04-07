@@ -1,5 +1,6 @@
 package Helpers.Utilities;
 
+import Enums.BoundType;
 import Enums.ZoomLevel;
 import Main.Main;
 import Model.Coastlines.CoastlineFactory;
@@ -45,6 +46,7 @@ public class DebugWindow extends WindowAdapter {
         container.addJLabel("loadtime","loadtime");
         container.addJLabel("lonlabel","lonlabel");
         container.addJLabel("latlabel","latlabel");
+        container.addJLabel("camera","camera");
         container.addJLabel("fpscount","fpscount");
         container.addJLabel("zoomlabel","zoomlabel");
         container.addJLabel("zoomfactor","zoomfactor");
@@ -91,7 +93,7 @@ public class DebugWindow extends WindowAdapter {
     public void setLongitudeLabel() {
         JLabel retrieved = container.getJLabel("lonlabel");
         Model model = Model.getInstance();
-        String label = "Longitude Bounds: Min='"+model.getMinLongitude()+"' Max='"+model.getMaxLongitude()+"'";
+        String label = "Longitude Bounds: Min='"+model.getMinLongitude(false)+"' Max='"+model.getMaxLongitude(false)+"'";
         if (retrieved != null){
             retrieved.setText(label);
         } else {
@@ -102,7 +104,7 @@ public class DebugWindow extends WindowAdapter {
     public void setLatitudeLabel() {
         JLabel retrieved = container.getJLabel("latlabel");
         Model model = Model.getInstance();
-        String label = "Latitude Bounds: Min='"+model.getMinLatitude()+"' Max='"+model.getMaxLatitude()+"'";
+        String label = "Latitude Bounds: Min='"+model.getMinLatitude(false)+"' Max='"+model.getMaxLatitude(false)+"'";
         if (retrieved != null) {
             retrieved.setText(label);
         } else {
@@ -139,6 +141,20 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
+    public void setCameraBoundsLabel() {
+        JLabel retrieved = container.getJLabel("camera");
+        Model model = Model.getInstance();
+        String label = "Camera: ("+model.getCameraBound(BoundType.MIN_LONGITUDE)+"; "
+                + model.getCameraBound(BoundType.MAX_LONGITUDE)+") - ("
+                + model.getCameraBound(BoundType.MIN_LATITUDE)+ "; "
+                + model.getCameraBound(BoundType.MAX_LATITUDE) + ")";
+        if (retrieved != null) {
+            retrieved.setText(label);
+        } else {
+            System.out.println("camera label not found");
+        }
+    }
+
     @Override
     public void windowOpened(WindowEvent e) {
         super.windowOpened(e);
@@ -146,6 +162,7 @@ public class DebugWindow extends WindowAdapter {
         setLoadtimeLabel();
         setLongitudeLabel();
         setLatitudeLabel();
+        setCameraBoundsLabel();
         setFPSLabel();
         setZoomLabel();
         setZoomFactorLabel();

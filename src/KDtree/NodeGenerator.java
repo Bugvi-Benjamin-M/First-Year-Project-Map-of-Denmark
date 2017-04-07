@@ -46,12 +46,10 @@ public class NodeGenerator {
         Point2D.Float median;
         int medianDepth = 0;
         if(parent == null || parent.getDepth() % 2 == 1) {
-            System.out.println("sortingX");
             median = findMedianX(low, high);
             if(parent == null) medianDepth = 0;
             else medianDepth = parent.getDepth() + 1;
         } else {
-            System.out.println("sortingY");
             median = findMedianY(low, high);
             medianDepth = parent.getDepth() + 1;
         }

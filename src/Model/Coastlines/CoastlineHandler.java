@@ -32,6 +32,7 @@ public class CoastlineHandler implements ContentHandler {
 
     private OSMWay way;
     private WayType wayType;
+    private float longFactor;
 
     private CoastlineHandler() {
         factory = new CoastlineFactory();
@@ -89,6 +90,7 @@ public class CoastlineHandler implements ContentHandler {
         factory.addBound(BoundType.MIN_LONGITUDE,minLongitude);
         factory.addBound(BoundType.MAX_LONGITUDE,maxLongitude);
         factory.setLongitudeFactor(minLatitude,maxLatitude);
+        longFactor = factory.getLongitudeFactor();
         factory.addBound(BoundType.MIN_LATITUDE,-minLatitude);
         factory.addBound(BoundType.MAX_LATITUDE,-maxLatitude);
     }
@@ -97,7 +99,7 @@ public class CoastlineHandler implements ContentHandler {
         long id = Long.parseLong(attributes.getValue("id"));
         float latitude = Float.parseFloat(attributes.getValue("lat"));
         float longitude = Float.parseFloat(attributes.getValue("lon"));
-        idToNode.put(id,new Point2D.Float(longitude,-latitude));
+        idToNode.put(id,new Point2D.Float(longitude* longFactor,-latitude));
     }
 
     private void handleWay(Attributes attributes) {

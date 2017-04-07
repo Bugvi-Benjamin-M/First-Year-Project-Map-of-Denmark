@@ -34,7 +34,6 @@ public final class ToolbarController extends Controller {
     private Toolbar toolbar;
     private SpringLayout toolbarLayout;
     private static ToolbarController instance;
-
     private enum ToolbarType {
         LARGE,
         SMALL
@@ -51,7 +50,7 @@ public final class ToolbarController extends Controller {
         super(window);
         toolbar = new Toolbar();
         toolbarLayout = toolbar.getLayout();
-        this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
+        this.window.addComponent(BorderLayout.NORTH, toolbar,true);
         type = ToolbarType.LARGE;
         setupLargeToolbar();
         addInteractionHandlersToTools();
@@ -285,12 +284,12 @@ public final class ToolbarController extends Controller {
 
     private void loadEvent() {
         FileNameExtensionFilter[] filters = new FileNameExtensionFilter[]{
-            new FileNameExtensionFilter("OSM Files", FileType.OSM.toString()),
-            new FileNameExtensionFilter("ZIP Files", FileType.ZIP.toString())
+                new FileNameExtensionFilter("OSM Files", FileType.OSM.toString()),
+                new FileNameExtensionFilter("ZIP Files", FileType.ZIP.toString()),
+                new FileNameExtensionFilter("BIN Files", FileType.BIN.toString())
         };
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {
-            FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
             try {
                 FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
             } catch (Exception e) {
@@ -300,7 +299,18 @@ public final class ToolbarController extends Controller {
     }
 
     private void saveEvent() {
-        PopupWindow.infoBox(null, "You activated save tool","Tool activated");
+        FileNameExtensionFilter[] filters = new FileNameExtensionFilter[]{
+                new FileNameExtensionFilter("BIN Files", FileType.BIN.toString())
+        };
+        JFileChooser chooser = PopupWindow.fileSaver(false, filters);
+        if (chooser != null) {
+            try {
+                FileHandler.fileChooserSave(chooser.getSelectedFile().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //PopupWindow.infoBox(null, "You activated save tool","Tool activated");
     }
 
     private void settingsEvent() {
@@ -310,8 +320,6 @@ public final class ToolbarController extends Controller {
             SettingsWindowController.getInstance().showSettingsWindow();
         }
     }
-
-
 
     public Toolbar getToolbar() {
         return toolbar;
@@ -392,7 +400,6 @@ public final class ToolbarController extends Controller {
                 }
             });
         }
-
     }
 
     private class ToolbarInteractionHandler extends MouseAdapter {
@@ -417,5 +424,4 @@ public final class ToolbarController extends Controller {
             toolbar.grabFocus();
         }
     }
-
 }
