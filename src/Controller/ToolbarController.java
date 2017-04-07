@@ -46,7 +46,7 @@ public final class ToolbarController extends Controller {
         super(window);
         toolbar = new Toolbar();
         toolbarLayout = toolbar.getLayout();
-        this.window.addComponent(BorderLayout.PAGE_START, toolbar,true);
+        this.window.addComponent(BorderLayout.NORTH, toolbar,true);
         type = ToolbarType.LARGE;
         setupLargeToolbar();
         addInteractionHandlersToTools();
