@@ -38,6 +38,7 @@ public class SearchTool extends ToolComponent {
         field.setRequestFocusEnabled(true);
     }
 
+
     private void addSearchLabel() {
         searchLabel = new JLabel("Search:");
         searchLabel.setFont(new Font(getFont().getName(), getFont().getStyle(), 20));
@@ -78,11 +79,17 @@ public class SearchTool extends ToolComponent {
 
         @Override
         protected JButton createArrowButton() {
-            JButton button = new JButton();
+            JButton button = new JButton() {
+                @Override
+                public int getWidth() {
+                    return 0;
+                }
+            };
             button.setEnabled(false);
             button.setBorderPainted(false);
             button.setFocusPainted(false);
             button.setBackground(ThemeHelper.color("toolbar"));
+
             return button;
         }
 

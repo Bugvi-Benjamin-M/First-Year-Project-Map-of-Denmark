@@ -2,9 +2,9 @@ package Controller;
 
 import Helpers.OSDetector;
 import Helpers.Utilities.DebugWindow;
-import View.MapCanvas;
 import View.PopupWindow;
 import View.Window;
+import Controller.ToolbarControllers.ToolbarController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,6 +40,7 @@ public final class MainWindowController extends WindowController {
                 .relativeTo(null)
                 .icon()
                 .hide();
+        mainWindow.setMinimumWindowSize(new Dimension(650, 500));
         return mainWindow;
     }
 
@@ -67,7 +68,8 @@ public final class MainWindowController extends WindowController {
     protected void addInteractionHandlerToWindow() {
         super.addInteractionHandlerToWindow();
         MainWindowInteractionHandler handler = new MainWindowInteractionHandler();
-        window.getFrame().getContentPane().addComponentListener(handler); //THINK THIS THROUGH
+        window.getFrame().addComponentListener(handler);
+        //Todo listener skal ligge på frame og ikke contentpane
     }
 
     public void resetInstance() {
@@ -81,6 +83,12 @@ public final class MainWindowController extends WindowController {
             super.componentResized(e);
             ToolbarController.getInstance(window).resizeEvent();
             CanvasController.getInstance(window).resizeEvent();
+        }
+
+        @Override
+        public void componentMoved(ComponentEvent e) {
+            super.componentMoved(e);
+            ToolbarController.getInstance(window).moveEvent();
         }
     }
 }
