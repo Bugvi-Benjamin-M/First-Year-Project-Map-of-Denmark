@@ -34,8 +34,7 @@ public class Coastline extends OSMWay {
         path.moveTo(node.getX(), node.getY());
 
         ZoomLevel level = ZoomLevel.getZoomLevel();
-        if (level != ZoomLevel.LEVEL_6 && level != ZoomLevel.LEVEL_5 &&
-                level != ZoomLevel.LEVEL_4 && level != ZoomLevel.LEVEL_3) {
+        if (level != ZoomLevel.LEVEL_6 && level != ZoomLevel.LEVEL_5) {
             // Make path
             boolean isWayNearby = false;
             int lastQuickIndex = 0, lastQualityIndex = 0;
@@ -45,14 +44,14 @@ public class Coastline extends OSMWay {
                 if (isWayNearby) {
                     if (!isNear) {
                         isWayNearby = false;
-                        qualityGeneratePath(path, lastQualityIndex, i - 1);
                         lastQuickIndex = i;
+                        qualityGeneratePath(path, lastQualityIndex, i - 1,level);
                     }
                 } else {
                     if (isNear) {
                         isWayNearby = true;
-                        quickGeneratePath(path, lastQuickIndex, i - 1);
                         lastQualityIndex = i;
+                        qualityGeneratePath(path, lastQuickIndex, i - 1,ZoomLevel.LEVEL_6);
                     }
                 }
             }
@@ -70,18 +69,26 @@ public class Coastline extends OSMWay {
         return path;
     }
 
-    private Path2D qualityGeneratePath(Path2D path, int startpoint, int endpoint) {
+    private Path2D allGeneratePath(Path2D path, int startpoint, int endpoint) {
+        for (int i = startpoint; i < endpoint; i++) {
+            Point2D point = get(i);
+            path.lineTo(point.getX(),point.getY());
+        }
+        return path;
+    }
+
+    private Path2D qualityGeneratePath(Path2D path, int startpoint, int endpoint, ZoomLevel level) {
         List<Point2D> copy = new ArrayList<>();
         for (int i = startpoint; i <= endpoint; i++) {
             copy.add(this.get(i));
         }
-        System.out.println("Copy size: "+copy.size());
-        double epsilon = ZoomLevel.getEpsilonValueBasedOnZoomLevel(ZoomLevel.getZoomLevel());
+        // System.out.println("Copy size: "+copy.size());
+        double epsilon = level.getEpsilonValueBasedOnZoomLevel();
         List<Point2D> newPoints = HelperFunctions.pathGeneralization(copy,epsilon);
         for (Point2D point: newPoints) {
             path.lineTo(point.getX(),point.getY());
         }
-        System.out.println("New size: "+newPoints.size());
+        // System.out.println("New size: "+newPoints.size());
         return path;
     }
 

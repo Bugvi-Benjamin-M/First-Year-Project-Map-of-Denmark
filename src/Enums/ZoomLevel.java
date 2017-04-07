@@ -17,7 +17,7 @@ public enum ZoomLevel {
     LEVEL_6(25);    // abstract far away
 
     private int nodesAtLevel;
-    private static double zoom_factor;
+    private static double zoom_factor = 0;
 
     ZoomLevel(int nodesAtLevel) {
         this.nodesAtLevel = nodesAtLevel;
@@ -68,18 +68,18 @@ public enum ZoomLevel {
         return sb.toString();
     }
 
-    public static double getEpsilonValueBasedOnZoomLevel(ZoomLevel level) {
-        switch (level) {
+    public double getEpsilonValueBasedOnZoomLevel() {
+        switch (this) {
             case LEVEL_0:
                 return 1;
             case LEVEL_1:
-                return 0.86;
+                return 0.90;
             case LEVEL_2:
-                return 0.72;
+                return 0.85;
             case LEVEL_3:
-                return 0.64;
+                return 0.80;
             case LEVEL_4:
-                return 0.56;
+                return 0.75;
             case LEVEL_5:
                 return 0.44;
             default:            // LEVEL 6
