@@ -76,15 +76,12 @@ public final class SearchToolController extends Controller {
 
     protected void searchActivatedEvent() {
         if(!allowSearch) {
-            System.out.println("case 1");
             searchTool.getField().requestFocus();
         }
         else if(allowSearch && searchTool.getField().getEditor().getItem().equals("")) {
-            System.out.println("case 2");
             searchTool.getField().requestFocus();
         }
         else if(allowSearch) {
-            System.out.println("case 3");
             PopupWindow.infoBox(null, searchTool.getText(), "Search Test");
             searchTool.getField().requestFocus();
             allowSearch = true;
