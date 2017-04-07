@@ -282,7 +282,7 @@ Notes from meeting:
 - It works now!
 - We have to think about how we want to save all Elements (EnumMaps)
 
-## Logbook 3/4 (Scribe MC Blanke is back, biiiiiiiiiiitch)
+## Logbook 3/4 (Scribe Blanke)
 What we did since last:
 - Work on resizing window and searchbar
 - Work on datastructure and data storage
