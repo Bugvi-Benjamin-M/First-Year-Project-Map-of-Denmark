@@ -36,6 +36,10 @@ public enum ZoomLevel {
         zoom_factor = zoomFactor;
     }
 
+    public static void resetZoomFactor(){
+        zoom_factor = 0;
+    }
+
     public static double getZoomFactor() {
         return zoom_factor;
     }

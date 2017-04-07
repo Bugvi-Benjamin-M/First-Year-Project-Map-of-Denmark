@@ -53,7 +53,7 @@ public class Main {
             SearchController.getInstance(MainWindowController.getInstance().getWindow());
             InfobarController.getInstance(MainWindowController.getInstance().getWindow());
 
-            CanvasController.adjustToBounds(false);
+            CanvasController.adjustToBounds();
             model.modelHasChanged();
             CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas().grabFocus();
 
@@ -69,7 +69,7 @@ public class Main {
             if (!DEBUG_MODE_ACTIVE) {
                 //FileHandler.loadResource(DEFAULT_RESOURCE, true);
                 //FileHandler.saveBin("/Users/Nik/IdeaProjects/Danmarkskort/Resources/Bst.bin", true);
-                FileHandler.loadBin("/Bst.bin", true);
+                FileHandler.loadBin("/Denmark.bin", true);
                 //CanvasController.adjustToBounds();
             }
             long stopTime = System.currentTimeMillis();

@@ -225,7 +225,6 @@ public final class ToolbarController extends Controller {
         };
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {
-            FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
             try {
                 FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
             } catch (Exception e) {
@@ -240,7 +239,6 @@ public final class ToolbarController extends Controller {
         };
         JFileChooser chooser = PopupWindow.fileSaver(false, filters);
         if (chooser != null) {
-            FileHandler.fileChooserSave(chooser.getSelectedFile().toString());
             try {
                 FileHandler.fileChooserSave(chooser.getSelectedFile().toString());
             } catch (Exception e) {

@@ -1,6 +1,7 @@
 package Helpers;
 
 import Controller.CanvasController;
+import Controller.MainWindowController;
 import Enums.BoundType;
 import Enums.FileType;
 import Enums.OSMEnums.WayType;
@@ -27,20 +28,22 @@ public class FileHandler {
 
     private static String pathStart = OSDetector.getPathPrefix();
 
+
     public static void loadResource(String fileName, boolean isLoadingFromStart) {
         try {
-            if (fileExists(fileName) || fileName.endsWith(FileType.OSM.getExtension())) {
+            if (fileExists(fileName) && fileName.endsWith(FileType.OSM.getExtension())) {
                 if(isLoadingFromStart){
+                    OSMHandler.getInstance().parseDefault(true);
                     FileHandler.loadOSM(new InputSource(FileHandler.class.getResourceAsStream(fileName)));
                 }else {
                     OSMHandler.getInstance().parseDefault(false);
                     FileHandler.loadOSM(new InputSource(pathStart + fileName));
-                    CanvasController.resetBounds();
-                    CanvasController.adjustToBounds(true);
+                    CanvasController.adjustToDynamicBounds();
                 }
-            } else if (fileExists(fileName) || fileName.endsWith(FileType.ZIP.getExtension())) {
+            } else if (fileExists(fileName) && fileName.endsWith(FileType.ZIP.getExtension())) {
                 ZipInputStream zip;
                 if(isLoadingFromStart){
+                    OSMHandler.getInstance().parseDefault(true);
                     zip = new ZipInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(fileName)));
                 }else {
                     OSMHandler.getInstance().parseDefault(false);
@@ -52,8 +55,7 @@ public class FileHandler {
                     e.printStackTrace();
                 }
                 loadOSM(new InputSource(zip));
-                CanvasController.resetBounds();
-                CanvasController.adjustToBounds(true);
+                if(!isLoadingFromStart) CanvasController.adjustToDynamicBounds();
             } else if (fileExists(fileName) || fileName.endsWith(FileType.BIN.getExtension())) {
                 loadBin(fileName, isLoadingFromStart);
             } else {
@@ -66,9 +68,8 @@ public class FileHandler {
 
 
     public static boolean fileExists(String fileName){
-        if(Model.class.getResourceAsStream(fileName) != null) {
-            return true;
-        }
+        if(Model.class.getResourceAsStream(fileName) != null)return true;
+        else if(new InputSource(pathStart + fileName) != null) return true;
         return false;
     }
 
@@ -78,7 +79,6 @@ public class FileHandler {
             if(isLoadingFromStart){
                 in = new ObjectInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(filename)));
             }else {
-                OSMHandler.getInstance().parseDefault(false);
                 in = new ObjectInputStream(new FileInputStream(filename));
             }
             long time = -System.nanoTime();
@@ -94,10 +94,10 @@ public class FileHandler {
                 Model.getInstance().setDynamicBound(BoundType.MIN_LATITUDE, in.readFloat());
                 Model.getInstance().setDynamicBound(BoundType.MAX_LATITUDE, in.readFloat());
             }
+            CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas().setElements(Model.getInstance().getElements());
             time += System.nanoTime();
             if(!isLoadingFromStart) {
-                CanvasController.resetBounds();
-                CanvasController.adjustToBounds(true);
+                CanvasController.adjustToDynamicBounds();
             }
             System.out.printf("Object deserialization: %f s\n", time / 1000000 / 1000d);
             Model.getInstance().modelHasChanged();
@@ -111,6 +111,8 @@ public class FileHandler {
     }
 
     public static void saveBin(String fileName, boolean dynamic) {
+        //File f = new File(fileName);
+        //if(f.exists()) f.delete();
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
             out.writeObject(Model.getInstance().getElements());
             out.writeFloat(Model.getInstance().getMinLongitude(dynamic));

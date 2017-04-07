@@ -2,6 +2,7 @@ package Controller;
 
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
+import KDtree.*;
 import Model.Model;
 import View.MapCanvas;
 import View.Window;
@@ -13,6 +14,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -146,7 +148,7 @@ public final class CanvasController extends Controller implements Observer {
         handler.addKeyBinding(KeyEvent.VK_0, Helpers.OSDetector.getActivationKey(), new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CanvasController.adjustToBounds(false);
+                CanvasController.adjustToBounds();
                 Model.getInstance().modelHasChanged();
             }
         });
@@ -176,14 +178,29 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.pan(dx, dy);
     }
 
-    public static void adjustToBounds(boolean dynamic) {
-        mapCanvas.pan(-model.getMinLongitude(dynamic), -model.getMaxLatitude(dynamic));
-        double factor = mapCanvas.getWidth()/(model.getMaxLongitude(dynamic)- model.getMinLongitude(dynamic));
+    public static void adjustToBounds() {
+        mapCanvas.pan(-model.getMinLongitude(false), -model.getMaxLatitude(false));
+        double factor = mapCanvas.getWidth()/(model.getMaxLongitude(false)- model.getMinLongitude(false));
         mapCanvas.zoom(factor);
-        if(dynamic) {
-            double newfactor = (model.getMaxLongitude(!dynamic)- model.getMinLongitude(!dynamic)) / (model.getMaxLongitude(dynamic)- model.getMinLongitude(dynamic));
-            changeZoomLevel(0.0);
-            changeZoomLevel((Math.log(newfactor) / Math.log(ZOOM_FACTOR))/3);
+    }
+
+    public static void adjustToDynamicBounds(){
+        ZoomLevel.resetZoomFactor();
+        zoom_value = 0;
+        double distancetoreach = 0;
+        double currentdistance = 1;
+        resetBounds();
+        double factor = mapCanvas.getWidth()/(model.getMaxLongitude(false)- model.getMinLongitude(false));
+        mapCanvas.pan(- model.getMinLongitude(true), -model.getMaxLatitude(true));
+        mapCanvas.zoom(factor);
+        while(distancetoreach < currentdistance) {
+            Rectangle2D rect = mapCanvas.getVisibleRect();
+            distancetoreach = model.getMaxLongitude(true) - model.getMinLongitude(true);
+            Point2D leftcorner = mapCanvas.toModelCoords(new Point2D.Double(rect.getX(), rect.getY()));
+            Point2D rightcorner = mapCanvas.toModelCoords(new Point2D.Double(rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight()));
+            currentdistance = rightcorner.getX() - leftcorner.getX();
+            mapCanvas.zoom(Math.pow(ZOOM_FACTOR, -1));
+            changeZoomLevel(-1);
         }
     }
 
