@@ -67,4 +67,23 @@ public enum ZoomLevel {
         sb.append(" nodes)");
         return sb.toString();
     }
+
+    public static double getEpsilonValueBasedOnZoomLevel(ZoomLevel level) {
+        switch (level) {
+            case LEVEL_0:
+                return 1;
+            case LEVEL_1:
+                return 0.86;
+            case LEVEL_2:
+                return 0.72;
+            case LEVEL_3:
+                return 0.64;
+            case LEVEL_4:
+                return 0.56;
+            case LEVEL_5:
+                return 0.44;
+            default:            // LEVEL 6
+                return 0.32;
+        }
+    }
 }

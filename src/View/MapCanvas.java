@@ -115,6 +115,12 @@ public class MapCanvas extends View {
         for (Path2D path: coastlines) {
             g.fill(path);
         }
+        // Creates outline
+        g.setStroke(new BasicStroke(Float.MIN_VALUE));
+        g.setColor(Color.black);
+        for (Path2D path: coastlines) {
+            g.draw(path);
+        }
     }
 
     //TODO tænk over rækkefølgen elementerne bliver tegnet i (Jakob Nikolaj)

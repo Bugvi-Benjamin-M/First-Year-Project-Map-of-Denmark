@@ -83,7 +83,7 @@ public class Main {
     }
 
     private static void splashScreenInit() {
-      ImageIcon myImage = new ImageIcon(Main.class.getResource("/dolphins.png")); //denmark.gif
+      ImageIcon myImage = new ImageIcon(Main.class.getResource("/middelfart.jpg")); //denmark.gif
       screen = new SplashScreen(myImage);
       screen.setLocationRelativeTo(null);
       screen.setScreenVisible(true);
