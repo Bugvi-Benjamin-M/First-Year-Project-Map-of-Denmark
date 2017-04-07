@@ -44,7 +44,6 @@ public final class CanvasController extends Controller implements Observer {
         super(window);
         model = Model.getInstance();
         model.addObserver(this);
-
         setupCanvas();
         addInteractionHandlerToCanvas();
     }
@@ -56,8 +55,12 @@ public final class CanvasController extends Controller implements Observer {
         return instance;
     }
 
+    public void resizeEvent(){
+        //
+    }
+
     private void setupCanvas() {
-        mapCanvas = new MapCanvas(window.getDimension());
+        mapCanvas = new MapCanvas();
         mapCanvas.setElements(model.getElements());
         mapCanvas.setCoastlines(model.getCoastlines());
         window.addComponent(BorderLayout.CENTER,mapCanvas,true);
@@ -223,7 +226,6 @@ public final class CanvasController extends Controller implements Observer {
         Point2D mousePosition = event.getPoint();
         Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
         mapCanvas.setCurrentPoint(mouseInModel);
-        mapCanvas.repaint();
     }
 
     private void mouseDraggedEvent(MouseEvent event) {
@@ -296,7 +298,6 @@ public final class CanvasController extends Controller implements Observer {
     private class CanvasInteractionHandler extends MouseAdapter {
 
         private int specifiedFocus;
-
         private CanvasInteractionHandler(int specifiedFocus) {
             this.specifiedFocus = specifiedFocus;
         }

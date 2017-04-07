@@ -282,7 +282,7 @@ Notes from meeting:
 - It works now!
 - We have to think about how we want to save all Elements (EnumMaps)
 
-## Logbook 3/4 (Scribe MC Blanke is back, biiiiiiiiiiitch)
+## Logbook 3/4 (Scribe Blanke)
 What we did since last:
 - Work on resizing window and searchbar
 - Work on datastructure and data storage
@@ -321,9 +321,36 @@ Impediments:
 - One member has not shown up at agreed upon time (revoked voting rights today)
 
 Notes from meeting:
-- We're having vacation next week from friday to sunday
+- We're having vacation next week from wednesday to sunday
 
 Next time:
 - Thursday at 10
+
+## Logbook 7/4 (Scribe Blanke)
+What we did since last:
+- Work on city displaying
+- Work on bug that scales incorrectly
+- Data structure complete and documented
+- Added relations to the model structure
+- Window resizing bug
+- Expanded keyboard shortcuts
+- Added a search tool / button
+- Coastline generalization (Douglas-Peucker algorithm)
+- Working on loading and saving
+
+What we will do until next time:
+- Finish up the sprint (ends on sunday)
+- Unit testing the datastructure
+- Finishing window resizing
+- Fixing bugs
+- Finishing coastlines (once and for all)
+- Finishing loading and saving
+
+Impediments:
+- Jacob has to go to work at 16:00
+- Niklas also has to go to work today
+
+Next time:
+- Monday the 10th of April at 10:00 (Nikolaj joins via skype)
 
 ## Next logbook...

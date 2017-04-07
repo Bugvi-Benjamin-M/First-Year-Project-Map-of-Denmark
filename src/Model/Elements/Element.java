@@ -12,7 +12,7 @@ public abstract class Element implements Serializable{
 
     private Shape shape;
 
-    Element(Shape shape){
+    public Element(Shape shape){
         this.shape = shape;
     }
 

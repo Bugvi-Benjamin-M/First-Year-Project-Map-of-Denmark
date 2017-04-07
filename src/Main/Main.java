@@ -26,7 +26,7 @@ public class Main {
     private static boolean programLoadedDefault;
 
     public static void main(String[] args) {
-
+        SwingUtilities.invokeLater(() -> {
 
         long startTime = System.nanoTime();
 
@@ -44,14 +44,12 @@ public class Main {
             model.loadFromCoastlines();
             programLoadedDefault = false;
         }
-        SwingUtilities.invokeLater(() -> {
-
             MainWindowController.getInstance();
 
-            CanvasController.getInstance(MainWindowController.getInstance().getWindow());
             ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
             SearchController.getInstance(MainWindowController.getInstance().getWindow());
             InfobarController.getInstance(MainWindowController.getInstance().getWindow());
+            CanvasController.getInstance(MainWindowController.getInstance().getWindow());
 
             CanvasController.adjustToBounds();
             model.modelHasChanged();
