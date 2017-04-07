@@ -43,7 +43,7 @@ public class TestKD {
     }
 
     @Test
-    public void testGetManyElements(){
+    public void testGetManyElementsLittleSquare(){
         HashSet<Element> set = tree.getManyElements(-1, -1, 3, 3);
 
         assertEquals(5, set.size());
@@ -55,7 +55,7 @@ public class TestKD {
     }
 
     @Test
-    public void testGetManyElements2(){
+    public void testGetManyElementsBigSquare(){
         HashSet<Element> set = tree.getManyElements(-1, -1, 10, 20);
 
         assertEquals(10, set.size());
@@ -67,13 +67,61 @@ public class TestKD {
     }
 
     @Test
-    public void testGetManyElements3(){
+    public void testGetManyElementsOutOfRangeSquare(){
         HashSet<Element> set = tree.getManyElements(-1, -1, -2, -2);
 
         assertEquals(2, set.size());
 
         double[] correctX = new double[]{0.0, 1.0};
         double[] correctY = new double[]{0.0, 2.0};
+
+        assertHashSetEqualsToPoints(set, correctX, correctY);
+    }
+
+    @Test
+    public void testGetManyElementsMiddleSquare(){
+        HashSet<Element> set = tree.getManyElements(5, 5, 7, 7);
+
+        assertEquals(3, set.size());
+
+        double[] correctX = new double[]{5.0, 6.0, 7.0};
+        double[] correctY = new double[]{10.0, 12.0, 14.0};
+
+        assertHashSetEqualsToPoints(set, correctX, correctY);
+    }
+
+    @Test
+    public void testGetManyElementsCornerTopLeft(){
+        HashSet<Element> set = tree.getManyElements(0, 30, -1, 31);
+
+        assertEquals(3, set.size());
+
+        double[] correctX = new double[]{2.0, 3.0, 4.0};
+        double[] correctY = new double[]{4.0, 6.0, 8.0};
+
+        assertHashSetEqualsToPoints(set, correctX, correctY);
+    }
+
+    @Test
+    public void testGetManyElementsCornerTopRight(){
+        HashSet<Element> set = tree.getManyElements(30, 30, 30, 30);
+
+        assertEquals(2, set.size());
+
+        double[] correctX = new double[]{8.0, 9.0};
+        double[] correctY = new double[]{16.0, 18.0};
+
+        assertHashSetEqualsToPoints(set, correctX, correctY);
+    }
+
+    @Test
+    public void testGetManyElementsCornerBottomRight(){
+        HashSet<Element> set = tree.getManyElements(30, 0, 31, -1);
+
+        assertEquals(3, set.size());
+
+        double[] correctX = new double[]{5.0, 6.0, 7.0};
+        double[] correctY = new double[]{10.0, 12.0, 14.0};
 
         assertHashSetEqualsToPoints(set, correctX, correctY);
     }
@@ -89,6 +137,14 @@ public class TestKD {
         double[] correctY = new double[]{};
 
         assertHashSetEqualsToPoints(set, correctX, correctY);
+    }
+
+    @Test
+    public void testEmptyKD(){
+        tree = new KDTree();
+        assertEquals(null, tree.getManyElements(0,0,0,0));
+        tree.clear();
+        assertEquals(null, tree.getManyElements(0,0,0,0));
     }
 
 
