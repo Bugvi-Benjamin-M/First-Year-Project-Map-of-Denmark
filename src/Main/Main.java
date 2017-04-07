@@ -26,14 +26,14 @@ public class Main {
     private static boolean programLoadedDefault;
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
+
 
         long startTime = System.nanoTime();
 
         splashScreenInit();
 
         Model model = Model.getInstance();
-
+        SwingUtilities.invokeLater(() -> {
         try {
             loadDefaultResource();
             splashScreenDestruct();
@@ -65,9 +65,9 @@ public class Main {
         try {
             long startTime = System.currentTimeMillis();
             if (!DEBUG_MODE_ACTIVE) {
-                FileHandler.loadResource(DEFAULT_RESOURCE, true);
+                //FileHandler.loadResource(DEFAULT_RESOURCE, true);
                 //FileHandler.saveBin("/Users/Nik/IdeaProjects/Danmarkskort/Resources/Bst.bin", true);
-                //FileHandler.loadBin("/Denmark.bin", true);
+                FileHandler.loadBin("/Danmark.bin", true);
                 //CanvasController.adjustToBounds();
             }
             long stopTime = System.currentTimeMillis();
