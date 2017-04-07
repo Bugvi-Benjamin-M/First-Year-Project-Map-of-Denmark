@@ -14,6 +14,7 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +42,12 @@ public final class OSMHandler implements ContentHandler {
     private float latitude;
     private float longitude;
     private ArrayList<Pointer> cityNames;
+    private ArrayList<Pointer> townNames;
+    private ArrayList<Pointer> villageNames;
+    private ArrayList<Pointer> hamletNames;
+    private ArrayList<Pointer> suburbNames;
+    private ArrayList<Pointer> quarterNames;
+    private ArrayList<Pointer> neighbourhoodNames;
 
     private OSMHandler() {
         idToNode = new LongToPointMap(22);
@@ -48,6 +55,12 @@ public final class OSMHandler implements ContentHandler {
         model = Model.getInstance();
         nodeGenerator = new NodeGenerator();
         cityNames = new ArrayList<>();
+        townNames  = new ArrayList<>();
+        villageNames = new ArrayList<>();
+        hamletNames = new ArrayList<>();
+        suburbNames = new ArrayList<>();
+        quarterNames = new ArrayList<>();
+        neighbourhoodNames = new ArrayList<>();
     }
 
     public void parseDefault(Boolean mode){
@@ -57,7 +70,6 @@ public final class OSMHandler implements ContentHandler {
     public float getLongitudeFactor(){
         return longitudeFactor;
     }
-
 
     /**
      * Returns the OSMHandler, which is a singleton.
@@ -167,7 +179,7 @@ public final class OSMHandler implements ContentHandler {
                     initialized = true;
 
                     for(Pointer p : cityNames){
-                        model.getElements().get(WayType.CITYNAME).putPointer(p);
+                        model.getElements().get(WayType.CITY_NAME).putPointer(p);
                     }
                 }
 

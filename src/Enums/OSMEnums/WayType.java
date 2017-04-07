@@ -14,7 +14,14 @@ public enum WayType {  //TODO Change name to ElementType
 
     WATER, //Søer og lign.
 
-    CITYNAME, //navne på byer
+    //NAMES
+    CITY_NAME, //navne på byer over 100k
+    TOWN_NAME, //navne på byer 10k-100k
+    VILLAGE_NAME, //navne på landsbyer -10k
+    HAMLET_NAME, //navne på byer -200
+    SUBURB_NAME, //navne på forstader
+    QUARTER_NAME, //Kvarter (mindre end suburb men større end neighbourhood)
+    NEIGHBOURHOOD_NAME, //navngivet nabolag
 
     //ROADS
     MOTORWAY, //Motorvej
