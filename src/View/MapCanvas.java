@@ -44,7 +44,7 @@ public class MapCanvas extends View {
 
     /**
      * The base Constructor for the MapCanvas.
-     * @param dimension The dimension of the component
+     * @param
      */
     public MapCanvas() {
         transform = new AffineTransform();

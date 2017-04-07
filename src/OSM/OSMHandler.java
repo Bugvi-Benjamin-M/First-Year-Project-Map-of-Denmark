@@ -137,14 +137,14 @@ public final class OSMHandler implements ContentHandler {
                 latitude = Float.parseFloat(atts.getValue("lat"));
                 longitude = Float.parseFloat(atts.getValue("lon"));
                 idToNode.put(id, longitude * longitudeFactor, -latitude);
-                nodeGenerator.addPoint(new Point2D.Float(longitude * longitudeFactor, -latitude));
-
-                name = "";
-                isCity = false;
 
                 if(defaultMode == true) {
                     nodeGenerator.addPoint(new Point2D.Float(longitude * longitudeFactor, -latitude));
                 }
+
+                name = "";
+                isCity = false;
+
                 loadednodes++;
                 if ((loadednodes & 0xFFFF) == 0) {
                     System.out.println("Numnodes: " + loadednodes);
