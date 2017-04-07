@@ -3,13 +3,13 @@ package Controller.ToolbarControllers;
 import Controller.Controller;
 import Enums.ToolType;
 import Helpers.ThemeHelper;
+import View.PopupWindow;
 import View.SearchTool;
 import View.Window;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.*;
 
 /**
  * Created by Búgvi Magnussen on 02-04-2017.
@@ -28,6 +28,7 @@ public final class SearchToolController extends Controller {
         searchTool = (SearchTool) ToolbarController.getInstance(this.window).getToolbar().getTool(ToolType.SEARCHBAR);
         addFocusListenerToSearchTool();
         setToDefaultText();
+        specifyKeyBindings();
     }
 
     public static SearchToolController getInstance(Window window) {
@@ -54,6 +55,7 @@ public final class SearchToolController extends Controller {
         searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCHBAR);
         addFocusListenerToSearchTool();
         setToCurrentText();
+        specifyKeyBindings();
     }
 
     protected void searchToolResizeEvent() {
@@ -61,6 +63,7 @@ public final class SearchToolController extends Controller {
         addFocusListenerToSearchTool();
         if(currentText.equals("")) currentText = defaultText;
         setToCurrentText();
+        specifyKeyBindings();
     }
 
     protected void setToDefaultText() {
@@ -72,13 +75,45 @@ public final class SearchToolController extends Controller {
     }
 
     protected void searchActivatedEvent() {
-        if(searchTool.getField().getEditor().getItem().equals("")) {
+        if(!allowSearch) {
+            System.out.println("case 1");
             searchTool.getField().requestFocus();
-            return;
         }
-        //Todo notice the request focus call. This might be the solution.
-        //Todo get this to work with focus
-        System.out.println("search");
+        else if(allowSearch && searchTool.getField().getEditor().getItem().equals("")) {
+            System.out.println("case 2");
+            searchTool.getField().requestFocus();
+        }
+        else if(allowSearch) {
+            System.out.println("case 3");
+            PopupWindow.infoBox(null, searchTool.getText(), "Search Test");
+            searchTool.getField().requestFocus();
+            allowSearch = true;
+        }
+
+
+    }
+
+    private void specifyKeyBindings() {
+        addKeyBinding(KeyEvent.VK_ENTER, KeyEvent.VK_UNDEFINED);
+    }
+
+    private void addKeyBinding(int key, int activationKey) {
+        searchTool.getField().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if(e.getKeyChar() == key) searchActivatedEvent();
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e);
+                if(e.getKeyChar() == key) {
+                    if (!searchTool.getText().isEmpty()) {
+                        allowSearch = true;
+                    }
+                }
+            }
+        });
     }
 
 
@@ -101,15 +136,15 @@ public final class SearchToolController extends Controller {
             else {
                 searchTool.setText("");
                 editorComponent.setForeground(ThemeHelper.color("icon"));
+                allowSearch = true;
             }
-            allowSearch = true;
         }
 
         @Override
         public void focusLost(FocusEvent e) {
             super.focusLost(e);
             if (editor.getItem().equals("")) setToDefaultText();
-            allowSearch = false;
+                allowSearch = false;
         }
     }
 
