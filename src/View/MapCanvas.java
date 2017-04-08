@@ -114,10 +114,13 @@ public class MapCanvas extends View {
             g.fill(path);
         }
         // Creates outline
-        g.setStroke(new BasicStroke(Float.MIN_VALUE));
-        g.setColor(Color.black);
-        for (Path2D path: coastlines) {
-            g.draw(path);
+        boolean markCoastlines = true;
+        if (markCoastlines) {
+            g.setStroke(new BasicStroke(Float.MIN_VALUE));
+            g.setColor(Color.black);
+            for (Path2D path : coastlines) {
+                g.draw(path);
+            }
         }
     }
 

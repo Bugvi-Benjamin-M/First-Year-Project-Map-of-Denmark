@@ -2,6 +2,7 @@ package Model.Coastlines;
 
 import Enums.BoundType;
 import Helpers.GlobalValue;
+import Helpers.HelperFunctions;
 import Model.Model;
 
 import java.awt.geom.Path2D;
@@ -71,6 +72,9 @@ public class CoastlineFactory {
     public List<Path2D> getCoastlinePolygons() {
         List<Path2D> paths = new ArrayList<>();
         for (Coastline coast: coastlines) {
+            System.out.println("Coast: "+coast.size()+" points ("+ (HelperFunctions.sizeOfPolygon(coast)*1000)+" size)");
+            System.out.println("... From: "+coast.getFromNode().getX()+", "+coast.getFromNode().getY());
+            System.out.println("... To:   "+coast.getToNode().getX()+", "+coast.getToNode().getY()+"\n");
             switch (GlobalValue.getZoomLevel()) {
                 case LEVEL_6:
                     if (coast.size() > 100) paths.add(coast.toPath2D());

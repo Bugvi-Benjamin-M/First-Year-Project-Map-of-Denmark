@@ -2,16 +2,12 @@ package Model.Coastlines;
 
 import Enums.BoundType;
 import Enums.ZoomLevel;
-import Helpers.GlobalValue;
 import Helpers.HelperFunctions;
-import KDtree.Point;
 import Model.Model;
-import OSM.OSMNode;
 import OSM.OSMWay;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +29,7 @@ public class Coastline extends OSMWay {
         Point2D node = this.getFromNode();
         path.moveTo(node.getX(), node.getY());
 
-        int lastI = 0; int increase = 20;
+        int lastI = 0; int increase = 15;
         for (int i = increase; i < size(); i += increase) {
             node = get(lastI);
             boolean isFromNear = isNodeNearCamera(node);
@@ -46,6 +42,8 @@ public class Coastline extends OSMWay {
             }
             lastI = i;
         }
+
+        // oldQuickSimplify(path);
 
         // Finish path (loop back)
         node = this.getFromNode();
@@ -61,36 +59,49 @@ public class Coastline extends OSMWay {
         return path;
     }
 
-    private Path2D qualityGeneratePath(Path2D path, int startpoint, int endpoint, ZoomLevel level) {
+    private void qualityGeneratePath(Path2D path, int startpoint, int endpoint, ZoomLevel level) {
+        // Copy array
         List<Point2D> copy = new ArrayList<>();
         for (int i = startpoint; i <= endpoint; i++) {
             copy.add(this.get(i));
         }
-        // System.out.println("Copy size: "+copy.size());
+
+        // Generate simplified path
         double epsilon = level.getEpsilonValueBasedOnZoomLevel();
         List<Point2D> newPoints = HelperFunctions.pathGeneralization(copy,epsilon);
+
+        // Add start point
         Point2D start = get(startpoint);
         path.lineTo(start.getX(),start.getY());
+
+        // Add generalized points
         for (Point2D point: newPoints) {
             path.lineTo(point.getX(),point.getY());
         }
+
+        // Add end point
         Point2D end = get(endpoint);
         path.lineTo(end.getX(),end.getY());
-        // System.out.println("New size: "+newPoints.size());
-        return path;
     }
 
-    private Path2D quickGeneratePath(Path2D path, int start, int end) {
+    private void quickGeneratePath(Path2D path, int start, int end) {
+        // Add start point
+        Point2D startPoint = this.get(start);
+        path.lineTo(startPoint.getX(),startPoint.getY());
+
+        // Add points
         for (int i = start; i < end; i += ZoomLevel.getZoomLevel().getNodesAtLevel()) {
             Point2D point = this.get(i);
             path.lineTo(point.getX(),point.getY());
         }
-        return path;
+
+        // Add end point
+        Point2D endPoint = this.get(end);
+        path.lineTo(endPoint.getX(),endPoint.getY());
     }
 
-    /*
-    private Path2D quickGeneratePath(Path2D path) {
-        for (int i = start; i < end; i += ZoomLevel.getZoomLevel().getNodesAtLevel()) {
+    private void oldQuickSimplify(Path2D path) {
+        for (int i = 0; i < this.size(); i += ZoomLevel.getZoomLevel().getNodesAtLevel()) {
             Point2D node = this.get(i);
             boolean isNear = isNodeNearCamera(node);
             if (isNear) path.lineTo(node.getX(), node.getY());
@@ -109,8 +120,7 @@ public class Coastline extends OSMWay {
                 }
             }
         }
-        return path;
-    }*/
+    }
 
     private boolean isNodeNearCamera(Point2D node) {
         boolean nodeIsNear = false;

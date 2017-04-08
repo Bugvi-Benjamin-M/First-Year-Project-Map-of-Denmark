@@ -95,4 +95,24 @@ public class HelperFunctions {
 
         return Math.sqrt(Math.pow(dx,2)+Math.pow(dy,2));
     }
+
+    public static double sizeOfPolygon(List<Point2D> points) {
+        double size = 0, dividend = 0;
+        int previus = 0, next = 1;
+        int n = points.size();
+        Point2D previousPoint, nextPoint;
+        for (int i = 0; i < n - 1; i++) {
+            previousPoint = points.get(previus);
+            nextPoint = points.get(next);
+            dividend += (previousPoint.getX()*nextPoint.getY()
+                    - previousPoint.getY()*nextPoint.getX());
+            previus++;
+            next++;
+        }
+        previousPoint = points.get(n-1);
+        nextPoint = points.get(0);
+        dividend += (previousPoint.getX()*nextPoint.getY()
+                - previousPoint.getY()*nextPoint.getX());
+        return Math.abs(dividend / 2);
+    }
 }
