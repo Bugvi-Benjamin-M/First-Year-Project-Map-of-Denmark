@@ -36,7 +36,7 @@ public class HelperFunctionsTest {
 
         System.out.println(points.size());
         HashMap<Integer,Double> values = new HashMap<>();
-        for (double i = 0.01; i < 1; i += 0.01) {
+        for (double i = 1; i > 0; i -= 0.01) {
             List<Point2D> result = HelperFunctions.pathGeneralization(points,i);
             values.put(result.size(),i);
         }

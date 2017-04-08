@@ -29,16 +29,17 @@ public class Coastline extends OSMWay {
         Point2D node = this.getFromNode();
         path.moveTo(node.getX(), node.getY());
 
-        int lastI = 0; int increase = 15;
+        int lastI = 0; int increase = ZoomLevel.getZoomLevel().getNodesAtLevel();
         for (int i = increase; i < size(); i += increase) {
             node = get(lastI);
             boolean isFromNear = isNodeNearCamera(node);
             node = get(i);
             boolean isToNear = isNodeNearCamera(node);
-            if (isFromNear && isToNear) {
+            if (isToNear) {
                 qualityGeneratePath(path,lastI,i,ZoomLevel.getZoomLevel());
             } else {
                 quickGeneratePath(path,lastI,i);
+                // simbleSimply(path,lastI,i);
             }
             lastI = i;
         }
@@ -46,8 +47,8 @@ public class Coastline extends OSMWay {
         // oldQuickSimplify(path);
 
         // Finish path (loop back)
-        node = this.getFromNode();
-        path.lineTo(node.getX(), node.getY());
+        // node = this.getFromNode();
+        // path.lineTo(node.getX(), node.getY());
         return path;
     }
 
@@ -120,6 +121,21 @@ public class Coastline extends OSMWay {
                 }
             }
         }
+    }
+
+    private void simbleSimply(Path2D path, int start, int end) {
+        int range = end - start;
+        int difference = range / 4;
+        Point2D point = this.get(start);
+        path.lineTo(point.getX(),point.getY());
+        point = this.get(start + difference);
+        path.lineTo(point.getX(),point.getY());
+        point = this.get(start + difference + difference);
+        path.lineTo(point.getX(),point.getY());
+        point = this.get(start + difference + difference + difference);
+        path.lineTo(point.getX(),point.getY());
+        point = this.get(end);
+        path.lineTo(point.getX(),point.getY());
     }
 
     private boolean isNodeNearCamera(Point2D node) {

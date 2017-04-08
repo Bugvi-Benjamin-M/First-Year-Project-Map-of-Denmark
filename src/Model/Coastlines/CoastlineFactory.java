@@ -75,19 +75,23 @@ public class CoastlineFactory {
             System.out.println("Coast: "+coast.size()+" points ("+ (HelperFunctions.sizeOfPolygon(coast)*1000)+" size)");
             System.out.println("... From: "+coast.getFromNode().getX()+", "+coast.getFromNode().getY());
             System.out.println("... To:   "+coast.getToNode().getX()+", "+coast.getToNode().getY()+"\n");
+            Path2D path = null;
             switch (GlobalValue.getZoomLevel()) {
                 case LEVEL_6:
-                    if (coast.size() > 100) paths.add(coast.toPath2D());
+                    if (coast.size() > 100) path = coast.toPath2D();
                     break;
                 case LEVEL_5:
-                    if (coast.size() > 60) paths.add(coast.toPath2D());
+                    if (coast.size() > 60) path = coast.toPath2D();
                 case LEVEL_4:
-                    if (coast.size() > 30) paths.add(coast.toPath2D());
+                    if (coast.size() > 30) path = coast.toPath2D();
                 case LEVEL_3:
-                    if (coast.size() > 20) paths.add(coast.toPath2D());
+                    if (coast.size() > 20) path = coast.toPath2D();
                 default:
-                    paths.add(coast.toPath2D());
+                    path = coast.toPath2D();
                     break;
+            }
+            if (path != null) {
+                paths.add(path);
             }
         }
         return paths;
