@@ -126,6 +126,13 @@ public class MapCanvas extends View {
                 drawCycleways(g);
                 drawPaths(g);
                 drawRoads(g);
+                drawCityNames(g, ElementType.CITY_NAME, 18);
+                drawCityNames(g, ElementType.TOWN_NAME, 18);
+                drawCityNames(g, ElementType.VILLAGE_NAME, 18);
+                drawCityNames(g, ElementType.HAMLET_NAME, 18);
+                drawCityNames(g, ElementType.SUBURB_NAME, 18);
+                drawCityNames(g, ElementType.QUARTER_NAME, 18);
+                drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 18);
                 break;
             case LEVEL_1:
                 drawWater(g);
@@ -137,6 +144,9 @@ public class MapCanvas extends View {
                 drawEscapes(g);
                 drawRaceways(g);
                 drawPedestrianStreets(g);
+                drawCityNames(g, ElementType.CITY_NAME, 18);
+                drawCityNames(g, ElementType.TOWN_NAME, 18);
+                drawCityNames(g, ElementType.VILLAGE_NAME, 18);
                 break;
             case LEVEL_2:
                 drawWater(g);
@@ -144,13 +154,15 @@ public class MapCanvas extends View {
                 drawSecondaryRoadLinks(g);
                 drawTertiaryRoads(g);
                 drawTertiaryRoadLinks(g);
+                drawCityNames(g, ElementType.CITY_NAME, 16);
+                drawCityNames(g, ElementType.TOWN_NAME, 16);
                 break;
             case LEVEL_3:
                 drawMotorways(g);
                 drawMotorwayLinks(g);
                 drawPrimaryRoads(g);
                 drawPrimaryRoadLinks(g);
-                drawCityNames(g);
+                drawCityNames(g, ElementType.CITY_NAME, 14);
                 break;
         }
     }
@@ -446,12 +458,12 @@ public class MapCanvas extends View {
     }
 
     //Draw City Names
-    private void drawCityNames(Graphics2D g){
-        setCurrentSection(ElementType.CITY_NAME);
+    private void drawCityNames(Graphics2D g, ElementType type, int scaleFactor){
+        setCurrentSection(type);
         for(Element element : currentSection){
             PlaceName placeName = (PlaceName) element;
             g.setColor(ThemeHelper.color("border"));  //TODO CHOOSE NAME COLOR
-            Font font = new Font("Arial", Font.BOLD, 12);
+            Font font = new Font("Arial", Font.BOLD, 1);
 
             FontMetrics fm = g.getFontMetrics(font);
             Rectangle2D visibleRect = currentRectangle;
@@ -460,13 +472,12 @@ public class MapCanvas extends View {
 
             float scale = 0f;
             if (xScale > yScale) {
-                scale = yScale / 12;
+                scale = yScale / scaleFactor;
             } else {
-                scale = xScale / 12;
+                scale = xScale / scaleFactor;
             }
 
             g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scale, scale)));
-
             g.drawString(placeName.getName(), placeName.getX(), placeName.getY());
         }
     }

@@ -4,6 +4,7 @@ import Enums.BoundType;
 import Enums.OSMEnums.ElementType;
 import Helpers.LongToPointMap;
 import KDtree.NodeGenerator;
+import KDtree.Point;
 import KDtree.Pointer;
 import Model.Model;
 import Model.Elements.*;
@@ -179,6 +180,37 @@ public final class OSMHandler implements ContentHandler {
                     for(Pointer p : cityNames){
                         model.getElements().get(ElementType.CITY_NAME).putPointer(p);
                     }
+                    cityNames = null;
+
+                    for(Pointer p : townNames){
+                        model.getElements().get(ElementType.TOWN_NAME).putPointer(p);
+                    }
+                    townNames = null;
+
+                    for(Pointer p : villageNames){
+                        model.getElements().get(ElementType.VILLAGE_NAME).putPointer(p);
+                    }
+                    villageNames = null;
+
+                    for(Pointer p : hamletNames){
+                        model.getElements().get(ElementType.HAMLET_NAME).putPointer(p);
+                    }
+                    hamletNames = null;
+
+                    for(Pointer p : suburbNames){
+                        model.getElements().get(ElementType.SUBURB_NAME).putPointer(p);
+                    }
+                    suburbNames = null;
+
+                    for(Pointer p : quarterNames){
+                        model.getElements().get(ElementType.QUARTER_NAME).putPointer(p);
+                    }
+                    quarterNames = null;
+
+                    for(Pointer p : neighbourhoodNames){
+                        model.getElements().get(ElementType.NEIGHBOURHOOD_NAME).putPointer(p);
+                    }
+                    neighbourhoodNames = null;
                 }
 
                 way = new OSMWay();
