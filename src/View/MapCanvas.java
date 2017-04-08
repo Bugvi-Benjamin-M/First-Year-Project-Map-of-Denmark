@@ -119,6 +119,22 @@ public class MapCanvas extends View {
         switch(ZoomLevel.getZoomLevel()){
             case LEVEL_0:
                 drawWater(g);
+                drawMotorways(g);
+                drawMotorwayLinks(g);
+                drawPrimaryRoads(g);
+                drawPrimaryRoadLinks(g);
+                drawSecondaryRoads(g);
+                drawSecondaryRoadLinks(g);
+                drawTertiaryRoads(g);
+                drawTertiaryRoadLinks(g);
+                drawUnclassifiedRoads(g);
+                drawResidentialRoads(g);
+                drawLivingStreets(g);
+                drawServiceRoads(g);
+                drawBusGuideways(g);
+                drawEscapes(g);
+                drawRaceways(g);
+                drawPedestrianStreets(g);
                 drawTracks(g);
                 drawSteps(g);
                 drawFootways(g);
@@ -136,6 +152,14 @@ public class MapCanvas extends View {
                 break;
             case LEVEL_1:
                 drawWater(g);
+                drawMotorways(g);
+                drawMotorwayLinks(g);
+                drawPrimaryRoads(g);
+                drawPrimaryRoadLinks(g);
+                drawSecondaryRoads(g);
+                drawSecondaryRoadLinks(g);
+                drawTertiaryRoads(g);
+                drawTertiaryRoadLinks(g);
                 drawUnclassifiedRoads(g);
                 drawResidentialRoads(g);
                 drawLivingStreets(g);
@@ -150,6 +174,10 @@ public class MapCanvas extends View {
                 break;
             case LEVEL_2:
                 drawWater(g);
+                drawMotorways(g);
+                drawMotorwayLinks(g);
+                drawPrimaryRoads(g);
+                drawPrimaryRoadLinks(g);
                 drawSecondaryRoads(g);
                 drawSecondaryRoadLinks(g);
                 drawTertiaryRoads(g);
