@@ -33,34 +33,18 @@ public class Coastline extends OSMWay {
         Point2D node = this.getFromNode();
         path.moveTo(node.getX(), node.getY());
 
-        ZoomLevel level = ZoomLevel.getZoomLevel();
-        if (level != ZoomLevel.LEVEL_6 && level != ZoomLevel.LEVEL_5) {
-            // Make path
-            boolean isWayNearby = false;
-            int lastQuickIndex = 0, lastQualityIndex = 0;
-            for (int i = 0; i < this.size(); i++) {
-                node = this.get(i);
-                boolean isNear = isNodeNearCamera(node);
-                if (isWayNearby) {
-                    if (!isNear) {
-                        isWayNearby = false;
-                        lastQuickIndex = i;
-                        qualityGeneratePath(path, lastQualityIndex, i - 1,level);
-                    }
-                } else {
-                    if (isNear) {
-                        isWayNearby = true;
-                        lastQualityIndex = i;
-                        qualityGeneratePath(path, lastQuickIndex, i - 1,ZoomLevel.LEVEL_6);
-                    }
-                }
+        int lastI = 0; int increase = 20;
+        for (int i = increase; i < size(); i += increase) {
+            node = get(lastI);
+            boolean isFromNear = isNodeNearCamera(node);
+            node = get(i);
+            boolean isToNear = isNodeNearCamera(node);
+            if (isFromNear && isToNear) {
+                qualityGeneratePath(path,lastI,i,ZoomLevel.getZoomLevel());
+            } else {
+                quickGeneratePath(path,lastI,i);
             }
-
-            if (path.getCurrentPoint().equals(this.get(size() - 1))) {
-                quickGeneratePath(path, 0, this.size() - 1);
-            }
-        } else {
-            quickGeneratePath(path,0,this.size()-1);
+            lastI = i;
         }
 
         // Finish path (loop back)
@@ -85,9 +69,13 @@ public class Coastline extends OSMWay {
         // System.out.println("Copy size: "+copy.size());
         double epsilon = level.getEpsilonValueBasedOnZoomLevel();
         List<Point2D> newPoints = HelperFunctions.pathGeneralization(copy,epsilon);
+        Point2D start = get(startpoint);
+        path.lineTo(start.getX(),start.getY());
         for (Point2D point: newPoints) {
             path.lineTo(point.getX(),point.getY());
         }
+        Point2D end = get(endpoint);
+        path.lineTo(end.getX(),end.getY());
         // System.out.println("New size: "+newPoints.size());
         return path;
     }

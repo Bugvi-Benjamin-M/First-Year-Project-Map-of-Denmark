@@ -75,15 +75,15 @@ public enum ZoomLevel {
             case LEVEL_1:
                 return 0.90;
             case LEVEL_2:
-                return 0.85;
-            case LEVEL_3:
                 return 0.80;
+            case LEVEL_3:
+                return 0.70;
             case LEVEL_4:
-                return 0.75;
+                return 0.55;
             case LEVEL_5:
-                return 0.44;
+                return 0.40;
             default:            // LEVEL 6
-                return 0.32;
+                return 0.30;
         }
     }
 }
