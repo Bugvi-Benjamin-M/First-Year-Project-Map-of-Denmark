@@ -1,17 +1,16 @@
 package View;
 
 import Enums.BoundType;
-import Enums.OSMEnums.WayType;
+import Enums.OSMEnums.ElementType;
 import Enums.ZoomLevel;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
-import KDtree.KDTree;
+import KDtree.*;
 import Main.Main;
-import Model.Elements.CityName;
+import Model.Elements.PlaceName;
 import Model.Elements.Element;
 import Model.Model;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class MapCanvas extends View {
     private HashSet<Element> currentSection;
     private Point2D currentPoint;
     private Rectangle2D currentRectangle;
-    private EnumMap<WayType, KDTree> elements;
+    private EnumMap<ElementType, KDTree> elements;
     private boolean antiAliasing;
 
     /**
@@ -62,7 +61,7 @@ public class MapCanvas extends View {
         repaint();
     }
 
-    private void setCurrentRectangle() {
+    public void setCurrentRectangle() {
         Rectangle2D rectangle = getVisibleRect();
         Point2D point = toModelCoords(new Point2D.Double(10, 10));
         Point2D factor = toModelCoords(new Point2D.Double(rectangle.getWidth()-10, rectangle.getHeight()-10));
@@ -147,7 +146,6 @@ public class MapCanvas extends View {
                 drawTertiaryRoadLinks(g);
                 break;
             case LEVEL_3:
-                drawWater(g);
                 drawMotorways(g);
                 drawMotorwayLinks(g);
                 drawPrimaryRoads(g);
@@ -157,8 +155,8 @@ public class MapCanvas extends View {
         }
     }
 
-    private void setCurrentSection(WayType wayType){
-        currentSection = elements.get(wayType).getManyElements(
+    private void setCurrentSection(ElementType elementType){
+        currentSection = elements.get(elementType).getManyElements(
                 (float) currentRectangle.getMinX(),
                 (float) currentRectangle.getMinY(),
                 (float) currentRectangle.getMaxX(),
@@ -218,11 +216,12 @@ public class MapCanvas extends View {
             return transform.inverseTransform(mousePosition, null);
 
         }catch(NoninvertibleTransformException e){
+            //System.out.println("NoninvertibleTransformException blev kastet i toModelCoords");
             throw new RuntimeException();
         }
     }
 
-    public void setElements(EnumMap<WayType, KDTree> map) {
+    public void setElements(EnumMap<ElementType, KDTree> map) {
         elements = map;
     }
 
@@ -236,7 +235,7 @@ public class MapCanvas extends View {
 
     //Draw Roads Methods
     private void drawMotorways(Graphics2D g){
-        setCurrentSection(WayType.MOTORWAY);
+        setCurrentSection(ElementType.MOTORWAY);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("motorway"));
             g.setStroke(new BasicStroke(0.00003f));
@@ -244,7 +243,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawMotorwayLinks(Graphics2D g){
-        setCurrentSection(WayType.MOTORWAY_LINK);
+        setCurrentSection(ElementType.MOTORWAY_LINK);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("motorway"));
             g.setStroke(new BasicStroke(0.00002f));
@@ -252,7 +251,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawTrunkRoads(Graphics2D g) {
-        setCurrentSection(WayType.TRUNK_ROAD);
+        setCurrentSection(ElementType.TRUNK_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("trunkRoad"));
             g.setStroke(new BasicStroke(0.00002f));
@@ -260,7 +259,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawTrunkRoadLinks(Graphics2D g){
-        setCurrentSection(WayType.TRUNK_ROAD_LINK);
+        setCurrentSection(ElementType.TRUNK_ROAD_LINK);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("trunkRoad"));
             g.setStroke(new BasicStroke(0.00002f));
@@ -268,7 +267,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawPrimaryRoads(Graphics2D g){
-        setCurrentSection(WayType.PRIMARY_ROAD);
+        setCurrentSection(ElementType.PRIMARY_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("primaryRoad"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -276,7 +275,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawPrimaryRoadLinks(Graphics2D g){
-        setCurrentSection(WayType.PRIMARY_ROAD_LINK);
+        setCurrentSection(ElementType.PRIMARY_ROAD_LINK);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("primaryRoad"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -284,7 +283,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawSecondaryRoads(Graphics2D g){
-        setCurrentSection(WayType.SECONDARY_ROAD);
+        setCurrentSection(ElementType.SECONDARY_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("secondaryRoad"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -292,7 +291,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawSecondaryRoadLinks(Graphics2D g){
-        setCurrentSection(WayType.SECONDARY_ROAD_LINK);
+        setCurrentSection(ElementType.SECONDARY_ROAD_LINK);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("secondaryRoad"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -300,7 +299,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawTertiaryRoads(Graphics2D g){
-        setCurrentSection(WayType.TERTIARY_ROAD);
+        setCurrentSection(ElementType.TERTIARY_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("tertiaryRoad"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -308,7 +307,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawTertiaryRoadLinks(Graphics2D g){
-        setCurrentSection(WayType.TERTIARY_ROAD_LINK);
+        setCurrentSection(ElementType.TERTIARY_ROAD_LINK);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("tertiaryRoad"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -316,7 +315,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawUnclassifiedRoads(Graphics2D g){
-        setCurrentSection(WayType.UNCLASSIFIED_ROAD);
+        setCurrentSection(ElementType.UNCLASSIFIED_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("unclassifiedRoad"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -324,7 +323,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawResidentialRoads(Graphics2D g){
-        setCurrentSection(WayType.RESIDENTIAL_ROAD);
+        setCurrentSection(ElementType.RESIDENTIAL_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("residentialRoad"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -332,7 +331,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawLivingStreets(Graphics2D g){
-        setCurrentSection(WayType.LIVING_STREET);
+        setCurrentSection(ElementType.LIVING_STREET);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("livingStreet"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -340,7 +339,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawServiceRoads(Graphics2D g){
-        setCurrentSection(WayType.SERVICE_ROAD);
+        setCurrentSection(ElementType.SERVICE_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("serviceRoad"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -348,7 +347,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawBusGuideways(Graphics2D g){
-        setCurrentSection(WayType.BUS_GUIDEWAY);
+        setCurrentSection(ElementType.BUS_GUIDEWAY);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("BusGuideway"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -356,7 +355,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawEscapes(Graphics2D g){
-        setCurrentSection(WayType.ESCAPE);
+        setCurrentSection(ElementType.ESCAPE);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("escape"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -364,7 +363,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawRaceways(Graphics2D g){
-        setCurrentSection(WayType.RACEWAY);
+        setCurrentSection(ElementType.RACEWAY);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("raceway"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -372,7 +371,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawPedestrianStreets(Graphics2D g){
-        setCurrentSection(WayType.PEDESTRIAN_STERET);
+        setCurrentSection(ElementType.PEDESTRIAN_STERET);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("pedestrianStreet"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -380,7 +379,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawTracks(Graphics2D g){
-        setCurrentSection(WayType.TRACK);
+        setCurrentSection(ElementType.TRACK);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("track"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -388,7 +387,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawSteps(Graphics2D g){
-        setCurrentSection(WayType.STEPS);
+        setCurrentSection(ElementType.STEPS);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("steps"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -396,7 +395,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawFootways(Graphics2D g){
-        setCurrentSection(WayType.FOOTWAY);
+        setCurrentSection(ElementType.FOOTWAY);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("footway"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -404,7 +403,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawBridleways(Graphics2D g){
-        setCurrentSection(WayType.BRIDLEWAY);
+        setCurrentSection(ElementType.BRIDLEWAY);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("bridleway"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -412,7 +411,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawCycleways(Graphics2D g){
-        setCurrentSection(WayType.CYCLEWAY);
+        setCurrentSection(ElementType.CYCLEWAY);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("cycleway"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -420,7 +419,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawPaths(Graphics2D g){
-        setCurrentSection(WayType.PATH);
+        setCurrentSection(ElementType.PATH);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("path"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -428,7 +427,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawRoads(Graphics2D g){
-        setCurrentSection(WayType.ROAD);
+        setCurrentSection(ElementType.ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("road"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -438,7 +437,7 @@ public class MapCanvas extends View {
 
     //Draw water
     private void drawWater(Graphics2D g){
-        setCurrentSection(WayType.WATER);
+        setCurrentSection(ElementType.WATER);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("water"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -448,11 +447,12 @@ public class MapCanvas extends View {
 
     //Draw City Names
     private void drawCityNames(Graphics2D g){
-        setCurrentSection(WayType.CITY_NAME);
+        setCurrentSection(ElementType.CITY_NAME);
         for(Element element : currentSection){
-            CityName cityName = (CityName) element;
+            PlaceName placeName = (PlaceName) element;
             g.setColor(ThemeHelper.color("border"));  //TODO CHOOSE NAME COLOR
             Font font = new Font("Arial", Font.BOLD, 12);
+
             FontMetrics fm = g.getFontMetrics(font);
             Rectangle2D visibleRect = currentRectangle;
             float xScale = (float) (visibleRect.getWidth() / fm.stringWidth("København"));
@@ -467,8 +467,7 @@ public class MapCanvas extends View {
 
             g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scale, scale)));
 
-            g.drawString(cityName.getName(), cityName.getX(), cityName.getY());
-            System.out.println(xScale + ", " + yScale + ", scale used: " + scale);
+            g.drawString(placeName.getName(), placeName.getX(), placeName.getY());
         }
     }
 

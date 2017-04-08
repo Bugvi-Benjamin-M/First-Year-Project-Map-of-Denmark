@@ -4,8 +4,7 @@ import Controller.CanvasController;
 import Controller.MainWindowController;
 import Enums.BoundType;
 import Enums.FileType;
-import Enums.OSMEnums.WayType;
-import Exceptions.FileWasNotFoundException;
+import Enums.OSMEnums.ElementType;
 import KDtree.KDTree;
 import Model.Coastlines.CoastlineFactory;
 import Model.Coastlines.CoastlineHandler;
@@ -82,7 +81,7 @@ public class FileHandler {
                 in = new ObjectInputStream(new FileInputStream(filename));
             }
             long time = -System.nanoTime();
-            Model.getInstance().setElements((EnumMap<WayType, KDTree>) in.readObject());
+            Model.getInstance().setElements((EnumMap<ElementType, KDTree>) in.readObject());
             if(isLoadingFromStart) {
                 Model.getInstance().setBound(BoundType.MIN_LONGITUDE, in.readFloat());
                 Model.getInstance().setBound(BoundType.MAX_LONGITUDE, in.readFloat());
@@ -140,7 +139,7 @@ public class FileHandler {
 
     public static void loadTreeStructure(String fileName){
         try(ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(fileName)));){
-            Model.getInstance().setElements((EnumMap<WayType, KDTree>) in.readObject());
+            Model.getInstance().setElements((EnumMap<ElementType, KDTree>) in.readObject());
         }catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

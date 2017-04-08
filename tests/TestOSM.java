@@ -64,14 +64,14 @@ public class TestOSM {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        int RoadCount = model.getWayElements().get(WayType.ROAD).size();
+        int RoadCount = model.getWayElements().get(ElementType.ROAD).size();
         assertEquals(3, RoadCount);
         try {
             FileHandler.loadResource("/testRoad.osm");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        RoadCount = model.getWayElements().get(WayType.ROAD).size();
+        RoadCount = model.getWayElements().get(ElementType.ROAD).size();
         assertEquals(1, RoadCount);
     }*/
     /*@Test
@@ -82,7 +82,7 @@ public class TestOSM {
         }catch(FileNotFoundException e){
             throw new RuntimeException(e);
         }
-        int RoadCount = model.getWayElements().get(WayType.ROAD).size();
+        int RoadCount = model.getWayElements().get(ElementType.ROAD).size();
         assertEquals(1, RoadCount);
 
     }
@@ -95,7 +95,7 @@ public class TestOSM {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        int UnknownCount = model.getWayElements().get(WayType.UNKNOWN).size();
+        int UnknownCount = model.getWayElements().get(ElementType.UNKNOWN).size();
         assertEquals(1, UnknownCount);
 
     }*/

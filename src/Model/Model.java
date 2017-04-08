@@ -1,9 +1,6 @@
 package Model;
 import Enums.BoundType;
-import Enums.OSMEnums.NodeType;
-import Enums.OSMEnums.RelationType;
-import Enums.OSMEnums.WayType;
-import Enums.ZoomLevel;
+import Enums.OSMEnums.ElementType;
 import Helpers.Utilities.DebugWindow;
 import KDtree.*;
 import Model.Coastlines.CoastlineFactory;
@@ -17,7 +14,7 @@ import java.util.*;
  */
 public final class Model extends Observable {
 
-    private EnumMap<WayType, KDTree> elements;
+    private EnumMap<ElementType, KDTree> elements;
 
     private static Model instance;
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
@@ -37,8 +34,8 @@ public final class Model extends Observable {
             camera_bounds.put(type,0.0f);
         }
 
-        elements = new EnumMap<>(WayType.class);
-        for(WayType type : WayType.values()) {
+        elements = new EnumMap<>(ElementType.class);
+        for(ElementType type : ElementType.values()) {
             elements.put(type, new KDTree());
         }
         //Todo remember to clean up the constructor
@@ -52,15 +49,15 @@ public final class Model extends Observable {
         return instance;
     }
 
-    public EnumMap<WayType, KDTree> getElements() {
+    public EnumMap<ElementType, KDTree> getElements() {
         return elements;
     }
 
-    public void setElements(EnumMap<WayType, KDTree> elements){
+    public void setElements(EnumMap<ElementType, KDTree> elements){
         this.elements = elements;
     }
 
-    public void addWayElement(WayType type, Pointer pointer){
+    public void addWayElement(ElementType type, Pointer pointer){
         elements.get(type).putPointer(pointer);
     }
 
@@ -80,7 +77,7 @@ public final class Model extends Observable {
     }
 
     public void clear() {
-        for(WayType type : WayType.values()){
+        for(ElementType type : ElementType.values()){
             elements.get(type).clear();
         }
     }
