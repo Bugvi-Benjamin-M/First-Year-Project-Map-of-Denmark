@@ -1,6 +1,5 @@
 package Controller;
 
-import Enums.BoundType;
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
 import Model.Model;
@@ -54,17 +53,15 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     public void resizeEvent() {
-        System.out.println("MaxLat " + Model.getInstance().getCameraBound(BoundType.MAX_LATITUDE));
-        System.out.println("MaxLon " + Model.getInstance().getCameraBound(BoundType.MAX_LONGITUDE));
-        System.out.println("MinLat " + Model.getInstance().getCameraBound(BoundType.MIN_LATITUDE));
-        System.out.println("MinLon " + Model.getInstance().getCameraBound(BoundType.MIN_LONGITUDE));
+        mapCanvas.revalidate();
+        mapCanvas.repaint();
     }
 
     private void setupCanvas() {
         mapCanvas = new MapCanvas();
         mapCanvas.setElements(model.getElements());
         mapCanvas.setCoastlines(model.getCoastlines());
-        window.addComponent(BorderLayout.CENTER,mapCanvas,true);
+        window.addBorderLayoutComponent(BorderLayout.CENTER,mapCanvas,true);
         mapCanvas.setVisible(true);
     }
 

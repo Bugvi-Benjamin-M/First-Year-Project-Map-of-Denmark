@@ -50,7 +50,8 @@ public final class ToolbarController extends Controller {
         super(MainWindowController.getInstance().getWindow());
         toolbar = new Toolbar();
         toolbarLayout = toolbar.getLayout();
-        this.window.addComponent(BorderLayout.NORTH, toolbar,true);
+        this.window.addBorderLayoutComponent(BorderLayout.NORTH, toolbar,true);
+        toolbar.setVisible(true);
         type = ToolbarType.LARGE;
         setupLargeToolbar();
         addInteractionHandlersToTools();
@@ -333,7 +334,7 @@ public final class ToolbarController extends Controller {
         SearchToolController.getInstance().saveCurrentText();
         resetToolbar();
         SearchToolController.getInstance().searchToolReplacedEvent();
-        window.addComponent(BorderLayout.PAGE_START, toolbar,true);
+        window.addBorderLayoutComponent(BorderLayout.PAGE_START, toolbar,true);
         if(type == ToolbarType.LARGE) setupLargeToolbar();
         else if(type == ToolbarType.SMALL) setupSmallToolbar();
     }

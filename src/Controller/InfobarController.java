@@ -19,7 +19,7 @@ public final class InfobarController extends Controller {
     private InfobarController() {
         super(MainWindowController.getInstance().getWindow());
         infobar = new Infobar();
-        window.addComponent(BorderLayout.LINE_START,infobar,true);
+        window.addBorderLayoutComponent(BorderLayout.LINE_START,infobar,true);
         toggleVisibility();
     }
 

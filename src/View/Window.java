@@ -100,7 +100,7 @@ public class Window {
      * @param component A visual component that extends the View class
      * @see BorderLayout
      */
-    public void addComponent(String layout, View component, boolean display) {
+    public void addBorderLayoutComponent(String layout, View component, boolean display) {
         checkLayout("BorderLayout");
         window.add(component,layout);
         if (display) show();

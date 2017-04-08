@@ -96,8 +96,8 @@ public final class SettingsWindowController extends WindowController {
      * Specifies the location for the different components in the settings window.
      */
     private void setupSettingsWindowSpecifics() {
-        window.addComponent(BorderLayout.CENTER, settings,true);
-        window.addComponent(BorderLayout.SOUTH, southButtons,true);
+        window.addBorderLayoutComponent(BorderLayout.CENTER, settings,true);
+        window.addBorderLayoutComponent(BorderLayout.SOUTH, southButtons,true);
         addActionsToSettingsWindowButtons();
     }
 
