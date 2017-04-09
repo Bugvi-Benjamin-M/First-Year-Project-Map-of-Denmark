@@ -1,9 +1,9 @@
 package Helpers;
 
 import Controller.CanvasController;
-import Controller.MainWindowController;
 import Enums.BoundType;
 import Enums.FileType;
+import Enums.OSMEnums.WayType;
 import Enums.OSMEnums.ElementType;
 import KDtree.KDTree;
 import Model.Coastlines.CoastlineFactory;
@@ -93,7 +93,7 @@ public class FileHandler {
                 Model.getInstance().setDynamicBound(BoundType.MIN_LATITUDE, in.readFloat());
                 Model.getInstance().setDynamicBound(BoundType.MAX_LATITUDE, in.readFloat());
             }
-            CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas().setElements(Model.getInstance().getElements());
+            CanvasController.getInstance().getMapCanvas().setElements(Model.getInstance().getElements());
             time += System.nanoTime();
             if(!isLoadingFromStart) {
                 CanvasController.adjustToDynamicBounds();

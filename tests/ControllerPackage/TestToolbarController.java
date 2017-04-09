@@ -32,8 +32,8 @@ public class TestToolbarController {
     @Before
     public void buildUp() {
         Model.getInstance().resetInstance();
-        CanvasController.getInstance(MainWindowController.getInstance().getWindow()).resetInstance();
-        ToolbarController.getInstance(MainWindowController.getInstance().getWindow()).resetInstance();
+        CanvasController.getInstance().resetInstance();
+        ToolbarController.getInstance().resetInstance();
         MainWindowController.getInstance().resetInstance();
     }
 
@@ -41,8 +41,8 @@ public class TestToolbarController {
     public void testToolListeners(){
         Model.getInstance();
         WindowController mainWindowController = MainWindowController.getInstance();
-        CanvasController.getInstance(mainWindowController.getWindow());
-        ToolbarController toolbarController = ToolbarController.getInstance(mainWindowController.getWindow());
+        CanvasController.getInstance();
+        ToolbarController toolbarController = ToolbarController.getInstance();
         Toolbar toolbar = toolbarController.getToolbar();
         JPanel loadtool = toolbar.getTool(ToolType.LOAD);
         assertEquals(1, loadtool.getListeners(MouseListener.class).length);
@@ -56,9 +56,9 @@ public class TestToolbarController {
     @Test
     public void testSingleton() {
         Model.getInstance();
-        CanvasController.getInstance(MainWindowController.getInstance().getWindow());
-        ToolbarController toolbarController = ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
-        ToolbarController toolbarController2 = ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
+        CanvasController.getInstance();
+        ToolbarController toolbarController = ToolbarController.getInstance();
+        ToolbarController toolbarController2 = ToolbarController.getInstance();
         assertTrue(toolbarController.equals(toolbarController2));
     }
 

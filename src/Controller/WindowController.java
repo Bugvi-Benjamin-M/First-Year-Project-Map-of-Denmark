@@ -59,7 +59,6 @@ public abstract class WindowController extends Controller {
         @Override
         public void componentHidden(ComponentEvent e) {
             super.componentHidden(e);
-            //Todo maybe use this method instead of window listener in subclass
         }
 
 

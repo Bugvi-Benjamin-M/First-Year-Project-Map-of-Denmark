@@ -53,7 +53,7 @@ public class DebugWindow extends WindowAdapter {
         container.addJLabel("coastlines","coastlines");
 
         window.addWindowAdapter(this);
-        window.addComponent(BorderLayout.CENTER,container,false);
+        window.addBorderLayoutComponent(BorderLayout.CENTER,container,false);
     }
 
     public static DebugWindow getInstance() {

@@ -28,15 +28,15 @@ public class TestCanvasController {
     @Before
     public void buildUp() {
         Model.getInstance().resetInstance();
-        CanvasController.getInstance(MainWindowController.getInstance().getWindow()).resetInstance();
+        CanvasController.getInstance().resetInstance();
         MainWindowController.getInstance().resetInstance();
     }
 
     @Test
     public void TestSingleton() {
         Model.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(MainWindowController.getInstance().getWindow());
-        CanvasController canvasController2 = CanvasController.getInstance(MainWindowController.getInstance().getWindow());
+        CanvasController canvasController = CanvasController.getInstance();
+        CanvasController canvasController2 = CanvasController.getInstance();
         assertTrue(canvasController.equals(canvasController2));
     }
 
@@ -44,7 +44,7 @@ public class TestCanvasController {
     public void testCanvasListener() {
         Model.getInstance();
         WindowController mainWindowController = MainWindowController.getInstance();
-        CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
+        CanvasController canvasController = CanvasController.getInstance();
         MapCanvas canvas = canvasController.getMapCanvas();
         assertEquals(1, canvas.getListeners(MouseListener.class).length);
         assertEquals(1, canvas.getListeners(MouseWheelListener.class).length);
@@ -54,7 +54,7 @@ public class TestCanvasController {
     @Test
     public void testGetCanvas() {
         Model.getInstance();
-        MapCanvas canvas = CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas();
+        MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
         assertNotNull(canvas);
         assertTrue(canvas instanceof JPanel);
     }
@@ -62,7 +62,7 @@ public class TestCanvasController {
     @Test
     public void testAdjustToBounds() {
         Model.getInstance();
-        MapCanvas canvas = CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas();
+        MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
         canvas.getVisibleRect().contains(2,2); //Todo Check if point is on screen
         //Todo implement properly
         //Need to find a way to test this properly
@@ -82,15 +82,15 @@ public class TestCanvasController {
 
         //Todo implement properly
         Model.getInstance();
-        MapCanvas canvas = CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas();
-        CanvasController canvasController = CanvasController.getInstance(MainWindowController.getInstance().getWindow());
+        MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
+        CanvasController canvasController = CanvasController.getInstance();
         canvasController.update(Model.getInstance(), null);
     }
 
     @Test
     public void testMousePressed() {
         Model.getInstance();
-        MapCanvas canvas = CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas();
+        MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
         MouseListener[] listener = canvas.getMouseListeners();
        // MouseEvent event = new MouseEvent(canvas, )
 
@@ -113,14 +113,14 @@ public class TestCanvasController {
     @Test
     public void testNumberOfKeyBindings() {
         Model.getInstance();
-        MapCanvas canvas = CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas();
+        MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
         assertEquals(12, canvas.getRegisteredKeyStrokes().length);
     }
 
     @Test
     public void testActionKeyBindings() {
         Model.getInstance();
-        MapCanvas canvas = CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas();
+        MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
         ActionMap actionMap = canvas.getActionMap();
         InputMap inputMap = canvas.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         List<String> inputMapKeyValues = new ArrayList<>();

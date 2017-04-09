@@ -1,14 +1,14 @@
 package Controller.ToolbarControllers;
 
+import Controller.Controller;
+import Controller.MainWindowController;
+import Controller.SettingsWindowController;
 import Enums.FileType;
 import Enums.ToolType;
 import Helpers.FileHandler;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
 import View.*;
-import View.Window;
-import Controller.*;
-
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -46,19 +46,20 @@ public final class ToolbarController extends Controller {
     private final int MARGIN_SMALLEST_RIGHT = -10;
     private final int MARGIN_TOP = 20;
 
-    private ToolbarController(Window window) {
-        super(window);
+    private ToolbarController() {
+        super(MainWindowController.getInstance().getWindow());
         toolbar = new Toolbar();
         toolbarLayout = toolbar.getLayout();
-        this.window.addComponent(BorderLayout.NORTH, toolbar,true);
+        this.window.addBorderLayoutComponent(BorderLayout.NORTH, toolbar,true);
+        toolbar.setVisible(true);
         type = ToolbarType.LARGE;
         setupLargeToolbar();
         addInteractionHandlersToTools();
     }
 
-    public static ToolbarController getInstance(Window window) {
+    public static ToolbarController getInstance() {
         if (instance == null) {
-            instance = new ToolbarController(window);
+            instance = new ToolbarController();
         }
         return instance;
     }
@@ -80,21 +81,21 @@ public final class ToolbarController extends Controller {
 
     public void resizeEvent() {
         if(type == ToolbarType.LARGE && MainWindowController.getInstance().getWindow().getFrame().getWidth() < SMALL_LARGE_EVENT_WIDTH) {
-            SearchToolController.getInstance(window).saveCurrentText();
+            SearchToolController.getInstance().saveCurrentText();
             setupSmallToolbar();
             return;
         }
         if(type == ToolbarType.SMALL && MainWindowController.getInstance().getWindow().getFrame().getWidth() >= SMALL_LARGE_EVENT_WIDTH) {
-            SearchToolController.getInstance(window).saveCurrentText();
+            SearchToolController.getInstance().saveCurrentText();
             setupLargeToolbar();
             return;
         }
         if(type == ToolbarType.LARGE) searchToolResizeEvent();
-        else MenuToolController.getInstance(window).windowResizedEvent();
+        else MenuToolController.getInstance().windowResizedEvent();
     }
 
     public void moveEvent() {
-        if(type == ToolbarType.SMALL) MenuToolController.getInstance(window).windowMovedEvent();
+        if(type == ToolbarType.SMALL) MenuToolController.getInstance().windowMovedEvent();
     }
 
     private void removeAllComponentsFromToolbar() {
@@ -122,14 +123,14 @@ public final class ToolbarController extends Controller {
                 WEST, toolbar);
         putNorthConstraints(menu);
         toolbar.add(menu);
-        MenuToolController.getInstance(window).setupMenuTool();
+        MenuToolController.getInstance().setupMenuTool();
         return menu;
     }
 
     private ToolComponent addSearchToolToSmallToolbar(ToolComponent tool) {
         toolbar.getAllTools().remove(ToolType.SEARCHBAR);
         toolbar.getAllTools().put(ToolType.SEARCHBAR, new SearchTool(GlobalValue.getSearchFieldSmallSize()));
-        SearchToolController.getInstance(window).searchToolReplacedEvent();
+        SearchToolController.getInstance().searchToolReplacedEvent();
         ToolComponent search = toolbar.getTool(ToolType.SEARCHBAR);
         toolbarLayout.putConstraint(EAST, search,
                 MARGIN_SMALLEST_RIGHT,
@@ -196,7 +197,7 @@ public final class ToolbarController extends Controller {
     }
 
     public void searchToolResizeEvent() {
-        SearchToolController.getInstance(window).saveCurrentText();
+        SearchToolController.getInstance().saveCurrentText();
         rebuildSearchTool();
     }
 
@@ -205,7 +206,7 @@ public final class ToolbarController extends Controller {
         toolbar.getAllTools().remove(ToolType.SEARCHBAR);
         toolbar.getAllTools().put(ToolType.SEARCHBAR, new SearchTool(GlobalValue.getSearchFieldLargeSize()));
         addSearchToolToLargeToolbar();
-        SearchToolController.getInstance(window).searchToolResizeEvent();
+        SearchToolController.getInstance().searchToolResizeEvent();
         updateSearchButtonTool();
         toolbar.revalidate();
         toolbar.repaint();
@@ -275,11 +276,11 @@ public final class ToolbarController extends Controller {
 
     private void searchButtonEvent() {
         //Todo maybe check if other parts of the program have focus here
-        SearchToolController.getInstance(window).searchActivatedEvent();
+        SearchToolController.getInstance().searchActivatedEvent();
     }
 
     private void menuEvent() {
-        MenuToolController.getInstance(window).menuToolActivated();
+        MenuToolController.getInstance().menuToolActivated();
     }
 
     private void loadEvent() {
@@ -330,10 +331,10 @@ public final class ToolbarController extends Controller {
     }
 
     public void themeHasChanged() {
-        SearchToolController.getInstance(window).saveCurrentText();
+        SearchToolController.getInstance().saveCurrentText();
         resetToolbar();
-        SearchToolController.getInstance(window).searchToolReplacedEvent();
-        window.addComponent(BorderLayout.PAGE_START, toolbar,true);
+        SearchToolController.getInstance().searchToolReplacedEvent();
+        window.addBorderLayoutComponent(BorderLayout.PAGE_START, toolbar,true);
         if(type == ToolbarType.LARGE) setupLargeToolbar();
         else if(type == ToolbarType.SMALL) setupSmallToolbar();
     }

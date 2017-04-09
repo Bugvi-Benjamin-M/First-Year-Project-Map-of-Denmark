@@ -1,10 +1,10 @@
 package Controller;
 
+import Controller.ToolbarControllers.ToolbarController;
 import Helpers.OSDetector;
 import Helpers.Utilities.DebugWindow;
 import View.PopupWindow;
 import View.Window;
-import Controller.ToolbarControllers.ToolbarController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +19,9 @@ public final class MainWindowController extends WindowController {
 
     private static final String MAIN_TITLE = "OSM Map Viewer v0.3";
     private static MainWindowController instance;
+    private final int DELAY = 200;
+    private javax.swing.Timer waitingTimer;
+
     private MainWindowController(Window window) {
         super(window);
     }
@@ -36,10 +39,10 @@ public final class MainWindowController extends WindowController {
                 .closeOperation(WindowConstants.EXIT_ON_CLOSE)
                 .dimension(new Dimension(1200, 1000))
                 .extendedState(JFrame.MAXIMIZED_BOTH)
-                .layout(new BorderLayout())
                 .relativeTo(null)
+                .layout(new BorderLayout())
                 .icon()
-                .hide();
+                .show();
         mainWindow.setMinimumWindowSize(new Dimension(650, 500));
         return mainWindow;
     }
@@ -69,7 +72,6 @@ public final class MainWindowController extends WindowController {
         super.addInteractionHandlerToWindow();
         MainWindowInteractionHandler handler = new MainWindowInteractionHandler();
         window.getFrame().addComponentListener(handler);
-        //Todo listener skal ligge på frame og ikke contentpane
     }
 
     public void resetInstance() {
@@ -81,14 +83,25 @@ public final class MainWindowController extends WindowController {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
-            ToolbarController.getInstance(window).resizeEvent();
-            CanvasController.getInstance(window).resizeEvent();
+            ToolbarController.getInstance().resizeEvent();
+            CanvasController.getInstance().resizeEvent();
+            if(waitingTimer == null) {
+                waitingTimer = new Timer(DELAY, e1 -> {
+                    if(e1.getSource()==waitingTimer) {
+                        waitingTimer.stop();
+                        waitingTimer = null;
+                        CanvasController.getInstance().resizeEvent();
+                    }
+                });
+                waitingTimer.start();
+            } else waitingTimer.restart();
         }
+
 
         @Override
         public void componentMoved(ComponentEvent e) {
             super.componentMoved(e);
-            ToolbarController.getInstance(window).moveEvent();
+            ToolbarController.getInstance().moveEvent();
         }
     }
 }

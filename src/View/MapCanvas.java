@@ -76,6 +76,7 @@ public class MapCanvas extends View {
         DebugWindow.getInstance().setCameraBoundsLabel();
     }
 
+
     /**
      * Paints the MapCanvas with all the shapes that should be displayed.
      */

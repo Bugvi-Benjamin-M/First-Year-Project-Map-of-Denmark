@@ -1,15 +1,18 @@
 package Controller.ToolbarControllers;
 
 import Controller.Controller;
+import Controller.MainWindowController;
 import Enums.ToolType;
 import Helpers.ThemeHelper;
 import View.PopupWindow;
 import View.SearchTool;
-import View.Window;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 /**
  * Created by Búgvi Magnussen on 02-04-2017.
@@ -23,17 +26,17 @@ public final class SearchToolController extends Controller {
     private String currentText;
     private boolean allowSearch;
 
-    private SearchToolController(Window window) {
-        super(window);
-        searchTool = (SearchTool) ToolbarController.getInstance(this.window).getToolbar().getTool(ToolType.SEARCHBAR);
+    private SearchToolController() {
+        super(MainWindowController.getInstance().getWindow());
+        searchTool = (SearchTool) ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBAR);
         addFocusListenerToSearchTool();
         setToDefaultText();
         specifyKeyBindings();
     }
 
-    public static SearchToolController getInstance(Window window) {
+    public static SearchToolController getInstance() {
         if (instance == null) {
-            instance = new SearchToolController(window);
+            instance = new SearchToolController();
         }
         return instance;
     }
@@ -52,14 +55,14 @@ public final class SearchToolController extends Controller {
     }
 
     protected void searchToolReplacedEvent() {
-        searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCHBAR);
+        searchTool = (SearchTool) ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBAR);
         addFocusListenerToSearchTool();
         setToCurrentText();
         specifyKeyBindings();
     }
 
     protected void searchToolResizeEvent() {
-        searchTool = (SearchTool) ToolbarController.getInstance(window).getToolbar().getTool(ToolType.SEARCHBAR);
+        searchTool = (SearchTool) ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBAR);
         addFocusListenerToSearchTool();
         if(currentText.equals("")) currentText = defaultText;
         setToCurrentText();
