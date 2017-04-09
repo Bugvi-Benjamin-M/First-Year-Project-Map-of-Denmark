@@ -30,16 +30,7 @@ public final class SettingsWindowController extends WindowController {
     private Settings settings;
 
     private SettingsWindowController() {
-        super(setupWindow());
-        settings = new Settings();
-        themeSettings = new ThemeSetting();
-        keyboardKeysToggle = new KeyboardKeysToggle();
-        southButtons = new SettingsButtons();
-        antiAliasingToggle = new AntiAliasingToggle();
-        setupSettingsWindowSpecifics();
-        addSettings();
-        keysActiveStatus = true;
-        antiAliasingStatus = false;
+        super(null);
     }
 
     /**
@@ -57,7 +48,8 @@ public final class SettingsWindowController extends WindowController {
     /**
      * Show the already existing settings window.
      */
-    public void showSettingsWindow() {
+    @Override
+    public void showWindow() {
         window.relativeTo(null);
         window.show();
     }
@@ -67,23 +59,36 @@ public final class SettingsWindowController extends WindowController {
      * is created.
      * @return the newly created settings window.
      */
-    private static Window setupWindow() {
-        Window settings = new Window().title("Settings")
+    public void setupSettingsWindow() {
+        window = new Window().title("Settings")
                 .closeOperation(WindowConstants.DISPOSE_ON_CLOSE)
                 .dimension(new Dimension(600, 600))
                 .extendedState(JFrame.NORMAL)
                 .layout(new BorderLayout())
                 .relativeTo(null)
-                .show();
-        settings.setMinimumWindowSize(new Dimension(600, 600));
-        return settings;
+                .hide();
+        window.setMinimumWindowSize(new Dimension(600, 600));
+        createSettings();
+        addSettingsToWindow();
+        buildSettings();
+        addInteractionHandlerToWindow();
+        hideWindow();
     }
 
+    private void createSettings() {
+        settings = new Settings();
+        themeSettings = new ThemeSetting();
+        keyboardKeysToggle = new KeyboardKeysToggle();
+        southButtons = new SettingsButtons();
+        antiAliasingToggle = new AntiAliasingToggle();
+        keysActiveStatus = true;
+        antiAliasingStatus = false;
+    }
 
     /**
      * adds the individual components to the settings JPanel
      */
-    private void addSettings() {
+    private void buildSettings() {
         settings.addSetting(themeSettings);
         settings.createSpace(new Dimension(0,20));
         settings.addSetting(keyboardKeysToggle);
@@ -95,7 +100,7 @@ public final class SettingsWindowController extends WindowController {
     /**
      * Specifies the location for the different components in the settings window.
      */
-    private void setupSettingsWindowSpecifics() {
+    private void addSettingsToWindow() {
         window.addBorderLayoutComponent(BorderLayout.CENTER, settings,true);
         window.addBorderLayoutComponent(BorderLayout.SOUTH, southButtons,true);
         addActionsToSettingsWindowButtons();

@@ -5,6 +5,7 @@ import Controller.MainWindowController;
 import Controller.SettingsWindowController;
 import Enums.FileType;
 import Enums.ToolType;
+import Enums.ToolbarType;
 import Helpers.FileHandler;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
@@ -34,10 +35,7 @@ public final class ToolbarController extends Controller {
     private Toolbar toolbar;
     private SpringLayout toolbarLayout;
     private static ToolbarController instance;
-    private enum ToolbarType {
-        LARGE,
-        SMALL
-    }
+
     private ToolbarType type;
 
     private final int MARGIN_SMALL_LEFT = 20;
@@ -47,14 +45,7 @@ public final class ToolbarController extends Controller {
     private final int MARGIN_TOP = 20;
 
     private ToolbarController() {
-        super(MainWindowController.getInstance().getWindow());
-        toolbar = new Toolbar();
-        toolbarLayout = toolbar.getLayout();
-        this.window.addBorderLayoutComponent(BorderLayout.NORTH, toolbar,true);
-        toolbar.setVisible(true);
-        type = ToolbarType.LARGE;
-        setupLargeToolbar();
-        addInteractionHandlersToTools();
+        super(null);
     }
 
     public static ToolbarController getInstance() {
@@ -64,7 +55,23 @@ public final class ToolbarController extends Controller {
         return instance;
     }
 
-    private void setupLargeToolbar() {
+    public void setupToolbar(ToolbarType type) {
+        toolbar = new Toolbar();
+        toolbarLayout = toolbar.getLayout();
+        this.type = type;
+        switch (type) {
+            case LARGE:
+                setupLargeToolbar();
+                break;
+            case SMALL:
+                setupSmallToolbar();
+                break;
+        }
+        addInteractionHandlersToTools();
+    }
+    // TODO: 09/04/2017 Consider if toolbar type should be used to determine how the tool is setup instead of small and large setup methods of every tool.
+
+    public void setupLargeToolbar() {
         removeAllComponentsFromToolbar();
         addSaveToolToLargeToolbar(addLoadToolToLargeToolbar());
         addSettingsToolToLargeToolbar();
@@ -72,7 +79,7 @@ public final class ToolbarController extends Controller {
         type = ToolbarType.LARGE;
     }
 
-    private void setupSmallToolbar() {
+    public void setupSmallToolbar() {
         removeAllComponentsFromToolbar();
         addMenuToolToSmallToolbar();
         addSearchToolToSmallToolbar(addSearchButtonToolToSmallToolbar());
@@ -311,15 +318,10 @@ public final class ToolbarController extends Controller {
                 e.printStackTrace();
             }
         }
-        //PopupWindow.infoBox(null, "You activated save tool","Tool activated");
     }
 
     private void settingsEvent() {
-        if (SettingsWindowController.getInstance() == null) {
-            SettingsWindowController.getInstance();
-        } else {
-            SettingsWindowController.getInstance().showSettingsWindow();
-        }
+            SettingsWindowController.getInstance().showWindow();
     }
 
     public Toolbar getToolbar() {

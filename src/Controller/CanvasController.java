@@ -6,7 +6,6 @@ import Model.Model;
 import View.MapCanvas;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -38,11 +37,9 @@ public final class CanvasController extends Controller implements Observer {
     private static double zoom_value;
 
     private CanvasController() {
-        super(MainWindowController.getInstance().getWindow());
+        super(null);
         model = Model.getInstance();
         model.addObserver(this);
-        setupCanvas();
-        addInteractionHandlerToCanvas();
     }
 
     public static CanvasController getInstance() {
@@ -57,12 +54,11 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.repaint();
     }
 
-    private void setupCanvas() {
+    public void setupCanvas() {
         mapCanvas = new MapCanvas();
         mapCanvas.setElements(model.getElements());
         mapCanvas.setCoastlines(model.getCoastlines());
-        window.addBorderLayoutComponent(BorderLayout.CENTER,mapCanvas,true);
-        mapCanvas.setVisible(true);
+        addInteractionHandlerToCanvas();
     }
 
     private void addInteractionHandlerToCanvas() {

@@ -1,6 +1,7 @@
 package Controller;
 
 import Controller.ToolbarControllers.ToolbarController;
+import Enums.ToolbarType;
 import Helpers.OSDetector;
 import Helpers.Utilities.DebugWindow;
 import View.PopupWindow;
@@ -23,14 +24,7 @@ public final class MainWindowController extends WindowController {
     private javax.swing.Timer waitingTimer;
 
     private MainWindowController() {
-        super(setupWindow());
-        SwingUtilities.invokeLater(() -> {
-            ToolbarController.getInstance();
-            InfobarController.getInstance();
-            CanvasController.getInstance();
-            CanvasController.adjustToBounds();
-            CanvasController.getInstance().getMapCanvas().grabFocus();
-        });
+        super(null);
     }
 
     public static MainWindowController getInstance() {
@@ -40,8 +34,8 @@ public final class MainWindowController extends WindowController {
         return instance;
     }
 
-    private static Window setupWindow() {
-       Window mainWindow = new Window().title(MAIN_TITLE)
+    public void setupMainWindow() {
+       window = new Window().title(MAIN_TITLE)
                 .closeOperation(WindowConstants.EXIT_ON_CLOSE)
                 .dimension(new Dimension(1200, 1000))
                 .extendedState(JFrame.MAXIMIZED_BOTH)
@@ -49,8 +43,33 @@ public final class MainWindowController extends WindowController {
                 .layout(new BorderLayout())
                 .icon()
                 .hide();
-        mainWindow.setMinimumWindowSize(new Dimension(650, 500));
-        return mainWindow;
+        window.setMinimumWindowSize(new Dimension(650, 500));
+        addToolbarToMainWindow();
+        addCanvasToMainWindow();
+        addInfobarToMainWindow();
+        addInteractionHandlerToWindow();
+        CanvasController.adjustToBounds();
+        hideWindow();
+    }
+
+    private void addToolbarToMainWindow() {
+        ToolbarController.getInstance().specifyWindow(window);
+        ToolbarController.getInstance().setupToolbar(ToolbarType.LARGE);
+        window.addBorderLayoutComponent(BorderLayout.NORTH, ToolbarController.getInstance().getToolbar(), true);
+        ToolbarController.getInstance().getToolbar().setVisible(true);
+    }
+
+    private void addCanvasToMainWindow() {
+        CanvasController.getInstance().specifyWindow(window);
+        CanvasController.getInstance().setupCanvas();
+        window.addBorderLayoutComponent(BorderLayout.CENTER, CanvasController.getInstance().getMapCanvas(), true);
+        CanvasController.getInstance().getMapCanvas().setVisible(true);
+    }
+
+    private void addInfobarToMainWindow() {
+        InfobarController.getInstance().specifyWindow(window);
+        InfobarController.getInstance().setupInfobar();
+        //window.addBorderLayoutComponent(BorderLayout.LINE_START, InfobarController.getInstance().getInfobar(), true);
     }
 
     @Override

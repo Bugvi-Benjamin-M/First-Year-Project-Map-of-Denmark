@@ -2,8 +2,6 @@ package Controller;
 
 import View.Infobar;
 
-import java.awt.*;
-
 /**
  * Class details:
  *
@@ -17,10 +15,7 @@ public final class InfobarController extends Controller {
     private static InfobarController instance;
 
     private InfobarController() {
-        super(MainWindowController.getInstance().getWindow());
-        infobar = new Infobar();
-        window.addBorderLayoutComponent(BorderLayout.LINE_START,infobar,true);
-        toggleVisibility();
+        super(null);
     }
 
     public static InfobarController getInstance() {
@@ -30,8 +25,17 @@ public final class InfobarController extends Controller {
         return instance;
     }
 
+    public void setupInfobar() {
+        infobar = new Infobar();
+        toggleVisibility();
+    }
+
     public void toggleVisibility() {
         infobar.toggleVisibility();
+    }
+
+    public Infobar getInfobar() {
+        return infobar;
     }
 
     public void resetInstance() {

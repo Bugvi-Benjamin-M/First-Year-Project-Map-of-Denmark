@@ -8,9 +8,12 @@ import View.Window;
 public abstract class Controller {
 
     protected Window window;
+
     public Controller(Window window) {
-        if(window != null) {
             this.window = window;
-        }
+    }
+
+    protected void specifyWindow(Window window) {
+        this.window = window;
     }
 }

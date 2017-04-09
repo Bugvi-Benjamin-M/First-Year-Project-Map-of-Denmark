@@ -37,6 +37,7 @@ public class Main {
         splashScreenInit();
 
         Model model = Model.getInstance();
+        SwingUtilities.invokeLater(() -> {
         try {
             loadDefaultResource();
             splashScreenDestruct();
@@ -47,13 +48,24 @@ public class Main {
             model.loadFromCoastlines();
             programLoadedDefault = false;
         }
-
-            MainWindowController.getInstance();
+            createControllers();
+            MainWindowController.getInstance().setupMainWindow();
+            SettingsWindowController.getInstance().setupSettingsWindow();
             model.modelHasChanged();
+            MainWindowController.getInstance().showWindow();
+        });
 
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: "+(LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();
+    }
+
+    private static void createControllers() {
+        MainWindowController.getInstance();
+        ToolbarController.getInstance();
+        CanvasController.getInstance();
+        InfobarController.getInstance();
+        SettingsWindowController.getInstance();
     }
 
     private static void loadDefaultResource() throws FileWasNotFoundException {
@@ -77,7 +89,6 @@ public class Main {
     private static void splashScreenDestruct() {
       screen.setScreenVisible(false);
       screen = null;
-      MainWindowController.getInstance().getWindow().show();
     }
 
     private static void splashScreenInit() {

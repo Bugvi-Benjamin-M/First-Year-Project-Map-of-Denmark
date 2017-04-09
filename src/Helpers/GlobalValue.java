@@ -4,7 +4,7 @@ import Controller.MainWindowController;
 import Enums.ZoomLevel;
 import Helpers.Utilities.DebugWindow;
 
-import static Enums.ZoomLevel.*;
+import static Enums.ZoomLevel.LEVEL_3;
 
 /**
  * Created by Búgvi Magnussen on 02-04-2017.
