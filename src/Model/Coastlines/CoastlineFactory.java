@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
  */
 public class CoastlineFactory {
 
-    private List<Coastline> coastlines;
+    private HashSet<Coastline> coastlines;
     private EnumMap<BoundType,Float> bounds;
     private static float longitudeFactor;
 
     protected CoastlineFactory() {
-        coastlines = new ArrayList<>();
+        coastlines = new HashSet<>();
         bounds = new EnumMap<>(BoundType.class);
     }
 
@@ -70,7 +70,7 @@ public class CoastlineFactory {
     }
 
     public List<Path2D> getCoastlinePolygons() {
-        List<Path2D> paths = new ArrayList<>();
+        HashSet<Path2D> paths = new HashSet<>();
         for (Coastline coast: coastlines) {
             System.out.println("Coast: "+coast.size()+" points ("+ (HelperFunctions.sizeOfPolygon(coast)*1000)+" size)");
             System.out.println("... From: "+coast.getFromNode().getX()+", "+coast.getFromNode().getY());
@@ -94,6 +94,10 @@ public class CoastlineFactory {
                 paths.add(path);
             }
         }
-        return paths;
+        List<Path2D> returnable = new ArrayList<>();
+        for (Path2D path : paths) {
+            returnable.add(path);
+        }
+        return returnable;
     }
 }

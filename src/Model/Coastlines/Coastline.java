@@ -29,35 +29,38 @@ public class Coastline extends OSMWay {
         Point2D node = this.getFromNode();
         path.moveTo(node.getX(), node.getY());
 
-        int lastI = 0; int increase = ZoomLevel.getZoomLevel().getNodesAtLevel();
+        // allGeneratePath(path,0,this.size());
+
+        int lastI = 0; int increase = ZoomLevel.getNodesAtMaxLevel();
         for (int i = increase; i < size(); i += increase) {
             node = get(lastI);
             boolean isFromNear = isNodeNearCamera(node);
             node = get(i);
             boolean isToNear = isNodeNearCamera(node);
-            if (isToNear) {
-                qualityGeneratePath(path,lastI,i,ZoomLevel.getZoomLevel());
+            if (isToNear || isFromNear) {
+                qualityGeneratePath(path,lastI,i,ZoomLevel.LEVEL_6);
             } else {
                 quickGeneratePath(path,lastI,i);
-                // simbleSimply(path,lastI,i);
+                // simpleSimply(path,lastI,i);
             }
             lastI = i;
         }
 
+        quickGeneratePath(path,lastI,this.size()-1);
+
         // oldQuickSimplify(path);
 
         // Finish path (loop back)
-        // node = this.getFromNode();
-        // path.lineTo(node.getX(), node.getY());
+        node = this.getFromNode();
+        path.lineTo(node.getX(), node.getY());
         return path;
     }
 
-    private Path2D allGeneratePath(Path2D path, int startpoint, int endpoint) {
+    private void allGeneratePath(Path2D path, int startpoint, int endpoint) {
         for (int i = startpoint; i < endpoint; i++) {
             Point2D point = get(i);
             path.lineTo(point.getX(),point.getY());
         }
-        return path;
     }
 
     private void qualityGeneratePath(Path2D path, int startpoint, int endpoint, ZoomLevel level) {
@@ -123,7 +126,7 @@ public class Coastline extends OSMWay {
         }
     }
 
-    private void simbleSimply(Path2D path, int start, int end) {
+    private void simpleSimply(Path2D path, int start, int end) {
         int range = end - start;
         int difference = range / 4;
         Point2D point = this.get(start);

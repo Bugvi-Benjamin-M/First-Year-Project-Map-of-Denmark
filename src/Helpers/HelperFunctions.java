@@ -25,7 +25,7 @@ public class HelperFunctions {
         double dmax = 0;
         int index = 0;
         int end = points.size();
-        for (int i = 2; i < end - 1; i++) {
+        for (int i = 1; i < end; i++) {
             double d = distanceBetweenPointAndPath(points.get(0),
                     points.get(end-1),points.get(i));
             // System.out.println("d: "+d);
@@ -49,6 +49,7 @@ public class HelperFunctions {
             for (int i = index; i < end; i++) {
                 secondSection.add(points.get(i));
             }
+
             firstSection = pathGeneralization(firstSection,epsilon);
             secondSection = pathGeneralization(secondSection,epsilon);
 
@@ -61,7 +62,9 @@ public class HelperFunctions {
             }
         } else {
             // System.out.println("add all");
-            result.addAll(points);
+            for (int i = 1; i < end; i++) {
+                result.add(points.get(i));
+            }
         }
 
         return result;
