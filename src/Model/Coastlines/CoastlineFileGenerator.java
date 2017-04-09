@@ -1,7 +1,7 @@
 package Model.Coastlines;
 
 import Enums.FileType;
-import Enums.OSMEnums.WayType;
+import Enums.OSMEnums.ElementType;
 import Helpers.OSDetector;
 
 import View.PopupWindow;
@@ -51,7 +51,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
     private static Map<Long,NodeCarrier> coastlineNodes;
 
     private WayCarrier way;
-    private WayType wayType;
+    private ElementType elementType;
 
     private boolean administrative_boundary, admin_level_nation, isMaritime;
 
@@ -235,7 +235,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
                 id = Long.parseLong(atts.getValue("id"));
                 way = new WayCarrier(id);
                 idToWay.put(id, way);
-                wayType = WayType.UNKNOWN;
+                elementType = ElementType.UNKNOWN;
                 administrative_boundary = false;
                 admin_level_nation = false;
                 isMaritime = false;
@@ -250,7 +250,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
                 switch (k){
                     case "natural":
                         if (v.equals(Coastline.OSM_IDENTIFIER)) {
-                            wayType = WayType.COASTLINE;
+                            elementType = ElementType.COASTLINE;
                         }
                         break;
                     case "boundary":
@@ -262,7 +262,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
                         if (debugging) System.out.println("\"" + v + "\" equals admin level 2 "+v.equals("2"));
                         break;
                     case "border_type":
-                        if (v.equals("nation")) wayType = WayType.COUNTRY_BOUNDARY_LAND;
+                        if (v.equals("nation")) elementType = ElementType.COUNTRY_BOUNDARY_LAND;
                         if (debugging) System.out.println("\"" + v + "\" equals border type nation "+v.equals("nation"));
                         break;
                     case "maritime":
@@ -277,7 +277,7 @@ public final class CoastlineFileGenerator implements ContentHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equals("way")) {
-            switch (wayType) {
+            switch (elementType) {
                 case COASTLINE:
                     // coastLineFix();
                     addWay(way);
