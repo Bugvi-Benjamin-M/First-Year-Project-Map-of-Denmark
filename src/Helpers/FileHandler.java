@@ -3,7 +3,6 @@ package Helpers;
 import Controller.CanvasController;
 import Enums.BoundType;
 import Enums.FileType;
-import Enums.OSMEnums.WayType;
 import Enums.OSMEnums.ElementType;
 import KDtree.KDTree;
 import Model.Coastlines.CoastlineFactory;
