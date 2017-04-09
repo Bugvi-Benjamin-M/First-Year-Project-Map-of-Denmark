@@ -23,7 +23,7 @@ public class Main {
     public static final FPSCounter FPS_COUNTER = new FPSCounter();
     private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
 
-    private static final boolean DEBUG_MODE_ACTIVE = false;  // CHANGE ME TO PREVENT LOADING DEFAULT
+    private static final boolean DEBUG_MODE_ACTIVE = true;  // CHANGE ME TO PREVENT LOADING DEFAULT
 
     public static long LOAD_TIME;
     private static SplashScreen screen;
@@ -37,7 +37,6 @@ public class Main {
         splashScreenInit();
 
         Model model = Model.getInstance();
-        SwingUtilities.invokeLater(() -> {
         try {
             loadDefaultResource();
             splashScreenDestruct();
@@ -49,21 +48,12 @@ public class Main {
             programLoadedDefault = false;
         }
 
-            //MainWindowController has to be called first of all the controllers.
             MainWindowController.getInstance();
-
-            ToolbarController.getInstance();
-            InfobarController.getInstance();
-            CanvasController.getInstance();
-
-            CanvasController.adjustToBounds();
             model.modelHasChanged();
-            CanvasController.getInstance().getMapCanvas().grabFocus();
 
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: "+(LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();
-        });
     }
 
     private static void loadDefaultResource() throws FileWasNotFoundException {

@@ -22,14 +22,20 @@ public final class MainWindowController extends WindowController {
     private final int DELAY = 200;
     private javax.swing.Timer waitingTimer;
 
-    private MainWindowController(Window window) {
-        super(window);
+    private MainWindowController() {
+        super(setupWindow());
+        SwingUtilities.invokeLater(() -> {
+            ToolbarController.getInstance();
+            InfobarController.getInstance();
+            CanvasController.getInstance();
+            CanvasController.adjustToBounds();
+            CanvasController.getInstance().getMapCanvas().grabFocus();
+        });
     }
 
     public static MainWindowController getInstance() {
         if(instance == null) {
-            Window mainWindow = setupWindow();
-            instance = new MainWindowController(mainWindow);
+            instance = new MainWindowController();
         }
         return instance;
     }
@@ -42,7 +48,7 @@ public final class MainWindowController extends WindowController {
                 .relativeTo(null)
                 .layout(new BorderLayout())
                 .icon()
-                .show();
+                .hide();
         mainWindow.setMinimumWindowSize(new Dimension(650, 500));
         return mainWindow;
     }
