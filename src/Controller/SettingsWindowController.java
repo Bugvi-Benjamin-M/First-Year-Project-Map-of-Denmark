@@ -29,8 +29,8 @@ public final class SettingsWindowController extends WindowController {
     private boolean antiAliasingStatus;
     private Settings settings;
 
-    private SettingsWindowController(Window window) {
-        super(window);
+    private SettingsWindowController() {
+        super(setupWindow());
         settings = new Settings();
         themeSettings = new ThemeSetting();
         keyboardKeysToggle = new KeyboardKeysToggle();
@@ -48,7 +48,7 @@ public final class SettingsWindowController extends WindowController {
      */
     public static SettingsWindowController getInstance() {
         if(instance == null) {
-            return instance = new SettingsWindowController(setupWindow());
+            return instance = new SettingsWindowController();
         }
         return instance;
     }
@@ -96,8 +96,8 @@ public final class SettingsWindowController extends WindowController {
      * Specifies the location for the different components in the settings window.
      */
     private void setupSettingsWindowSpecifics() {
-        window.addComponent(BorderLayout.CENTER, settings,true);
-        window.addComponent(BorderLayout.SOUTH, southButtons,true);
+        window.addBorderLayoutComponent(BorderLayout.CENTER, settings,true);
+        window.addBorderLayoutComponent(BorderLayout.SOUTH, southButtons,true);
         addActionsToSettingsWindowButtons();
     }
 

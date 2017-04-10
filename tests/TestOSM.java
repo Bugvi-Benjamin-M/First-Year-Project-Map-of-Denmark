@@ -25,7 +25,7 @@ public class TestOSM {
     public void buildUp(){
         model = Model.getInstance();
         mainWindowController = MainWindowController.getInstance();
-        canvasController = CanvasController.getInstance(mainWindowController.getWindow());
+        canvasController = CanvasController.getInstance();
         OSMHandler = OSMHandler.getInstance();
 
         mainWindowController.resetInstance();
@@ -35,7 +35,7 @@ public class TestOSM {
         System.gc();
         model = Model.getInstance();
         mainWindowController = MainWindowController.getInstance();
-        canvasController = CanvasController.getInstance(mainWindowController.getWindow());
+        canvasController = CanvasController.getInstance();
         OSMHandler = OSMHandler.getInstance();
     }
 

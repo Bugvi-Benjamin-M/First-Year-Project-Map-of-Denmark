@@ -1,6 +1,9 @@
 package Main;
 
-import Controller.*;
+import Controller.CanvasController;
+import Controller.InfobarController;
+import Controller.MainWindowController;
+import Controller.SettingsWindowController;
 import Controller.ToolbarControllers.ToolbarController;
 import Exceptions.FileWasNotFoundException;
 import Helpers.FileHandler;
@@ -45,15 +48,17 @@ public class Main {
             model.loadFromCoastlines();
             programLoadedDefault = false;
         }
+
+            //MainWindowController has to be called first of all the controllers.
             MainWindowController.getInstance();
 
-            ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
-            InfobarController.getInstance(MainWindowController.getInstance().getWindow());
-            CanvasController.getInstance(MainWindowController.getInstance().getWindow());
+            ToolbarController.getInstance();
+            InfobarController.getInstance();
+            CanvasController.getInstance();
 
             CanvasController.adjustToBounds();
             model.modelHasChanged();
-            CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas().grabFocus();
+            CanvasController.getInstance().getMapCanvas().grabFocus();
 
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: "+(LOAD_TIME / 1000000) + " ms");
@@ -93,22 +98,22 @@ public class Main {
     }
 
     public static void notifyAntiAliasingToggle(boolean status) {
-        CanvasController.getInstance(MainWindowController.getInstance().getWindow()).toggleAntiAliasing(status);
+        CanvasController.getInstance().toggleAntiAliasing(status);
     }
 
     public static void notifyThemeChange() {
-        CanvasController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
-        ToolbarController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
-        InfobarController.getInstance(MainWindowController.getInstance().getWindow()).themeHasChanged();
-        CanvasController.getInstance(MainWindowController.getInstance().getWindow()).getMapCanvas().grabFocus();
+        CanvasController.getInstance().themeHasChanged();
+        ToolbarController.getInstance().themeHasChanged();
+        InfobarController.getInstance().themeHasChanged();
+        CanvasController.getInstance().getMapCanvas().grabFocus();
     }
 
     public static void notifyKeyToggle(boolean status) {
-        CanvasController.getInstance(MainWindowController.getInstance().getWindow()).toggleKeyBindings(status);
-        ToolbarController.getInstance(MainWindowController.getInstance().getWindow()).toggleKeyBindings(status);
+        CanvasController.getInstance().toggleKeyBindings(status);
+        ToolbarController.getInstance().toggleKeyBindings(status);
         SettingsWindowController.getInstance().toggleKeyBindings(status);
         MainWindowController.getInstance().toggleKeyBindings(status);
-        InfobarController.getInstance(MainWindowController.getInstance().getWindow()).toggleKeyBindings(status);
+        InfobarController.getInstance().toggleKeyBindings(status);
     }
 
     public static boolean didTheProgramLoadDefault() {
