@@ -64,10 +64,18 @@ public class Window {
     }
 
     public Window layout(LayoutManager layout){
-        this.layout = layout;
-        window.setLayout(layout);
-        window.pack();
-        return this;
+        if(layout == null) {
+            BoxLayout box = new BoxLayout(window.getContentPane(), BoxLayout.Y_AXIS);
+            this.layout = box;
+            window.setLayout(this.layout);
+            //window.pack();
+            return this;
+        } else {
+            this.layout = layout;
+            window.setLayout(layout);
+            window.pack();
+            return this;
+        }
     }
 
     public Window relativeTo(JFrame relativeTo){
@@ -104,6 +112,10 @@ public class Window {
         checkLayout("BorderLayout");
         window.add(component,layout);
         if (display) show();
+    }
+
+    public void addBoxLayoutComponent(View component, int position) {
+        window.add(component, position);
     }
 
     public void removeComponent(View component) {

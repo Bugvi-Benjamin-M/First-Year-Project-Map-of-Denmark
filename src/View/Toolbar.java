@@ -30,6 +30,7 @@ public class Toolbar extends View {
         layout = new SpringLayout();
         setLayout(layout);
         setPreferredSize(new Dimension(1000, 100));
+        setMinimumSize(new Dimension(500, 100));
         setBorder(BorderFactory.createLineBorder(ThemeHelper.color("border")));
         setBackGroundColor();
     }

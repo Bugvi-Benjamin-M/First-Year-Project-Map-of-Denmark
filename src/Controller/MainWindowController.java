@@ -40,7 +40,7 @@ public final class MainWindowController extends WindowController {
                 .dimension(new Dimension(1200, 1000))
                 .extendedState(JFrame.MAXIMIZED_BOTH)
                 .relativeTo(null)
-                .layout(new BorderLayout())
+                .layout(null)
                 .icon()
                 .hide();
         window.setMinimumWindowSize(new Dimension(650, 500));
@@ -55,14 +55,16 @@ public final class MainWindowController extends WindowController {
     private void addToolbarToMainWindow() {
         ToolbarController.getInstance().specifyWindow(window);
         ToolbarController.getInstance().setupToolbar(ToolbarType.LARGE);
-        window.addBorderLayoutComponent(BorderLayout.NORTH, ToolbarController.getInstance().getToolbar(), true);
+        //window.addBorderLayoutComponent(BorderLayout.NORTH, ToolbarController.getInstance().getToolbar(), true);
+        window.addBoxLayoutComponent(ToolbarController.getInstance().getToolbar(), 0);
         ToolbarController.getInstance().getToolbar().setVisible(true);
     }
 
     private void addCanvasToMainWindow() {
         CanvasController.getInstance().specifyWindow(window);
         CanvasController.getInstance().setupCanvas();
-        window.addBorderLayoutComponent(BorderLayout.CENTER, CanvasController.getInstance().getMapCanvas(), true);
+        //window.addBorderLayoutComponent(BorderLayout.CENTER, CanvasController.getInstance().getMapCanvas(), true);
+        window.addBoxLayoutComponent(CanvasController.getInstance().getMapCanvas(), 1);
         CanvasController.getInstance().getMapCanvas().setVisible(true);
     }
 
