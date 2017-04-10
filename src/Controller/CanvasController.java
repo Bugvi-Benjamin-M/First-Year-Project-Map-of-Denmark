@@ -60,7 +60,6 @@ public final class CanvasController extends Controller implements Observer {
     private void setupCanvas() {
         mapCanvas = new MapCanvas();
         mapCanvas.setElements(model.getElements());
-        mapCanvas.setCoastlines(model.getCoastlines());
         window.addBorderLayoutComponent(BorderLayout.CENTER,mapCanvas,true);
         mapCanvas.setVisible(true);
     }
@@ -265,7 +264,6 @@ public final class CanvasController extends Controller implements Observer {
         ZoomLevel newLevel = GlobalValue.getZoomLevel();
         if (!lastLevel.equals(newLevel)) {
             System.out.println("changed level: "+newLevel.toString());
-            mapCanvas.setCoastlines(model.getCoastlines());
         }
     }
 

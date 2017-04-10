@@ -25,9 +25,10 @@ public class HelperFunctions {
         double dmax = 0;
         int index = 0;
         int end = points.size();
-        for (int i = 1; i < end - 1; i++) {
-            double d = distanceBetweenPointAndPath(points.get(0),points.get(end-1),points.get(i));
-            System.out.println("d: "+d);
+        for (int i = 1; i < end; i++) {
+            double d = distanceBetweenPointAndPath(points.get(0),
+                    points.get(end-1),points.get(i));
+            // System.out.println("d: "+d);
             if (d > dmax) {
                 index = i;
                 dmax = d;
@@ -37,25 +38,33 @@ public class HelperFunctions {
         List<Point2D> result = new ArrayList<>();
 
         // if max distance is greater than epsilon, recursively simplify
-        if (dmax > epsilon) {
-            System.out.println("recursive call");
+        if (dmax >= epsilon) {
+            // System.out.println("recursive call");
             // Recursive call
-            List<Point2D> firstSection = new ArrayList<>(), secondSection = new ArrayList<>();
-            for (int i = 0; i < index; i++) {
+            List<Point2D> firstSection = new ArrayList<>(),
+                    secondSection = new ArrayList<>();
+            for (int i = 1; i <= index; i++) {
                 firstSection.add(points.get(i));
             }
             for (int i = index; i < end; i++) {
                 secondSection.add(points.get(i));
             }
+
             firstSection = pathGeneralization(firstSection,epsilon);
             secondSection = pathGeneralization(secondSection,epsilon);
 
             // Build the result list
-            result.addAll(firstSection);
-            result.addAll(secondSection);
+            for (int i = 1; i < firstSection.size()-2; i++) {
+                result.add(firstSection.get(i));
+            }
+            for (int i = 1; i < secondSection.size()-1; i++) {
+                result.add(secondSection.get(i));
+            }
         } else {
-            System.out.println("add all");
-            result.addAll(points);
+            // System.out.println("add all");
+            for (int i = 1; i < end; i++) {
+                result.add(points.get(i));
+            }
         }
 
         return result;
@@ -90,5 +99,25 @@ public class HelperFunctions {
         if (dy < 0) dy *= -1;
 
         return Math.sqrt(Math.pow(dx,2)+Math.pow(dy,2));
+    }
+
+    public static double sizeOfPolygon(List<Point2D> points) {
+        double size = 0, dividend = 0;
+        int previus = 0, next = 1;
+        int n = points.size();
+        Point2D previousPoint, nextPoint;
+        for (int i = 0; i < n - 1; i++) {
+            previousPoint = points.get(previus);
+            nextPoint = points.get(next);
+            dividend += (previousPoint.getX()*nextPoint.getY()
+                    - previousPoint.getY()*nextPoint.getX());
+            previus++;
+            next++;
+        }
+        previousPoint = points.get(n-1);
+        nextPoint = points.get(0);
+        dividend += (previousPoint.getX()*nextPoint.getY()
+                - previousPoint.getY()*nextPoint.getX());
+        return Math.abs(dividend / 2);
     }
 }

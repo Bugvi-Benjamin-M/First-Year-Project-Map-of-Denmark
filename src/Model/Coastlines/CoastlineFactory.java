@@ -2,6 +2,7 @@ package Model.Coastlines;
 
 import Enums.BoundType;
 import Helpers.GlobalValue;
+import Helpers.HelperFunctions;
 import Model.Model;
 
 import java.awt.geom.Path2D;
@@ -18,12 +19,12 @@ import java.util.stream.Collectors;
  */
 public class CoastlineFactory {
 
-    private List<Coastline> coastlines;
+    private HashSet<Coastline> coastlines;
     private EnumMap<BoundType,Float> bounds;
     private static float longitudeFactor;
 
     protected CoastlineFactory() {
-        coastlines = new ArrayList<>();
+        coastlines = new HashSet<>();
         bounds = new EnumMap<>(BoundType.class);
     }
 
@@ -69,21 +70,35 @@ public class CoastlineFactory {
     }
 
     public List<Path2D> getCoastlinePolygons() {
-        List<Path2D> paths = new ArrayList<>();
+        HashSet<Path2D> paths = new HashSet<>();
         for (Coastline coast: coastlines) {
+            double size = (HelperFunctions.sizeOfPolygon(coast)*100000);
+            System.out.println("Coast: "+coast.size()+" points ("+ size +" size)");
+            System.out.println("... From: "+coast.getFromNode().getX()+", "+coast.getFromNode().getY());
+            System.out.println("... To:   "+coast.getToNode().getX()+", "+coast.getToNode().getY()+"\n");
+            Path2D path = null;
             switch (GlobalValue.getZoomLevel()) {
-                case LEVEL_3:
-                    if (coast.size() > 50) paths.add(coast.toPath2D());
+                case LEVEL_6:
+                    if (size > 40) path = coast.toPath2D();
                     break;
-                case LEVEL_2:
-                    if (coast.size() > 30) paths.add(coast.toPath2D());
-                case LEVEL_1:
-                    if (coast.size() > 10) paths.add(coast.toPath2D());
+                case LEVEL_5:
+                    if (size > 30) path = coast.toPath2D();
+                case LEVEL_4:
+                    if (size > 20) path = coast.toPath2D();
+                case LEVEL_3:
+                    if (size > 10) path = coast.toPath2D();
                 default:
-                    paths.add(coast.toPath2D());
+                    path = coast.toPath2D();
                     break;
             }
+            if (path != null) {
+                paths.add(path);
+            }
         }
-        return paths;
+        List<Path2D> returnable = new ArrayList<>();
+        for (Path2D path : paths) {
+            returnable.add(path);
+        }
+        return returnable;
     }
 }

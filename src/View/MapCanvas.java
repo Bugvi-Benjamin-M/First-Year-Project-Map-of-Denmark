@@ -34,7 +34,6 @@ import java.util.HashSet;
 public class MapCanvas extends View {
 
     private AffineTransform transform;
-    private java.util.List<Path2D> coastlines;
     private HashSet<Element> currentSection;
     private Point2D currentPoint;
     private Rectangle2D currentRectangle;
@@ -47,7 +46,6 @@ public class MapCanvas extends View {
     public MapCanvas() {
         transform = new AffineTransform();
         setBackgroundColor();
-        coastlines = new ArrayList<>();
         antiAliasing = false;
         grabFocus();
     }
@@ -108,10 +106,19 @@ public class MapCanvas extends View {
     }
 
     private void drawCoastlines(Graphics2D g) {
-        coastlines = Model.getInstance().getCoastlines();
+        java.util.List<Path2D> coastlines = Model.getInstance().getCoastlines();
         g.setColor(ThemeHelper.color("background"));
         for (Path2D path: coastlines) {
             g.fill(path);
+        }
+        // Creates outline
+        boolean markCoastlines = true;
+        if (markCoastlines) {
+            g.setStroke(new BasicStroke(Float.MIN_VALUE));
+            g.setColor(Color.black);
+            for (Path2D path : coastlines) {
+                g.draw(path);
+            }
         }
     }
 
@@ -246,10 +253,6 @@ public class MapCanvas extends View {
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
         DebugWindow.getInstance().setFPSLabel();
         repaint();
-    }
-
-    public void setCoastlines(java.util.List<Path2D> coastlines) {
-        this.coastlines = coastlines;
     }
 
     public Point2D toModelCoords(Point2D mousePosition){
@@ -510,6 +513,5 @@ public class MapCanvas extends View {
             g.drawString(placeName.getName(), placeName.getX(), placeName.getY());
         }
     }
-
 
 }
