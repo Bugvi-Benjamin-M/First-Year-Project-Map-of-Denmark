@@ -16,8 +16,8 @@ public abstract class WindowController extends Controller {
 
     protected WindowInteractionHandler handler;
 
-    protected WindowController(Window window) {
-        super(window);
+    protected WindowController() {
+        super();
     }
 
     protected void addInteractionHandlerToWindow() {

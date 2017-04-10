@@ -15,7 +15,7 @@ public final class InfobarController extends Controller {
     private static InfobarController instance;
 
     private InfobarController() {
-        super(null);
+        super();
     }
 
     public static InfobarController getInstance() {

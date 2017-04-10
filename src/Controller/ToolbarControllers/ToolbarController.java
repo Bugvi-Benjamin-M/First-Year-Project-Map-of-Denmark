@@ -45,7 +45,7 @@ public final class ToolbarController extends Controller {
     private final int MARGIN_TOP = 20;
 
     private ToolbarController() {
-        super(null);
+        super();
     }
 
     public static ToolbarController getInstance() {
@@ -322,6 +322,10 @@ public final class ToolbarController extends Controller {
 
     private void settingsEvent() {
             SettingsWindowController.getInstance().showWindow();
+    }
+
+    public boolean doesSearchbarHaveFocus() {
+        return SearchToolController.getInstance().doesSearchbarHaveFocus();
     }
 
     public Toolbar getToolbar() {

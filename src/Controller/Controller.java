@@ -9,8 +9,8 @@ public abstract class Controller {
 
     protected Window window;
 
-    public Controller(Window window) {
-            this.window = window;
+    public Controller() {
+            //
     }
 
     protected void specifyWindow(Window window) {

@@ -30,7 +30,7 @@ public final class SettingsWindowController extends WindowController {
     private Settings settings;
 
     private SettingsWindowController() {
-        super(null);
+        super();
     }
 
     /**

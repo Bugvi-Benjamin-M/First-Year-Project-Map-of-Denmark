@@ -40,7 +40,8 @@ public final class MenuToolController extends Controller {
     private Toolbar toolbar;
 
     private MenuToolController() {
-        super(MainWindowController.getInstance().getWindow());
+        super();
+        specifyWindow(MainWindowController.getInstance().getWindow());
         toolbar = ToolbarController.getInstance().getToolbar();
     }
 

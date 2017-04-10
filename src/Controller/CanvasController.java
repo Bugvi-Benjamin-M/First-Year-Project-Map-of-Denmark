@@ -37,7 +37,7 @@ public final class CanvasController extends Controller implements Observer {
     private static double zoom_value;
 
     private CanvasController() {
-        super(null);
+        super();
         model = Model.getInstance();
         model.addObserver(this);
     }
