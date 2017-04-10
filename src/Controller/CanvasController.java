@@ -258,13 +258,19 @@ public final class CanvasController extends Controller implements Observer {
 
     private static void changeZoomLevel(double zoomFactor) {
         Model model = Model.getInstance();
-        ZoomLevel lastLevel = GlobalValue.getZoomLevel();
-        if (zoomFactor != 0.0) zoom_value -= zoomFactor*10;
-        GlobalValue.setZoomLevel(zoom_value);
-        ZoomLevel newLevel = GlobalValue.getZoomLevel();
-        if (!lastLevel.equals(newLevel)) {
-            System.out.println("changed level: "+newLevel.toString());
-        }
+        double increase = -zoomFactor*10;
+        //if ((zoom_value > -50 || increase > 0) && (zoom_value < 500 || increase < 0)) {
+            // ZoomLevel lastLevel = GlobalValue.getZoomLevel();
+            if (zoomFactor != 0.0) zoom_value += increase;
+            System.out.println("Increase zoom: " + increase + "\nZoom value: " + zoom_value);
+            GlobalValue.setZoomLevel(zoom_value);
+            /*
+            ZoomLevel newLevel = GlobalValue.getZoomLevel();
+            if (!lastLevel.equals(newLevel)) {
+                System.out.println("changed level: "+newLevel.toString());
+            }
+            */
+        //}
     }
 
     public void themeHasChanged() {
