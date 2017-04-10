@@ -21,6 +21,11 @@ public class GlobalValue {
         return (int) (MainWindowController.getInstance().getWindow().getFrame().getWidth() / 1.7);
     }
 
+
+    public static int getToolbarWidth() {
+        return 100;
+    }
+
     public static ZoomLevel getZoomLevel() {
         return zoomLevel;
     }

@@ -5,7 +5,6 @@ import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +28,6 @@ public class Toolbar extends View {
         tools = new ToolFactory().setupToolbar();
         layout = new SpringLayout();
         setLayout(layout);
-        setPreferredSize(new Dimension(1000, 100));
         setBorder(BorderFactory.createLineBorder(ThemeHelper.color("border")));
         setBackGroundColor();
     }

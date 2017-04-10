@@ -49,6 +49,7 @@ public class MapCanvas extends View {
         setBackgroundColor();
         coastlines = new ArrayList<>();
         antiAliasing = false;
+        setPreferredSize(new Dimension(800, 600));
         grabFocus();
     }
 
@@ -88,7 +89,7 @@ public class MapCanvas extends View {
         if(antiAliasing) g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         else g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         setBackgroundColor();
-
+        // TODO: 10/04/2017 Remember to uncomment setCurrentRegtangle and g2.draw(currentRectangle)
         setCurrentRectangle();
 
         drawCoastlines(g2D);

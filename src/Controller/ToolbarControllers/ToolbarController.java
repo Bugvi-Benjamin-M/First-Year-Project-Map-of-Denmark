@@ -58,6 +58,7 @@ public final class ToolbarController extends Controller {
     public void setupToolbar(ToolbarType type) {
         toolbar = new Toolbar();
         toolbarLayout = toolbar.getLayout();
+        toolbar.setPreferredSize(new Dimension(window.getFrame().getWidth(), GlobalValue.getToolbarWidth()));
         this.type = type;
         switch (type) {
             case LARGE:
@@ -335,7 +336,7 @@ public final class ToolbarController extends Controller {
     public void resetInstance() {
         instance = null;
     }
-
+    //Todo remove responsibility from this controller to MainWindowController regarding adding the new toolbar to the window
     public void themeHasChanged() {
         SearchToolController.getInstance().saveCurrentText();
         resetToolbar();
@@ -350,6 +351,7 @@ public final class ToolbarController extends Controller {
         toolbar = null;
         toolbar = new Toolbar();
         toolbarLayout = toolbar.getLayout();
+        toolbar.setPreferredSize(new Dimension(window.getFrame().getWidth(), GlobalValue.getToolbarWidth()));
         addInteractionHandlersToTools();
     }
 

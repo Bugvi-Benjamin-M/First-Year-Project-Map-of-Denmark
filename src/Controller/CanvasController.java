@@ -6,6 +6,7 @@ import Model.Model;
 import View.MapCanvas;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -56,6 +57,7 @@ public final class CanvasController extends Controller implements Observer {
 
     public void setupCanvas() {
         mapCanvas = new MapCanvas();
+        mapCanvas.setPreferredSize(new Dimension(window.getFrame().getWidth(), window.getFrame().getHeight() - GlobalValue.getToolbarWidth()));
         mapCanvas.setElements(model.getElements());
         mapCanvas.setCoastlines(model.getCoastlines());
         addInteractionHandlerToCanvas();
