@@ -8,11 +8,11 @@ import java.util.ArrayList;
  */
 public class OSMRelation extends ArrayList<OSMWay>{
 
-    public Path2D toPath2D() {
+    public Path2D toPath2D(boolean connected) {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         for (OSMWay way : this) {
             if (way != null) {
-                path.append(way.toPath2D(), false);
+                path.append(way.toPath2D(), connected);
             }
         }
         return path;

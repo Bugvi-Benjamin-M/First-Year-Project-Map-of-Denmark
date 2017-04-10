@@ -470,7 +470,7 @@ public final class OSMHandler implements ContentHandler {
             }
         }
         else {
-            path = relation.toPath2D();
+            path = relation.toPath2D(true);
             Road road = new Road(path, name);
             for (int i = 0; i < relation.size(); i++){
                 for (int j = 0; i < relation.get(i).size(); j+=5){
@@ -492,7 +492,7 @@ public final class OSMHandler implements ContentHandler {
                 model.getElements().get(type).putPointer(p);
             }
         } else {
-            path = relation.toPath2D();
+            path = relation.toPath2D(true);
             Water water = new Water(path, name);
             for (int i = 0; i < relation.size()-1; i++) {
                 if(relation.get(i) != null) {
