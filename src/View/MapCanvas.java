@@ -12,6 +12,7 @@ import Model.Elements.Element;
 import Model.Model;
 
 import java.awt.*;
+import java.awt.font.GlyphVector;
 import java.awt.geom.*;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -129,6 +130,8 @@ public class MapCanvas extends View {
                 drawWater(g);
                 drawMotorways(g);
                 drawMotorwayLinks(g);
+                drawTrunkRoads(g);
+                drawTrunkRoadLinks(g);
                 drawPrimaryRoads(g);
                 drawPrimaryRoadLinks(g);
                 drawSecondaryRoads(g);
@@ -150,18 +153,20 @@ public class MapCanvas extends View {
                 drawCycleways(g);
                 drawPaths(g);
                 drawRoads(g);
-                drawCityNames(g, ElementType.CITY_NAME, 18);
-                drawCityNames(g, ElementType.TOWN_NAME, 18);
-                drawCityNames(g, ElementType.VILLAGE_NAME, 18);
-                drawCityNames(g, ElementType.HAMLET_NAME, 18);
-                drawCityNames(g, ElementType.SUBURB_NAME, 18);
-                drawCityNames(g, ElementType.QUARTER_NAME, 18);
-                drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 18);
+                drawCityNames(g, ElementType.CITY_NAME, 20);
+                drawCityNames(g, ElementType.TOWN_NAME, 20);
+                drawCityNames(g, ElementType.VILLAGE_NAME, 20);
+                drawCityNames(g, ElementType.HAMLET_NAME, 20);
+                drawCityNames(g, ElementType.SUBURB_NAME, 20);
+                drawCityNames(g, ElementType.QUARTER_NAME, 20);
+                drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 20);
                 break;
             case LEVEL_1:
                 drawWater(g);
                 drawMotorways(g);
                 drawMotorwayLinks(g);
+                drawTrunkRoads(g);
+                drawTrunkRoadLinks(g);
                 drawPrimaryRoads(g);
                 drawPrimaryRoadLinks(g);
                 drawSecondaryRoads(g);
@@ -176,29 +181,42 @@ public class MapCanvas extends View {
                 drawEscapes(g);
                 drawRaceways(g);
                 drawPedestrianStreets(g);
-                drawCityNames(g, ElementType.CITY_NAME, 18);
-                drawCityNames(g, ElementType.TOWN_NAME, 18);
-                drawCityNames(g, ElementType.VILLAGE_NAME, 18);
+                drawCityNames(g, ElementType.CITY_NAME, 20);
+                drawCityNames(g, ElementType.TOWN_NAME, 20);
+                drawCityNames(g, ElementType.VILLAGE_NAME, 20);
                 break;
             case LEVEL_2:
                 drawWater(g);
                 drawMotorways(g);
                 drawMotorwayLinks(g);
+                drawTrunkRoads(g);
+                drawTrunkRoadLinks(g);
                 drawPrimaryRoads(g);
                 drawPrimaryRoadLinks(g);
                 drawSecondaryRoads(g);
                 drawSecondaryRoadLinks(g);
                 drawTertiaryRoads(g);
                 drawTertiaryRoadLinks(g);
-                drawCityNames(g, ElementType.CITY_NAME, 16);
-                drawCityNames(g, ElementType.TOWN_NAME, 16);
+                drawCityNames(g, ElementType.CITY_NAME, 18);
+                drawCityNames(g, ElementType.TOWN_NAME, 18);
                 break;
             case LEVEL_3:
                 drawMotorways(g);
                 drawMotorwayLinks(g);
+                drawTrunkRoads(g);
+                drawTrunkRoadLinks(g);
                 drawPrimaryRoads(g);
                 drawPrimaryRoadLinks(g);
-                drawCityNames(g, ElementType.CITY_NAME, 14);
+                drawCityNames(g, ElementType.CITY_NAME, 16);
+                break;
+            case LEVEL_4:
+                drawCityNames(g, ElementType.CITY_NAME, 16);
+                break;
+            case LEVEL_5:
+                drawCityNames(g, ElementType.CITY_NAME, 16);
+                break;
+            case LEVEL_6:
+                drawCityNames(g, ElementType.CITY_NAME, 16);
                 break;
         }
     }
@@ -495,7 +513,7 @@ public class MapCanvas extends View {
         for(Element element : currentSection){
             PlaceName placeName = (PlaceName) element;
             g.setColor(ThemeHelper.color("border"));  //TODO CHOOSE NAME COLOR
-            Font font = new Font("Arial", Font.BOLD, 1);
+            Font font = new Font("Times New Roman", Font.PLAIN, 1);
 
             FontMetrics fm = g.getFontMetrics(font);
             Rectangle2D visibleRect = currentRectangle;
@@ -508,10 +526,15 @@ public class MapCanvas extends View {
             } else {
                 scale = xScale / scaleFactor;
             }
-
+            //g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scale, scale)));
             g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scale, scale)));
             g.drawString(placeName.getName(), placeName.getX(), placeName.getY());
+            System.out.println("Scaling X: " + transform.getScaleX());
+            System.out.println("Scaling Y: " + transform.getScaleY());
+            System.out.println("Shear X: " + transform.getShearX());
+            System.out.println("Shear Y: " + transform.getShearY());
+            System.out.println("Translate X: " + transform.getTranslateX());
+            System.out.println("Translate Y: " + transform.getTranslateY());
         }
     }
-
 }

@@ -49,7 +49,6 @@ public class Main {
             model.loadFromCoastlines();
             programLoadedDefault = false;
         }
-
             //MainWindowController has to be called first of all the controllers.
             MainWindowController.getInstance();
 
