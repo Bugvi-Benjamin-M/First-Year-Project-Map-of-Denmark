@@ -26,15 +26,15 @@ public enum ZoomLevel {
     public static ZoomLevel getZoomLevel() {
         if (zoom_factor <= 150) {           // LEVEL_6
             return ZoomLevel.LEVEL_6;
-        } else if (zoom_factor <= 200) {    // LEVEL_5
+        } else if (zoom_factor <= 250) {    // LEVEL_5
             return ZoomLevel.LEVEL_5;
-        } else if (zoom_factor <= 250) {    // LEVEL_4
+        } else if (zoom_factor <= 350) {    // LEVEL_4
             return ZoomLevel.LEVEL_4;
-        } else if (zoom_factor <= 300) {    // LEVEL_3
+        } else if (zoom_factor <= 400) {    // LEVEL_3
             return ZoomLevel.LEVEL_3;
-        } else if (zoom_factor <= 350) {    // LEVEL_2
+        } else if (zoom_factor <= 450) {    // LEVEL_2
             return ZoomLevel.LEVEL_2;
-        } else if (zoom_factor <= 400) {    // LEVEL_1
+        } else if (zoom_factor <= 570) {    // LEVEL_1
             return ZoomLevel.LEVEL_1;
         } else {                            // LEVEL_0
             return ZoomLevel.LEVEL_0;

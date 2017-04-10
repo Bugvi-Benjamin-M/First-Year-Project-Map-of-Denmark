@@ -144,7 +144,7 @@ public class Coastline extends OSMWay {
     private boolean isNodeNearCamera(Point2D node) {
         boolean nodeIsNear = false;
         Model model = Model.getInstance();
-        float buffer = 0.5f;
+        float buffer = 0.2f;
         float minlon = model.getCameraBound(BoundType.MIN_LONGITUDE) - buffer;
         float maxlon = model.getCameraBound(BoundType.MAX_LONGITUDE) + buffer;
         float minlat = model.getCameraBound(BoundType.MIN_LATITUDE) + buffer;
