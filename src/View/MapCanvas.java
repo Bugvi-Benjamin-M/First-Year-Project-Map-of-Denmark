@@ -62,8 +62,10 @@ public class MapCanvas extends View {
         repaint();
     }
 
+
     private void setCurrentRectangle() {
         Rectangle2D rectangle = getVisibleRect();
+
         Point2D point = toModelCoords(new Point2D.Double(10, 10));
         Point2D factor = toModelCoords(new Point2D.Double(rectangle.getWidth()-10, rectangle.getHeight()-10));
         double xBounds = factor.getX() - point.getX();
@@ -93,6 +95,7 @@ public class MapCanvas extends View {
         setCurrentRectangle();
 
         drawCoastlines(g2D);
+
 
         g2D.setColor(Color.black);
         g2D.setStroke(new BasicStroke(0.00001f));
@@ -165,7 +168,7 @@ public class MapCanvas extends View {
                 (float) currentRectangle.getMaxX(),
                 (float) currentRectangle.getMaxY());
     }
-    /*
+/*
     private void drawBoundaries(Graphics2D g2D) {
         g2D.setColor(ThemeHelper.color("boundary"));
         Path2D boundary = new Path2D.Float();
@@ -176,8 +179,8 @@ public class MapCanvas extends View {
         boundary.lineTo(model.getMinLongitude(), model.getMaxLatitude());
         boundary.lineTo(model.getMinLongitude(), model.getMinLatitude());
         g2D.draw(boundary);
-    }
-    */
+    }*/
+
 
     /**
      * Zooms in or out upon the elements on the MapCanvas depending on a given factor.

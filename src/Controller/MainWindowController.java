@@ -54,7 +54,6 @@ public final class MainWindowController extends WindowController {
         addInfobarToMainWindow();
         addInteractionHandlerToWindow();
         CanvasController.adjustToBounds();
-        window.getFrame().pack();
         hideWindow();
     }
 
@@ -62,19 +61,17 @@ public final class MainWindowController extends WindowController {
         layeredPane = new JLayeredPane();
         window.getFrame().add(layeredPane, BorderLayout.CENTER);
         layeredPane.setBounds(new Rectangle(window.getFrame().getWidth(), window.getFrame().getHeight()));
-
         panel = new JPanel(new BorderLayout());
-        panel.setBounds(0,GlobalValue.getToolbarWidth(),window.getFrame().getWidth(), window.getFrame().getHeight());
+        panel.setBounds(0,0,window.getFrame().getWidth(), window.getFrame().getHeight());
         panel.setBackground(Color.BLUE);
         panel.setOpaque(true);
-        layeredPane.setLayer(panel, 0);
         panel2 = new JPanel(new BorderLayout());
         panel2.setBackground(Color.GREEN);
         panel2.setBounds(0,0,window.getFrame().getWidth(), GlobalValue.getToolbarWidth());
         panel2.setOpaque(true);
-        layeredPane.setLayer(panel2, 1);
-        layeredPane.add(panel, new Integer(0), 0);
-        layeredPane.add(panel2, new Integer(1), 0);
+
+        layeredPane.add(panel, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(panel2, JLayeredPane.PALETTE_LAYER);
     }
 
     private void addToolbarToMainWindow() {
@@ -82,7 +79,7 @@ public final class MainWindowController extends WindowController {
         ToolbarController.getInstance().setupToolbar(ToolbarType.LARGE);
         panel2.add(ToolbarController.getInstance().getToolbar(), BorderLayout.CENTER);
         //window.addBorderLayoutComponent(BorderLayout.NORTH, ToolbarController.getInstance().getToolbar(), true);
-        //ToolbarController.getInstance().getToolbar().setVisible(true);
+        ToolbarController.getInstance().getToolbar().setVisible(true);
     }
 
     private void addCanvasToMainWindow() {
@@ -90,7 +87,7 @@ public final class MainWindowController extends WindowController {
         CanvasController.getInstance().setupCanvas();
         panel.add(CanvasController.getInstance().getMapCanvas(), BorderLayout.CENTER);
         //window.addBorderLayoutComponent(BorderLayout.CENTER, CanvasController.getInstance().getMapCanvas(), true);
-        //CanvasController.getInstance().getMapCanvas().setVisible(true);
+        CanvasController.getInstance().getMapCanvas().setVisible(true);
     }
 
     private void addInfobarToMainWindow() {
