@@ -89,13 +89,13 @@ public class MapCanvas extends View {
         else g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         setBackgroundColor();
 
-        //setCurrentRectangle();
+        setCurrentRectangle();
 
         drawCoastlines(g2D);
 
         g2D.setColor(Color.black);
         g2D.setStroke(new BasicStroke(0.00001f));
-//        g2D.draw(currentRectangle);
+        g2D.draw(currentRectangle);
 
         if (Main.didTheProgramLoadDefault()) {
             drawElements(g2D);
