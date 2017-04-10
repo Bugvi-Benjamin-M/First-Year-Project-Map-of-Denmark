@@ -72,20 +72,21 @@ public class CoastlineFactory {
     public List<Path2D> getCoastlinePolygons() {
         HashSet<Path2D> paths = new HashSet<>();
         for (Coastline coast: coastlines) {
-            System.out.println("Coast: "+coast.size()+" points ("+ (HelperFunctions.sizeOfPolygon(coast)*1000)+" size)");
+            double size = (HelperFunctions.sizeOfPolygon(coast)*100000);
+            System.out.println("Coast: "+coast.size()+" points ("+ size +" size)");
             System.out.println("... From: "+coast.getFromNode().getX()+", "+coast.getFromNode().getY());
             System.out.println("... To:   "+coast.getToNode().getX()+", "+coast.getToNode().getY()+"\n");
             Path2D path = null;
             switch (GlobalValue.getZoomLevel()) {
                 case LEVEL_6:
-                    if (coast.size() > 100) path = coast.toPath2D();
+                    if (size > 40) path = coast.toPath2D();
                     break;
                 case LEVEL_5:
-                    if (coast.size() > 60) path = coast.toPath2D();
+                    if (size > 30) path = coast.toPath2D();
                 case LEVEL_4:
-                    if (coast.size() > 30) path = coast.toPath2D();
+                    if (size > 20) path = coast.toPath2D();
                 case LEVEL_3:
-                    if (coast.size() > 20) path = coast.toPath2D();
+                    if (size > 10) path = coast.toPath2D();
                 default:
                     path = coast.toPath2D();
                     break;

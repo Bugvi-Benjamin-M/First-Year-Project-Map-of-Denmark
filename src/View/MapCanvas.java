@@ -111,7 +111,7 @@ public class MapCanvas extends View {
             g.fill(path);
         }
         // Creates outline
-        boolean markCoastlines = false;
+        boolean markCoastlines = true;
         if (markCoastlines) {
             g.setStroke(new BasicStroke(Float.MIN_VALUE));
             g.setColor(Color.black);
@@ -252,10 +252,6 @@ public class MapCanvas extends View {
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
         DebugWindow.getInstance().setFPSLabel();
         repaint();
-    }
-
-    public void setCoastlines(java.util.List<Path2D> coastlines) {
-        this.coastlines = coastlines;
     }
 
     public Point2D toModelCoords(Point2D mousePosition){
@@ -515,27 +511,6 @@ public class MapCanvas extends View {
             g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scale, scale)));
             g.drawString(placeName.getName(), placeName.getX(), placeName.getY());
         }
-    }
-
-    public Point2D toModelCoords(Point2D mousePosition){
-        try{
-            return transform.inverseTransform(mousePosition, null);
-
-        }catch(NoninvertibleTransformException e){
-            throw new RuntimeException();
-        }
-    }
-
-    public void setElements(EnumMap<WayType, KDTree> map) {
-        elements = map;
-    }
-
-    public void setCurrentSection(HashSet<Element> currentSection) {
-        this.currentSection = currentSection;
-    }
-
-    public void setCurrentPoint(Point2D currentPoint) {
-        this.currentPoint = currentPoint;
     }
 
 }
