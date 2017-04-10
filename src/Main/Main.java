@@ -1,6 +1,7 @@
 package Main;
 
 import Controller.*;
+import Controller.ToolbarControllers.ToolbarController;
 import Exceptions.FileWasNotFoundException;
 import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
@@ -19,7 +20,7 @@ public class Main {
     public static final FPSCounter FPS_COUNTER = new FPSCounter();
     private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
 
-    private static final boolean DEBUG_MODE_ACTIVE = true;  // CHANGE ME TO PREVENT LOADING DEFAULT
+    private static final boolean DEBUG_MODE_ACTIVE = false;  // CHANGE ME TO PREVENT LOADING DEFAULT
 
     public static long LOAD_TIME;
     private static SplashScreen screen;
@@ -33,7 +34,7 @@ public class Main {
         splashScreenInit();
 
         Model model = Model.getInstance();
-
+        SwingUtilities.invokeLater(() -> {
         try {
             loadDefaultResource();
             splashScreenDestruct();
@@ -44,14 +45,11 @@ public class Main {
             model.loadFromCoastlines();
             programLoadedDefault = false;
         }
-        SwingUtilities.invokeLater(() -> {
-
             MainWindowController.getInstance();
 
-            CanvasController.getInstance(MainWindowController.getInstance().getWindow());
             ToolbarController.getInstance(MainWindowController.getInstance().getWindow());
-            SearchController.getInstance(MainWindowController.getInstance().getWindow());
             InfobarController.getInstance(MainWindowController.getInstance().getWindow());
+            CanvasController.getInstance(MainWindowController.getInstance().getWindow());
 
             CanvasController.adjustToBounds();
             model.modelHasChanged();
@@ -66,7 +64,12 @@ public class Main {
     private static void loadDefaultResource() throws FileWasNotFoundException {
         try {
             long startTime = System.currentTimeMillis();
-            if (!DEBUG_MODE_ACTIVE) FileHandler.loadResource(DEFAULT_RESOURCE);
+            if (!DEBUG_MODE_ACTIVE) {
+                //FileHandler.loadResource(DEFAULT_RESOURCE, true);
+                //FileHandler.saveBin("/Users/Nik/IdeaProjects/Danmarkskort/Resources/Bst.bin", true);
+                FileHandler.loadBin("/Danmark.bin", true);
+                //CanvasController.adjustToBounds();
+            }
             long stopTime = System.currentTimeMillis();
             System.out.println("Resource load time: "+(stopTime-startTime)+" ms");
             if (DEBUG_MODE_ACTIVE) throw new FileWasNotFoundException("");

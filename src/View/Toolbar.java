@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import Controller.MainWindowController;
 
 /**
  * Class details:
@@ -30,7 +31,8 @@ public class Toolbar extends View {
         layout = new SpringLayout();
         setLayout(layout);
 
-        setPreferredSize(new Dimension(500,100));
+        int width = MainWindowController.getInstance().getWindow().getFrame().getBounds().width;
+        setPreferredSize(new Dimension(width, 100));
         setBorder(BorderFactory.createLineBorder(ThemeHelper.color("border")));
         setBackGroundColor();
     }
@@ -64,8 +66,9 @@ public class Toolbar extends View {
             tools.put(ToolType.LOAD, new ToolFeature("\uf115",ToolType.LOAD));
             tools.put(ToolType.SAVE, new ToolFeature("\uf0c7",ToolType.SAVE));
             tools.put(ToolType.SETTINGS, new ToolFeature("\uf085",ToolType.SETTINGS));
-            tools.put(ToolType.Menu, new ToolFeature("\uf0c9", ToolType.Menu));
-            tools.put(ToolType.SEARCH, new SearchTool(GlobalValue.getSearchFieldLargeSize()));
+            tools.put(ToolType.MENU, new ToolFeature("\uf0c9", ToolType.MENU));
+            tools.put(ToolType.SEARCHBAR, new SearchTool(GlobalValue.getSearchFieldLargeSize()));
+            tools.put(ToolType.SEARCHBUTTON, new ToolFeature("\uf002", ToolType.SEARCHBUTTON));
             return tools;
         }
     }

@@ -3,8 +3,7 @@ package Enums.OSMEnums;
 /**
  * Created by Jakob on 06-03-2017.
  */
-public enum WayType {  //TODO Change name to ElementType
-
+public enum ElementType {
     COASTLINE,
     COUNTRY_BOUNDARY_LAND,
 
@@ -13,6 +12,15 @@ public enum WayType {  //TODO Change name to ElementType
     UNKNOWN, //ukendte elementer
 
     WATER, //Søer og lign.
+
+    //PLACES - NAMES
+    CITY_NAME, //navne på byer over 100k
+    TOWN_NAME, //navne på byer 10k-100k
+    VILLAGE_NAME, //navne på landsbyer -10k
+    HAMLET_NAME, //navne på byer -200
+    SUBURB_NAME, //navne på forstader
+    QUARTER_NAME, //Kvarter (mindre end suburb men større end neighbourhood)
+    NEIGHBOURHOOD_NAME, //navngivet nabolag
 
     //ROADS
     MOTORWAY, //Motorvej

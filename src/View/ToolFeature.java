@@ -31,7 +31,7 @@ public class ToolFeature extends ToolComponent {
         this.type = type;
         this.icon = icon;
         setupLayout();
-        this.setPreferredSize(new Dimension(60,90));
+        this.setPreferredSize(new Dimension(60,58));
     }
 
     /**

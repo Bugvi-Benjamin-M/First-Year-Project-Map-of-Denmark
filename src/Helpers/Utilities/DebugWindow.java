@@ -93,7 +93,7 @@ public class DebugWindow extends WindowAdapter {
     public void setLongitudeLabel() {
         JLabel retrieved = container.getJLabel("lonlabel");
         Model model = Model.getInstance();
-        String label = "Longitude Bounds: Min='"+model.getMinLongitude()+"' Max='"+model.getMaxLongitude()+"'";
+        String label = "Longitude Bounds: Min='"+model.getMinLongitude(false)+"' Max='"+model.getMaxLongitude(false)+"'";
         if (retrieved != null){
             retrieved.setText(label);
         } else {
@@ -104,7 +104,7 @@ public class DebugWindow extends WindowAdapter {
     public void setLatitudeLabel() {
         JLabel retrieved = container.getJLabel("latlabel");
         Model model = Model.getInstance();
-        String label = "Latitude Bounds: Min='"+model.getMinLatitude()+"' Max='"+model.getMaxLatitude()+"'";
+        String label = "Latitude Bounds: Min='"+model.getMinLatitude(false)+"' Max='"+model.getMaxLatitude(false)+"'";
         if (retrieved != null) {
             retrieved.setText(label);
         } else {

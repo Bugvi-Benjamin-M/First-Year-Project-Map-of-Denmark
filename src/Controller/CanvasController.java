@@ -2,6 +2,7 @@ package Controller;
 
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
+import KDtree.*;
 import Model.Model;
 import View.MapCanvas;
 import View.Window;
@@ -10,8 +11,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -35,13 +38,12 @@ public final class CanvasController extends Controller implements Observer {
 
     private Point2D lastMousePosition;
     private CanvasInteractionHandler handler;
-    private double zoom_value;
+    private static double zoom_value;
 
     private CanvasController(Window window) {
         super(window);
         model = Model.getInstance();
         model.addObserver(this);
-
         setupCanvas();
         addInteractionHandlerToCanvas();
     }
@@ -53,8 +55,12 @@ public final class CanvasController extends Controller implements Observer {
         return instance;
     }
 
+    public void resizeEvent(){
+        //
+    }
+
     private void setupCanvas() {
-        mapCanvas = new MapCanvas(window.getDimension());
+        mapCanvas = new MapCanvas();
         mapCanvas.setElements(model.getElements());
         window.addComponent(BorderLayout.CENTER,mapCanvas,true);
         mapCanvas.setVisible(true);
@@ -175,8 +181,29 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     public static void adjustToBounds() {
-        mapCanvas.pan(-model.getMinLongitude(), -model.getMaxLatitude());
-        mapCanvas.zoom(mapCanvas.getWidth()/(model.getMaxLongitude()- model.getMinLongitude()));
+        mapCanvas.pan(-model.getMinLongitude(false), -model.getMaxLatitude(false));
+        double factor = mapCanvas.getWidth()/(model.getMaxLongitude(false)- model.getMinLongitude(false));
+        mapCanvas.zoom(factor);
+    }
+
+    public static void adjustToDynamicBounds(){
+        ZoomLevel.resetZoomFactor();
+        zoom_value = 0;
+        double distancetoreach = 0;
+        double currentdistance = 1;
+        resetBounds();
+        double factor = mapCanvas.getWidth()/(model.getMaxLongitude(false)- model.getMinLongitude(false));
+        mapCanvas.pan(- model.getMinLongitude(true), -model.getMaxLatitude(true));
+        mapCanvas.zoom(factor);
+        while(distancetoreach < currentdistance) {
+            Rectangle2D rect = mapCanvas.getVisibleRect();
+            distancetoreach = model.getMaxLongitude(true) - model.getMinLongitude(true);
+            Point2D leftcorner = mapCanvas.toModelCoords(new Point2D.Double(rect.getX(), rect.getY()));
+            Point2D rightcorner = mapCanvas.toModelCoords(new Point2D.Double(rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight()));
+            currentdistance = rightcorner.getX() - leftcorner.getX();
+            mapCanvas.zoom(Math.pow(ZOOM_FACTOR, -1));
+            changeZoomLevel(-1);
+        }
     }
 
     public static void resetBounds(){
@@ -198,7 +225,6 @@ public final class CanvasController extends Controller implements Observer {
         Point2D mousePosition = event.getPoint();
         Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
         mapCanvas.setCurrentPoint(mouseInModel);
-        mapCanvas.repaint();
     }
 
     private void mouseDraggedEvent(MouseEvent event) {
@@ -232,7 +258,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.pan(dx, dy);
     }
 
-    private void changeZoomLevel(double zoomFactor) {
+    private static void changeZoomLevel(double zoomFactor) {
         // System.out.println("zoomed in by "+zoomFactor);
         Model model = Model.getInstance();
         ZoomLevel lastLevel = GlobalValue.getZoomLevel();
@@ -270,7 +296,6 @@ public final class CanvasController extends Controller implements Observer {
     private class CanvasInteractionHandler extends MouseAdapter {
 
         private int specifiedFocus;
-
         private CanvasInteractionHandler(int specifiedFocus) {
             this.specifiedFocus = specifiedFocus;
         }

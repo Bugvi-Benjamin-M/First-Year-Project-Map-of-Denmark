@@ -1,9 +1,6 @@
 package Model;
 import Enums.BoundType;
-import Enums.OSMEnums.NodeType;
-import Enums.OSMEnums.RelationType;
-import Enums.OSMEnums.WayType;
-import Enums.ZoomLevel;
+import Enums.OSMEnums.ElementType;
 import Helpers.Utilities.DebugWindow;
 import KDtree.*;
 import Model.Coastlines.CoastlineFactory;
@@ -17,7 +14,7 @@ import java.util.*;
  */
 public final class Model extends Observable {
 
-    private EnumMap<WayType, KDTree> elements;
+    private EnumMap<ElementType, KDTree> elements;
 
     private static Model instance;
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
@@ -25,18 +22,20 @@ public final class Model extends Observable {
     private CoastlineFactory coastlineFactory;
 
     private EnumMap<BoundType, Float> bounds;
+    private EnumMap<BoundType, Float> dynamicBounds;
     private EnumMap<BoundType,Float> camera_bounds;
 
     private Model(){
         bounds = new EnumMap<>(BoundType.class);
+        dynamicBounds = new EnumMap<>(BoundType.class);
         camera_bounds = new EnumMap<>(BoundType.class);
         for (BoundType type: BoundType.values()) {
             bounds.put(type,0.0f);
             camera_bounds.put(type,0.0f);
         }
 
-        elements = new EnumMap<>(WayType.class);
-        for(WayType type : WayType.values()) {
+        elements = new EnumMap<>(ElementType.class);
+        for(ElementType type : ElementType.values()) {
             elements.put(type, new KDTree());
         }
         //Todo remember to clean up the constructor
@@ -50,11 +49,15 @@ public final class Model extends Observable {
         return instance;
     }
 
-    public EnumMap<WayType, KDTree> getElements() {
+    public EnumMap<ElementType, KDTree> getElements() {
         return elements;
     }
 
-    public void addWayElement(WayType type, Pointer pointer){
+    public void setElements(EnumMap<ElementType, KDTree> elements){
+        this.elements = elements;
+    }
+
+    public void addWayElement(ElementType type, Pointer pointer){
         elements.get(type).putPointer(pointer);
     }
 
@@ -74,7 +77,7 @@ public final class Model extends Observable {
     }
 
     public void clear() {
-        for(WayType type : WayType.values()){
+        for(ElementType type : ElementType.values()){
             elements.get(type).clear();
         }
     }
@@ -88,26 +91,34 @@ public final class Model extends Observable {
         bounds.put(type,value);
     }
 
+    public void setDynamicBound(BoundType type, float value){
+        dynamicBounds.put(type, value);
+    }
+
     public void setCameraBound(BoundType type, float value) {
         camera_bounds.put(type,value);
     }
 
     public float getCameraBound(BoundType type) {return camera_bounds.get(type);}
 
-    public float getMinLatitude() {
-        return bounds.get(BoundType.MIN_LATITUDE);
+    public float getMinLatitude(boolean dynamic) {
+        if(dynamic) return dynamicBounds.get(BoundType.MIN_LATITUDE);
+        else return bounds.get(BoundType.MIN_LATITUDE);
     }
 
-    public float getMaxLatitude() {
-        return bounds.get(BoundType.MAX_LATITUDE);
+    public float getMaxLatitude(boolean dynamic) {
+        if(dynamic) return dynamicBounds.get(BoundType.MAX_LATITUDE);
+        else return bounds.get(BoundType.MAX_LATITUDE);
     }
 
-    public float getMinLongitude() {
-        return bounds.get(BoundType.MIN_LONGITUDE);
+    public float getMinLongitude(boolean dynamic) {
+        if(dynamic) return dynamicBounds.get(BoundType.MIN_LONGITUDE);
+        else return bounds.get(BoundType.MIN_LONGITUDE);
     }
 
-    public float getMaxLongitude() {
-        return bounds.get(BoundType.MAX_LONGITUDE);
+    public float getMaxLongitude(boolean dynamic) {
+        if(dynamic) return dynamicBounds.get(BoundType.MAX_LONGITUDE);
+        else return bounds.get(BoundType.MAX_LONGITUDE);
     }
 
     public ArrayList<Point2D> getMedianpoints() {

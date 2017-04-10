@@ -1,12 +1,14 @@
 package KDtree;
 
 import Model.Elements.Element;
+
+import java.io.Serializable;
 import java.util.HashSet;
 
 /**
  * Created by Jakob on 30-03-2017.
  */
-public class KDTree {
+public class KDTree implements Serializable{
     private Node root;
     private HashSet<Element> elementsToReturn;
 
@@ -76,18 +78,15 @@ public class KDTree {
 
     private Node putNode(Node parent, Node nodeToPut){
         if(parent == null) {
-            System.out.println("Lortet er lig med null");
             return nodeToPut;
         }
 
         if(parent.getDepth() % 2 == 0){
-            System.out.println(parent.getDepth());
             int compare = nodeToPut.compareToX(parent);
             if(compare <= 0) parent.setLeft(putNode(parent.getLeft(), nodeToPut));
             if(compare > 0) parent.setRight(putNode(parent.getRight(), nodeToPut));
         }
         else{
-            System.out.println(parent.getDepth());
             int compare = nodeToPut.compareToY(parent);
             if(compare <= 0) parent.setLeft(putNode(parent.getLeft(), nodeToPut));
             if(compare > 0) parent.setRight(putNode(parent.getRight(), nodeToPut));

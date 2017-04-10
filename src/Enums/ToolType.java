@@ -7,9 +7,10 @@ public enum ToolType {
     SAVE("Save"),
     LOAD("Load"),
     SETTINGS("Settings"),
-    SEARCH("Search"),
+    SEARCHBAR("Search"),
     UNKNOWN("Unknown"),
-    Menu("Menu");
+    MENU("Menu"),
+    SEARCHBUTTON("Search");
 
     private String tag;
 
