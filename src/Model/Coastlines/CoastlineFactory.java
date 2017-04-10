@@ -74,8 +74,8 @@ public class CoastlineFactory {
         for (Coastline coast: coastlines) {
             double size = (HelperFunctions.sizeOfPolygon(coast)*100000);
 
-            System.out.println("Coast: "+coast.size()+" points ("+ size +" size)");
             /*
+            System.out.println("Coast: "+coast.size()+" points ("+ size +" size)");
             System.out.println("... From: "+coast.getFromNode().getX()+", "+coast.getFromNode().getY());
             System.out.println("... To:   "+coast.getToNode().getX()+", "+coast.getToNode().getY()+"\n");
             */
