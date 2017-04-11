@@ -555,15 +555,22 @@ public class MapCanvas extends View {
         if(ZoomLevel.getZoomFactor() < -50){}
         else{
             float scaleFactor;
-            //scaleFactor = 0.0008f;
             if(ZoomLevel.getZoomFactor() >= 100) {
                 scaleFactor = 397.522f * (float) (Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
             }
             else{
                 scaleFactor = 0.0054586004f;
             }
+            //Font
             Font font = new Font("Arial", Font.BOLD, 12);
+
+            //Transparency
+            Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f);
+            g.setComposite(c);
+
+            //Color
             g.setColor(ThemeHelper.color("cityName"));
+
             for(Element element : currentSection){
                 PlaceName placeName = (PlaceName) element;
                 g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
@@ -572,10 +579,10 @@ public class MapCanvas extends View {
          }
     }
     private void drawString (String s , Graphics2D g , float x , float y, Font font, float scaleFactor){
+        x = x - ((getFontMetrics(font).charWidth(s.charAt(s.length()/2))*scaleFactor) * s.length()/2);
         for (int i = 0 ; i < s.length() ; i++){
             char ch = s.charAt(i);
             g.drawString(ch + "", x, y) ;
-            //x += ((getFontMetrics(font).charWidth(ch))/(transform.getScaleX())*3);
             x += ((getFontMetrics(font).charWidth(ch)))*scaleFactor;
         }
     }
