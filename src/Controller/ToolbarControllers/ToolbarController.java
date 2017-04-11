@@ -36,13 +36,15 @@ public final class ToolbarController extends Controller {
     private ToolbarType type;
 
     private final int MARGIN_SMALL_LEFT = 20;
-    private final int MARGIN_SMALL_RIGHT = -20;
+    private final int MARGIN_SMALL_RIGHT = -40;
     private final int MARGIN_SMALLEST_LEFT = 10;
     private final int MARGIN_SMALLEST_RIGHT = -10;
     private final int MARGIN_TOP = 20;
 
     private ToolbarController() {
         super();
+        SearchToolController.getInstance();
+        MenuToolController.getInstance();
     }
 
     public static ToolbarController getInstance() {
@@ -65,6 +67,10 @@ public final class ToolbarController extends Controller {
                 setupSmallToolbar();
                 break;
         }
+        SearchToolController.getInstance().specifyWindow(window);
+        MenuToolController.getInstance().specifyWindow(window);
+        SearchToolController.getInstance().setupSearchTool();
+        //MenuToolController.getInstance().setupMenuTool();
         addInteractionHandlersToTools();
     }
     // TODO: 09/04/2017 Consider if toolbar type should be used to determine how the tool is setup instead of small and large setup methods of every tool.
@@ -203,7 +209,8 @@ public final class ToolbarController extends Controller {
 
     public void searchToolResizeEvent() {
         SearchToolController.getInstance().saveCurrentText();
-        rebuildSearchTool();
+        //rebuildSearchTool();
+        SearchToolController.getInstance().searchToolResizeEvent();
     }
 
     private void rebuildSearchTool() {

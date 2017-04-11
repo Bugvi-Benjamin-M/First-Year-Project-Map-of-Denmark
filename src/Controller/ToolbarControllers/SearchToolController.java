@@ -28,11 +28,6 @@ public final class SearchToolController extends Controller {
 
     private SearchToolController() {
         super();
-        specifyWindow(MainWindowController.getInstance().getWindow());
-        searchTool = (SearchTool) ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBAR);
-        addFocusListenerToSearchTool();
-        setToDefaultText();
-        specifyKeyBindings();
     }
 
     public static SearchToolController getInstance() {
@@ -40,6 +35,13 @@ public final class SearchToolController extends Controller {
             instance = new SearchToolController();
         }
         return instance;
+    }
+
+    protected void setupSearchTool() {
+        searchTool = (SearchTool) ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBAR);
+        addFocusListenerToSearchTool();
+        setToDefaultText();
+        specifyKeyBindings();
     }
 
     public void resetInstance() {
@@ -68,11 +70,12 @@ public final class SearchToolController extends Controller {
     }
 
     protected void searchToolResizeEvent() {
-        searchTool = (SearchTool) ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBAR);
-        addFocusListenerToSearchTool();
+        //searchTool = (SearchTool) ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBAR);
+        //addFocusListenerToSearchTool();
         if(currentText.equals("")) currentText = defaultText;
         setToCurrentText();
-        specifyKeyBindings();
+        searchTool.adaptSize();
+        //specifyKeyBindings();
     }
 
     protected void setToDefaultText() {

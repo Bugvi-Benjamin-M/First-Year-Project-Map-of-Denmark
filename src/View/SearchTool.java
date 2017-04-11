@@ -1,5 +1,6 @@
 package View;
 
+import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
@@ -18,20 +19,28 @@ public class SearchTool extends ToolComponent {
 
     private JComboBox<String> field;
     private Dimension searchFieldDimension;
+    private final int SEARCHBAR_HEIGHT = 40;
 
     public SearchTool(int width) {
         field = new JComboBox<>();
-        searchFieldDimension = new Dimension(width, 40);
+        //searchFieldDimension = new Dimension(width, SEARCHBAR_HEIGHT);
         //todo use set bounds to adjust searchfield size instead of removing and adding
         setupLayout();
+        adaptSize();
         applyTheme();
         add(field);
+    }
+
+    public void adaptSize() {
+        searchFieldDimension = new Dimension(GlobalValue.getSearchFieldLargeSize(), SEARCHBAR_HEIGHT);
+        field.setPreferredSize(searchFieldDimension);
+        field.setBounds(GlobalValue.getSearchFieldStartX(), 30, GlobalValue.getSearchFieldStartX() + GlobalValue.getSearchFieldLargeSize(), 70);
     }
 
     @Override
     public void setupLayout() {
         field.setUI(NoArrowUI.createUI(field));
-        field.setPreferredSize(searchFieldDimension);
+        //field.setPreferredSize(searchFieldDimension);
         field.setEditable(true);
         field.setFont(new Font(field.getFont().getName(), field.getFont().getStyle(), 20));
         field.setRequestFocusEnabled(true);
