@@ -51,7 +51,7 @@ public final class SearchToolController extends Controller {
     }
 
     protected void setToCurrentText() {
-        if(currentText.equals(defaultText)) setToDefaultText();
+        if(currentText.equals(defaultText) || currentText.equals("")) setToDefaultText();
         else searchTool.setText(currentText);
     }
 
@@ -60,6 +60,11 @@ public final class SearchToolController extends Controller {
         addFocusListenerToSearchTool();
         setToCurrentText();
         specifyKeyBindings();
+    }
+
+    protected void themeHasChanged() {
+        currentText = searchTool.getText();
+        setToCurrentText();
     }
 
     protected void searchToolResizeEvent() {
@@ -95,9 +100,7 @@ public final class SearchToolController extends Controller {
     protected boolean doesSearchbarHaveFocus() {
         return searchTool.getField().getEditor().getEditorComponent().hasFocus();
     }
-    //private void specifyKeyBindings() {
-        //addKeyBinding(KeyEvent.VK_ENTER, KeyEvent.VK_UNDEFINED);
-    //}
+
 
     private void specifyKeyBindings() {
         searchTool.getField().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
@@ -109,7 +112,7 @@ public final class SearchToolController extends Controller {
                         searchActivatedEvent();
                         break;
                     case KeyEvent.VK_ESCAPE:
-                        if(searchTool.getField().getEditor().getEditorComponent().hasFocus()) ToolbarController.getInstance().getToolbar().grabFocus();
+                        if(searchTool.getField().getEditor().getEditorComponent().hasFocus()) ToolbarController.getInstance().transferFocusToCanvas();
                 }
             }
             @Override
@@ -151,7 +154,7 @@ public final class SearchToolController extends Controller {
         @Override
         public void focusLost(FocusEvent e) {
             super.focusLost(e);
-            if (editor.getItem().equals("")) setToDefaultText();
+            if (editor.getItem().equals("")) setToCurrentText();
                 allowSearch = false;
         }
     }

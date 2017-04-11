@@ -14,10 +14,7 @@ import View.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 import static javax.swing.SpringLayout.*;
 
@@ -335,24 +332,10 @@ public final class ToolbarController extends Controller {
     public void resetInstance() {
         instance = null;
     }
-    //Todo remove responsibility from this controller to MainWindowController regarding adding the new toolbar to the window
-    public void themeHasChanged() {
-        SearchToolController.getInstance().saveCurrentText();
-        resetToolbar();
-        SearchToolController.getInstance().searchToolReplacedEvent();
-        window.addBorderLayoutComponent(BorderLayout.PAGE_START, toolbar,true);
-        if(type == ToolbarType.LARGE) setupLargeToolbar();
-        else if(type == ToolbarType.SMALL) setupSmallToolbar();
-        //setupToolbar(type);
-    }
 
-    private void resetToolbar() {
-        window.removeComponent(toolbar);
-        toolbar = null;
-        toolbar = new Toolbar();
-        toolbarLayout = toolbar.getLayout();
-        toolbar.setPreferredSize(new Dimension(window.getFrame().getWidth(), GlobalValue.getToolbarWidth()));
-        addInteractionHandlersToTools();
+    public void themeHasChanged() {
+        SearchToolController.getInstance().themeHasChanged();
+        toolbar.applyTheme();
     }
 
     public void toggleKeyBindings(boolean status) {
@@ -362,6 +345,10 @@ public final class ToolbarController extends Controller {
                 toolbar.getTool(type).getActionMap().get(key).setEnabled(status);
             }
         }
+    }
+
+    public void transferFocusToCanvas() {
+        MainWindowController.getInstance().transferFocusToMapCanvas();
     }
 
     private class ToolInteractionHandler extends MouseAdapter {
@@ -433,4 +420,5 @@ public final class ToolbarController extends Controller {
             toolbar.grabFocus();
         }
     }
+
 }

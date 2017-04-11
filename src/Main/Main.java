@@ -54,6 +54,7 @@ public class Main {
             SettingsWindowController.getInstance().setupSettingsWindow();
             model.modelHasChanged();
             MainWindowController.getInstance().showWindow();
+            MainWindowController.getInstance().transferFocusToMapCanvas();
         });
 
             LOAD_TIME = System.nanoTime() - startTime;
@@ -103,13 +104,6 @@ public class Main {
 
     public static void notifyAntiAliasingToggle(boolean status) {
         CanvasController.getInstance().toggleAntiAliasing(status);
-    }
-
-    public static void notifyThemeChange() {
-        CanvasController.getInstance().themeHasChanged();
-        ToolbarController.getInstance().themeHasChanged();
-        InfobarController.getInstance().themeHasChanged();
-        CanvasController.getInstance().getMapCanvas().grabFocus();
     }
 
     public static void notifyKeyToggle(boolean status) {

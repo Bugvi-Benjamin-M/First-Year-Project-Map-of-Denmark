@@ -85,10 +85,18 @@ public final class MainWindowController extends WindowController {
         InfobarController.getInstance().setupInfobar();
     }
 
+    public void transferFocusToMapCanvas() {
+        CanvasController.getInstance().getMapCanvas().grabFocus();
+    }
+
     public void themeHasChanged() {
-        layeredPane.remove(ToolbarController.getInstance().getToolbar());
+        //layeredPane.remove(ToolbarController.getInstance().getToolbar());
         ToolbarController.getInstance().themeHasChanged();
-        layeredPane.add(ToolbarController.getInstance().getToolbar(), new Integer(2));
+        CanvasController.getInstance().themeHasChanged();
+        transferFocusToMapCanvas();
+        //ToolbarController.getInstance().getToolbar().setOpaque(true);
+        //adjustBounds();
+        //layeredPane.add(ToolbarController.getInstance().getToolbar(), new Integer(2));
     }
 
     @Override

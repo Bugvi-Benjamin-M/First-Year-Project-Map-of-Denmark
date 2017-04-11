@@ -45,7 +45,7 @@ public class SearchTool extends ToolComponent {
         add(searchLabel);
     }
 
-    private void applyTheme() {
+    public void applyTheme() {
         setBackground(ThemeHelper.color("toolbar"));
         searchLabel.setForeground(ThemeHelper.color("icon"));
         field.getEditor().getEditorComponent().setBackground(ThemeHelper.color("searchfield"));

@@ -125,8 +125,7 @@ public final class SettingsWindowController extends WindowController {
         if(!ThemeHelper.getCurrentTheme().equals("Default")) {
             ThemeHelper.setTheme("Default");
             themeSettings.setSelectedThemeToDefault();
-            Main.notifyThemeChange();
-            //MainWindowController.getInstance().themeHasChanged();
+            MainWindowController.getInstance().themeHasChanged();
         }
         if(!keysActiveStatus) {
             keysActiveStatus = true;
@@ -146,7 +145,7 @@ public final class SettingsWindowController extends WindowController {
     private void applyButtonActivated() {
         if(!ThemeHelper.getCurrentTheme().equals(themeSettings.getSelectedTheme())) {
             ThemeHelper.setTheme(themeSettings.getSelectedTheme());
-            Main.notifyThemeChange();
+            MainWindowController.getInstance().themeHasChanged();
         }
         if(!keyboardKeysToggle.isToggleSelected()) {
             keysActiveStatus = false;
