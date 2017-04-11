@@ -513,30 +513,22 @@ public class MapCanvas extends View {
         if(ZoomLevel.getZoomFactor() < -10){}
         else{
             float scaleFactor = 1f;
-            scaleFactor = 0.01f;
+            scaleFactor = 0.001f;
+            g.setColor(ThemeHelper.color("border"));  //TODO CHOOSE NAME COLOR
+            Font font = new Font("Arial", Font.BOLD, 12);
             for(Element element : currentSection){
                 PlaceName placeName = (PlaceName) element;
-                g.setColor(ThemeHelper.color("border"));  //TODO CHOOSE NAME COLOR
-                Font font = new Font("Arial", Font.BOLD, 12);
                 g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-                //g.drawString(placeName.getName(), placeName.getX(), placeName.getY());
                 drawString(placeName.getName(), g, placeName.getX(), placeName.getY(), font);
-                //System.out.println(getFontMetrics(font).charWidth('A'));
-                //System.out.println(transform.getScaleX());
-                //System.out.println((getFontMetrics(font).charWidth('A'))/(transform.getScaleX()));
             }
-        }
+         }
     }
     private void drawString (String s , Graphics2D g , float x , float y, Font font){
         for (int i = 0 ; i < s.length() ; i++){
-
             char ch = s.charAt(i);
             g.drawString(ch + "", x, y) ;
-
-            x += ((getFontMetrics(font).charWidth(ch))/(transform.getScaleX())*4);
-
-            //x+= g.getFontMetrics().charWidth(ch) ;
-            //System.out.println(g.getFontMetrics().charWidth(ch));
+            //x += ((getFontMetrics(font).charWidth(ch))/(transform.getScaleX())*3);
+            x += ((getFontMetrics(font).charWidth(ch)))*0.001f;
         }
     }
 }
