@@ -45,6 +45,8 @@ public interface Theme {
     public abstract Color path();
     public abstract Color road();
 
+    public abstract Color cityName();
+
 
     public abstract String getName();
 }

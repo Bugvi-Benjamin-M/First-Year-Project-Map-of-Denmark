@@ -154,13 +154,13 @@ public class MapCanvas extends View {
                 drawCycleways(g);
                 drawPaths(g);
                 drawBuilding(g);
-                drawCityNames(g, ElementType.CITY_NAME);
-                drawCityNames(g, ElementType.TOWN_NAME);
-                drawCityNames(g, ElementType.VILLAGE_NAME);
-                drawCityNames(g, ElementType.HAMLET_NAME);
-                drawCityNames(g, ElementType.SUBURB_NAME);
-                drawCityNames(g, ElementType.QUARTER_NAME);
-                drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME);
+                //drawCityNames(g, ElementType.CITY_NAME);
+                //drawCityNames(g, ElementType.TOWN_NAME);
+                //drawCityNames(g, ElementType.VILLAGE_NAME);
+                //drawCityNames(g, ElementType.HAMLET_NAME);
+                //drawCityNames(g, ElementType.SUBURB_NAME);
+                //drawCityNames(g, ElementType.QUARTER_NAME);
+                //drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME);
                 break;
             case LEVEL_1:
                 drawWater(g);
@@ -183,9 +183,9 @@ public class MapCanvas extends View {
                 drawMotorways(g);
                 drawMotorwayLinks(g);
                 drawBuilding(g);
-                drawCityNames(g, ElementType.CITY_NAME);
-                drawCityNames(g, ElementType.TOWN_NAME);
-                drawCityNames(g, ElementType.VILLAGE_NAME);
+                //drawCityNames(g, ElementType.CITY_NAME);
+                //drawCityNames(g, ElementType.TOWN_NAME);
+                //drawCityNames(g, ElementType.VILLAGE_NAME);
                 break;
             case LEVEL_2:
                 drawWater(g);
@@ -199,8 +199,8 @@ public class MapCanvas extends View {
                 drawTrunkRoadLinks(g);
                 drawMotorways(g);
                 drawMotorwayLinks(g);
-                drawCityNames(g, ElementType.CITY_NAME);
-                drawCityNames(g, ElementType.TOWN_NAME);
+                //drawCityNames(g, ElementType.CITY_NAME);
+                //drawCityNames(g, ElementType.TOWN_NAME);
                 break;
             case LEVEL_3:
                 drawPrimaryRoads(g);
@@ -209,7 +209,7 @@ public class MapCanvas extends View {
                 drawTrunkRoadLinks(g);
                 drawMotorways(g);
                 drawMotorwayLinks(g);
-                drawCityNames(g, ElementType.CITY_NAME);
+                //drawCityNames(g, ElementType.CITY_NAME);
                 break;
             case LEVEL_4:
                 drawPrimaryRoads(g);
@@ -554,23 +554,29 @@ public class MapCanvas extends View {
         setCurrentSection(type);
         if(ZoomLevel.getZoomFactor() < -10){}
         else{
-            float scaleFactor = 1f;
-            scaleFactor = 0.001f;
-            g.setColor(ThemeHelper.color("border"));  //TODO CHOOSE NAME COLOR
+            float scaleFactor;
+            //scaleFactor = 0.0008f;
+            if(ZoomLevel.getZoomFactor() >= 100) {
+                scaleFactor = 397.522f * (float) (Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
+            }
+            else{
+                scaleFactor = 0.0054586004f;
+            }
             Font font = new Font("Arial", Font.BOLD, 12);
+            g.setColor(ThemeHelper.color("cityName"));
             for(Element element : currentSection){
                 PlaceName placeName = (PlaceName) element;
                 g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-                drawString(placeName.getName(), g, placeName.getX(), placeName.getY(), font);
+                drawString(placeName.getName(), g, placeName.getX(), placeName.getY(), font, scaleFactor);
             }
          }
     }
-    private void drawString (String s , Graphics2D g , float x , float y, Font font){
+    private void drawString (String s , Graphics2D g , float x , float y, Font font, float scaleFactor){
         for (int i = 0 ; i < s.length() ; i++){
             char ch = s.charAt(i);
             g.drawString(ch + "", x, y) ;
             //x += ((getFontMetrics(font).charWidth(ch))/(transform.getScaleX())*3);
-            x += ((getFontMetrics(font).charWidth(ch)))*0.001f;
+            x += ((getFontMetrics(font).charWidth(ch)))*scaleFactor;
         }
     }
 }

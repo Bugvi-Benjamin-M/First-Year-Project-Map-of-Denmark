@@ -47,6 +47,8 @@ public class NightTheme implements Theme {
         return new Color(0xA4ADDE);
     }
 
+    public Color cityName() { return new Color(0xA4ADDE); }
+
     @Override
     public Color water() {
         return new Color(0x515c6d);
