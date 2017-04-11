@@ -3,6 +3,7 @@ package Model.Elements;
 import Model.Elements.Element;
 import Model.Model;
 
+import java.awt.*;
 import java.awt.geom.Path2D;
 
 /**
@@ -13,17 +14,17 @@ public class Road extends Element {
     private boolean oneWay;
     private int maxSpeed;
 
-    public Road(Path2D path, String name, boolean oneWay, int maxSpeed){
-        super(path);
+    public Road(Shape shape, String name, boolean oneWay, int maxSpeed){
+        super(shape);
         this.name = name;
         this.oneWay = oneWay;
         this.maxSpeed = maxSpeed;
     }
-    public Road(Path2D path){
-        this(path, "", false, 50);
+    public Road(Shape shape){
+        this(shape, "", false, 50);
     }
-    public Road(Path2D path, String name){
-        this(path, name, false, 50);
+    public Road(Shape shape, String name){
+        this(shape, name, false, 50);
     }
 
     public String getName() {

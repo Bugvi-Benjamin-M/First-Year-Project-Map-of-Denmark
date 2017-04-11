@@ -1,5 +1,6 @@
 package Model.Elements;
 
+import java.awt.*;
 import java.awt.geom.Path2D;
 
 /**
@@ -8,12 +9,12 @@ import java.awt.geom.Path2D;
 public class Water extends Element{
     private String name;
 
-    public Water(Path2D path, String name){
-        super(path);
+    public Water(Shape shape, String name){
+        super(shape);
         this.name = name;
     }
-    public Water(Path2D path){
-        this(path, "");
+    public Water(Path2D shape){
+        this(shape, "");
     }
 
     public String getName() {
