@@ -1,15 +1,13 @@
 package Model.Coastlines;
 
 import Enums.BoundType;
-import Enums.OSMEnums.WayType;
-import OSM.OSMNode;
+import Enums.OSMEnums.ElementType;
 import OSM.OSMWay;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +29,7 @@ public class CoastlineHandler implements ContentHandler {
     private static Map<Point2D,OSMWay> coastlines;
 
     private OSMWay way;
-    private WayType wayType;
+    private ElementType elementType;
     private float longFactor;
 
     private CoastlineHandler() {
@@ -105,7 +103,7 @@ public class CoastlineHandler implements ContentHandler {
     private void handleWay(Attributes attributes) {
         way = new OSMWay();
         long id = Long.parseLong(attributes.getValue("id"));
-        wayType = WayType.UNKNOWN;
+        elementType = ElementType.UNKNOWN;
         idToWay.put(id, way);
     }
 
@@ -120,7 +118,7 @@ public class CoastlineHandler implements ContentHandler {
         switch (k) {
             case "natural":
                 if (v.equals(Coastline.OSM_IDENTIFIER)) {
-                    wayType = WayType.COASTLINE;
+                    elementType = ElementType.COASTLINE;
                 }
                 break;
         }
@@ -130,7 +128,7 @@ public class CoastlineHandler implements ContentHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName) {
             case "way":
-                switch (wayType){
+                switch (elementType){
                     case COASTLINE:
                         coastLineFix();
                         break;

@@ -23,7 +23,8 @@ public class Main {
     public static final FPSCounter FPS_COUNTER = new FPSCounter();
     private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
 
-    private static final boolean DEBUG_MODE_ACTIVE = true;  // CHANGE ME TO PREVENT LOADING DEFAULT
+    private static final boolean DEBUG_MODE_ACTIVE = false;  // CHANGE ME TO PREVENT LOADING DEFAULT
+    private static final boolean SAVE_AFTER_LOAD = false;     // CHANGE ME TO PREVENT SAVING BIN
 
     public static long LOAD_TIME;
     private static SplashScreen screen;
@@ -72,10 +73,12 @@ public class Main {
         try {
             long startTime = System.currentTimeMillis();
             if (!DEBUG_MODE_ACTIVE) {
-                FileHandler.loadResource(DEFAULT_RESOURCE, true);
-                //FileHandler.saveBin("/Users/Nik/IdeaProjects/Danmarkskort/Resources/Bst.bin", true);
-                //FileHandler.loadBin("/Danmark.bin", true);
-                //CanvasController.adjustToBounds();
+                try {
+                    FileHandler.loadBin("/Danmark.bin", true);
+                } catch (FileWasNotFoundException e) {
+                    FileHandler.loadResource(DEFAULT_RESOURCE, true);
+                    if (SAVE_AFTER_LOAD) FileHandler.saveBin("/Danmark.bin",true);
+                }
             }
             long stopTime = System.currentTimeMillis();
             System.out.println("Resource load time: "+(stopTime-startTime)+" ms");
@@ -92,7 +95,7 @@ public class Main {
     }
 
     private static void splashScreenInit() {
-      ImageIcon myImage = new ImageIcon(Main.class.getResource("/dolphins.png")); //denmark.gif
+      ImageIcon myImage = new ImageIcon(Main.class.getResource("/middelfart.jpg")); //denmark.gif
       screen = new SplashScreen(myImage);
       screen.setLocationRelativeTo(null);
       screen.setScreenVisible(true);

@@ -353,4 +353,41 @@ Impediments:
 Next time:
 - Monday the 10th of April at 10:00 (Nikolaj joins via skype)
 
+## Logbook 10/4 (Scribe Magnussen) 
+What we did since last time:
+- Issued a release on Github. Version 0.3
+- Refactoring and fixing bugs. 
+- Found multiple bugs regarding coastlines. 
+
+What we will do until next time:
+- Clean up Trello
+- Agree on backlog for next sprint. 
+- Fix more bugs
+- Refactor controllers 
+- Test new structure in main window. 
+- Add more elements to the map
+- Continue work on coastlines
+
+Impediments:
+- Blanke has to leave at 15.00
+
+Next Time: 
+- Tuesday the 11th of April 
+
+## Logbook 11/4 (Scribe Blanke)
+What we did since last time:
+- Had a meeting with Kevin the TA
+- Default loadup
+- City names has been implemented (does not work on Mac)
+- Introduced more zoom levels
+
+What we will do until next time:
+- Have vacation
+
+Impediments:
+- Niclas is at work
+
+Next Time:
+- Wednesday the 19th of April
+
 ## Next logbook...

@@ -32,10 +32,10 @@ public class TestModel {
         Model model = Model.getInstance();
         WindowController mainWindowController = MainWindowController.getInstance();
         CanvasController canvasController = CanvasController.getInstance(mainWindowController.getWindow());
-        assertEquals(0, model.getWayElements().get(WayType.ROAD).size());
+        assertEquals(0, model.getWayElements().get(ElementType.ROAD).size());
         OSMWay path = new OSMWay();
-        model.addWayElement(WayType.ROAD, new Road(RoadType.SERVICE, path));
-        assertEquals(1, model.getWayElements().get(WayType.ROAD).size());
+        model.addWayElement(ElementType.ROAD, new Road(RoadType.SERVICE, path));
+        assertEquals(1, model.getWayElements().get(ElementType.ROAD).size());
     }
 */
     /*@Test
@@ -51,8 +51,8 @@ public class TestModel {
         }
         assertEquals(false, model.getWayElements().isEmpty());
         model.clear();
-        assertEquals(true, model.getWayElements().get(WayType.ROAD).isEmpty());
-        assertEquals(true, model.getWayElements().get(WayType.UNKNOWN).isEmpty());
+        assertEquals(true, model.getWayElements().get(ElementType.ROAD).isEmpty());
+        assertEquals(true, model.getWayElements().get(ElementType.UNKNOWN).isEmpty());
     }*/
 
  /*   @Test
