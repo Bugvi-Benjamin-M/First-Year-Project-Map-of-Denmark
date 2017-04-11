@@ -47,7 +47,7 @@ public class DefaultTheme implements Theme {
         return new Color(0xA0A39F);
     }
 
-    public Color cityName() { return new Color(0x5F5D59); }
+    public Color cityName() { return new Color(0x000000); }
 
     @Override
     public Color water() {
