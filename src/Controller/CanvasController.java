@@ -59,7 +59,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas = new MapCanvas();
         mapCanvas.setPreferredSize(new Dimension(window.getFrame().getWidth(), window.getFrame().getHeight() - GlobalValue.getToolbarWidth()));
         mapCanvas.setElements(model.getElements());
-        mapCanvas.setCoastlines(model.getCoastlines());
+        //mapCanvas.setCoastlines(model.getCoastlines());
         addInteractionHandlerToCanvas();
     }
 
