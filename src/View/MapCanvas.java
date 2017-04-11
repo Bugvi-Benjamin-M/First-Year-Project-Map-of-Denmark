@@ -92,6 +92,7 @@ public class MapCanvas extends View {
 
         drawCoastlines(g2D);
 
+
         g2D.setColor(Color.black);
         g2D.setStroke(new BasicStroke(0.00001f));
         g2D.draw(currentRectangle);
@@ -473,7 +474,7 @@ public class MapCanvas extends View {
         }
     }
     private void drawCycleways(Graphics2D g){
-        setCurrentSection(ElementType.CYCLEWAY);
+        setCurrentSection(WayType.CYCLEWAY);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("cycleway"));
             g.setStroke(new BasicStroke(0.00001f));
@@ -552,4 +553,6 @@ public class MapCanvas extends View {
             */
         }
     }
+
+
 }

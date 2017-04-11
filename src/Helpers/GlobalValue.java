@@ -4,7 +4,7 @@ import Controller.MainWindowController;
 import Enums.ZoomLevel;
 import Helpers.Utilities.DebugWindow;
 
-import static Enums.ZoomLevel.*;
+import static Enums.ZoomLevel.LEVEL_3;
 
 /**
  * Created by Búgvi Magnussen on 02-04-2017.
@@ -19,6 +19,11 @@ public class GlobalValue {
 
     public static int getSearchFieldSmallSize() {
         return (int) (MainWindowController.getInstance().getWindow().getFrame().getWidth() / 1.7);
+    }
+
+
+    public static int getToolbarWidth() {
+        return 100;
     }
 
     public static ZoomLevel getZoomLevel() {

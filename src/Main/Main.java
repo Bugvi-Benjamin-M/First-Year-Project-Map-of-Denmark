@@ -49,21 +49,24 @@ public class Main {
             model.loadFromCoastlines();
             programLoadedDefault = false;
         }
-            //MainWindowController has to be called first of all the controllers.
-            MainWindowController.getInstance();
-
-            ToolbarController.getInstance();
-            InfobarController.getInstance();
-            CanvasController.getInstance();
-
-            CanvasController.adjustToBounds();
+            createControllers();
+            MainWindowController.getInstance().setupMainWindow();
+            SettingsWindowController.getInstance().setupSettingsWindow();
             model.modelHasChanged();
-            CanvasController.getInstance().getMapCanvas().grabFocus();
+            MainWindowController.getInstance().showWindow();
+        });
 
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: "+(LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();
-        });
+    }
+
+    private static void createControllers() {
+        MainWindowController.getInstance();
+        ToolbarController.getInstance();
+        CanvasController.getInstance();
+        InfobarController.getInstance();
+        SettingsWindowController.getInstance();
     }
 
     private static void loadDefaultResource() throws FileWasNotFoundException {
@@ -89,7 +92,6 @@ public class Main {
     private static void splashScreenDestruct() {
       screen.setScreenVisible(false);
       screen = null;
-      MainWindowController.getInstance().getWindow().show();
     }
 
     private static void splashScreenInit() {
