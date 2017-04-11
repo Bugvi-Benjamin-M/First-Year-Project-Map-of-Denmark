@@ -2,7 +2,6 @@ package Controller;
 
 import Controller.ToolbarControllers.ToolbarController;
 import Enums.ToolbarType;
-import Helpers.GlobalValue;
 import Helpers.OSDetector;
 import Helpers.Utilities.DebugWindow;
 import View.PopupWindow;
@@ -48,45 +47,45 @@ public final class MainWindowController extends WindowController {
                 .icon()
                 .hide();
         window.setMinimumWindowSize(new Dimension(650, 500));
-        setupLayeredPane();
         addToolbarToMainWindow();
         addCanvasToMainWindow();
         addInfobarToMainWindow();
+        //setupLayeredPane();
         addInteractionHandlerToWindow();
         CanvasController.adjustToBounds();
         hideWindow();
     }
 
-    private void setupLayeredPane() {
+   /* private void setupLayeredPane() {
         layeredPane = new JLayeredPane();
         window.getFrame().add(layeredPane, BorderLayout.CENTER);
         layeredPane.setBounds(new Rectangle(window.getFrame().getWidth(), window.getFrame().getHeight()));
-        panel = new JPanel(new BorderLayout());
-        panel.setBounds(0,0,window.getFrame().getWidth(), window.getFrame().getHeight());
-        panel.setBackground(Color.BLUE);
+        panel = new JPanel();
+        //panel.setBounds(0,0,window.getFrame().getWidth(), window.getFrame().getHeight());
+        //panel.setBackground(Color.BLUE);
+        panel = CanvasController.getInstance().getMapCanvas();
         panel.setOpaque(true);
-        panel2 = new JPanel(new BorderLayout());
-        panel2.setBackground(Color.GREEN);
-        panel2.setBounds(0,0,window.getFrame().getWidth(), GlobalValue.getToolbarWidth());
+        panel2 = new JPanel();
+        //panel2.setBackground(Color.GREEN);
+        //panel2.setBounds(0,0,window.getFrame().getWidth(), GlobalValue.getToolbarWidth());
         panel2.setOpaque(true);
+        panel2 = ToolbarController.getInstance().getToolbar();
 
-        layeredPane.add(panel, JLayeredPane.DEFAULT_LAYER);
-        layeredPane.add(panel2, JLayeredPane.PALETTE_LAYER);
-    }
+        layeredPane.add(panel, new Integer(1));
+        layeredPane.add(panel2, new Integer(2));
+    }*/
 
     private void addToolbarToMainWindow() {
         ToolbarController.getInstance().specifyWindow(window);
         ToolbarController.getInstance().setupToolbar(ToolbarType.LARGE);
-        panel2.add(ToolbarController.getInstance().getToolbar(), BorderLayout.CENTER);
-        //window.addBorderLayoutComponent(BorderLayout.NORTH, ToolbarController.getInstance().getToolbar(), true);
+        window.addBorderLayoutComponent(BorderLayout.NORTH, ToolbarController.getInstance().getToolbar(), true);
         ToolbarController.getInstance().getToolbar().setVisible(true);
     }
 
     private void addCanvasToMainWindow() {
         CanvasController.getInstance().specifyWindow(window);
         CanvasController.getInstance().setupCanvas();
-        panel.add(CanvasController.getInstance().getMapCanvas(), BorderLayout.CENTER);
-        //window.addBorderLayoutComponent(BorderLayout.CENTER, CanvasController.getInstance().getMapCanvas(), true);
+        window.addBorderLayoutComponent(BorderLayout.CENTER, CanvasController.getInstance().getMapCanvas(), true);
         CanvasController.getInstance().getMapCanvas().setVisible(true);
     }
 
@@ -135,9 +134,9 @@ public final class MainWindowController extends WindowController {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
-            layeredPane.setBounds(0,0,window.getFrame().getWidth(), window.getFrame().getHeight());
-            panel.setBounds(0,GlobalValue.getToolbarWidth(),window.getFrame().getWidth(), window.getFrame().getHeight());
-            panel2.setBounds(0,0,window.getFrame().getWidth(), GlobalValue.getToolbarWidth());
+            //layeredPane.setBounds(0,0,window.getFrame().getWidth(), window.getFrame().getHeight());
+            //panel.setBounds(0, GlobalValue.getToolbarWidth(),window.getFrame().getWidth(), window.getFrame().getHeight());
+            //panel2.setBounds(0,0,window.getFrame().getWidth(), GlobalValue.getToolbarWidth());
             ToolbarController.getInstance().resizeEvent();
             CanvasController.getInstance().resizeEvent();
             if(waitingTimer == null) {
