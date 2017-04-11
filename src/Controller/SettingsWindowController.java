@@ -126,6 +126,7 @@ public final class SettingsWindowController extends WindowController {
             ThemeHelper.setTheme("Default");
             themeSettings.setSelectedThemeToDefault();
             Main.notifyThemeChange();
+            //MainWindowController.getInstance().themeHasChanged();
         }
         if(!keysActiveStatus) {
             keysActiveStatus = true;

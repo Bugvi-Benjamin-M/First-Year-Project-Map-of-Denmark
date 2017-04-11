@@ -102,23 +102,6 @@ public final class ToolbarController extends Controller {
         else MenuToolController.getInstance().windowResizedEvent();
     }
 
-    /*
-    public void resizeEvent() {
-        if(type == ToolbarType.LARGE && MainWindowController.getInstance().getWindow().getFrame().getWidth() < SMALL_LARGE_EVENT_WIDTH) {
-            SearchToolController.getInstance().saveCurrentText();
-            setupSmallToolbar();
-            return;
-        }
-        if(type == ToolbarType.SMALL && MainWindowController.getInstance().getWindow().getFrame().getWidth() >= SMALL_LARGE_EVENT_WIDTH) {
-            SearchToolController.getInstance().saveCurrentText();
-            setupLargeToolbar();
-            return;
-        }
-        if(type == ToolbarType.LARGE) searchToolResizeEvent();
-        else MenuToolController.getInstance().windowResizedEvent();
-    }
-    */
-
     public void moveEvent() {
         if(type == ToolbarType.SMALL) MenuToolController.getInstance().windowMovedEvent();
     }
@@ -300,7 +283,6 @@ public final class ToolbarController extends Controller {
     }
 
     private void searchButtonEvent() {
-        //Todo maybe check if other parts of the program have focus here
         SearchToolController.getInstance().searchActivatedEvent();
     }
 
@@ -361,6 +343,7 @@ public final class ToolbarController extends Controller {
         window.addBorderLayoutComponent(BorderLayout.PAGE_START, toolbar,true);
         if(type == ToolbarType.LARGE) setupLargeToolbar();
         else if(type == ToolbarType.SMALL) setupSmallToolbar();
+        //setupToolbar(type);
     }
 
     private void resetToolbar() {
