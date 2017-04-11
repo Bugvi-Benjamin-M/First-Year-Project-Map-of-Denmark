@@ -27,7 +27,8 @@ public final class SearchToolController extends Controller {
     private boolean allowSearch;
 
     private SearchToolController() {
-        super(MainWindowController.getInstance().getWindow());
+        super();
+        specifyWindow(MainWindowController.getInstance().getWindow());
         searchTool = (SearchTool) ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBAR);
         addFocusListenerToSearchTool();
         setToDefaultText();
@@ -89,25 +90,32 @@ public final class SearchToolController extends Controller {
             searchTool.getField().requestFocus();
             allowSearch = true;
         }
-
-
     }
+
+    protected boolean doesSearchbarHaveFocus() {
+        return searchTool.getField().getEditor().getEditorComponent().hasFocus();
+    }
+    //private void specifyKeyBindings() {
+        //addKeyBinding(KeyEvent.VK_ENTER, KeyEvent.VK_UNDEFINED);
+    //}
 
     private void specifyKeyBindings() {
-        addKeyBinding(KeyEvent.VK_ENTER, KeyEvent.VK_UNDEFINED);
-    }
-
-    private void addKeyBinding(int key, int activationKey) {
         searchTool.getField().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                if(e.getKeyChar() == key) searchActivatedEvent();
+                switch (e.getKeyChar()) {
+                    case KeyEvent.VK_ENTER:
+                        searchActivatedEvent();
+                        break;
+                    case KeyEvent.VK_ESCAPE:
+                        if(searchTool.getField().getEditor().getEditorComponent().hasFocus()) ToolbarController.getInstance().getToolbar().grabFocus();
+                }
             }
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                if(e.getKeyChar() == key) {
+                if(e.getKeyChar() == KeyEvent.VK_ENTER) {
                     if (!searchTool.getText().isEmpty()) {
                         allowSearch = true;
                     }

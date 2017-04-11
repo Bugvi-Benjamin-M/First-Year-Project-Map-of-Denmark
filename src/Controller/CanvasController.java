@@ -38,11 +38,9 @@ public final class CanvasController extends Controller implements Observer {
     private static double zoom_value;
 
     private CanvasController() {
-        super(MainWindowController.getInstance().getWindow());
+        super();
         model = Model.getInstance();
         model.addObserver(this);
-        setupCanvas();
-        addInteractionHandlerToCanvas();
     }
 
     public static CanvasController getInstance() {
@@ -57,11 +55,12 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.repaint();
     }
 
-    private void setupCanvas() {
+    public void setupCanvas() {
         mapCanvas = new MapCanvas();
+        mapCanvas.setPreferredSize(new Dimension(window.getFrame().getWidth(), window.getFrame().getHeight() - GlobalValue.getToolbarWidth()));
         mapCanvas.setElements(model.getElements());
-        window.addBorderLayoutComponent(BorderLayout.CENTER,mapCanvas,true);
-        mapCanvas.setVisible(true);
+        //mapCanvas.setCoastlines(model.getCoastlines());
+        addInteractionHandlerToCanvas();
     }
 
     private void addInteractionHandlerToCanvas() {

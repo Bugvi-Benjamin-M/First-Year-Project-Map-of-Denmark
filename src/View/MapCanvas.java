@@ -513,43 +513,30 @@ public class MapCanvas extends View {
         if(ZoomLevel.getZoomFactor() < -10){}
         else{
             float scaleFactor = 1f;
-            scaleFactor = 0.000009f;
+            scaleFactor = 0.01f;
             for(Element element : currentSection){
                 PlaceName placeName = (PlaceName) element;
                 g.setColor(ThemeHelper.color("border"));  //TODO CHOOSE NAME COLOR
                 Font font = new Font("Arial", Font.BOLD, 12);
                 g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-                g.drawString(placeName.getName(), placeName.getX(), placeName.getY());
-        }
-
-
-
-            //FontMetrics fm = g.getFontMetrics(font);
-            //float scale = 0.08f;
-            /*
-            Rectangle2D visibleRect = currentRectangle;
-            float xScale = (float) (visibleRect.getWidth() / fm.stringWidth("København"));
-            float yScale = (float) (visibleRect.getHeight() / fm.getHeight());
-            float scale = 0f;
-            if (xScale > yScale) {
-                scale = yScale / scaleFactor;
-            } else {
-                scale = xScale / scaleFactor;
+                //g.drawString(placeName.getName(), placeName.getX(), placeName.getY());
+                drawString(placeName.getName(), g, placeName.getX(), placeName.getY(), font);
+                //System.out.println(getFontMetrics(font).charWidth('A'));
+                //System.out.println(transform.getScaleX());
+                //System.out.println((getFontMetrics(font).charWidth('A'))/(transform.getScaleX()));
             }
-            //g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scale, scale)));
-            */
-            //g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-            //g.drawString(placeName.getName(), placeName.getX(), placeName.getY());
+        }
+    }
+    private void drawString (String s , Graphics2D g , float x , float y, Font font){
+        for (int c1=0 ; c1 < s.length() ; c1++){
 
-            //System.out.println("Scale: " + scale);
-            /*
-            System.out.println("Scaling X: " + transform.getScaleX());
-            System.out.println("Scaling Y: " + transform.getScaleY());
-            System.out.println("Shear X: " + transform.getShearX());
-            System.out.println("Shear Y: " + transform.getShearY());
-            System.out.println("Translate X: " + transform.getTranslateX());
-            System.out.println("Translate Y: " + transform.getTranslateY());
-            */
+            char ch = s.charAt(c1);
+            g.drawString(ch+"", x, y) ;
+
+            x += (getFontMetrics(font).charWidth('A'))/(transform.getScaleX());
+
+            //x+= g.getFontMetrics().charWidth(ch) ;
+            //System.out.println(g.getFontMetrics().charWidth(ch));
         }
     }
 }
