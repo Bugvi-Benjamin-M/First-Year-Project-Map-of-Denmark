@@ -199,6 +199,7 @@ public final class CanvasController extends Controller implements Observer {
             Point2D rightcorner = mapCanvas.toModelCoords(new Point2D.Double(rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight()));
             currentdistance = rightcorner.getX() - leftcorner.getX();
             mapCanvas.zoom(Math.pow(ZOOM_FACTOR, -1));
+            mapCanvas.repaint();
             changeZoomLevel(-1);
         }
     }

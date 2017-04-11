@@ -2,7 +2,7 @@ package OSM;
 
 import Enums.BoundType;
 import Enums.OSMEnums.ElementType;
-import Helpers.LongToPointMap;
+import Helpers.*;
 import KDtree.NodeGenerator;
 import KDtree.Point;
 import KDtree.Pointer;
@@ -180,37 +180,37 @@ public final class OSMHandler implements ContentHandler {
                     for(Pointer p : cityNames){
                         model.getElements().get(ElementType.CITY_NAME).putPointer(p);
                     }
-                    cityNames = null;
+                    //cityNames = null;
 
                     for(Pointer p : townNames){
                         model.getElements().get(ElementType.TOWN_NAME).putPointer(p);
                     }
-                    townNames = null;
+                    //townNames = null;
 
                     for(Pointer p : villageNames){
                         model.getElements().get(ElementType.VILLAGE_NAME).putPointer(p);
                     }
-                    villageNames = null;
+                    //villageNames = null;
 
                     for(Pointer p : hamletNames){
                         model.getElements().get(ElementType.HAMLET_NAME).putPointer(p);
                     }
-                    hamletNames = null;
+                    //hamletNames = null;
 
                     for(Pointer p : suburbNames){
                         model.getElements().get(ElementType.SUBURB_NAME).putPointer(p);
                     }
-                    suburbNames = null;
+                    //suburbNames = null;
 
                     for(Pointer p : quarterNames){
                         model.getElements().get(ElementType.QUARTER_NAME).putPointer(p);
                     }
-                    quarterNames = null;
+                    //quarterNames = null;
 
                     for(Pointer p : neighbourhoodNames){
                         model.getElements().get(ElementType.NEIGHBOURHOOD_NAME).putPointer(p);
                     }
-                    neighbourhoodNames = null;
+                    //neighbourhoodNames = null;
                 }
 
                 way = new OSMWay();
@@ -460,18 +460,19 @@ public final class OSMHandler implements ContentHandler {
     }
 
     private void addRoad(ElementType type, Boolean isRelation) {
-        Path2D path;
+        PolygonApprox polygonApprox;
+        polygonApprox = new PolygonApprox(way);
         if(!isRelation) {
-            path = way.toPath2D();
-            Road road = new Road(path, name);
+            Road road = new Road(polygonApprox, name);
             for (int i = 0; i < way.size(); i+=5) {
                 Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
             }
         }
         else {
-            path = relation.toPath2D(true);
-            Road road = new Road(path, name);
+            MultiPolygonApprox multiPolygonApprox;
+            multiPolygonApprox = new MultiPolygonApprox(relation);
+            Road road = new Road(multiPolygonApprox, name);
             for (int i = 0; i < relation.size(); i++){
                 for (int j = 0; i < relation.get(i).size(); j+=5){
                     Pointer p = new Pointer((float) relation.get(i).get(0).getX(), (float) relation.get(i).get(0).getY(), road);
@@ -483,17 +484,18 @@ public final class OSMHandler implements ContentHandler {
     }
 
     private void addWater(ElementType type, Boolean isRelation) {
-        Path2D path;
+        PolygonApprox polygonApprox;
+        polygonApprox = new PolygonApprox(way);
         if (!isRelation) {
-            path = way.toPath2D();
-            Water water = new Water(path, name);
+            Water water = new Water(polygonApprox, name);
             for (int i = 0; i < way.size(); i += 5) {
                 Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), water);
                 model.getElements().get(type).putPointer(p);
             }
         } else {
-            path = relation.toPath2D(true);
-            Water water = new Water(path, name);
+            MultiPolygonApprox multiPolygonApprox;
+            multiPolygonApprox = new MultiPolygonApprox(relation);
+            Water water = new Water(multiPolygonApprox, name);
             for (int i = 0; i < relation.size()-1; i++) {
                 if(relation.get(i) != null) {
                     for (int j = 0; j < relation.get(i).size(); j += 5) {
