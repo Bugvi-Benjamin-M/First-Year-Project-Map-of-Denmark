@@ -49,17 +49,21 @@ public class DefaultTheme implements Theme {
 
     @Override
     public Color water() {
-        return new Color(0x99B3CC);
+        return new Color(0x91BEFF);
     }
 
     @Override
     public Color park() {
-        return new Color(0xb4d39a);
+        return new Color(0xC0E48F);
     }
 
     @Override
-    public Color sand() {
+    public Color sand(){
         return new Color(0xfcf99a);
+    }
+    @Override
+    public Color building(){
+        return new Color(0x959795);
     }
 
     //Roads:
@@ -79,19 +83,19 @@ public class DefaultTheme implements Theme {
         return new Color(0xE4F136);
     }
     public Color unclassifiedRoad(){
-        return new Color(0x9F99F1);
+        return new Color(0xFFFFFF);
     }
     public Color residentialRoad(){
-        return new Color(0x9F99F1);
+        return new Color(0xFFFFFF);
     }
     public Color livingStreet(){
-        return new Color(0x9F99F1);
+        return new Color(0xFFFFFF);
     }
     public Color serviceRoad(){
-        return new Color(0x9F99F1);
+        return new Color(0xFFFFFF);
     }
     public Color busGuideway(){
-        return new Color(0x9F99F1);
+        return new Color(0xFFFFFF);
     }
     public Color escape(){
         return new Color(0x9F99F1);
@@ -100,7 +104,7 @@ public class DefaultTheme implements Theme {
         return new Color(0x9F99F1);
     }
     public Color pedestrianStreet(){
-        return new Color(0x9F99F1);
+        return new Color(0xFFFFFF);
     }
     public Color track(){
         return new Color(0xF17205);

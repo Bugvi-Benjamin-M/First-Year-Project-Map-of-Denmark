@@ -62,6 +62,11 @@ public class NightTheme implements Theme {
         return new Color(0x2f3948);
     }
 
+    @Override
+    public Color building(){
+        return new Color(0x959795);
+    }
+
     //Roads
     public Color motorway(){
         return new Color(0x1f2835);

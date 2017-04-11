@@ -128,31 +128,32 @@ public class MapCanvas extends View {
         switch(ZoomLevel.getZoomLevel()){
             case LEVEL_0:
                 drawWater(g);
-                drawMotorways(g);
-                drawMotorwayLinks(g);
-                drawTrunkRoads(g);
-                drawTrunkRoadLinks(g);
-                drawPrimaryRoads(g);
-                drawPrimaryRoadLinks(g);
-                drawSecondaryRoads(g);
-                drawSecondaryRoadLinks(g);
+                drawRoads(g);
+                drawSteps(g);
+                drawTracks(g);
+                drawPedestrianStreets(g);
+                drawRaceways(g);
+                drawEscapes(g);
+                drawBusGuideways(g);
+                drawServiceRoads(g);
+                drawLivingStreets(g);
+                drawResidentialRoads(g);
+                drawUnclassifiedRoads(g);
                 drawTertiaryRoads(g);
                 drawTertiaryRoadLinks(g);
-                drawUnclassifiedRoads(g);
-                drawResidentialRoads(g);
-                drawLivingStreets(g);
-                drawServiceRoads(g);
-                drawBusGuideways(g);
-                drawEscapes(g);
-                drawRaceways(g);
-                drawPedestrianStreets(g);
-                drawTracks(g);
-                drawSteps(g);
+                drawSecondaryRoads(g);
+                drawSecondaryRoadLinks(g);
+                drawPrimaryRoads(g);
+                drawPrimaryRoadLinks(g);
+                drawTrunkRoads(g);
+                drawTrunkRoadLinks(g);
+                drawMotorways(g);
+                drawMotorwayLinks(g);
                 drawFootways(g);
                 drawBridleways(g);
                 drawCycleways(g);
                 drawPaths(g);
-                drawRoads(g);
+                drawBuilding(g);
                 drawCityNames(g, ElementType.CITY_NAME);
                 drawCityNames(g, ElementType.TOWN_NAME);
                 drawCityNames(g, ElementType.VILLAGE_NAME);
@@ -163,59 +164,78 @@ public class MapCanvas extends View {
                 break;
             case LEVEL_1:
                 drawWater(g);
-                drawMotorways(g);
-                drawMotorwayLinks(g);
-                drawTrunkRoads(g);
-                drawTrunkRoadLinks(g);
-                drawPrimaryRoads(g);
-                drawPrimaryRoadLinks(g);
-                drawSecondaryRoads(g);
-                drawSecondaryRoadLinks(g);
+                drawPedestrianStreets(g);
+                drawRaceways(g);
+                drawEscapes(g);
+                drawBusGuideways(g);
+                drawServiceRoads(g);
+                drawLivingStreets(g);
+                drawResidentialRoads(g);
+                drawUnclassifiedRoads(g);
                 drawTertiaryRoads(g);
                 drawTertiaryRoadLinks(g);
-                drawUnclassifiedRoads(g);
-                drawResidentialRoads(g);
-                drawLivingStreets(g);
-                drawServiceRoads(g);
-                drawBusGuideways(g);
-                drawEscapes(g);
-                drawRaceways(g);
-                drawPedestrianStreets(g);
+                drawSecondaryRoads(g);
+                drawSecondaryRoadLinks(g);
+                drawPrimaryRoads(g);
+                drawPrimaryRoadLinks(g);
+                drawTrunkRoads(g);
+                drawTrunkRoadLinks(g);
+                drawMotorways(g);
+                drawMotorwayLinks(g);
+                drawBuilding(g);
                 drawCityNames(g, ElementType.CITY_NAME);
                 drawCityNames(g, ElementType.TOWN_NAME);
                 drawCityNames(g, ElementType.VILLAGE_NAME);
                 break;
             case LEVEL_2:
                 drawWater(g);
-                drawMotorways(g);
-                drawMotorwayLinks(g);
-                drawTrunkRoads(g);
-                drawTrunkRoadLinks(g);
-                drawPrimaryRoads(g);
-                drawPrimaryRoadLinks(g);
-                drawSecondaryRoads(g);
-                drawSecondaryRoadLinks(g);
                 drawTertiaryRoads(g);
                 drawTertiaryRoadLinks(g);
+                drawSecondaryRoads(g);
+                drawSecondaryRoadLinks(g);
+                drawPrimaryRoads(g);
+                drawPrimaryRoadLinks(g);
+                drawTrunkRoads(g);
+                drawTrunkRoadLinks(g);
+                drawMotorways(g);
+                drawMotorwayLinks(g);
                 drawCityNames(g, ElementType.CITY_NAME);
                 drawCityNames(g, ElementType.TOWN_NAME);
                 break;
             case LEVEL_3:
-                drawMotorways(g);
-                drawMotorwayLinks(g);
-                drawTrunkRoads(g);
-                drawTrunkRoadLinks(g);
                 drawPrimaryRoads(g);
                 drawPrimaryRoadLinks(g);
+                drawTrunkRoads(g);
+                drawTrunkRoadLinks(g);
+                drawMotorways(g);
+                drawMotorwayLinks(g);
                 drawCityNames(g, ElementType.CITY_NAME);
                 break;
             case LEVEL_4:
+                drawPrimaryRoads(g);
+                drawPrimaryRoadLinks(g);
+                drawTrunkRoads(g);
+                drawTrunkRoadLinks(g);
+                drawMotorways(g);
+                drawMotorwayLinks(g);
                 drawCityNames(g, ElementType.CITY_NAME);
                 break;
             case LEVEL_5:
+                drawPrimaryRoads(g);
+                drawPrimaryRoadLinks(g);
+                drawTrunkRoads(g);
+                drawTrunkRoadLinks(g);
+                drawMotorways(g);
+                drawMotorwayLinks(g);
                 drawCityNames(g, ElementType.CITY_NAME);
                 break;
             case LEVEL_6:
+                drawPrimaryRoads(g);
+                drawPrimaryRoadLinks(g);
+                drawTrunkRoads(g);
+                drawTrunkRoadLinks(g);
+                drawMotorways(g);
+                drawMotorwayLinks(g);
                 drawCityNames(g, ElementType.CITY_NAME);
                 break;
         }
@@ -300,7 +320,8 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.MOTORWAY);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("motorway"));
-            g.setStroke(new BasicStroke(0.00003f));
+            g.setStroke(new BasicStroke(0.00018f,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER));
             g.draw(element.getShape());
         }
     }
@@ -308,7 +329,8 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.MOTORWAY_LINK);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("motorway"));
-            g.setStroke(new BasicStroke(0.00002f));
+            g.setStroke(new BasicStroke(0.00012f,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER));
             g.draw(element.getShape());
         }
     }
@@ -316,7 +338,8 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.TRUNK_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("trunkRoad"));
-            g.setStroke(new BasicStroke(0.00002f));
+            g.setStroke(new BasicStroke(0.00014f,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER));
             g.draw(element.getShape());
         }
     }
@@ -324,7 +347,8 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.TRUNK_ROAD_LINK);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("trunkRoad"));
-            g.setStroke(new BasicStroke(0.00002f));
+            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER));
             g.draw(element.getShape());
         }
     }
@@ -332,7 +356,8 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.PRIMARY_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("primaryRoad"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER));
             g.draw(element.getShape());
         }
     }
@@ -340,7 +365,8 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.PRIMARY_ROAD_LINK);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("primaryRoad"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER));
             g.draw(element.getShape());
         }
     }
@@ -348,7 +374,8 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.SECONDARY_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("secondaryRoad"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER));
             g.draw(element.getShape());
         }
     }
@@ -356,7 +383,8 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.SECONDARY_ROAD_LINK);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("secondaryRoad"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER));
             g.draw(element.getShape());
         }
     }
@@ -364,7 +392,8 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.TERTIARY_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("tertiaryRoad"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER));
             g.draw(element.getShape());
         }
     }
@@ -372,7 +401,8 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.TERTIARY_ROAD_LINK);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("tertiaryRoad"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER));
             g.draw(element.getShape());
         }
     }
@@ -380,7 +410,7 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.UNCLASSIFIED_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("unclassifiedRoad"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.00007f));
             g.draw(element.getShape());
         }
     }
@@ -388,7 +418,8 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.RESIDENTIAL_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("residentialRoad"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.00006f,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER));
             g.draw(element.getShape());
         }
     }
@@ -396,7 +427,7 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.LIVING_STREET);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("livingStreet"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.00007f));
             g.draw(element.getShape());
         }
     }
@@ -404,7 +435,8 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.SERVICE_ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("serviceRoad"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.00004f,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER));
             g.draw(element.getShape());
         }
     }
@@ -412,7 +444,7 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.BUS_GUIDEWAY);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("BusGuideway"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.00007f));
             g.draw(element.getShape());
         }
     }
@@ -420,7 +452,7 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.ESCAPE);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("escape"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.00002f));
             g.draw(element.getShape());
         }
     }
@@ -428,7 +460,7 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.RACEWAY);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("raceway"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.00004f));
             g.draw(element.getShape());
         }
     }
@@ -436,7 +468,7 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.PEDESTRIAN_STERET);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("pedestrianStreet"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.00004f));
             g.draw(element.getShape());
         }
     }
@@ -444,7 +476,7 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.TRACK);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("track"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.00004f));
             g.draw(element.getShape());
         }
     }
@@ -492,16 +524,26 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.ROAD);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("road"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setStroke(new BasicStroke(0.00004f));
             g.draw(element.getShape());
         }
     }
 
     //Draw water
-    private void drawWater(Graphics2D g){
+    private void drawWater(Graphics2D g) {
         setCurrentSection(ElementType.WATER);
         for (Element element : currentSection) {
             g.setColor(ThemeHelper.color("water"));
+            g.setStroke(new BasicStroke(0.00001f));
+            g.fill(element.getShape());
+        }
+    }
+
+    //Draw buildings
+    private  void drawBuilding(Graphics2D g){
+        setCurrentSection(ElementType.BUILDING);
+        for (Element element : currentSection) {
+            g.setColor(ThemeHelper.color("building"));
             g.setStroke(new BasicStroke(0.00001f));
             g.fill(element.getShape());
         }

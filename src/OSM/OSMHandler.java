@@ -47,6 +47,8 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> suburbNames;
     private ArrayList<Pointer> quarterNames;
     private ArrayList<Pointer> neighbourhoodNames;
+    private boolean addRelation;
+
 
     private OSMHandler() {
         idToNode = new LongToPointMap(22);
@@ -162,6 +164,10 @@ public final class OSMHandler implements ContentHandler {
                 }
                 break;
             case "relation":
+                long relationID = Long.parseLong(atts.getValue("id"));
+                if(relationID == 2365410){ //Dont draw Sydhavnen (Only works wit coastlines)
+                    addRelation = false;
+                }
                 relation = new OSMRelation();
                 elementType = ElementType.UNKNOWN;
                 loadedRelations++;
@@ -242,6 +248,9 @@ public final class OSMHandler implements ContentHandler {
                         break;
                     case "place":
                         determinePlace(v);
+                        break;
+                    case "building":
+                        elementType = ElementType.BUILDING;
                         break;
                 }
                 break;
@@ -416,6 +425,9 @@ public final class OSMHandler implements ContentHandler {
                     case WATER:
                         addWater(elementType, false);
                         break;
+                    case BUILDING:
+                        addBuilding(elementType, false);
+                        break;
                     case UNKNOWN:
                         //UnknownWay unknownWay = new UnknownWay(path);
                         //model.addWayElement(elementType, unknownWay);
@@ -428,6 +440,29 @@ public final class OSMHandler implements ContentHandler {
                         break;
                 }
                 break;
+        }
+    }
+
+    private void addBuilding(ElementType type, boolean isRelation){
+        PolygonApprox polygonApprox;
+        polygonApprox = new PolygonApprox(way);
+        if(!isRelation) {
+            Building building = new Building(polygonApprox);
+            for (int i = 0; i < way.size(); i+=5) {
+                Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), building);
+                model.getElements().get(type).putPointer(p);
+            }
+        }
+        else {
+            MultiPolygonApprox multiPolygonApprox;
+            multiPolygonApprox = new MultiPolygonApprox(relation);
+            Building building = new Building(multiPolygonApprox);
+            for (int i = 0; i < relation.size(); i++){
+                for (int j = 0; i < relation.get(i).size(); j+=5){
+                    Pointer p = new Pointer((float) relation.get(i).get(0).getX(), (float) relation.get(i).get(0).getY(), building);
+                    model.getElements().get(type).putPointer(p);
+                }
+            }
         }
     }
 
@@ -459,7 +494,7 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    private void addRoad(ElementType type, Boolean isRelation) {
+    private void addRoad(ElementType type, boolean isRelation) {
         PolygonApprox polygonApprox;
         polygonApprox = new PolygonApprox(way);
         if(!isRelation) {
@@ -483,26 +518,30 @@ public final class OSMHandler implements ContentHandler {
         //System.out.println(name + " Added :)");
     }
 
-    private void addWater(ElementType type, Boolean isRelation) {
-        PolygonApprox polygonApprox;
-        polygonApprox = new PolygonApprox(way);
-        if (!isRelation) {
-            Water water = new Water(polygonApprox, name);
-            for (int i = 0; i < way.size(); i += 5) {
-                Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), water);
-                model.getElements().get(type).putPointer(p);
-            }
-        } else {
-            MultiPolygonApprox multiPolygonApprox;
-            multiPolygonApprox = new MultiPolygonApprox(relation);
-            Water water = new Water(multiPolygonApprox, name);
-            for (int i = 0; i < relation.size()-1; i++) {
-                if(relation.get(i) != null) {
-                    for (int j = 0; j < relation.get(i).size(); j += 5) {
-                        Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), water);
-                        model.getElements().get(type).putPointer(p);
-                    }
-                }else continue;
+    private void addWater(ElementType type, boolean isRelation) {
+        if(addRelation == false){
+            addRelation = true;
+        }else {
+            PolygonApprox polygonApprox;
+            polygonApprox = new PolygonApprox(way);
+            if (!isRelation) {
+                Water water = new Water(polygonApprox, name);
+                for (int i = 0; i < way.size(); i += 5) {
+                    Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), water);
+                    model.getElements().get(type).putPointer(p);
+                }
+            } else {
+                MultiPolygonApprox multiPolygonApprox;
+                multiPolygonApprox = new MultiPolygonApprox(relation);
+                Water water = new Water(multiPolygonApprox, name);
+                for (int i = 0; i < relation.size() - 1; i++) {
+                    if (relation.get(i) != null) {
+                        for (int j = 0; j < relation.get(i).size(); j += 5) {
+                            Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), water);
+                            model.getElements().get(type).putPointer(p);
+                        }
+                    } else continue;
+                }
             }
         }
     }
