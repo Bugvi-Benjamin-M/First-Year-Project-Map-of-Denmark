@@ -4,6 +4,7 @@ import Enums.BoundType;
 import Helpers.GlobalValue;
 import Helpers.HelperFunctions;
 import Model.Model;
+import OSM.OSMWay;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -51,9 +52,11 @@ public class CoastlineFactory {
         return bounds.get(type);
     }
 
-    protected void insertCoastline(Collection<Point2D> nodes) {
+    protected void insertCoastline(OSMWay nodes) {
         Coastline object = new Coastline();
-        object.addAll(nodes);
+        for (int i = 0; i < nodes.size(); i++) {
+            object.add(nodes.get(i));
+        }
         coastlines.add(object);
     }
 

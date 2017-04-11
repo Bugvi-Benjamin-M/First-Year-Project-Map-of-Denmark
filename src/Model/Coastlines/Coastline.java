@@ -35,24 +35,25 @@ public class Coastline extends OSMWay {
         for (int i = increase; i < size(); i += increase) {
             node = get(lastI);
             boolean isFromNear = isNodeNearCamera(node);
+            path.lineTo(node.getX(),node.getY());
             node = get(i);
             boolean isToNear = isNodeNearCamera(node);
             if (isToNear || isFromNear) {
-                qualityGeneratePath(path,lastI,i,ZoomLevel.LEVEL_6);
+                path.append(qualityGeneratePath(lastI,i,ZoomLevel.LEVEL_6),true);
             } else {
-                quickGeneratePath(path,lastI,i);
+                path.append(quickGeneratePath(lastI,i),true);
                 // simpleSimply(path,lastI,i);
             }
             lastI = i;
         }
 
-        quickGeneratePath(path,lastI,this.size()-1);
+        // quickGeneratePath(path,lastI,this.size()-1);
 
         // oldQuickSimplify(path);
 
         // Finish path (loop back)
-        node = this.getFromNode();
-        path.lineTo(node.getX(), node.getY());
+        // node = this.getFromNode();
+        // path.lineTo(node.getX(), node.getY());
         return path;
     }
 
@@ -63,7 +64,8 @@ public class Coastline extends OSMWay {
         }
     }
 
-    private void qualityGeneratePath(Path2D path, int startpoint, int endpoint, ZoomLevel level) {
+    private Path2D qualityGeneratePath(int startpoint, int endpoint, ZoomLevel level) {
+        Path2D path = new Path2D.Float();
         // Copy array
         List<Point2D> copy = new ArrayList<>();
         for (int i = startpoint; i <= endpoint; i++) {
@@ -75,23 +77,22 @@ public class Coastline extends OSMWay {
         List<Point2D> newPoints = HelperFunctions.pathGeneralization(copy,epsilon);
 
         // Add start point
-        Point2D start = get(startpoint);
-        path.lineTo(start.getX(),start.getY());
+        Point2D start = newPoints.get(0);
+        path.moveTo(start.getX(),start.getY());
 
         // Add generalized points
-        for (Point2D point: newPoints) {
+        for (int i = 1; i < newPoints.size(); i++) {
+            Point2D point = newPoints.get(i);
             path.lineTo(point.getX(),point.getY());
         }
-
-        // Add end point
-        Point2D end = get(endpoint);
-        path.lineTo(end.getX(),end.getY());
+        return path;
     }
 
-    private void quickGeneratePath(Path2D path, int start, int end) {
+    private Path2D quickGeneratePath(int start, int end) {
+        Path2D path = new Path2D.Float();
         // Add start point
         Point2D startPoint = this.get(start);
-        path.lineTo(startPoint.getX(),startPoint.getY());
+        path.moveTo(startPoint.getX(),startPoint.getY());
 
         // Add points
         for (int i = start; i < end; i += ZoomLevel.getZoomLevel().getNodesAtLevel()) {
@@ -102,6 +103,7 @@ public class Coastline extends OSMWay {
         // Add end point
         Point2D endPoint = this.get(end);
         path.lineTo(endPoint.getX(),endPoint.getY());
+        return path;
     }
 
     private void oldQuickSimplify(Path2D path) {
@@ -156,6 +158,24 @@ public class Coastline extends OSMWay {
         }
 
         return nodeIsNear;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Coastline of size: ");
+        sb.append(size());
+        sb.append("\n");
+        for (int i = 0; i < size(); i++) {
+            Point2D point = get(i);
+            sb.append("(");
+            sb.append(point.getX());
+            sb.append("; ");
+            sb.append(-point.getY());
+            sb.append(")\n");
+        }
+        sb.append("\n");
+        return sb.toString();
     }
 
 }

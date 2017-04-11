@@ -26,17 +26,20 @@ public class CoastlineHandler implements ContentHandler {
 
     private static Map<Long, Point2D> idToNode;
     private static Map<Long, OSMWay> idToWay;
+    private static Map<Point2D,Long> coastlineIDs;
     private static Map<Point2D,OSMWay> coastlines;
 
     private OSMWay way;
     private ElementType elementType;
     private float longFactor;
+    private long coastlineID;
 
     private CoastlineHandler() {
         factory = new CoastlineFactory();
         idToNode = new HashMap<>();
         idToWay = new HashMap<>();
         coastlines = new HashMap<>();
+        coastlineIDs = new HashMap<>();
     }
 
     public static CoastlineHandler getInstance() {
@@ -105,11 +108,13 @@ public class CoastlineHandler implements ContentHandler {
         long id = Long.parseLong(attributes.getValue("id"));
         elementType = ElementType.UNKNOWN;
         idToWay.put(id, way);
+        coastlineID = id;
     }
 
     private void handleWayNode(Attributes attributes) {
         long ref = Long.parseLong(attributes.getValue("ref"));
         way.add(idToNode.get(ref));
+        coastlineIDs.put(idToNode.get(ref),coastlineID);
     }
 
     private void handleTag(Attributes attributes) {

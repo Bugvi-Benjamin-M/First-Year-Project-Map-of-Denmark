@@ -102,7 +102,7 @@ public class HelperFunctions {
     }
 
     public static double sizeOfPolygon(List<Point2D> points) {
-        double size = 0, dividend = 0;
+        double dividend = 0;
         int previus = 0, next = 1;
         int n = points.size();
         Point2D previousPoint, nextPoint;
