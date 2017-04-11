@@ -170,7 +170,7 @@ public final class OSMHandler implements ContentHandler {
                 }
                 break;
             case "way":
-                if(!initialized && defaultMode == true){
+                if(!initialized && defaultMode){
                     nodeGenerator.initialise();
                     for (ElementType type : ElementType.values()) {
                         nodeGenerator.setupTree(model.getElements().get(type));

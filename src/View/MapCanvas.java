@@ -528,12 +528,12 @@ public class MapCanvas extends View {
         }
     }
     private void drawString (String s , Graphics2D g , float x , float y, Font font){
-        for (int c1=0 ; c1 < s.length() ; c1++){
+        for (int i = 0 ; i < s.length() ; i++){
 
-            char ch = s.charAt(c1);
-            g.drawString(ch+"", x, y) ;
+            char ch = s.charAt(i);
+            g.drawString(ch + "", x, y) ;
 
-            x += (getFontMetrics(font).charWidth('A'))/(transform.getScaleX());
+            x += ((getFontMetrics(font).charWidth(ch))/(transform.getScaleX())*4);
 
             //x+= g.getFontMetrics().charWidth(ch) ;
             //System.out.println(g.getFontMetrics().charWidth(ch));
