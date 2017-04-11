@@ -552,7 +552,7 @@ public class MapCanvas extends View {
     //Draw City Names
     private void drawCityNames(Graphics2D g, ElementType type){
         setCurrentSection(type);
-        if(ZoomLevel.getZoomFactor() < -10){}
+        if(ZoomLevel.getZoomFactor() < -50){}
         else{
             float scaleFactor;
             //scaleFactor = 0.0008f;
