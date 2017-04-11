@@ -18,13 +18,12 @@ public class SearchTool extends ToolComponent {
 
     private JComboBox<String> field;
     private Dimension searchFieldDimension;
-    private JLabel searchLabel;
 
     public SearchTool(int width) {
         field = new JComboBox<>();
         searchFieldDimension = new Dimension(width, 40);
+        //todo use set bounds to adjust searchfield size instead of removing and adding
         setupLayout();
-        addSearchLabel();
         applyTheme();
         add(field);
     }
@@ -39,15 +38,8 @@ public class SearchTool extends ToolComponent {
     }
 
 
-    private void addSearchLabel() {
-        searchLabel = new JLabel("Search:");
-        searchLabel.setFont(new Font(getFont().getName(), getFont().getStyle(), 20));
-        add(searchLabel);
-    }
-
     public void applyTheme() {
         setBackground(ThemeHelper.color("toolbar"));
-        searchLabel.setForeground(ThemeHelper.color("icon"));
         field.getEditor().getEditorComponent().setBackground(ThemeHelper.color("searchfield"));
         field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
     }
