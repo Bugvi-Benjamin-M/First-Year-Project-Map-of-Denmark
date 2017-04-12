@@ -9,6 +9,7 @@ import KDtree.*;
 import Main.Main;
 import Model.Elements.PlaceName;
 import Model.Elements.Element;
+import Model.Elements.Road;
 import Model.Model;
 
 import java.awt.*;
@@ -127,34 +128,53 @@ public class MapCanvas extends View {
     private void drawElements(Graphics2D g){
         switch(ZoomLevel.getZoomLevel()){
             case LEVEL_0:
-                drawWater(g);
-                drawRoads(g);
-                drawSteps(g);
-                drawTracks(g);
-                drawPedestrianStreets(g);
-                drawRaceways(g);
-                drawEscapes(g);
-                drawBusGuideways(g);
-                drawServiceRoads(g);
-                drawLivingStreets(g);
-                drawResidentialRoads(g);
-                drawUnclassifiedRoads(g);
-                drawTertiaryRoads(g);
-                drawTertiaryRoadLinks(g);
-                drawSecondaryRoads(g);
-                drawSecondaryRoadLinks(g);
-                drawPrimaryRoads(g);
-                drawPrimaryRoadLinks(g);
-                drawTrunkRoads(g);
-                drawTrunkRoadLinks(g);
-                drawMotorways(g);
-                drawMotorwayLinks(g);
-                drawFootways(g);
-                drawBridleways(g);
-                drawCycleways(g);
-                drawPaths(g);
-                drawBuilding(g);
-                /*
+                drawWater(g, ThemeHelper.color("water"));
+                drawFootways(g, ThemeHelper.color("footway"), 0.000004f);
+                drawBridleways(g, ThemeHelper.color("bridleway"), 0.000004f);
+                drawCycleways(g, ThemeHelper.color("cycleway"), 0.000004f);
+                drawPaths(g, ThemeHelper.color("path"), 0.000004f);
+                drawRoads(g, ThemeHelper.color("road"), 0.00004f);
+                drawSteps(g, ThemeHelper.color("steps"), 0.000004f);
+                drawTracks(g, ThemeHelper.color("track"), 0.00004f);
+                drawRaceways(g, ThemeHelper.color("raceway"), 0.00007f);
+                drawEscapes(g, ThemeHelper.color("escape"), 0.00002f);
+                drawBusGuideways(g, ThemeHelper.color("busGuideway"), 0.00006f);
+
+                //roadborders
+                drawPedestrianStreets(g, ThemeHelper.color("roadBorder"), 0.000045f);
+                drawServiceRoads(g, ThemeHelper.color("roadBorder"), 0.000045f);
+                drawLivingStreets(g, ThemeHelper.color("roadBorder"), 0.000055f);
+                drawResidentialRoads(g, ThemeHelper.color("roadBorder"), 0.000055f);
+                drawUnclassifiedRoads(g, ThemeHelper.color("roadBorder"), 0.000055f);
+                drawTertiaryRoads(g, ThemeHelper.color("roadBorder"), 0.000065f);
+                drawTertiaryRoadLinks(g, ThemeHelper.color("roadBorder"), 0.000065f);
+                drawSecondaryRoads(g, ThemeHelper.color("roadBorder"), 0.000085f);
+                drawSecondaryRoadLinks(g, ThemeHelper.color("roadBorder"), 0.000085f);
+                drawPrimaryRoads(g,ThemeHelper.color("roadBorder"), 0.000085f);
+                drawPrimaryRoadLinks(g,ThemeHelper.color("roadBorder"), 0.000085f);
+                drawTrunkRoads(g, ThemeHelper.color("roadBorder"), 0.000125f);
+                drawTrunkRoadLinks(g, ThemeHelper.color("roadBorder"), 0.00015f);
+                drawMotorways(g, ThemeHelper.color("roadBorder"), 0.000155f);
+                drawMotorwayLinks(g, ThemeHelper.color("roadBorder"), 0.000125f);
+
+                //roads
+                drawPedestrianStreets(g, ThemeHelper.color("pedestrianStreet"), 0.00004f);
+                drawServiceRoads(g, ThemeHelper.color("serviceRoad"), 0.00004f);
+                drawLivingStreets(g, ThemeHelper.color("livingStreet"), 0.00005f);
+                drawResidentialRoads(g, ThemeHelper.color("residentialRoad"), 0.00005f);
+                drawUnclassifiedRoads(g, ThemeHelper.color("unclassifiedRoad"), 0.00005f);
+                drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.00006f);
+                drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.00006f);
+                drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.00008f);
+                drawSecondaryRoadLinks(g, ThemeHelper.color("secondaryRoad"), 0.00008f);
+                drawPrimaryRoads(g,ThemeHelper.color("primaryRoad"), 0.00008f);
+                drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.00008f);
+                drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00013f);
+                drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.0001f);
+                drawMotorways(g, ThemeHelper.color("motorway"), 0.00016f);
+                drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00012f);
+
+                drawBuilding(g, ThemeHelper.color("building"));
                 drawCityNames(g, ElementType.CITY_NAME);
                 drawCityNames(g, ElementType.TOWN_NAME);
                 drawCityNames(g, ElementType.VILLAGE_NAME);
@@ -162,94 +182,85 @@ public class MapCanvas extends View {
                 drawCityNames(g, ElementType.SUBURB_NAME);
                 drawCityNames(g, ElementType.QUARTER_NAME);
                 drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME);
-                */
                 break;
             case LEVEL_1:
-                drawWater(g);
-                drawPedestrianStreets(g);
-                drawRaceways(g);
-                drawEscapes(g);
-                drawBusGuideways(g);
-                drawServiceRoads(g);
-                drawLivingStreets(g);
-                drawResidentialRoads(g);
-                drawUnclassifiedRoads(g);
-                drawTertiaryRoads(g);
-                drawTertiaryRoadLinks(g);
-                drawSecondaryRoads(g);
-                drawSecondaryRoadLinks(g);
-                drawPrimaryRoads(g);
-                drawPrimaryRoadLinks(g);
-                drawTrunkRoads(g);
-                drawTrunkRoadLinks(g);
-                drawMotorways(g);
-                drawMotorwayLinks(g);
-                drawBuilding(g);
-                drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
-                drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
-                drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
-                drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
+                drawWater(g, ThemeHelper.color("water"));
+                drawRaceways(g, ThemeHelper.color("raceway"), 0.00007f);
+                drawEscapes(g, ThemeHelper.color("escape"), 0.00002f);
+                drawBusGuideways(g, ThemeHelper.color("busGuideway"), 0.00006f);
+
+                //roads
+                drawPedestrianStreets(g, ThemeHelper.color("pedestrianStreet"), 0.00006f);
+                drawServiceRoads(g, ThemeHelper.color("serviceRoad"), 0.00006f);
+                drawLivingStreets(g, ThemeHelper.color("livingStreet"), 0.00007f);
+                drawResidentialRoads(g, ThemeHelper.color("residentialRoad"), 0.00007f);
+                drawUnclassifiedRoads(g, ThemeHelper.color("unclassifiedRoad"), 0.00007f);
+                drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
+                drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
+                drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
+                drawSecondaryRoadLinks(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
+                drawPrimaryRoads(g,ThemeHelper.color("primaryRoad"), 0.0001f);
+                drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
+                drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
+                drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
+                drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
+                drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+
+                drawBuilding(g, ThemeHelper.color("building"));
+                drawCityNames(g, ElementType.CITY_NAME);
+                drawCityNames(g, ElementType.TOWN_NAME);
+                drawCityNames(g, ElementType.VILLAGE_NAME);
                 break;
             case LEVEL_2:
-                drawWater(g);
-                drawTertiaryRoads(g);
-                drawTertiaryRoadLinks(g);
-                drawSecondaryRoads(g);
-                drawSecondaryRoadLinks(g);
-                drawPrimaryRoads(g);
-                drawPrimaryRoadLinks(g);
-                drawTrunkRoads(g);
-                drawTrunkRoadLinks(g);
-                drawMotorways(g);
-                drawMotorwayLinks(g);
-                drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
-                drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
-                drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
-                drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
-                drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
+                drawWater(g, ThemeHelper.color("water"));
+                drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
+                drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
+                drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
+                drawSecondaryRoadLinks(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
+                drawPrimaryRoads(g,ThemeHelper.color("primaryRoad"), 0.0001f);
+                drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
+                drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
+                drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
+                drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
+                drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+                drawCityNames(g, ElementType.CITY_NAME);
+                drawCityNames(g, ElementType.TOWN_NAME);
                 break;
             case LEVEL_3:
-                drawPrimaryRoads(g);
-                drawPrimaryRoadLinks(g);
-                drawTrunkRoads(g);
-                drawTrunkRoadLinks(g);
-                drawMotorways(g);
-                drawMotorwayLinks(g);
-                drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
-                drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
-                drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
-                drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
-                drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
+                drawPrimaryRoads(g,ThemeHelper.color("primaryRoad"), 0.0001f);
+                drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
+                drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
+                drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
+                drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
+                drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+                drawCityNames(g, ElementType.CITY_NAME);
                 break;
             case LEVEL_4:
-                drawPrimaryRoads(g);
-                drawPrimaryRoadLinks(g);
-                drawTrunkRoads(g);
-                drawTrunkRoadLinks(g);
-                drawMotorways(g);
-                drawMotorwayLinks(g);
-                drawCityNames(g, ElementType.CITY_NAME, 0.8f);
-                drawCityNames(g, ElementType.TOWN_NAME, 0.35f);
-                drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
+                drawPrimaryRoads(g,ThemeHelper.color("primaryRoad"), 0.0001f);
+                drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
+                drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
+                drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
+                drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
+                drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+                drawCityNames(g, ElementType.CITY_NAME);
                 break;
             case LEVEL_5:
-                drawPrimaryRoads(g);
-                drawPrimaryRoadLinks(g);
-                drawTrunkRoads(g);
-                drawTrunkRoadLinks(g);
-                drawMotorways(g);
-                drawMotorwayLinks(g);
-                drawCityNames(g, ElementType.CITY_NAME, 0.8f);
-                drawCityNames(g, ElementType.TOWN_NAME, 0.35f);
+                drawPrimaryRoads(g,ThemeHelper.color("primaryRoad"), 0.0001f);
+                drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
+                drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
+                drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
+                drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
+                drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+                drawCityNames(g, ElementType.CITY_NAME);
                 break;
             case LEVEL_6:
-                drawPrimaryRoads(g);
-                drawPrimaryRoadLinks(g);
-                drawTrunkRoads(g);
-                drawTrunkRoadLinks(g);
-                drawMotorways(g);
-                drawMotorwayLinks(g);
-                drawCityNames(g, ElementType.CITY_NAME, 1f);
+                drawPrimaryRoads(g,ThemeHelper.color("primaryRoad"), 0.0001f);
+                drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
+                drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
+                drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
+                drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
+                drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+                drawCityNames(g, ElementType.CITY_NAME);
                 break;
         }
     }
@@ -329,234 +340,253 @@ public class MapCanvas extends View {
     }
 
     //Draw Roads Methods
-    private void drawMotorways(Graphics2D g){
+    private void drawMotorways(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.MOTORWAY);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("motorway"));
-            g.setStroke(new BasicStroke(0.00018f,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_MITER));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawMotorwayLinks(Graphics2D g){
+    private void drawMotorwayLinks(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.MOTORWAY_LINK);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("motorway"));
-            g.setStroke(new BasicStroke(0.00012f,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_MITER));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawTrunkRoads(Graphics2D g) {
+    private void drawTrunkRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TRUNK_ROAD);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("trunkRoad"));
-            g.setStroke(new BasicStroke(0.00014f,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_MITER));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawTrunkRoadLinks(Graphics2D g){
+    private void drawTrunkRoadLinks(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.TRUNK_ROAD_LINK);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("trunkRoad"));
-            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_MITER));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawPrimaryRoads(Graphics2D g){
+    private void drawPrimaryRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.PRIMARY_ROAD);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("primaryRoad"));
-            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_MITER));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawPrimaryRoadLinks(Graphics2D g){
+    private void drawPrimaryRoadLinks(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.PRIMARY_ROAD_LINK);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("primaryRoad"));
-            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_MITER));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawSecondaryRoads(Graphics2D g){
+    private void drawSecondaryRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.SECONDARY_ROAD);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("secondaryRoad"));
-            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_MITER));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawSecondaryRoadLinks(Graphics2D g){
+    private void drawSecondaryRoadLinks(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.SECONDARY_ROAD_LINK);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("secondaryRoad"));
-            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_MITER));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawTertiaryRoads(Graphics2D g){
+    private void drawTertiaryRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.TERTIARY_ROAD);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("tertiaryRoad"));
-            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_MITER));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawTertiaryRoadLinks(Graphics2D g){
+    private void drawTertiaryRoadLinks(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.TERTIARY_ROAD_LINK);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("tertiaryRoad"));
-            g.setStroke(new BasicStroke(0.0001f,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_MITER));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawUnclassifiedRoads(Graphics2D g){
+    private void drawUnclassifiedRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.UNCLASSIFIED_ROAD);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("unclassifiedRoad"));
-            g.setStroke(new BasicStroke(0.00007f));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawResidentialRoads(Graphics2D g){
+    private void drawResidentialRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.RESIDENTIAL_ROAD);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("residentialRoad"));
-            g.setStroke(new BasicStroke(0.00006f,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_MITER));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawLivingStreets(Graphics2D g){
+    private void drawLivingStreets(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.LIVING_STREET);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("livingStreet"));
-            g.setStroke(new BasicStroke(0.00007f));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawServiceRoads(Graphics2D g){
+    private void drawServiceRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.SERVICE_ROAD);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("serviceRoad"));
-            g.setStroke(new BasicStroke(0.00004f,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_MITER));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawBusGuideways(Graphics2D g){
+    private void drawBusGuideways(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.BUS_GUIDEWAY);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("BusGuideway"));
-            g.setStroke(new BasicStroke(0.00007f));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width));
             g.draw(element.getShape());
         }
     }
-    private void drawEscapes(Graphics2D g){
+    private void drawEscapes(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.ESCAPE);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("escape"));
-            g.setStroke(new BasicStroke(0.00002f));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width));
             g.draw(element.getShape());
         }
     }
-    private void drawRaceways(Graphics2D g){
+    private void drawRaceways(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.RACEWAY);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("raceway"));
-            g.setStroke(new BasicStroke(0.00004f));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawPedestrianStreets(Graphics2D g){
-        setCurrentSection(ElementType.PEDESTRIAN_STERET);
+    private void drawPedestrianStreets(Graphics2D g, Color color, float width){
+        setCurrentSection(ElementType.PEDESTRIAN_STREET);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("pedestrianStreet"));
-            g.setStroke(new BasicStroke(0.00004f));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
+            Road road = (Road) element;
+            if(road.isArea()) g.fill(element.getShape());
             g.draw(element.getShape());
         }
     }
-    private void drawTracks(Graphics2D g){
+    private void drawTracks(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.TRACK);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("track"));
-            g.setStroke(new BasicStroke(0.00004f));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
-    private void drawSteps(Graphics2D g){
+    private void drawSteps(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.STEPS);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("steps"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,
+                    BasicStroke.CAP_BUTT,
+                    BasicStroke.JOIN_MITER,
+                    10.0f, new float[]{0.00001f}, 0.0f));
             g.draw(element.getShape());
         }
     }
-    private void drawFootways(Graphics2D g){
+    private void drawFootways(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.FOOTWAY);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("footway"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,
+                    BasicStroke.CAP_BUTT,
+                    BasicStroke.JOIN_MITER,
+                    10.0f, new float[]{0.00001f}, 0.0f));
             g.draw(element.getShape());
         }
     }
-    private void drawBridleways(Graphics2D g){
+    private void drawBridleways(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.BRIDLEWAY);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("bridleway"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,
+                    BasicStroke.CAP_BUTT,
+                    BasicStroke.JOIN_MITER,
+                    10.0f, new float[]{0.00001f}, 0.0f));
             g.draw(element.getShape());
         }
     }
-    private void drawCycleways(Graphics2D g){
+    private void drawCycleways(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.CYCLEWAY);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("cycleway"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width));
             g.draw(element.getShape());
         }
     }
-    private void drawPaths(Graphics2D g){
+    private void drawPaths(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.PATH);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("path"));
-            g.setStroke(new BasicStroke(0.00001f));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,
+                    BasicStroke.CAP_BUTT,
+                    BasicStroke.JOIN_MITER,
+                    10.0f, new float[]{0.00001f}, 0.0f));
             g.draw(element.getShape());
         }
     }
-    private void drawRoads(Graphics2D g){
+    private void drawRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.ROAD);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("road"));
-            g.setStroke(new BasicStroke(0.00004f));
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width));
             g.draw(element.getShape());
         }
     }
 
     //Draw water
-    private void drawWater(Graphics2D g) {
+    private void drawWater(Graphics2D g, Color color) {
         setCurrentSection(ElementType.WATER);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("water"));
+            g.setColor(color);
             g.setStroke(new BasicStroke(0.00001f));
             g.fill(element.getShape());
         }
     }
 
     //Draw buildings
-    private  void drawBuilding(Graphics2D g){
+    private  void drawBuilding(Graphics2D g, Color color){
         setCurrentSection(ElementType.BUILDING);
         for (Element element : currentSection) {
-            g.setColor(ThemeHelper.color("building"));
+            g.setColor(color);
             g.setStroke(new BasicStroke(0.00001f));
             g.fill(element.getShape());
         }

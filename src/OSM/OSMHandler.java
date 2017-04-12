@@ -47,7 +47,8 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> suburbNames;
     private ArrayList<Pointer> quarterNames;
     private ArrayList<Pointer> neighbourhoodNames;
-    private boolean addRelation;
+    private boolean specialCase = false;
+    private boolean isArea = false;
 
 
     private OSMHandler() {
@@ -166,7 +167,7 @@ public final class OSMHandler implements ContentHandler {
             case "relation":
                 long relationID = Long.parseLong(atts.getValue("id"));
                 if(relationID == 2365410){ //Dont draw Sydhavnen (Only works wit coastlines)
-                    addRelation = false;
+                    specialCase = true;
                 }
                 relation = new OSMRelation();
                 elementType = ElementType.UNKNOWN;
@@ -252,6 +253,11 @@ public final class OSMHandler implements ContentHandler {
                     case "building":
                         elementType = ElementType.BUILDING;
                         break;
+                    case "area":
+                        switch(v){
+                            case("yes"):
+                                isArea = true;
+                        }
                 }
                 break;
             case "member":
@@ -351,7 +357,7 @@ public final class OSMHandler implements ContentHandler {
                 elementType = ElementType.RACEWAY;
                 break;
             case "pedestrian":
-                elementType = ElementType.PEDESTRIAN_STERET;
+                elementType = ElementType.PEDESTRIAN_STREET;
                 break;
             case "track":
                 elementType = ElementType.TRACK;
@@ -407,12 +413,12 @@ public final class OSMHandler implements ContentHandler {
                     case TERTIARY_ROAD_LINK:
                     case UNCLASSIFIED_ROAD:
                     case RESIDENTIAL_ROAD:
+                    case PEDESTRIAN_STREET:
                     case LIVING_STREET:
                     case SERVICE_ROAD:
                     case BUS_GUIDEWAY:
                     case ESCAPE:
                     case RACEWAY:
-                    case PEDESTRIAN_STERET:
                     case TRACK:
                     case STEPS:
                     case FOOTWAY:
@@ -420,7 +426,12 @@ public final class OSMHandler implements ContentHandler {
                     case CYCLEWAY:
                     case PATH:
                     case ROAD:
-                        addRoad(elementType, false);
+                        if(isArea == false){
+                            addRoad(elementType, false, false);
+                        }else{
+                            addRoad(elementType, false, true);
+                            isArea = false;
+                        }
                         break;
                     case WATER:
                         addWater(elementType, false);
@@ -494,20 +505,22 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    private void addRoad(ElementType type, boolean isRelation) {
-        PolygonApprox polygonApprox;
-        polygonApprox = new PolygonApprox(way);
+    private void addRoad(ElementType type, boolean isRelation, boolean area) {
         if(!isRelation) {
-            Road road = new Road(polygonApprox, name);
+            PolygonApprox polygonApprox = new PolygonApprox(way);
+            Road road;
+            if(!area) road = new Road(polygonApprox, name);
+            else road = new Road(polygonApprox, name, true);
             for (int i = 0; i < way.size(); i+=5) {
                 Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
             }
         }
         else {
-            MultiPolygonApprox multiPolygonApprox;
-            multiPolygonApprox = new MultiPolygonApprox(relation);
-            Road road = new Road(multiPolygonApprox, name);
+            MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
+            Road road;
+            if(!area) road = new Road(multiPolygonApprox, name);
+            else road = new Road(multiPolygonApprox, name, true);
             for (int i = 0; i < relation.size(); i++){
                 for (int j = 0; i < relation.get(i).size(); j+=5){
                     Pointer p = new Pointer((float) relation.get(i).get(0).getX(), (float) relation.get(i).get(0).getY(), road);
@@ -519,8 +532,8 @@ public final class OSMHandler implements ContentHandler {
     }
 
     private void addWater(ElementType type, boolean isRelation) {
-        if(addRelation == false){
-            addRelation = true;
+        if(specialCase == true){
+            specialCase = false;
         }else {
             PolygonApprox polygonApprox;
             polygonApprox = new PolygonApprox(way);

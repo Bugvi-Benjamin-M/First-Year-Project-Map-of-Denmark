@@ -130,6 +130,9 @@ public class NightTheme implements Theme {
     public Color road(){
         return new Color(0x1f2835);
     }
+    public Color roadBorder(){
+        return  new Color(0000000);
+    }
 
     @Override
     public String getName() {

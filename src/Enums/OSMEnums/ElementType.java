@@ -40,7 +40,7 @@ public enum ElementType {
     BUS_GUIDEWAY,
     ESCAPE, //sikkerhedsveje ?
     RACEWAY,
-    PEDESTRIAN_STERET, //Gågader
+    PEDESTRIAN_STREET, //Gågader
     TRACK, //Markvej
     STEPS,
     FOOTWAY,

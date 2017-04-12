@@ -70,7 +70,7 @@ public class DefaultTheme implements Theme {
 
     //Roads:
     public Color motorway() {
-        return new Color(0xF100C8);
+        return new Color(0xE27B90);
     }
     public Color trunkRoad() {
         return new Color(0xF13400);
@@ -82,7 +82,7 @@ public class DefaultTheme implements Theme {
         return new Color(0xF1D108);
     }
     public Color tertiaryRoad(){
-        return new Color(0xE4F136);
+        return new Color(0xFFFFFF);
     }
     public Color unclassifiedRoad(){
         return new Color(0xFFFFFF);
@@ -106,28 +106,31 @@ public class DefaultTheme implements Theme {
         return new Color(0x9F99F1);
     }
     public Color pedestrianStreet(){
-        return new Color(0xFFFFFF);
+        return new Color(0xD5D4E3);
     }
     public Color track(){
         return new Color(0xF17205);
     }
     public Color steps(){
-        return new Color(0xF10000);
+        return new Color(0x000000);
     }
     public Color footway(){
-        return new Color(0xF10000);
+        return new Color(0x000000);
     }
     public Color bridleway(){
-        return new Color(0x9F99F1);
+        return new Color(0x000000);
     }
     public Color cycleway(){
-        return new Color(0x040BF1);
+        return new Color(0x000000);
     }
     public Color path(){
-        return new Color(0x9F99F1);
+        return new Color(0x000000);
     }
     public Color road(){
         return new Color(0x9F99F1);
+    }
+    public Color roadBorder(){
+        return  new Color(0x605C66);
     }
 
 
