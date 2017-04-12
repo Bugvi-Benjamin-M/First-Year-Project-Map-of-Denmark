@@ -198,4 +198,8 @@ public class PolygonApprox implements Shape, Serializable {
 	public Rectangle2D getBounds2D() {
 		return new Rectangle2D.Double(bx, by, bw, bh);
 	}
+
+	public float[] getCoords(){
+		return coords;
+	}
 }

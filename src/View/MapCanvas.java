@@ -3,9 +3,11 @@ package View;
 import Enums.BoundType;
 import Enums.OSMEnums.ElementType;
 import Enums.ZoomLevel;
+import Helpers.PolygonApprox;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
 import KDtree.*;
+import KDtree.Point;
 import Main.Main;
 import Model.Elements.PlaceName;
 import Model.Elements.Element;
@@ -105,6 +107,15 @@ public class MapCanvas extends View {
 
         Main.FPS_COUNTER.interrupt();
         DebugWindow.getInstance();
+
+        /*
+        //Test text på Langeland, rotate text, successfull, saved this bit of code to look at at later times.
+        AffineTransform old = g2D.getTransform();
+        g2D.rotate(Math.PI / 4, 6, -55);
+        g2D.setColor(Color.BLACK);
+        g.drawString("Hello", 6, -55);
+        g2D.setTransform(old);
+        */
     }
 
     private void drawCoastlines(Graphics2D g) {
@@ -113,7 +124,7 @@ public class MapCanvas extends View {
         for (Path2D path: coastlines) {
             g.fill(path);
         }
-        // Creates outline
+        //Creates outline
         boolean markCoastlines = true;
         if (markCoastlines) {
             g.setStroke(new BasicStroke(Float.MIN_VALUE));
@@ -175,6 +186,8 @@ public class MapCanvas extends View {
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00012f);
 
                 drawBuilding(g, ThemeHelper.color("building"));
+
+                drawRoadNames(g);
                 break;
             case LEVEL_1:
                 drawWater(g, ThemeHelper.color("water"));
@@ -204,6 +217,8 @@ public class MapCanvas extends View {
                 drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
                 drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
                 drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
+
+                drawRoadNames(g);
                 break;
             case LEVEL_2:
                 drawWater(g, ThemeHelper.color("water"));
@@ -596,6 +611,94 @@ public class MapCanvas extends View {
         }
     }
 
+    //Draw road names
+    private void drawRoadNames(Graphics2D g){
+        setCurrentSection(ElementType.TERTIARY_ROAD);  //TODO Se drawCityNames for a more generic version
+
+        //Scalefactor
+        float scaleFactor =  0.1f * 397.522f * (float) (Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
+
+        //Font
+        Font font = new Font("Arial", Font.BOLD, 12);
+
+        //Transparency
+        Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f);
+        g.setComposite(c);
+
+        //Color
+        g.setColor(ThemeHelper.color("cityName"));
+
+        for (Element element : currentSection) {
+            Road road = (Road) element;
+
+            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+            PolygonApprox polygon = (PolygonApprox) road.getShape();
+
+            float[] coords = polygon.getCoords();
+
+            float longestVectorX1 = coords[0];
+            float longestVectorY1 = coords[1];
+            float longestVectorX2 = coords[2];
+            float longestVectorY2 = coords[3];
+
+            float x1;
+            float y1;
+            float x2;
+            float y2;
+
+            //Find the longest vector in the path
+            for(int i = 2 ; i < coords.length ; i += 2){
+                x1 = coords[i-2];
+                y1 = coords[i-1];
+                x2 = coords[i];
+                y2 = coords[i+1];
+
+                if( (vectorLength(longestVectorX2-longestVectorX1, longestVectorY2-longestVectorY1)) < (vectorLength(x2-x1, y2-y1))){
+                    longestVectorX1 = x1;
+                    longestVectorY1 = y1;
+                    longestVectorX2 = x2;
+                    longestVectorY2 = y2;
+                }
+            }
+
+            //Find the angle of the longest vector in the path
+            double angle = vectorAngle(longestVectorX1, longestVectorY1, longestVectorX2, longestVectorY2);
+
+            AffineTransform old = g.getTransform();
+            g.rotate(angle, longestVectorX1, longestVectorY1);
+            //g.setColor(Color.BLACK);
+            //g.drawString("Hello", 6, -55);
+            drawString(road.getName(), g, longestVectorX1, longestVectorY1, font, scaleFactor, false);
+            g.setTransform(old);
+        }
+    }
+    private double vectorLength(float x, float y){
+        double newX = (double) x;
+        double newY = (double) y;
+        return Math.sqrt( x * x + y * y);
+    }
+    private double dotProduct(float x1, float y1, float x2, float y2){
+        double newX1 = (double) x1;
+        double newY1 = (double) y1;
+        double newX2 = (double) x2;
+        double newY2 = (double) y2;
+        return newX1 * newX2 + newY1 * newY2;
+    }
+    private double vectorAngle(float x1, float y1, float x2, float y2){
+        double cosAngle;
+        double dotProduct = dotProduct((x2-x1),(y2-y1), 1, 0f);
+        double vector1Length = vectorLength((x2-x1),(y2-y1));
+        double vector2Length = vectorLength(1, 0f);
+        cosAngle = dotProduct / (vector1Length * vector2Length);
+        return Math.acos(cosAngle);
+    }
+
+
+
+
+
+
+
     //Draw City Names
     private void drawCityNames(Graphics2D g, ElementType type, float scaling){
         setCurrentSection(type);
@@ -616,20 +719,21 @@ public class MapCanvas extends View {
 
             //Color
             g.setColor(ThemeHelper.color("cityName"));
-
             for(Element element : currentSection){
                 PlaceName placeName = (PlaceName) element;
                 g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-                drawString(placeName.getName(), g, placeName.getX(), placeName.getY(), font, scaleFactor);
+                drawString(placeName.getName(), g, placeName.getX(), placeName.getY(), font, scaleFactor, true);
             }
         }
     }
-    private void drawString (String s , Graphics2D g , float x , float y, Font font, float scaleFactor){
-        x = x - ((getFontMetrics(font).charWidth(s.charAt(s.length()/2))*scaleFactor) * s.length()/2);
-        for (int i = 0 ; i < s.length() ; i++){
-            char ch = s.charAt(i);
-            g.drawString(ch + "", x, y) ;
-            x += ((getFontMetrics(font).charWidth(ch)))*scaleFactor;
+    private void drawString (String s , Graphics2D g , float x , float y, Font font, float scaleFactor, boolean isShiftedLeft){
+        if(s.length() > 2){
+            if(isShiftedLeft) x = x - ((getFontMetrics(font).charWidth(s.charAt(s.length()/2))*scaleFactor) * s.length()/2);
+            for (int i = 0 ; i < s.length() ; i++){
+                char ch = s.charAt(i);
+                g.drawString(ch + "", x, y) ;
+                x += ((getFontMetrics(font).charWidth(ch)))*scaleFactor;
+            }
         }
     }
 }

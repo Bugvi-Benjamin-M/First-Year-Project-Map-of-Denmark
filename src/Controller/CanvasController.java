@@ -262,7 +262,7 @@ public final class CanvasController extends Controller implements Observer {
         //if ((zoom_value > -50 || increase > 0) && (zoom_value < 500 || increase < 0)) {
             // ZoomLevel lastLevel = GlobalValue.getZoomLevel();
             if (zoomFactor != 0.0) zoom_value += increase;
-            System.out.println("Increase zoom: " + increase + "\nZoom value: " + zoom_value);
+            //System.out.println("Increase zoom: " + increase + "\nZoom value: " + zoom_value);
             GlobalValue.setZoomLevel(zoom_value);
             /*
             ZoomLevel newLevel = GlobalValue.getZoomLevel();
