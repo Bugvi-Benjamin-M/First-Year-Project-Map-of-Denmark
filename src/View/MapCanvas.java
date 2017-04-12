@@ -175,13 +175,13 @@ public class MapCanvas extends View {
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00012f);
 
                 drawBuilding(g, ThemeHelper.color("building"));
-                drawCityNames(g, ElementType.CITY_NAME);
+                /*drawCityNames(g, ElementType.CITY_NAME);
                 drawCityNames(g, ElementType.TOWN_NAME);
                 drawCityNames(g, ElementType.VILLAGE_NAME);
                 drawCityNames(g, ElementType.HAMLET_NAME);
                 drawCityNames(g, ElementType.SUBURB_NAME);
                 drawCityNames(g, ElementType.QUARTER_NAME);
-                drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME);
+                drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME);*/
                 break;
             case LEVEL_1:
                 drawWater(g, ThemeHelper.color("water"));
@@ -207,9 +207,9 @@ public class MapCanvas extends View {
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
 
                 drawBuilding(g, ThemeHelper.color("building"));
-                drawCityNames(g, ElementType.CITY_NAME);
+                /*drawCityNames(g, ElementType.CITY_NAME);
                 drawCityNames(g, ElementType.TOWN_NAME);
-                drawCityNames(g, ElementType.VILLAGE_NAME);
+                drawCityNames(g, ElementType.VILLAGE_NAME);*/
                 break;
             case LEVEL_2:
                 drawWater(g, ThemeHelper.color("water"));
@@ -223,8 +223,8 @@ public class MapCanvas extends View {
                 drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
                 drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-                drawCityNames(g, ElementType.CITY_NAME);
-                drawCityNames(g, ElementType.TOWN_NAME);
+                /*drawCityNames(g, ElementType.CITY_NAME);
+                drawCityNames(g, ElementType.TOWN_NAME);*/
                 break;
             case LEVEL_3:
                 drawPrimaryRoads(g,ThemeHelper.color("primaryRoad"), 0.0001f);
@@ -233,7 +233,7 @@ public class MapCanvas extends View {
                 drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
                 drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-                drawCityNames(g, ElementType.CITY_NAME);
+                //drawCityNames(g, ElementType.CITY_NAME);
                 break;
             case LEVEL_4:
                 drawPrimaryRoads(g,ThemeHelper.color("primaryRoad"), 0.0001f);
@@ -242,7 +242,7 @@ public class MapCanvas extends View {
                 drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
                 drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-                drawCityNames(g, ElementType.CITY_NAME);
+                //drawCityNames(g, ElementType.CITY_NAME);
                 break;
             case LEVEL_5:
                 drawPrimaryRoads(g,ThemeHelper.color("primaryRoad"), 0.0001f);
@@ -251,7 +251,7 @@ public class MapCanvas extends View {
                 drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
                 drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-                drawCityNames(g, ElementType.CITY_NAME);
+                //drawCityNames(g, ElementType.CITY_NAME);
                 break;
             case LEVEL_6:
                 drawPrimaryRoads(g,ThemeHelper.color("primaryRoad"), 0.0001f);
@@ -260,7 +260,7 @@ public class MapCanvas extends View {
                 drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
                 drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-                drawCityNames(g, ElementType.CITY_NAME);
+                //drawCityNames(g, ElementType.CITY_NAME);
                 break;
         }
     }
