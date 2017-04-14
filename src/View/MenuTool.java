@@ -1,5 +1,7 @@
 package View;
 
+import Helpers.ThemeHelper;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -20,7 +22,13 @@ public class MenuTool extends ToolComponent {
 
     @Override
     void setupLayout() {
-        popupMenu = new JPopupMenu();
+        popupMenu = new JPopupMenu() {
+            @Override
+            public void paintComponent(Graphics g) {
+                g.setColor(ThemeHelper.color("toolbar"));
+                g.fillRect(0,0, getWidth(), getHeight());
+            }
+        };
         layout = new SpringLayout();
         popupMenu.setLayout(layout);
     }
@@ -51,14 +59,6 @@ public class MenuTool extends ToolComponent {
 
     public SpringLayout getLayout() {
         return layout;
-    }
-
-    public void setBackGroundColor(Color color) {
-        popupMenu.setBackground(color);
-    }
-
-    public void setForeGroundColor(Color color) {
-        popupMenu.setForeground(color);
     }
 
 }

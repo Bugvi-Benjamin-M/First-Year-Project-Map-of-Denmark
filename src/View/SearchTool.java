@@ -24,17 +24,22 @@ public class SearchTool extends ToolComponent {
     public SearchTool(int width) {
         field = new JComboBox<>();
         //searchFieldDimension = new Dimension(width, SEARCHBAR_HEIGHT);
-        //todo use set bounds to adjust searchfield size instead of removing and adding
         setupLayout();
-        adaptSize();
+        adaptSizeToLargeToolbar();
         applyTheme();
         add(field);
     }
 
-    public void adaptSize() {
+    public void adaptSizeToLargeToolbar() {
         searchFieldDimension = new Dimension(GlobalValue.getSearchFieldLargeSize(), SEARCHBAR_HEIGHT);
         field.setPreferredSize(searchFieldDimension);
         field.setBounds(GlobalValue.getSearchFieldStartX(), 30, GlobalValue.getSearchFieldStartX() + GlobalValue.getSearchFieldLargeSize(), 70);
+    }
+
+    public void adaptSizeToSmallToolbar() {
+        searchFieldDimension = new Dimension(GlobalValue.getSearchFieldSmallSize(), SEARCHBAR_HEIGHT);
+        field.setPreferredSize(searchFieldDimension);
+        //field.setBounds(GlobalValue.getSearchFieldStartX(), 30, GlobalValue.getSearchFieldStartX() + GlobalValue.getSearchFieldSmallSize(), 70);
     }
 
     @Override

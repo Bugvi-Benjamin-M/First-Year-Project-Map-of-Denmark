@@ -1,11 +1,11 @@
 package Controller.ToolbarControllers;
 
 import Controller.Controller;
-import Controller.MainWindowController;
 import Enums.ToolType;
 import Helpers.ThemeHelper;
 import View.PopupWindow;
 import View.SearchTool;
+import View.Toolbar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,13 +72,23 @@ public final class SearchToolController extends Controller {
     protected void searchToolResizeEvent() {
         //searchTool = (SearchTool) ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBAR);
         //addFocusListenerToSearchTool();
-        if(currentText.equals("")) currentText = defaultText;
-        setToCurrentText();
-        searchTool.adaptSize();
+        //if(currentText.equals("")) currentText = defaultText;
+        //setToCurrentText();
+        setToDefaultText();
+        searchTool.adaptSizeToLargeToolbar();
+        ToolbarController.getInstance().transferFocusToCanvas();
         //specifyKeyBindings();
     }
 
+    protected void searchToolFixedSizeEvent() {
+        //setToCurrentText();
+        setToDefaultText();
+        searchTool.adaptSizeToSmallToolbar();
+        ToolbarController.getInstance().transferFocusToCanvas();
+    }
+
     protected void setToDefaultText() {
+        if(searchTool.getText().equals(""))
         searchTool.setDefaultText(defaultText);
     }
 
@@ -157,7 +167,7 @@ public final class SearchToolController extends Controller {
         @Override
         public void focusLost(FocusEvent e) {
             super.focusLost(e);
-            if (editor.getItem().equals("")) setToCurrentText();
+            if (editor.getItem().equals("")) setToDefaultText();
                 allowSearch = false;
         }
     }
