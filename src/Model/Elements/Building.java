@@ -1,7 +1,6 @@
 package Model.Elements;
 
-import java.awt.*;
-import java.awt.geom.Path2D;
+import Helpers.Shapes.PolygonApprox;
 
 /**
  * Created by Nik on 11/04/17.
@@ -9,13 +8,13 @@ import java.awt.geom.Path2D;
 public class Building extends Element{
     private String name;
 
-    public Building(Shape shape, String name){
-        super(shape);
+    public Building(PolygonApprox polygon, String name){
+        super(polygon);
         this.name = name;
     }
 
-    public Building(Shape shape){
-        this(shape, "");
+    public Building(PolygonApprox polygon){
+        this(polygon, "");
     }
 
     public String getName() {

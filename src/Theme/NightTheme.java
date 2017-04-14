@@ -56,7 +56,12 @@ public class NightTheme implements Theme {
 
     @Override
     public Color park() {
-        return new Color(0x263c3f);
+        return new Color(0x023F0F);
+    }
+
+    @Override
+    public Color forest(){
+        return new Color(0x023F0F);
     }
 
     @Override

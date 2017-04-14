@@ -1,14 +1,13 @@
-package Helpers;
-
-import Helpers.PolygonApprox;
-
+package Helpers.Shapes;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MultiPolygonApprox extends PolygonApprox {
 	private static final long serialVersionUID = 1L;
@@ -23,21 +22,11 @@ public class MultiPolygonApprox extends PolygonApprox {
 		int coord = 0;
 		int point = 0;
 		for (List<? extends Point2D> l : rel) {
-			/*Point2D start = new Point2D.Double(l.get(0).getX(), l.get(0).getY());
-			Point2D end = new Point2D.Double(l.get(l.size()-1).getX(), l.get(l.size()-1).getY());
-
-			if(coord > 1 && coords[coord - 1] != 0 && coords[coord] != 0){
-				Point2D recent = new Point2D.Double(coords[coord-1], coords[coord]);
-				double distToStart = Math.sqrt((recent.getX()-start.getX())*(recent.getX()-start.getX()) + (recent.getY()-start.getY())*(recent.getY()-start.getY()));
-				double distToEnd = Math.sqrt((recent.getX()-end.getX())*(recent.getX()-end.getX()) + (recent.getY()-end.getY())*(recent.getY()-end.getY()));
-				if(distToEnd < distToStart) Collections.reverse(l);
-			}*/
-
 			pointtypes[point] = (byte) PathIterator.SEG_MOVETO;
 			point += l.size();
-			for (int i = 0; i < l.size(); i++) {
-				coords[coord++] = (float)l.get(i).getX();
-				coords[coord++] = (float)l.get(i).getY();
+			for (Point2D p : l) {
+				coords[coord++] = (float)p.getX();
+				coords[coord++] = (float)p.getY();
 			}
 		}
 		init();

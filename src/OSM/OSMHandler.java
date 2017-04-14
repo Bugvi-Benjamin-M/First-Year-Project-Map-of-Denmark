@@ -3,8 +3,11 @@ package OSM;
 import Enums.BoundType;
 import Enums.OSMEnums.ElementType;
 import Helpers.*;
+import Helpers.Shapes.DynamicMultiPolygonApprox;
+import Helpers.Shapes.DynamicPolygonApprox;
+import Helpers.Shapes.MultiPolygonApprox;
+import Helpers.Shapes.PolygonApprox;
 import KDtree.NodeGenerator;
-import KDtree.Point;
 import KDtree.Pointer;
 import Model.Model;
 import Model.Elements.*;
@@ -12,9 +15,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +52,8 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> suburbNames;
     private ArrayList<Pointer> quarterNames;
     private ArrayList<Pointer> neighbourhoodNames;
-    private boolean specialCase = false;
+    private boolean specialRelationCase = false;
+    private boolean specialWayCase = false;
     private boolean isArea = false;
 
 
@@ -167,7 +173,11 @@ public final class OSMHandler implements ContentHandler {
             case "relation":
                 long relationID = Long.parseLong(atts.getValue("id"));
                 if(relationID == 2365410){ //Dont draw Sydhavnen (Only works wit coastlines)
-                    specialCase = true;
+                    specialRelationCase = true;
+                }
+                // takes care of ways that are in the wrong order.
+                if(!specialWayCase) {
+                    reverseSpecialCaseWays();
                 }
                 relation = new OSMRelation();
                 elementType = ElementType.UNKNOWN;
@@ -253,6 +263,10 @@ public final class OSMHandler implements ContentHandler {
                     case "building":
                         elementType = ElementType.BUILDING;
                         break;
+                    case "leisure":
+                        determineLeisure(v);
+                    case "landuse":
+                        determineLanduse(v);
                     case "area":
                         switch(v){
                             case("yes"):
@@ -263,6 +277,22 @@ public final class OSMHandler implements ContentHandler {
             case "member":
                 ref = Long.parseLong(atts.getValue("ref"));
                 relation.add(idToWay.get(ref));
+                break;
+        }
+    }
+
+    private void determineLanduse(String value){
+        switch(value){
+            case "forest":
+                elementType = ElementType.FOREST;
+                break;
+        }
+    }
+
+    private void determineLeisure(String value){
+        switch(value){
+            case "park":
+                elementType = ElementType.PARK;
                 break;
         }
     }
@@ -439,6 +469,10 @@ public final class OSMHandler implements ContentHandler {
                     case BUILDING:
                         addBuilding(elementType, false);
                         break;
+                    case PARK:
+                    case FOREST:
+                        addBiome(elementType, false);
+                        break;
                     case UNKNOWN:
                         //UnknownWay unknownWay = new UnknownWay(path);
                         //model.addWayElement(elementType, unknownWay);
@@ -448,6 +482,10 @@ public final class OSMHandler implements ContentHandler {
                 switch(elementType){
                     case WATER:
                         addWater(elementType, true);
+                        break;
+                    case PARK:
+                    case FOREST:
+                        addBiome(elementType, true);
                         break;
                 }
                 break;
@@ -531,21 +569,48 @@ public final class OSMHandler implements ContentHandler {
         //System.out.println(name + " Added :)");
     }
 
-    private void addWater(ElementType type, boolean isRelation) {
-        if(specialCase == true){
-            specialCase = false;
+    private void addBiome(ElementType type, boolean isRelation) {
+        if(specialRelationCase == true){
+            specialRelationCase = false;
         }else {
-            PolygonApprox polygonApprox;
-            polygonApprox = new PolygonApprox(way);
             if (!isRelation) {
+                DynamicPolygonApprox polygonApprox;
+                polygonApprox = new DynamicPolygonApprox(way);
+                Biome biome = new Biome(polygonApprox, name);
+                for (int i = 0; i < way.size(); i += 5) {
+                    Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), biome);
+                    model.getElements().get(type).putPointer(p);
+                }
+            } else {
+                DynamicMultiPolygonApprox multiPolygonApprox;
+                multiPolygonApprox = new DynamicMultiPolygonApprox(relation);
+                Biome biome = new Biome(multiPolygonApprox, name);
+                for (int i = 0; i < relation.size() - 1; i++) {
+                    if (relation.get(i) != null) {
+                        for (int j = 0; j < relation.get(i).size(); j += 5) {
+                            Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), biome);
+                            model.getElements().get(type).putPointer(p);
+                        }
+                    } else continue;
+                }
+            }
+        }
+    }
+
+    private void addWater(ElementType type, boolean isRelation) {
+        if(specialRelationCase == true){
+            specialRelationCase = false;
+        }else {
+            if (!isRelation) {
+                DynamicPolygonApprox polygonApprox;
+                polygonApprox = new DynamicPolygonApprox(way);
                 Water water = new Water(polygonApprox, name);
                 for (int i = 0; i < way.size(); i += 5) {
                     Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), water);
                     model.getElements().get(type).putPointer(p);
                 }
-            } else {
-                MultiPolygonApprox multiPolygonApprox;
-                multiPolygonApprox = new MultiPolygonApprox(relation);
+            } else {DynamicMultiPolygonApprox multiPolygonApprox;
+                multiPolygonApprox = new DynamicMultiPolygonApprox(relation);
                 Water water = new Water(multiPolygonApprox, name);
                 for (int i = 0; i < relation.size() - 1; i++) {
                     if (relation.get(i) != null) {
@@ -557,6 +622,32 @@ public final class OSMHandler implements ContentHandler {
                 }
             }
         }
+    }
+
+    public void reverseSpecialCaseWays(){
+        //Skoven ved himmelbjerget
+        OSMWay specialWay = idToWay.get(480309120L);
+        Collections.reverse(specialWay);
+        idToWay.remove(480309120L);
+        idToWay.put(480309120L, specialWay);
+
+        OSMWay specialWay1 = idToWay.get(478349664L);
+        Collections.reverse(specialWay1);
+        idToWay.remove(478349664L);
+        idToWay.put(478349664L, specialWay1);
+        //
+
+        OSMWay specialWay2 = idToWay.get(176968799L);
+        Collections.reverse(specialWay2);
+        idToWay.remove(176968799L);
+        idToWay.put(176968799L, specialWay2);
+
+        OSMWay specialWay3 = idToWay.get(176968802L);
+        Collections.reverse(specialWay3);
+        idToWay.remove(176968802L);
+        idToWay.put(176968802L, specialWay3);
+
+        specialWayCase = true;
     }
 
 

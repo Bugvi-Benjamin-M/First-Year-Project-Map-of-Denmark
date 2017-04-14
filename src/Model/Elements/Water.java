@@ -1,6 +1,7 @@
 package Model.Elements;
 
-import java.awt.*;
+import Helpers.Shapes.PolygonApprox;
+
 import java.awt.geom.Path2D;
 
 /**
@@ -9,12 +10,16 @@ import java.awt.geom.Path2D;
 public class Water extends Element{
     private String name;
 
-    public Water(Shape shape, String name){
-        super(shape);
+    public Water(PolygonApprox polygon, String name) {
+        super(polygon);
         this.name = name;
     }
-    public Water(Path2D shape){
-        this(shape, "");
+    public Water(PolygonApprox polygon){
+        this(polygon, "");
+    }
+
+    public PolygonApprox getShape(){
+        return (PolygonApprox) super.getShape();
     }
 
     public String getName() {

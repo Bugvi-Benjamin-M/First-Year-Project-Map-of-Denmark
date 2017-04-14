@@ -20,6 +20,7 @@ public interface Theme {
 
     public abstract Color water();
     public abstract Color park();
+    public abstract Color forest();
     public abstract Color sand();
     public abstract Color building();
 

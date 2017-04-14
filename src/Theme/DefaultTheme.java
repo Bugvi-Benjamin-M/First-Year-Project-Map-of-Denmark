@@ -60,6 +60,11 @@ public class DefaultTheme implements Theme {
     }
 
     @Override
+    public Color forest(){
+        return new Color(0x9DCA8A);
+    }
+
+    @Override
     public Color sand(){
         return new Color(0xfcf99a);
     }
@@ -100,16 +105,16 @@ public class DefaultTheme implements Theme {
         return new Color(0xFFFFFF);
     }
     public Color escape(){
-        return new Color(0x9F99F1);
+        return new Color(0xFFFFFF);
     }
     public Color raceway(){
-        return new Color(0x9F99F1);
+        return new Color(0xFFFFFF);
     }
     public Color pedestrianStreet(){
         return new Color(0xD5D4E3);
     }
     public Color track(){
-        return new Color(0xF17205);
+        return new Color(0xFFFFFF);
     }
     public Color steps(){
         return new Color(0x000000);

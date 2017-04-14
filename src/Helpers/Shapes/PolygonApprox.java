@@ -1,5 +1,4 @@
-package Helpers;
-
+package Helpers.Shapes;
 import java.awt.Shape;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
