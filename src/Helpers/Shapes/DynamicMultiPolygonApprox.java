@@ -43,24 +43,30 @@ public class DynamicMultiPolygonApprox extends  MultiPolygonApprox{
         public void next() {
             float fx = coords[index];
             float fy = coords[index + 1];
-
-            if (ZoomLevel.getZoomLevel().getNodesAtLevel() % 2 == 1) {
-                if (waySegments[currentWay] > index + ZoomLevel.getZoomLevel().getNodesAtLevel() + 1) {
-                    index += ZoomLevel.getZoomLevel().getNodesAtLevel() + 1;
+            if(ZoomLevel.getZoomLevel().getNodesAtLevel() > 3) {
+                if (ZoomLevel.getZoomLevel().getNodesAtLevel() % 2 == 1) {
+                    if (waySegments[currentWay] > index + ZoomLevel.getZoomLevel().getNodesAtLevel() + 1) {
+                        index += ZoomLevel.getZoomLevel().getNodesAtLevel() + 1;
+                    } else {
+                        index += 2;
+                        if (waySegments[currentWay] < index) {
+                            if (waySegments.length > currentWay + 1) currentWay++;
+                        }
+                    }
                 } else {
-                    index += 2;
-                    if (waySegments[currentWay] < index) {
-                        if (waySegments.length > currentWay + 1) currentWay++;
+                    if (waySegments[currentWay] > ZoomLevel.getZoomLevel().getNodesAtLevel()) {
+                        index += ZoomLevel.getZoomLevel().getNodesAtLevel();
+                    } else {
+                        index += 2;
+                        if (waySegments[currentWay] < index) {
+                            if (waySegments.length > currentWay + 1) currentWay++;
+                        }
                     }
                 }
-            } else {
-                if (waySegments[currentWay] > ZoomLevel.getZoomLevel().getNodesAtLevel()) {
-                    index += ZoomLevel.getZoomLevel().getNodesAtLevel();
-                } else {
-                    index += 2;
-                    if (waySegments[currentWay] < index) {
-                        if (waySegments.length > currentWay + 1) currentWay++;
-                    }
+            }else{
+                index += 2;
+                if (waySegments[currentWay] < index) {
+                    if (waySegments.length > currentWay + 1) currentWay++;
                 }
             }
 
