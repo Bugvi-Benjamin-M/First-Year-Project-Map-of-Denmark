@@ -7,6 +7,7 @@ import Controller.SettingsWindowController;
 import Controller.ToolbarControllers.ToolbarController;
 import Exceptions.FileWasNotFoundException;
 import Helpers.FileHandler;
+import Helpers.ScreenScaler;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Model;
@@ -55,6 +56,7 @@ public class Main {
             model.modelHasChanged();
             MainWindowController.getInstance().showWindow();
             MainWindowController.getInstance().transferFocusToMapCanvas();
+            ScreenScaler.print();
         });
 
             LOAD_TIME = System.nanoTime() - startTime;

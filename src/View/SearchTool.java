@@ -55,21 +55,14 @@ public class SearchTool extends ToolComponent {
     public void applyTheme() {
         setBackground(ThemeHelper.color("toolbar"));
         field.getEditor().getEditorComponent().setBackground(ThemeHelper.color("searchfield"));
-        field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
     }
 
-    public void setDefaultText(String text) {
-        field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("defaulttext"));
-        field.getEditor().setItem(text);
-    }
 
     public JComboBox<String> getField() {
         return field;
     }
 
-
     public void setText(String text) {
-        field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
         field.getEditor().setItem(text);
     }
 

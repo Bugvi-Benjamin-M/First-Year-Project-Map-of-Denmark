@@ -3,9 +3,9 @@ package Controller.ToolbarControllers;
 import Controller.Controller;
 import Enums.ToolType;
 import Helpers.ThemeHelper;
+import Theme.Theme;
 import View.PopupWindow;
 import View.SearchTool;
-import View.Toolbar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +23,6 @@ public final class SearchToolController extends Controller {
 
     private static SearchToolController instance;
     private SearchTool searchTool;
-    private String currentText;
     private boolean allowSearch;
 
     private SearchToolController() {
@@ -48,48 +47,29 @@ public final class SearchToolController extends Controller {
         instance = null;
     }
 
-    protected void saveCurrentText() {
-        currentText = searchTool.getText();
-    }
-
-    protected void setToCurrentText() {
-        if(currentText.equals(defaultText) || currentText.equals("")) setToDefaultText();
-        else searchTool.setText(currentText);
-    }
-
-    protected void searchToolReplacedEvent() {
-        searchTool = (SearchTool) ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBAR);
-        addFocusListenerToSearchTool();
-        setToCurrentText();
-        specifyKeyBindings();
-    }
 
     protected void themeHasChanged() {
-        currentText = searchTool.getText();
-        setToCurrentText();
+        setToDefaultText();
     }
 
     protected void searchToolResizeEvent() {
-        //searchTool = (SearchTool) ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBAR);
-        //addFocusListenerToSearchTool();
-        //if(currentText.equals("")) currentText = defaultText;
-        //setToCurrentText();
+
         setToDefaultText();
         searchTool.adaptSizeToLargeToolbar();
         ToolbarController.getInstance().transferFocusToCanvas();
-        //specifyKeyBindings();
     }
 
     protected void searchToolFixedSizeEvent() {
-        //setToCurrentText();
         setToDefaultText();
         searchTool.adaptSizeToSmallToolbar();
         ToolbarController.getInstance().transferFocusToCanvas();
     }
 
     protected void setToDefaultText() {
-        if(searchTool.getText().equals(""))
-        searchTool.setDefaultText(defaultText);
+        if (searchTool.getText().equals("") || searchTool.getText().equals(defaultText)) {
+            searchTool.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("defaulttext"));
+            searchTool.setText(defaultText);
+        }
     }
 
     private void addFocusListenerToSearchTool() {
@@ -156,19 +136,20 @@ public final class SearchToolController extends Controller {
         @Override
         public void focusGained(FocusEvent e) {
             super.focusGained(e);
-            if (!((editor.getItem().equals(defaultText)))) return;
-            else {
+            if(editor.getItem().equals(defaultText)) {
                 searchTool.setText("");
-                editorComponent.setForeground(ThemeHelper.color("icon"));
-                allowSearch = true;
+            } else {
+                editor.selectAll();
             }
+            editorComponent.setForeground(ThemeHelper.color("icon"));
+            allowSearch = true;
         }
 
         @Override
         public void focusLost(FocusEvent e) {
             super.focusLost(e);
-            if (editor.getItem().equals("")) setToDefaultText();
-                allowSearch = false;
+            setToDefaultText();
+            allowSearch = false;
         }
     }
 
