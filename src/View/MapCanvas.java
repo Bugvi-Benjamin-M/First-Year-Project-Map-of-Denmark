@@ -691,6 +691,7 @@ public class MapCanvas extends View {
             g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
             PolygonApprox polygon = (PolygonApprox) road.getShape();
 
+            //The polygon coords
             float[] coords = polygon.getCoords();
 
             float longestVectorX1 = coords[0];
@@ -698,6 +699,7 @@ public class MapCanvas extends View {
             float longestVectorX2 = coords[2];
             float longestVectorY2 = coords[3];
 
+            //Coords to help finding the longest vector
             float x1;
             float y1;
             float x2;
@@ -721,17 +723,40 @@ public class MapCanvas extends View {
             //Find the angle of the longest vector in the path
             double angle = vectorAngle(longestVectorX1, longestVectorY1, longestVectorX2, longestVectorY2);
 
+            //The center of the longest vector
+            float centerX = (longestVectorX2 + longestVectorX1) / 2;
+            float centerY = (longestVectorY2 + longestVectorY1) / 2;
+
+            //The length of the string (name)
+            float stringLength = 0;
+            for(int i = 0 ; i < road.getName().length() ; i++){
+                char ch = road.getName().charAt(i);
+                stringLength += getFontMetrics(font).charWidth(ch)*scaleFactor;
+            }
+
+            //Using trigonometry to find the appropiate start for the string
+            float hyp = stringLength / 2;
+            float hos = (float) Math.cos(angle) * hyp;
+            float mod = (float) Math.sin(angle) * hyp;
+
+            float drawFromX = centerX - hos;
+            float drawFromY = centerY - mod;
+
+            hyp = (float) 0.0001 / 4; //I though it would be better to divide by 2 and not 4, but it turned out 4 is better. Also though it would matter more to adjust for various stroke sizes.
+            hos = (float) Math.cos(90-angle) * hyp;
+            mod = (float) Math.sin(90-angle) * hyp;
+
+            drawFromX = drawFromX - hos;
+            drawFromY = drawFromY + mod;
+
+
             AffineTransform old = g.getTransform();
-            g.rotate(angle, longestVectorX1, longestVectorY1);
-            //g.setColor(Color.BLACK);
-            //g.drawString("Hello", 6, -55);
-            drawString(road.getName(), g, longestVectorX1, longestVectorY1, font, scaleFactor, false);
+            g.rotate(angle, drawFromX, drawFromY);
+            drawString(road.getName(), g, drawFromX, drawFromY, font, scaleFactor, false);
             g.setTransform(old);
         }
     }
     private double vectorLength(float x, float y){
-        double newX = (double) x;
-        double newY = (double) y;
         return Math.sqrt( x * x + y * y);
     }
     private double dotProduct(float x1, float y1, float x2, float y2){
@@ -747,6 +772,12 @@ public class MapCanvas extends View {
         double vector1Length = vectorLength((x2-x1),(y2-y1));
         double vector2Length = vectorLength(1, 0f);
         cosAngle = dotProduct / (vector1Length * vector2Length);
+
+        if((y2-y1) < 0 && (x2-x1) > 0) return -Math.acos(cosAngle);
+        if((y2-y1) < 0 && (x2-x1) < 0) return Math.acos(-cosAngle);
+        if((y2-y1) > 0 && (x2-x1) > 0) return Math.acos(cosAngle);
+        if((y2-y1) > 0 && (x2-x1) < 0) return -Math.acos(-cosAngle);
+        if ((x2-x1) < 0) return Math.acos(-cosAngle);
         return Math.acos(cosAngle);
     }
 
