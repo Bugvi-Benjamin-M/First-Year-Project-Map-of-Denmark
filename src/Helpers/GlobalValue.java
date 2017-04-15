@@ -14,10 +14,6 @@ public class GlobalValue {
     private static ZoomLevel zoomLevel = LEVEL_3;
 
 
-    public static int getSearchFieldStartX() {
-        return (int) (MainWindowController.getInstance().getWindow().getFrame().getWidth() / 2.909);
-    }
-
     public static ZoomLevel getZoomLevel() {
         return zoomLevel;
     }
