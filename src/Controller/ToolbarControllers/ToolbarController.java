@@ -9,6 +9,7 @@ import Enums.ToolbarType;
 import Helpers.FileHandler;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
+import Helpers.ScreenScaler;
 import View.*;
 
 import javax.swing.*;
@@ -27,7 +28,7 @@ import static javax.swing.SpringLayout.*;
  */
 public final class ToolbarController extends Controller {
 
-    private static final int SMALL_LARGE_EVENT_WIDTH = 700;
+    private static final int SMALL_LARGE_EVENT_WIDTH = 800 * ScreenScaler.getWidthScaleFactor();
 
     private Toolbar toolbar;
     private SpringLayout toolbarLayout;
@@ -35,11 +36,11 @@ public final class ToolbarController extends Controller {
 
     private ToolbarType type;
 
-    private final int MARGIN_SMALL_LEFT = 20;
-    private final int MARGIN_SMALL_RIGHT = -40;
-    private final int MARGIN_SMALLEST_LEFT = 10;
-    private final int MARGIN_SMALLEST_RIGHT = -10;
-    private final int MARGIN_TOP = 20;
+    private final int MARGIN_SMALL_LEFT = 20 * ScreenScaler.getWidthScaleFactor();
+    private final int MARGIN_SMALL_RIGHT = -20 * ScreenScaler.getWidthScaleFactor();
+    private final int MARGIN_SMALLEST_LEFT = 10 * ScreenScaler.getWidthScaleFactor();
+    private final int MARGIN_SMALLEST_RIGHT = -10 * ScreenScaler.getWidthScaleFactor();
+    private final int MARGIN_TOP = 20 * ScreenScaler.getHeightScaleFactor();
 
     private ToolbarController() {
         super();
@@ -57,7 +58,7 @@ public final class ToolbarController extends Controller {
     public void setupToolbar(ToolbarType type) {
         toolbar = new Toolbar();
         toolbarLayout = toolbar.getLayout();
-        toolbar.setPreferredSize(new Dimension(window.getFrame().getWidth(), GlobalValue.getToolbarWidth()));
+        toolbar.setPreferredSize(new Dimension(window.getFrame().getWidth(), ScreenScaler.getToolbarWidth()));
         this.type = type;
         switch (type) {
             case LARGE:

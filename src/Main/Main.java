@@ -56,7 +56,6 @@ public class Main {
             model.modelHasChanged();
             MainWindowController.getInstance().showWindow();
             MainWindowController.getInstance().transferFocusToMapCanvas();
-            ScreenScaler.print();
         });
 
             LOAD_TIME = System.nanoTime() - startTime;

@@ -1,6 +1,7 @@
 package View;
 
 import Helpers.GlobalValue;
+import Helpers.ScreenScaler;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
@@ -19,11 +20,10 @@ public class SearchTool extends ToolComponent {
 
     private JComboBox<String> field;
     private Dimension searchFieldDimension;
-    private final int SEARCHBAR_HEIGHT = 40;
+    private final int SEARCHBAR_HEIGHT = 40 * ScreenScaler.getHeightScaleFactor();
 
-    public SearchTool(int width) {
+    public SearchTool() {
         field = new JComboBox<>();
-        //searchFieldDimension = new Dimension(width, SEARCHBAR_HEIGHT);
         setupLayout();
         adaptSizeToLargeToolbar();
         applyTheme();
@@ -31,23 +31,21 @@ public class SearchTool extends ToolComponent {
     }
 
     public void adaptSizeToLargeToolbar() {
-        searchFieldDimension = new Dimension(GlobalValue.getSearchFieldLargeSize(), SEARCHBAR_HEIGHT);
+        searchFieldDimension = new Dimension(ScreenScaler.getSearchFieldLargeSize(), SEARCHBAR_HEIGHT);
         field.setPreferredSize(searchFieldDimension);
-        field.setBounds(GlobalValue.getSearchFieldStartX(), 30, GlobalValue.getSearchFieldStartX() + GlobalValue.getSearchFieldLargeSize(), 70);
+        field.setBounds(GlobalValue.getSearchFieldStartX(), 30, GlobalValue.getSearchFieldStartX() + ScreenScaler.getSearchFieldLargeSize(), 70);
     }
 
     public void adaptSizeToSmallToolbar() {
-        searchFieldDimension = new Dimension(GlobalValue.getSearchFieldSmallSize(), SEARCHBAR_HEIGHT);
+        searchFieldDimension = new Dimension(ScreenScaler.getSearchFieldSmallSize(), SEARCHBAR_HEIGHT);
         field.setPreferredSize(searchFieldDimension);
-        //field.setBounds(GlobalValue.getSearchFieldStartX(), 30, GlobalValue.getSearchFieldStartX() + GlobalValue.getSearchFieldSmallSize(), 70);
     }
 
     @Override
     public void setupLayout() {
         field.setUI(NoArrowUI.createUI(field));
-        //field.setPreferredSize(searchFieldDimension);
         field.setEditable(true);
-        field.setFont(new Font(field.getFont().getName(), field.getFont().getStyle(), 20));
+        field.setFont(new Font(field.getFont().getName(), field.getFont().getStyle(), 20 * ScreenScaler.getWidthScaleFactor()));
         field.setRequestFocusEnabled(true);
     }
 
