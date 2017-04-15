@@ -742,18 +742,20 @@ public class MapCanvas extends View {
             float drawFromX = centerX - hos;
             float drawFromY = centerY - mod;
 
-            hyp = (float) 0.0001 / 4; //I though it would be better to divide by 2 and not 4, but it turned out 4 is better. Also though it would matter more to adjust for various stroke sizes.
+            hyp = (float) 0.0001 / 4; //TODO I though it would be better to divide by 2 and not 4, but it turned out 4 is better. Also though it would matter more to adjust for various stroke sizes.
             hos = (float) Math.cos(90-angle) * hyp;
             mod = (float) Math.sin(90-angle) * hyp;
 
             drawFromX = drawFromX - hos;
             drawFromY = drawFromY + mod;
 
+            if(vectorLength(longestVectorX2-longestVectorX1, longestVectorY2-longestVectorY1) > stringLength){
+                AffineTransform old = g.getTransform();
+                g.rotate(angle, drawFromX, drawFromY);
+                drawString(road.getName(), g, drawFromX, drawFromY, font, scaleFactor, false);
+                g.setTransform(old);
+            }
 
-            AffineTransform old = g.getTransform();
-            g.rotate(angle, drawFromX, drawFromY);
-            drawString(road.getName(), g, drawFromX, drawFromY, font, scaleFactor, false);
-            g.setTransform(old);
         }
     }
     private double vectorLength(float x, float y){
