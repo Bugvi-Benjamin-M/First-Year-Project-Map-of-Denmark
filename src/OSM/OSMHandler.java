@@ -265,13 +265,17 @@ public final class OSMHandler implements ContentHandler {
                         break;
                     case "leisure":
                         determineLeisure(v);
+                        break;
                     case "landuse":
                         determineLanduse(v);
+                        break;
                     case "area":
                         switch(v){
                             case("yes"):
                                 isArea = true;
+                                break;
                         }
+                        break;
                 }
                 break;
             case "member":

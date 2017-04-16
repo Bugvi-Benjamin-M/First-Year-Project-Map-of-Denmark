@@ -11,6 +11,10 @@
  <node id="1196047776" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7296222" lon="11.4755057"/>
  <node id="1196047777" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7296222" lon="11.4695057"/>
  <node id="1196047778" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7316222" lon="11.4695057"/>
+ <node id="1196047779" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7294022" lon="11.4725057"/>
+ <node id="1196047780" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7294022" lon="11.4735057"/>
+ <node id="1196047781" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7294022" lon="11.4746057"/>
+ <node id="1196047782" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7294022" lon="11.4756057"/>
 
  <way id="102227563" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
   <nd ref="1196047770"/>
@@ -59,5 +63,13 @@
   <nd ref="1196047778"/>
   <tag k="highway" v="tertiary"/>
   <tag k="name" v="North West"/>
+ </way>
+ <way id="102227571" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1196047779"/>
+  <nd ref="1196047780"/>
+  <nd ref="1196047781"/>
+  <nd ref="1196047782"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="name" v="Some Road"/>
  </way>
 </osm>
