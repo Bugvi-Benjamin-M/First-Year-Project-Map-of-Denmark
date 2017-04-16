@@ -189,7 +189,17 @@ public class MapCanvas extends View {
 
                 drawBuilding(g, ThemeHelper.color("building"));
 
-                drawRoadNames(g);
+                drawRoadNames(g, ElementType.PEDESTRIAN_STREET);
+                drawRoadNames(g, ElementType.SERVICE_ROAD);
+                drawRoadNames(g, ElementType.LIVING_STREET);
+                drawRoadNames(g, ElementType.RESIDENTIAL_ROAD);
+                drawRoadNames(g, ElementType.UNCLASSIFIED_ROAD);
+                drawRoadNames(g, ElementType.TERTIARY_ROAD);
+                drawRoadNames(g, ElementType.SECONDARY_ROAD);
+                drawRoadNames(g, ElementType.PRIMARY_ROAD);
+                drawRoadNames(g, ElementType.TRUNK_ROAD);
+                drawRoadNames(g, ElementType.MOTORWAY);
+
                 break;
             case LEVEL_1:
                 drawWater(g, ThemeHelper.color("water"), 0.00005);
@@ -198,6 +208,7 @@ public class MapCanvas extends View {
                 drawRaceways(g, ThemeHelper.color("raceway"), 0.00007f);
                 drawEscapes(g, ThemeHelper.color("escape"), 0.00002f);
                 drawBusGuideways(g, ThemeHelper.color("busGuideway"), 0.00006f);
+
                 drawPedestrianStreets(g, ThemeHelper.color("pedestrianStreet"), 0.00006f);
                 drawServiceRoads(g, ThemeHelper.color("serviceRoad"), 0.00006f);
                 drawLivingStreets(g, ThemeHelper.color("livingStreet"), 0.00007f);
@@ -215,12 +226,22 @@ public class MapCanvas extends View {
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
 
                 drawBuilding(g, ThemeHelper.color("building"));
+
                 drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
                 drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
                 drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
                 drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
 
-                drawRoadNames(g);
+                drawRoadNames(g, ElementType.PEDESTRIAN_STREET);
+                drawRoadNames(g, ElementType.SERVICE_ROAD);
+                drawRoadNames(g, ElementType.LIVING_STREET);
+                drawRoadNames(g, ElementType.RESIDENTIAL_ROAD);
+                drawRoadNames(g, ElementType.UNCLASSIFIED_ROAD);
+                drawRoadNames(g, ElementType.TERTIARY_ROAD);
+                drawRoadNames(g, ElementType.SECONDARY_ROAD);
+                drawRoadNames(g, ElementType.PRIMARY_ROAD);
+                drawRoadNames(g, ElementType.TRUNK_ROAD);
+                drawRoadNames(g, ElementType.MOTORWAY);
                 break;
             case LEVEL_2:
                 drawWater(g, ThemeHelper.color("water"), 0.0002);
@@ -669,8 +690,8 @@ public class MapCanvas extends View {
     }
 
     //Draw road names
-    private void drawRoadNames(Graphics2D g){
-        setCurrentSection(ElementType.TERTIARY_ROAD);  //TODO Se drawCityNames for a more generic version
+    private void drawRoadNames(Graphics2D g, ElementType type){
+        setCurrentSection(type);  //TODO Se drawCityNames for a more generic version
 
         //Scalefactor
         float scaleFactor =  0.1f * 397.522f * (float) (Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
@@ -679,11 +700,11 @@ public class MapCanvas extends View {
         Font font = new Font("Arial", Font.BOLD, 12);
 
         //Transparency
-        Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f);
+        Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f); //TODO want transparency for road names ?
         g.setComposite(c);
 
         //Color
-        g.setColor(ThemeHelper.color("cityName"));
+        g.setColor(ThemeHelper.color("cityName"));  //TODO should the color be this one or a specific one for roads ?
 
         for (Element element : currentSection) {
             Road road = (Road) element;
@@ -749,6 +770,7 @@ public class MapCanvas extends View {
             drawFromX = drawFromX - hos;
             drawFromY = drawFromY + mod;
 
+            //TODO cosider to move the if-statement further up, such that all the calculations dont have to be done if the name is too long.
             if(vectorLength(longestVectorX2-longestVectorX1, longestVectorY2-longestVectorY1) > stringLength){
                 AffineTransform old = g.getTransform();
                 g.rotate(angle, drawFromX, drawFromY);
