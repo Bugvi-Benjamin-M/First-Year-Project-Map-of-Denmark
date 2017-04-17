@@ -46,10 +46,6 @@ public class ScreenScaler {
     }
 
     public static int getSearchFieldSmallSize() {
-        return (int) ((MainWindowController.getInstance().getWindow().getFrame().getWidth() / 2.7) * widthScaleFactor);
-    }
-
-    public static int getSearchFieldStartX() {
-        return (int) (MainWindowController.getInstance().getWindow().getFrame().getWidth() / 2.909);
+        return (int) ((MainWindowController.getInstance().getWindow().getFrame().getWidth() / 2.3) * widthScaleFactor);
     }
 }

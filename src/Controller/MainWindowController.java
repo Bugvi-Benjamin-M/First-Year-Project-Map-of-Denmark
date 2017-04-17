@@ -39,14 +39,14 @@ public final class MainWindowController extends WindowController {
     public void setupMainWindow() {
        window = new Window().title(MAIN_TITLE)
                 .closeOperation(WindowConstants.EXIT_ON_CLOSE)
-                .dimension(new Dimension(1200 * ScreenScaler.getWidthScaleFactor(), 1000 * ScreenScaler.getHeightScaleFactor()))
+                .dimension(new Dimension(1200, 1000))
                 .extendedState(JFrame.MAXIMIZED_BOTH)
                 .relativeTo(null)
                 .layout(new BorderLayout())
                 .icon()
                 .hide();
        //Todo figure this out with minimum size
-       window.setMinimumWindowSize(new Dimension(750 * ScreenScaler.getWidthScaleFactor(), 500 * ScreenScaler.getHeightScaleFactor()));
+       window.setMinimumWindowSize(new Dimension(650, 500));
         setupToolbar();
         setupCanvas();
         setupInfobar();

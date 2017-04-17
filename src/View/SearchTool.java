@@ -33,7 +33,7 @@ public class SearchTool extends ToolComponent {
     public void adaptSizeToLargeToolbar() {
         searchFieldDimension = new Dimension(ScreenScaler.getSearchFieldLargeSize(), SEARCHBAR_HEIGHT);
         field.setPreferredSize(searchFieldDimension);
-        field.setBounds(ScreenScaler.getSearchFieldStartX(), 30, ScreenScaler.getSearchFieldStartX() + ScreenScaler.getSearchFieldLargeSize(), 70);
+        field.setBounds(GlobalValue.getSearchFieldStartX(), 30, GlobalValue.getSearchFieldStartX() + ScreenScaler.getSearchFieldLargeSize(), 70);
     }
 
     public void adaptSizeToSmallToolbar() {
