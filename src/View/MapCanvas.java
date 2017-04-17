@@ -94,7 +94,8 @@ public class MapCanvas extends View {
         g2D.setTransform(transform);
         if(antiAliasing) g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         else g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-        setBackgroundColor();
+        // setBackgroundColor();
+        drawBackground(g2D);
 
         setCurrentRectangle();
 
@@ -109,7 +110,7 @@ public class MapCanvas extends View {
         g2D.setStroke(new BasicStroke(0.00001f));
         g2D.draw(currentRectangle);
 
-        //drawBoundaries(g2D);
+        drawBoundaries(g2D);
 
         Main.FPS_COUNTER.interrupt();
         DebugWindow.getInstance();
@@ -122,6 +123,18 @@ public class MapCanvas extends View {
         g.drawString("Hello", 6, -55);
         g2D.setTransform(old);
         */
+    }
+
+    private void drawBackground(Graphics2D g) {
+        g.setColor(ThemeHelper.color("water"));
+        Path2D boundary = new Path2D.Float();
+        Model model = Model.getInstance();
+        boundary.moveTo(model.getMinLongitude(false), model.getMinLatitude(false));
+        boundary.lineTo(model.getMaxLongitude(false), model.getMinLatitude(false));
+        boundary.lineTo(model.getMaxLongitude(false), model.getMaxLatitude(false));
+        boundary.lineTo(model.getMinLongitude(false), model.getMaxLatitude(false));
+        boundary.lineTo(model.getMinLongitude(false), model.getMinLatitude(false));
+        g.fill(boundary);
     }
 
     private void drawCoastlines(Graphics2D g) {
@@ -358,19 +371,18 @@ public class MapCanvas extends View {
                 (float) currentRectangle.getMaxX(),
                 (float) currentRectangle.getMaxY());
     }
-    /*
+
     private void drawBoundaries(Graphics2D g2D) {
         g2D.setColor(ThemeHelper.color("boundary"));
         Path2D boundary = new Path2D.Float();
         Model model = Model.getInstance();
-        boundary.moveTo(model.getMinLongitude(), model.getMinLatitude());
-        boundary.lineTo(model.getMaxLongitude(), model.getMinLatitude());
-        boundary.lineTo(model.getMaxLongitude(), model.getMaxLatitude());
-        boundary.lineTo(model.getMinLongitude(), model.getMaxLatitude());
-        boundary.lineTo(model.getMinLongitude(), model.getMinLatitude());
+        boundary.moveTo(model.getMinLongitude(true), model.getMinLatitude(true));
+        boundary.lineTo(model.getMaxLongitude(true), model.getMinLatitude(true));
+        boundary.lineTo(model.getMaxLongitude(true), model.getMaxLatitude(true));
+        boundary.lineTo(model.getMinLongitude(true), model.getMaxLatitude(true));
+        boundary.lineTo(model.getMinLongitude(true), model.getMinLatitude(true));
         g2D.draw(boundary);
     }
-    */
 
     /**
      * Zooms in or out upon the elements on the MapCanvas depending on a given factor.

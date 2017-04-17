@@ -75,9 +75,9 @@ public enum ZoomLevel {
     public double getEpsilonValueBasedOnZoomLevel() {
         switch (this) {
             case LEVEL_0:
-                return 0.8;
+                return 0.98;
             case LEVEL_1:
-                return 0.70;
+                return 0.75;
             case LEVEL_2:
                 return 0.50;
             case LEVEL_3:
