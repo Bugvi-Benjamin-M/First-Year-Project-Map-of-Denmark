@@ -29,10 +29,13 @@ public class Coastline extends OSMWay {
         Point2D node = this.getFromNode();
         path.moveTo(node.getX(), node.getY());
 
-        // allGeneratePath(path,0,this.size());
+        if (size() == 683) allGeneratePath(path,0,this.size());
 
+        /*
         int lastI = 0; int increase = ZoomLevel.getNodesAtMaxLevel();
-        for (int i = increase; i < size(); i += increase) {
+        for (int i = 0; i < size() - 1; ) {
+            i += increase;
+            if (i >= size()) i = size()-1;
             node = get(lastI);
             boolean isFromNear = isNodeNearCamera(node);
             path.lineTo(node.getX(),node.getY());
@@ -45,15 +48,14 @@ public class Coastline extends OSMWay {
                 // simpleSimply(path,lastI,i);
             }
             lastI = i;
-        }
+        }*/
 
         // quickGeneratePath(path,lastI,this.size()-1);
 
         // oldQuickSimplify(path);
 
         // Finish path (loop back)
-        // node = this.getFromNode();
-        // path.lineTo(node.getX(), node.getY());
+        path.closePath();
         return path;
     }
 
@@ -168,11 +170,12 @@ public class Coastline extends OSMWay {
         sb.append("\n");
         for (int i = 0; i < size(); i++) {
             Point2D point = get(i);
-            sb.append("(");
-            sb.append(point.getX());
-            sb.append("; ");
+            //sb.append("(");
+            //sb.append(point.getX());
+            //sb.append("; ");
             sb.append(-point.getY());
-            sb.append(")\n");
+            //sb.append(")");
+            sb.append("\n");
         }
         sb.append("\n");
         return sb.toString();

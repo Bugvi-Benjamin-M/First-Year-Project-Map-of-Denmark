@@ -89,6 +89,7 @@ public final class Model extends Observable {
 
     public void setBound(BoundType type, float value) {
         bounds.put(type,value);
+        dynamicBounds.put(type,value);
     }
 
     public void setDynamicBound(BoundType type, float value){
