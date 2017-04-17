@@ -42,8 +42,6 @@ public final class SearchToolController extends Controller {
 
     private String currentQuery;
 
-    private static final int[] prohibitedKeys = {KeyEvent.VK_BACK_SPACE, KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL};
-
     private SearchToolController() {
         super();
     }
@@ -166,6 +164,9 @@ public final class SearchToolController extends Controller {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
+                if(e.getKeyCode() == KeyEvent.VK_SHIFT) {
+                    return;
+                }
                 switch (e.getKeyChar()) {
                     case KeyEvent.VK_ENTER:
                         searchActivatedEvent();
@@ -175,7 +176,6 @@ public final class SearchToolController extends Controller {
                         break;
                     default:
                         //TODO: Fix this.. CTRL/SHIFT/BACKSPACE on empty
-                        //if(!Arrays.asList(prohibitedKeys).contains(e.getKeyCode())){
                         if(e.getKeyChar() != KeyEvent.VK_BACK_SPACE){
                             currentQuery = searchTool.getText();
                             showMatchingResults();
