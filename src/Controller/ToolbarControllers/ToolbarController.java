@@ -333,6 +333,10 @@ public final class ToolbarController extends Controller {
         MainWindowController.getInstance().transferFocusToMapCanvas();
     }
 
+    public void requestCanvasRepaint() {
+        MainWindowController.getInstance().requestCanvasRepaint();
+    }
+
     private class ToolInteractionHandler extends MouseAdapter {
 
         private ToolType type;

@@ -133,6 +133,10 @@ public final class MainWindowController extends WindowController {
         instance = null;
     }
 
+    public void requestCanvasRepaint() {
+        CanvasController.getInstance().getMapCanvas().repaint();
+    }
+
     private class MainWindowInteractionHandler extends MainWindowController.WindowInteractionHandler {
 
         @Override

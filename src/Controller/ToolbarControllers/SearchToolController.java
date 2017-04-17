@@ -195,6 +195,7 @@ public final class SearchToolController extends Controller {
                     }
                 }
                 if(searchTool.getText().isEmpty()){
+                    ToolbarController.getInstance().requestCanvasRepaint();
                     searchTool.getField().hidePopup();
                     showHistory();
                 }
