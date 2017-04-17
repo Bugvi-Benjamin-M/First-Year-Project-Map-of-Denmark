@@ -16,19 +16,25 @@ public abstract class WindowController extends Controller {
 
     protected WindowInteractionHandler handler;
 
-    protected WindowController(Window window) {
-        super(window);
-        addInteractionHandlerToWindow();
-        specifyKeyBindings();
+    protected WindowController() {
+        super();
     }
 
     protected void addInteractionHandlerToWindow() {
         handler = new WindowInteractionHandler();
         window.getFrame().addComponentListener(handler);
+        specifyKeyBindings();
     }
 
     protected abstract void specifyKeyBindings();
 
+    public void showWindow() {
+        window.show();
+    }
+
+    public void hideWindow() {
+        window.hide();
+    }
 
     public Window getWindow() {
         return window;

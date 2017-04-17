@@ -1,7 +1,6 @@
 package View;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 /**
@@ -19,12 +18,13 @@ public abstract class ToolComponent extends JPanel {
 
     ToolComponent() {
         super();
-        defaultColor = Helpers.ThemeHelper.color("toolbar");
+        defaultColor = Helpers.ThemeHelper.color("icon");
     }
 
     abstract void setupLayout();
 
-    Color getDefaultColor() {
+    public Color getDefaultColor() {
         return defaultColor;
     }
+
 }

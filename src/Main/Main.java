@@ -49,22 +49,25 @@ public class Main {
             model.loadFromCoastlines();
             programLoadedDefault = false;
         }
-
-            //MainWindowController has to be called first of all the controllers.
-            MainWindowController.getInstance();
-
-            ToolbarController.getInstance();
-            InfobarController.getInstance();
-            CanvasController.getInstance();
-
-            CanvasController.adjustToBounds();
+            createControllers();
+            MainWindowController.getInstance().setupMainWindow();
+            SettingsWindowController.getInstance().setupSettingsWindow();
             model.modelHasChanged();
-            CanvasController.getInstance().getMapCanvas().grabFocus();
+            MainWindowController.getInstance().showWindow();
+            MainWindowController.getInstance().transferFocusToMapCanvas();
+        });
 
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: "+(LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();
-        });
+    }
+
+    private static void createControllers() {
+        MainWindowController.getInstance();
+        ToolbarController.getInstance();
+        CanvasController.getInstance();
+        InfobarController.getInstance();
+        SettingsWindowController.getInstance();
     }
 
     private static void loadDefaultResource() throws FileWasNotFoundException {
@@ -90,7 +93,6 @@ public class Main {
     private static void splashScreenDestruct() {
       screen.setScreenVisible(false);
       screen = null;
-      MainWindowController.getInstance().getWindow().show();
     }
 
     private static void splashScreenInit() {
@@ -102,13 +104,6 @@ public class Main {
 
     public static void notifyAntiAliasingToggle(boolean status) {
         CanvasController.getInstance().toggleAntiAliasing(status);
-    }
-
-    public static void notifyThemeChange() {
-        CanvasController.getInstance().themeHasChanged();
-        ToolbarController.getInstance().themeHasChanged();
-        InfobarController.getInstance().themeHasChanged();
-        CanvasController.getInstance().getMapCanvas().grabFocus();
     }
 
     public static void notifyKeyToggle(boolean status) {

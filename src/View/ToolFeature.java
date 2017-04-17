@@ -1,6 +1,7 @@
 package View;
 
 import Enums.ToolType;
+import Helpers.ThemeHelper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +27,7 @@ public class ToolFeature extends ToolComponent {
      * @param icon The string to the icon file
      * @param type The type of this tool
      */
-    ToolFeature(String icon, ToolType type) {
+    public ToolFeature(String icon, ToolType type) {
         super();
         this.type = type;
         this.icon = icon;
@@ -38,17 +39,15 @@ public class ToolFeature extends ToolComponent {
      * Sets up the specific layout for any Tool Feature
      */
     @Override
-    void setupLayout() {
+    public void setupLayout() {
         label = new JLabel(type.toString());
-        label.setForeground(Helpers.ThemeHelper.color("icon"));
         label.setOpaque(false);
         label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 14));
 
-
         iconLabel = new JLabel(this.icon);
         iconLabel.setFont(Helpers.FontAwesome.getFontAwesome());
-        iconLabel.setForeground(Helpers.ThemeHelper.color("icon"));
         iconLabel.setOpaque(false);
+
 
         this.setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
         this.setOpaque(false);
@@ -58,5 +57,10 @@ public class ToolFeature extends ToolComponent {
 
     public ToolType getType() {
         return type;
+    }
+
+    public void setTheme() {
+        label.setForeground(ThemeHelper.color("icon"));
+        iconLabel.setForeground(ThemeHelper.color("icon"));
     }
 }

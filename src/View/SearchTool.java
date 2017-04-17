@@ -1,5 +1,6 @@
 package View;
 
+import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
@@ -18,52 +19,50 @@ public class SearchTool extends ToolComponent {
 
     private JComboBox<String> field;
     private Dimension searchFieldDimension;
-    private JLabel searchLabel;
+    private final int SEARCHBAR_HEIGHT = 40;
 
     public SearchTool(int width) {
         field = new JComboBox<>();
-        searchFieldDimension = new Dimension(width, 40);
+        //searchFieldDimension = new Dimension(width, SEARCHBAR_HEIGHT);
         setupLayout();
-        addSearchLabel();
+        adaptSizeToLargeToolbar();
         applyTheme();
         add(field);
+    }
+
+    public void adaptSizeToLargeToolbar() {
+        searchFieldDimension = new Dimension(GlobalValue.getSearchFieldLargeSize(), SEARCHBAR_HEIGHT);
+        field.setPreferredSize(searchFieldDimension);
+        field.setBounds(GlobalValue.getSearchFieldStartX(), 30, GlobalValue.getSearchFieldStartX() + GlobalValue.getSearchFieldLargeSize(), 70);
+    }
+
+    public void adaptSizeToSmallToolbar() {
+        searchFieldDimension = new Dimension(GlobalValue.getSearchFieldSmallSize(), SEARCHBAR_HEIGHT);
+        field.setPreferredSize(searchFieldDimension);
+        //field.setBounds(GlobalValue.getSearchFieldStartX(), 30, GlobalValue.getSearchFieldStartX() + GlobalValue.getSearchFieldSmallSize(), 70);
     }
 
     @Override
     public void setupLayout() {
         field.setUI(NoArrowUI.createUI(field));
-        field.setPreferredSize(searchFieldDimension);
+        //field.setPreferredSize(searchFieldDimension);
         field.setEditable(true);
         field.setFont(new Font(field.getFont().getName(), field.getFont().getStyle(), 20));
         field.setRequestFocusEnabled(true);
     }
 
 
-    private void addSearchLabel() {
-        searchLabel = new JLabel("Search:");
-        searchLabel.setFont(new Font(getFont().getName(), getFont().getStyle(), 20));
-        add(searchLabel);
-    }
-
-    private void applyTheme() {
+    public void applyTheme() {
         setBackground(ThemeHelper.color("toolbar"));
-        searchLabel.setForeground(ThemeHelper.color("icon"));
         field.getEditor().getEditorComponent().setBackground(ThemeHelper.color("searchfield"));
-        field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
     }
 
-    public void setDefaultText(String text) {
-        field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("defaulttext"));
-        field.getEditor().setItem(text);
-    }
 
     public JComboBox<String> getField() {
         return field;
     }
 
-
     public void setText(String text) {
-        field.getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
         field.getEditor().setItem(text);
     }
 

@@ -20,7 +20,9 @@ public interface Theme {
 
     public abstract Color water();
     public abstract Color park();
+    public abstract Color forest();
     public abstract Color sand();
+    public abstract Color building();
 
     //Roads
     public abstract Color motorway();
@@ -43,6 +45,13 @@ public interface Theme {
     public abstract Color cycleway();
     public abstract Color path();
     public abstract Color road();
+    public abstract Color roadBorder();
+
+    public abstract Color rail();
+
+
+    public abstract Color cityName();
+    public abstract Color roadName();
 
 
     public abstract String getName();

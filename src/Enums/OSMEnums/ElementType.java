@@ -13,6 +13,9 @@ public enum ElementType {
 
     WATER, //Søer og lign.
 
+    PARK,
+    FOREST,
+
     //PLACES - NAMES
     CITY_NAME, //navne på byer over 100k
     TOWN_NAME, //navne på byer 10k-100k
@@ -40,12 +43,14 @@ public enum ElementType {
     BUS_GUIDEWAY,
     ESCAPE, //sikkerhedsveje ?
     RACEWAY,
-    PEDESTRIAN_STERET, //Gågader
+    PEDESTRIAN_STREET, //Gågader
     TRACK, //Markvej
     STEPS,
     FOOTWAY,
     BRIDLEWAY, //Ridesti
     CYCLEWAY,
     PATH, //Temporary setting
-    ROAD //Temporary setting
+    ROAD, //Temporary setting
+
+    RAIL
 }

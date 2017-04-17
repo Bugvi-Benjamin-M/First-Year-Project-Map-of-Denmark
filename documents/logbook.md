@@ -374,4 +374,20 @@ Impediments:
 Next Time: 
 - Tuesday the 11th of April 
 
+## Logbook 11/4 (Scribe Blanke)
+What we did since last time:
+- Had a meeting with Kevin the TA
+- Default loadup
+- City names has been implemented (does not work on Mac)
+- Introduced more zoom levels
+
+What we will do until next time:
+- Have vacation
+
+Impediments:
+- Niclas is at work
+
+Next Time:
+- Wednesday the 19th of April
+
 ## Next logbook...

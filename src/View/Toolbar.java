@@ -5,10 +5,8 @@ import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-import Controller.MainWindowController;
 
 /**
  * Class details:
@@ -30,15 +28,22 @@ public class Toolbar extends View {
         tools = new ToolFactory().setupToolbar();
         layout = new SpringLayout();
         setLayout(layout);
-
-        int width = MainWindowController.getInstance().getWindow().getFrame().getBounds().width;
-        setPreferredSize(new Dimension(width, 100));
         setBorder(BorderFactory.createLineBorder(ThemeHelper.color("border")));
-        setBackGroundColor();
+        applyTheme();
     }
 
-    public void setBackGroundColor() {
+    public void applyTheme() {
+
         setBackground(ThemeHelper.color("toolbar"));
+        for(ToolType type : tools.keySet()) {
+            if(type == ToolType.SEARCHBAR) {
+                SearchTool searchTool = (SearchTool) tools.get(type);
+                searchTool.applyTheme();
+            } else {
+                ToolFeature feature = (ToolFeature) tools.get(type);
+                feature.setTheme();
+            }
+        }
     }
 
     public SpringLayout getLayout() {

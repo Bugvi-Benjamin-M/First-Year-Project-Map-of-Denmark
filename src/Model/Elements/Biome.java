@@ -5,16 +5,16 @@ import Helpers.Shapes.PolygonApprox;
 import java.awt.geom.Path2D;
 
 /**
- * Created by Nik on 04/04/17.
+ * Created by Nik on 12/04/17.
  */
-public class Water extends Element{
+public class Biome extends Element{
     private String name;
 
-    public Water(PolygonApprox polygon, String name) {
+    public Biome(PolygonApprox polygon, String name){
         super(polygon);
         this.name = name;
     }
-    public Water(PolygonApprox polygon){
+    public Biome(PolygonApprox polygon){
         this(polygon, "");
     }
 

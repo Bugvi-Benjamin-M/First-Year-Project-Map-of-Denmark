@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="CGImap 0.5.8 (12631 thorn-02.openstreetmap.org)" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+ <bounds minlat="55.7272800" minlon="11.4692700" maxlat="55.7286100" maxlon="11.4735500"/>
+
+ <node id="1196047770" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7306222" lon="11.4725057"/>
+ <node id="1196047771" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7316222" lon="11.4725057"/>
+ <node id="1196047772" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7306222" lon="11.4755057"/>
+ <node id="1196047773" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7296222" lon="11.4725057"/>
+ <node id="1196047774" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7306222" lon="11.4695057"/>
+ <node id="1196047775" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7316222" lon="11.4755057"/>
+ <node id="1196047776" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7296222" lon="11.4755057"/>
+ <node id="1196047777" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7296222" lon="11.4695057"/>
+ <node id="1196047778" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7316222" lon="11.4695057"/>
+ <node id="1196047779" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7294022" lon="11.4725057"/>
+ <node id="1196047780" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7294022" lon="11.4735057"/>
+ <node id="1196047781" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7294022" lon="11.4746057"/>
+ <node id="1196047782" visible="true" version="1" changeset="7519361" timestamp="2011-03-10T22:54:24Z" user="Niels Elgaard Larsen" uid="1288" lat="55.7294022" lon="11.4756057"/>
+
+ <way id="102227563" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1196047770"/>
+  <nd ref="1196047771"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="name" v="North"/>
+ </way>
+ <way id="102227564" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1196047770"/>
+  <nd ref="1196047772"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="name" v="East"/>
+ </way>
+ <way id="102227565" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1196047770"/>
+  <nd ref="1196047773"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="name" v="South"/>
+ </way>
+ <way id="102227566" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1196047770"/>
+  <nd ref="1196047774"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="name" v="West"/>
+ </way>
+ <way id="102227567" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1196047770"/>
+  <nd ref="1196047775"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="name" v="North East"/>
+ </way>
+ <way id="102227568" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1196047770"/>
+  <nd ref="1196047776"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="name" v="South East"/>
+ </way>
+ <way id="102227569" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1196047770"/>
+  <nd ref="1196047777"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="name" v="South West"/>
+ </way>
+ <way id="102227570" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1196047770"/>
+  <nd ref="1196047778"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="name" v="North West"/>
+ </way>
+ <way id="102227571" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1196047779"/>
+  <nd ref="1196047780"/>
+  <nd ref="1196047781"/>
+  <nd ref="1196047782"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="name" v="Some Road"/>
+ </way>
+</osm>
