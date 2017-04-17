@@ -5,7 +5,6 @@ import Enums.ToolType;
 import Helpers.ThemeHelper;
 import Helpers.OSDetector;
 import Theme.Theme;
-import View.PopupWindow;
 import View.SearchTool;
 import java.util.Arrays;
 
@@ -130,6 +129,7 @@ public final class SearchToolController extends Controller {
     }
 
     private void showHistory(){
+        if(searchHistory.isEmpty()) return;
         searchTool.getField().removeAllItems();
         Iterator<String> iterator = searchHistory.iterator();
         while (iterator.hasNext()) {
@@ -195,6 +195,7 @@ public final class SearchToolController extends Controller {
                     }
                 }
                 if(searchTool.getText().isEmpty()){
+                    searchTool.getField().hidePopup();
                     showHistory();
                 }
             }
