@@ -164,7 +164,7 @@ public final class SearchToolController extends Controller {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                if(e.getKeyCode() == KeyEvent.VK_SHIFT) {
+                if(e.getKeyCode() == KeyEvent.VK_SHIFT || e.getKeyCode() == KeyEvent.VK_CONTROL) {
                     return;
                 }
                 switch (e.getKeyChar()) {
@@ -175,7 +175,6 @@ public final class SearchToolController extends Controller {
                         if(searchTool.getField().getEditor().getEditorComponent().hasFocus()) ToolbarController.getInstance().transferFocusToCanvas();
                         break;
                     default:
-                        //TODO: Fix this.. CTRL/SHIFT/BACKSPACE on empty
                         if(e.getKeyChar() != KeyEvent.VK_BACK_SPACE){
                             currentQuery = searchTool.getText();
                             showMatchingResults();
