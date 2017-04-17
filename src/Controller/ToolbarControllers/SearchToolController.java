@@ -7,6 +7,7 @@ import Helpers.OSDetector;
 import Theme.Theme;
 import View.PopupWindow;
 import View.SearchTool;
+import java.util.Arrays;
 
 import java.util.Iterator;
 
@@ -39,6 +40,10 @@ public final class SearchToolController extends Controller {
     private boolean allowSearch;
     private JSONParser parser = new JSONParser();
     private JSONArray searchHistory;
+
+    private String currentQuery;
+
+    private static final int[] prohibitedKeys = {KeyEvent.VK_BACK_SPACE, KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL};
 
     private SearchToolController() {
         super();
@@ -103,33 +108,35 @@ public final class SearchToolController extends Controller {
         if(!allowSearch) {
             searchTool.getField().requestFocus();
         }
-        else if(allowSearch && searchTool.getField().getEditor().getItem().equals("")) {
+        else if(allowSearch && searchTool.getText().isEmpty()) {
             searchTool.getField().requestFocus();
         }
         else if(allowSearch) {
             this.saveHistory(searchTool.getText());
 
-            searchTool.getField().getEditor().selectAll();
+            //searchTool.getField().getEditor().selectAll();
+            //searchTool.getField().requestFocus();
 
-            searchTool.getField().requestFocus();
+            ToolbarController.getInstance().transferFocusToCanvas();
             allowSearch = true;
         }
     }
 
     private void showMatchingResults(){
         searchTool.getField().removeAllItems();
-        searchTool.getField().addItem("");
         searchTool.getField().addItem("Cat");
         searchTool.getField().addItem("Horse");
+        searchTool.getField().showPopup();
     }
 
     private void showHistory(){
         searchTool.getField().removeAllItems();
-        searchTool.getField().addItem("");
         Iterator<String> iterator = searchHistory.iterator();
         while (iterator.hasNext()) {
-            searchTool.getField().addItem((String)iterator.next());
+            searchTool.getField().addItem(iterator.next());
         }
+        searchTool.getField().setSelectedIndex(-1);
+        searchTool.getField().showPopup();
     }
 
     private void saveHistory(String query){
@@ -169,7 +176,13 @@ public final class SearchToolController extends Controller {
                         if(searchTool.getField().getEditor().getEditorComponent().hasFocus()) ToolbarController.getInstance().transferFocusToCanvas();
                         break;
                     default:
-                        showMatchingResults();
+                        //TODO: Fix this.. CTRL/SHIFT/BACKSPACE on empty
+                        //if(!Arrays.asList(prohibitedKeys).contains(e.getKeyCode())){
+                        if(e.getKeyChar() != KeyEvent.VK_BACK_SPACE){
+                            currentQuery = searchTool.getText();
+                            showMatchingResults();
+                            searchTool.setText(currentQuery);
+                        }
                         break;
                 }
             }
@@ -180,6 +193,9 @@ public final class SearchToolController extends Controller {
                     if (!searchTool.getText().isEmpty()) {
                         allowSearch = true;
                     }
+                }
+                if(searchTool.getText().isEmpty()){
+                    showHistory();
                 }
             }
         });
@@ -204,8 +220,9 @@ public final class SearchToolController extends Controller {
             if(editor.getItem().equals(defaultText)) {
                 showHistory();
                 searchTool.setText("");
-                searchTool.getField().showPopup();
             } else {
+                showMatchingResults();
+                searchTool.setText(currentQuery);
                 editor.selectAll();
             }
             editorComponent.setForeground(ThemeHelper.color("icon"));
