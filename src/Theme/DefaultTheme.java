@@ -52,7 +52,11 @@ public class DefaultTheme implements Theme {
         return new Color(0xA0A39F);
     }
 
+    @Override
     public Color cityName() { return new Color(0x000000); }
+
+    @Override
+    public Color roadName() {return new Color(0x000000);}
 
     @Override
     public Color water() {

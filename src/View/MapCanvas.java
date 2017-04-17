@@ -734,7 +734,7 @@ public class MapCanvas extends View {
         g.setComposite(c);
 
         //Color
-        g.setColor(ThemeHelper.color("cityName"));  //TODO should the color be this one or a specific one for roads ?
+        g.setColor(ThemeHelper.color("roadName"));
 
         for (Element element : currentSection) {
             Road road = (Road) element;
