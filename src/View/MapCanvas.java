@@ -4,7 +4,6 @@ import Enums.BoundType;
 import Enums.OSMEnums.ElementType;
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
-import Helpers.ScreenScaler;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
 import KDtree.KDTree;
@@ -62,8 +61,8 @@ public class MapCanvas extends View {
 
     public void setCurrentRectangle() {
         Rectangle2D rectangle = getVisibleRect();
-        rectangle.setRect(rectangle.getX(), rectangle.getY() + ScreenScaler.getToolbarWidth(), rectangle.getWidth(), rectangle.getHeight());
-        Point2D point = toModelCoords(new Point2D.Double(10, 10 + ScreenScaler.getToolbarWidth()));
+        rectangle.setRect(rectangle.getX(), rectangle.getY() + GlobalValue.getToolbarWidth(), rectangle.getWidth(), rectangle.getHeight());
+        Point2D point = toModelCoords(new Point2D.Double(10, 10 + GlobalValue.getToolbarWidth()));
         Point2D factor = toModelCoords(new Point2D.Double(rectangle.getWidth()-10, rectangle.getHeight()-10));
         double xBounds = factor.getX() - point.getX();
         double yBounds = factor.getY() - point.getY();

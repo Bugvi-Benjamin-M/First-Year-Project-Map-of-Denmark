@@ -1,7 +1,6 @@
 package View;
 
 import Enums.ToolType;
-import Helpers.ScreenScaler;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
@@ -33,7 +32,7 @@ public class ToolFeature extends ToolComponent {
         this.type = type;
         this.icon = icon;
         setupLayout();
-        this.setPreferredSize(new Dimension(60 * ScreenScaler.getWidthScaleFactor(),58 * ScreenScaler.getHeightScaleFactor()));
+        this.setPreferredSize(new Dimension(60,58));
     }
 
     /**
@@ -43,7 +42,7 @@ public class ToolFeature extends ToolComponent {
     public void setupLayout() {
         label = new JLabel(type.toString());
         label.setOpaque(false);
-        label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 14 * ScreenScaler.getWidthScaleFactor()));
+        label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 14));
 
         iconLabel = new JLabel(this.icon);
         iconLabel.setFont(Helpers.FontAwesome.getFontAwesome());

@@ -4,7 +4,6 @@ import Controller.ToolbarControllers.ToolbarController;
 import Enums.ToolbarType;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
-import Helpers.ScreenScaler;
 import Helpers.Utilities.DebugWindow;
 import View.PopupWindow;
 import View.Window;
@@ -45,8 +44,7 @@ public final class MainWindowController extends WindowController {
                 .layout(new BorderLayout())
                 .icon()
                 .hide();
-       //Todo figure this out with minimum size
-       window.setMinimumWindowSize(new Dimension(650, 500));
+        window.setMinimumWindowSize(new Dimension(650, 500));
         setupToolbar();
         setupCanvas();
         setupInfobar();
@@ -68,7 +66,7 @@ public final class MainWindowController extends WindowController {
 
     private void adjustBounds() {
         layeredPane.setBounds(new Rectangle(window.getFrame().getWidth(), window.getFrame().getHeight()));
-        ToolbarController.getInstance().getToolbar().setBounds(0,0,window.getFrame().getWidth(), ScreenScaler.getToolbarWidth());
+        ToolbarController.getInstance().getToolbar().setBounds(0,0,window.getFrame().getWidth(), GlobalValue.getToolbarWidth());
         CanvasController.getInstance().getMapCanvas().setBounds(0,0,window.getFrame().getWidth(), window.getFrame().getHeight());
     }
 
@@ -92,9 +90,13 @@ public final class MainWindowController extends WindowController {
     }
 
     public void themeHasChanged() {
+        //layeredPane.remove(ToolbarController.getInstance().getToolbar());
         ToolbarController.getInstance().themeHasChanged();
         CanvasController.getInstance().themeHasChanged();
         transferFocusToMapCanvas();
+        //ToolbarController.getInstance().getToolbar().setOpaque(true);
+        //adjustBounds();
+        //layeredPane.add(ToolbarController.getInstance().getToolbar(), new Integer(2));
     }
 
     @Override

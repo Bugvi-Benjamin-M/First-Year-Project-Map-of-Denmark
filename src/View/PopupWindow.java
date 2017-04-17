@@ -1,11 +1,8 @@
 package View;
 
-import Helpers.ScreenScaler;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.FontUIResource;
-import java.awt.*;
+import java.util.Objects;
 
 /**
  * Class details:

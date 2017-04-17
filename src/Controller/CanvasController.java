@@ -2,7 +2,6 @@ package Controller;
 
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
-import Helpers.ScreenScaler;
 import Model.Model;
 import View.MapCanvas;
 
@@ -58,7 +57,7 @@ public final class CanvasController extends Controller implements Observer {
 
     public void setupCanvas() {
         mapCanvas = new MapCanvas();
-        mapCanvas.setPreferredSize(new Dimension(window.getFrame().getWidth(), window.getFrame().getHeight() - ScreenScaler.getToolbarWidth()));
+        mapCanvas.setPreferredSize(new Dimension(window.getFrame().getWidth(), window.getFrame().getHeight() - GlobalValue.getToolbarWidth()));
         mapCanvas.setElements(model.getElements());
         //mapCanvas.setCoastlines(model.getCoastlines());
         addInteractionHandlerToCanvas();
