@@ -30,6 +30,16 @@ public class OSDetector {
 
     }
 
+    public static String getTemporaryPath(){
+        if (OSDetector.isWindows()) {
+            return "%USERPROFILE%\\AppData\\Local\\Temp\\";
+        } else if (OSDetector.isMac()) {
+            return "/tmp/";
+        } else {
+            return "/tmp/";
+        }
+    }
+
     public static String getPathPrefix() {
         if (OSDetector.isWindows()) {
             return "file:";

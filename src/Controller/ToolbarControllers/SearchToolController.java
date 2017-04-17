@@ -3,9 +3,12 @@ package Controller.ToolbarControllers;
 import Controller.Controller;
 import Enums.ToolType;
 import Helpers.ThemeHelper;
+import Helpers.OSDetector;
 import Theme.Theme;
 import View.PopupWindow;
 import View.SearchTool;
+
+import java.util.Iterator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +16,16 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  * Created by Búgvi Magnussen on 02-04-2017.
@@ -24,6 +37,8 @@ public final class SearchToolController extends Controller {
     private static SearchToolController instance;
     private SearchTool searchTool;
     private boolean allowSearch;
+    private JSONParser parser = new JSONParser();
+    private JSONArray searchHistory;
 
     private SearchToolController() {
         super();
@@ -41,6 +56,14 @@ public final class SearchToolController extends Controller {
         addFocusListenerToSearchTool();
         setToDefaultText();
         specifyKeyBindings();
+
+        try {
+            Object obj = parser.parse(new FileReader(OSDetector.getTemporaryPath()  + "searchHistory.json"));
+            JSONObject jsonObject = (JSONObject) obj;
+            searchHistory = (JSONArray) jsonObject.get("history");
+        }catch(Exception e){
+            searchHistory = new JSONArray();
+        }
     }
 
     public void resetInstance() {
@@ -84,10 +107,48 @@ public final class SearchToolController extends Controller {
             searchTool.getField().requestFocus();
         }
         else if(allowSearch) {
-            PopupWindow.infoBox(null, searchTool.getText(), "Search Test");
+            this.saveHistory(searchTool.getText());
+
+            searchTool.getField().getEditor().selectAll();
+
             searchTool.getField().requestFocus();
             allowSearch = true;
         }
+    }
+
+    private void showMatchingResults(){
+        searchTool.getField().removeAllItems();
+        searchTool.getField().addItem("");
+        searchTool.getField().addItem("Cat");
+        searchTool.getField().addItem("Horse");
+    }
+
+    private void showHistory(){
+        searchTool.getField().removeAllItems();
+        searchTool.getField().addItem("");
+        Iterator<String> iterator = searchHistory.iterator();
+        while (iterator.hasNext()) {
+            searchTool.getField().addItem((String)iterator.next());
+        }
+    }
+
+    private void saveHistory(String query){
+        searchHistory.add(query);
+
+        try {
+           File file=new File("/tmp/searchHistory.json");
+           file.createNewFile();
+           FileWriter fileWriter = new FileWriter(file);
+
+           JSONObject jsonObj = new JSONObject();
+           jsonObj.put("history", searchHistory);
+           fileWriter.write(jsonObj.toJSONString());
+           fileWriter.flush();
+           fileWriter.close();
+
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
     }
 
     protected boolean doesSearchbarHaveFocus() {
@@ -106,6 +167,10 @@ public final class SearchToolController extends Controller {
                         break;
                     case KeyEvent.VK_ESCAPE:
                         if(searchTool.getField().getEditor().getEditorComponent().hasFocus()) ToolbarController.getInstance().transferFocusToCanvas();
+                        break;
+                    default:
+                        showMatchingResults();
+                        break;
                 }
             }
             @Override
@@ -137,7 +202,9 @@ public final class SearchToolController extends Controller {
         public void focusGained(FocusEvent e) {
             super.focusGained(e);
             if(editor.getItem().equals(defaultText)) {
+                showHistory();
                 searchTool.setText("");
+                searchTool.getField().showPopup();
             } else {
                 editor.selectAll();
             }
@@ -150,10 +217,10 @@ public final class SearchToolController extends Controller {
             super.focusLost(e);
             setToDefaultText();
             allowSearch = false;
+            searchTool.getField().hidePopup();
+
         }
     }
 
 
 }
-
-
