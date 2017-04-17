@@ -50,5 +50,7 @@ public enum ElementType {
     BRIDLEWAY, //Ridesti
     CYCLEWAY,
     PATH, //Temporary setting
-    ROAD //Temporary setting
+    ROAD, //Temporary setting
+
+    RAIL
 }

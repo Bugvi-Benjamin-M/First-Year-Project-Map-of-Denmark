@@ -13,6 +13,11 @@ public class NightTheme implements Theme {
     private String name = "Night";
 
     @Override
+    public Color rail() {
+        return new Color(0x000000);
+    }
+
+    @Override
     public Color background() {
         return new Color(0x242f3e);
     }

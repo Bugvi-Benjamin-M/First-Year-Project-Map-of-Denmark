@@ -13,6 +13,11 @@ public class DefaultTheme implements Theme {
     private static String name = "Default";
 
     @Override
+    public Color rail() {
+        return new Color(0x000000);
+    }
+
+    @Override
     public Color boundary() {
         return new Color(0xFF1DF2);
     }

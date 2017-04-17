@@ -251,6 +251,9 @@ public final class OSMHandler implements ContentHandler {
                     case "highway":
                         determineHighway(v);
                         break;
+                    case "railway":
+                        determineRailway(v);
+                        break;
                     case "name":
                         name = v;
                         break;
@@ -298,6 +301,16 @@ public final class OSMHandler implements ContentHandler {
             case "park":
                 elementType = ElementType.PARK;
                 break;
+        }
+    }
+
+    private void determineRailway(String value){
+        switch(value){
+            case "light_rail":
+            case "rail":
+            case "tram":
+            case "monorail":
+                elementType = ElementType.RAIL;
         }
     }
 
@@ -460,6 +473,7 @@ public final class OSMHandler implements ContentHandler {
                     case CYCLEWAY:
                     case PATH:
                     case ROAD:
+                    case RAIL:
                         if(isArea == false){
                             addRoad(elementType, false, false);
                         }else{

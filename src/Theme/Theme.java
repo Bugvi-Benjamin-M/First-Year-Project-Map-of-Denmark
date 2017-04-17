@@ -47,6 +47,9 @@ public interface Theme {
     public abstract Color road();
     public abstract Color roadBorder();
 
+    public abstract Color rail();
+
+
     public abstract Color cityName();
 
 

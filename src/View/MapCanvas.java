@@ -187,6 +187,8 @@ public class MapCanvas extends View {
                 drawMotorways(g, ThemeHelper.color("motorway"), 0.00016f);
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00012f);
 
+                drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+
                 drawBuilding(g, ThemeHelper.color("building"));
 
                 drawRoadNames(g, ElementType.PEDESTRIAN_STREET);
@@ -225,6 +227,8 @@ public class MapCanvas extends View {
                 drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
 
+                drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+
                 drawBuilding(g, ThemeHelper.color("building"));
 
                 drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
@@ -260,6 +264,8 @@ public class MapCanvas extends View {
                 drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
 
+                drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+
                 drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
                 drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
                 drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
@@ -280,6 +286,9 @@ public class MapCanvas extends View {
                 drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
                 drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+
+                drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+
                 drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
                 drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
                 drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
@@ -300,6 +309,9 @@ public class MapCanvas extends View {
                 drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
                 drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+
+                drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+
                 drawCityNames(g, ElementType.CITY_NAME, 0.8f);
                 drawCityNames(g, ElementType.TOWN_NAME, 0.35f);
                 drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
@@ -314,6 +326,7 @@ public class MapCanvas extends View {
                 drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
                 drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
                 drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+
                 drawCityNames(g, ElementType.CITY_NAME, 0.8f);
                 drawCityNames(g, ElementType.TOWN_NAME, 0.35f);
                 break;
@@ -404,6 +417,17 @@ public class MapCanvas extends View {
 
     public void setCurrentPoint(Point2D currentPoint) {
         this.currentPoint = currentPoint;
+    }
+
+    //Draw Roads Methods
+    private void drawRail(Graphics2D g, Color color, float width){
+        setCurrentSection(ElementType.RAIL);
+        for (Element element : currentSection) {
+            g.setColor(color);
+            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_BEVEL));
+            g.draw(element.getShape());
+        }
     }
 
     //Draw Roads Methods
