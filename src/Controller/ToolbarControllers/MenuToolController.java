@@ -41,8 +41,6 @@ public final class MenuToolController extends Controller {
 
     private MenuToolController() {
         super();
-        specifyWindow(MainWindowController.getInstance().getWindow());
-        toolbar = ToolbarController.getInstance().getToolbar();
     }
 
     public static MenuToolController getInstance() {
@@ -54,15 +52,19 @@ public final class MenuToolController extends Controller {
 
     protected void setupMenuTool() {
         toolbar = ToolbarController.getInstance().getToolbar();
-        if(popupMenu != null && popupMenu.isVisible()) popupMenu.hidePopupMenu();
+        //if(popupMenu != null && popupMenu.isVisible()) popupMenu.hidePopupMenu();
         popupMenu = new MenuTool();
-        setupLayoutForMenuTool();
-        setToCurrentTheme();
+        //setupLayoutForMenuTool();
+        //setToCurrentTheme();
         addFocusListener();
         addActionsToToolsMenu();
     }
 
-    private void setupLayoutForMenuTool() {
+    protected void hidePopupMenu() {
+        if(popupMenu != null && popupMenu.isVisible()) popupMenu.hidePopupMenu();
+    }
+
+    protected void setupLayoutForMenuTool() {
         ToolComponent load = toolbar.getTool(ToolType.LOAD);
         popupMenu.getLayout().putConstraint(WEST, load, POPUP_MARGIN_LEFT, WEST, popupMenu.getPopupMenu());
         popupMenu.getLayout().putConstraint(NORTH, load, POPUP_MARGIN_TOP, NORTH, popupMenu.getPopupMenu());
@@ -79,11 +81,7 @@ public final class MenuToolController extends Controller {
         popupMenu.getPopupMenu().setPopupSize(POPUP_MARGIN_WIDTH, POPUP_MARGIN_HEIGHT);
         popupMenu.showPopupMenu();
         popupMenu.hidePopupMenu();
-    }
-
-    private void setToCurrentTheme() {
-        popupMenu.setBackGroundColor(ThemeHelper.color("toolbar"));
-        popupMenu.setForeGroundColor(ThemeHelper.color("icon"));
+        popupMenu.getPopupMenu().repaint();
     }
 
     private void addActionsToToolsMenu() {

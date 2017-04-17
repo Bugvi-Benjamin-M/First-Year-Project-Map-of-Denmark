@@ -10,13 +10,18 @@ import KDtree.*;
 import KDtree.Point;
 import Main.Main;
 import Model.Elements.*;
+import Helpers.GlobalValue;
+import Helpers.ThemeHelper;
+import Helpers.Utilities.DebugWindow;
+import KDtree.KDTree;
+import Main.Main;
+import Model.Elements.Element;
+import Model.Elements.PlaceName;
 import Model.Model;
 import Theme.Theme;
 
 import java.awt.*;
-import java.awt.font.GlyphVector;
 import java.awt.geom.*;
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashSet;
 
@@ -64,7 +69,8 @@ public class MapCanvas extends View {
 
     public void setCurrentRectangle() {
         Rectangle2D rectangle = getVisibleRect();
-        Point2D point = toModelCoords(new Point2D.Double(10, 10));
+        rectangle.setRect(rectangle.getX(), rectangle.getY() + GlobalValue.getToolbarWidth(), rectangle.getWidth(), rectangle.getHeight());
+        Point2D point = toModelCoords(new Point2D.Double(10, 10 + GlobalValue.getToolbarWidth()));
         Point2D factor = toModelCoords(new Point2D.Double(rectangle.getWidth()-10, rectangle.getHeight()-10));
         double xBounds = factor.getX() - point.getX();
         double yBounds = factor.getY() - point.getY();

@@ -23,7 +23,7 @@ public class Main {
     public static final FPSCounter FPS_COUNTER = new FPSCounter();
     private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
 
-    private static final boolean DEBUG_MODE_ACTIVE = false;  // CHANGE ME TO PREVENT LOADING DEFAULT
+    private static final boolean DEBUG_MODE_ACTIVE = true;  // CHANGE ME TO PREVENT LOADING DEFAULT
     private static final boolean SAVE_AFTER_LOAD = false;     // CHANGE ME TO PREVENT SAVING BIN
 
     public static long LOAD_TIME;
@@ -54,6 +54,7 @@ public class Main {
             SettingsWindowController.getInstance().setupSettingsWindow();
             model.modelHasChanged();
             MainWindowController.getInstance().showWindow();
+            MainWindowController.getInstance().transferFocusToMapCanvas();
         });
 
             LOAD_TIME = System.nanoTime() - startTime;
@@ -103,13 +104,6 @@ public class Main {
 
     public static void notifyAntiAliasingToggle(boolean status) {
         CanvasController.getInstance().toggleAntiAliasing(status);
-    }
-
-    public static void notifyThemeChange() {
-        CanvasController.getInstance().themeHasChanged();
-        ToolbarController.getInstance().themeHasChanged();
-        InfobarController.getInstance().themeHasChanged();
-        CanvasController.getInstance().getMapCanvas().grabFocus();
     }
 
     public static void notifyKeyToggle(boolean status) {

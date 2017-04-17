@@ -21,6 +21,10 @@ public class GlobalValue {
         return (int) (MainWindowController.getInstance().getWindow().getFrame().getWidth() / 1.7);
     }
 
+    public static int getSearchFieldStartX() {
+        return (int) (MainWindowController.getInstance().getWindow().getFrame().getWidth() / 2.909);
+    }
+
 
     public static int getToolbarWidth() {
         return 100;

@@ -2,6 +2,7 @@ package Controller;
 
 import Controller.ToolbarControllers.ToolbarController;
 import Enums.ToolbarType;
+import Helpers.GlobalValue;
 import Helpers.OSDetector;
 import Helpers.Utilities.DebugWindow;
 import View.PopupWindow;
@@ -20,11 +21,8 @@ public final class MainWindowController extends WindowController {
 
     private static final String MAIN_TITLE = "OSM Map Viewer v0.3";
     private static MainWindowController instance;
-    private final int DELAY = 200;
-    private javax.swing.Timer waitingTimer;
     private JLayeredPane layeredPane;
-    private JPanel panel;
-    private JPanel panel2;
+
 
     private MainWindowController() {
         super();
@@ -47,52 +45,58 @@ public final class MainWindowController extends WindowController {
                 .icon()
                 .hide();
         window.setMinimumWindowSize(new Dimension(650, 500));
-        addToolbarToMainWindow();
-        addCanvasToMainWindow();
-        addInfobarToMainWindow();
-        //setupLayeredPane();
+        setupToolbar();
+        setupCanvas();
+        setupInfobar();
+        setupLayeredPane();
         addInteractionHandlerToWindow();
         CanvasController.adjustToBounds();
         hideWindow();
     }
 
-   /* private void setupLayeredPane() {
+    private void setupLayeredPane() {
         layeredPane = new JLayeredPane();
         window.getFrame().add(layeredPane, BorderLayout.CENTER);
+        adjustBounds();
+        ToolbarController.getInstance().getToolbar().setOpaque(true);
+        CanvasController.getInstance().getMapCanvas().setOpaque(true);
+        layeredPane.add(CanvasController.getInstance().getMapCanvas(), new Integer(1));
+        layeredPane.add(ToolbarController.getInstance().getToolbar(), new Integer(2));
+    }
+
+    private void adjustBounds() {
         layeredPane.setBounds(new Rectangle(window.getFrame().getWidth(), window.getFrame().getHeight()));
-        panel = new JPanel();
-        //panel.setBounds(0,0,window.getFrame().getWidth(), window.getFrame().getHeight());
-        //panel.setBackground(Color.BLUE);
-        panel = CanvasController.getInstance().getMapCanvas();
-        panel.setOpaque(true);
-        panel2 = new JPanel();
-        //panel2.setBackground(Color.GREEN);
-        //panel2.setBounds(0,0,window.getFrame().getWidth(), GlobalValue.getToolbarWidth());
-        panel2.setOpaque(true);
-        panel2 = ToolbarController.getInstance().getToolbar();
+        ToolbarController.getInstance().getToolbar().setBounds(0,0,window.getFrame().getWidth(), GlobalValue.getToolbarWidth());
+        CanvasController.getInstance().getMapCanvas().setBounds(0,0,window.getFrame().getWidth(), window.getFrame().getHeight());
+    }
 
-        layeredPane.add(panel, new Integer(1));
-        layeredPane.add(panel2, new Integer(2));
-    }*/
-
-    private void addToolbarToMainWindow() {
+    private void setupToolbar() {
         ToolbarController.getInstance().specifyWindow(window);
         ToolbarController.getInstance().setupToolbar(ToolbarType.LARGE);
-        window.addBorderLayoutComponent(BorderLayout.NORTH, ToolbarController.getInstance().getToolbar(), true);
-        ToolbarController.getInstance().getToolbar().setVisible(true);
     }
 
-    private void addCanvasToMainWindow() {
+    private void setupCanvas() {
         CanvasController.getInstance().specifyWindow(window);
         CanvasController.getInstance().setupCanvas();
-        window.addBorderLayoutComponent(BorderLayout.CENTER, CanvasController.getInstance().getMapCanvas(), true);
-        CanvasController.getInstance().getMapCanvas().setVisible(true);
     }
 
-    private void addInfobarToMainWindow() {
+    private void setupInfobar() {
         InfobarController.getInstance().specifyWindow(window);
         InfobarController.getInstance().setupInfobar();
-        //window.addBorderLayoutComponent(BorderLayout.LINE_START, InfobarController.getInstance().getInfobar(), true);
+    }
+
+    public void transferFocusToMapCanvas() {
+        CanvasController.getInstance().getMapCanvas().grabFocus();
+    }
+
+    public void themeHasChanged() {
+        //layeredPane.remove(ToolbarController.getInstance().getToolbar());
+        ToolbarController.getInstance().themeHasChanged();
+        CanvasController.getInstance().themeHasChanged();
+        transferFocusToMapCanvas();
+        //ToolbarController.getInstance().getToolbar().setOpaque(true);
+        //adjustBounds();
+        //layeredPane.add(ToolbarController.getInstance().getToolbar(), new Integer(2));
     }
 
     @Override
@@ -134,21 +138,9 @@ public final class MainWindowController extends WindowController {
         @Override
         public void componentResized(ComponentEvent e) {
             super.componentResized(e);
-            //layeredPane.setBounds(0,0,window.getFrame().getWidth(), window.getFrame().getHeight());
-            //panel.setBounds(0, GlobalValue.getToolbarWidth(),window.getFrame().getWidth(), window.getFrame().getHeight());
-            //panel2.setBounds(0,0,window.getFrame().getWidth(), GlobalValue.getToolbarWidth());
+            adjustBounds();
             ToolbarController.getInstance().resizeEvent();
             CanvasController.getInstance().resizeEvent();
-            if(waitingTimer == null) {
-                waitingTimer = new Timer(DELAY, e1 -> {
-                    if(e1.getSource()==waitingTimer) {
-                        waitingTimer.stop();
-                        waitingTimer = null;
-                        CanvasController.getInstance().resizeEvent();
-                    }
-                });
-                waitingTimer.start();
-            } else waitingTimer.restart();
         }
 
 
