@@ -21,9 +21,8 @@ public class SearchTool extends ToolComponent {
     private Dimension searchFieldDimension;
     private final int SEARCHBAR_HEIGHT = 40;
 
-    public SearchTool(int width) {
+    public SearchTool() {
         field = new JComboBox<>();
-        //searchFieldDimension = new Dimension(width, SEARCHBAR_HEIGHT);
         setupLayout();
         adaptSizeToLargeToolbar();
         applyTheme();
@@ -39,13 +38,11 @@ public class SearchTool extends ToolComponent {
     public void adaptSizeToSmallToolbar() {
         searchFieldDimension = new Dimension(GlobalValue.getSearchFieldSmallSize(), SEARCHBAR_HEIGHT);
         field.setPreferredSize(searchFieldDimension);
-        //field.setBounds(GlobalValue.getSearchFieldStartX(), 30, GlobalValue.getSearchFieldStartX() + GlobalValue.getSearchFieldSmallSize(), 70);
     }
 
     @Override
     public void setupLayout() {
         field.setUI(NoArrowUI.createUI(field));
-        //field.setPreferredSize(searchFieldDimension);
         field.setEditable(true);
         field.setFont(new Font(field.getFont().getName(), field.getFont().getStyle(), 20));
         field.setRequestFocusEnabled(true);
@@ -55,6 +52,17 @@ public class SearchTool extends ToolComponent {
     public void applyTheme() {
         setBackground(ThemeHelper.color("toolbar"));
         field.getEditor().getEditorComponent().setBackground(ThemeHelper.color("searchfield"));
+        field.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public void setBackground(Color bg) {
+                super.setBackground(ThemeHelper.color("toolbar"));
+            }
+
+            @Override
+            public void setForeground(Color fg) {
+                super.setForeground(ThemeHelper.color("icon"));
+            }
+        });
     }
 
 
@@ -79,11 +87,11 @@ public class SearchTool extends ToolComponent {
         @Override
         protected JButton createArrowButton() {
             JButton button = new JButton() {
-                @Override
-                public int getWidth() {
-                    return 0;
-                }
-            };
+            @Override
+            public int getWidth() {
+                return 0;
+            }
+        };
             button.setEnabled(false);
             button.setBorderPainted(false);
             button.setFocusPainted(false);

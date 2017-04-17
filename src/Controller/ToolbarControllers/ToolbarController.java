@@ -115,10 +115,9 @@ public final class ToolbarController extends Controller {
     }
 
     private ToolComponent addSearchButtonToolToSmallToolbar() {
-        //todo change MARGIN_SMALLEST_RIGHT
         ToolComponent button = toolbar.getTool(ToolType.SEARCHBUTTON);
         toolbarLayout.putConstraint(EAST, button,
-                MARGIN_SMALLEST_RIGHT,
+                MARGIN_SMALL_RIGHT,
                 EAST, toolbar);
         putNorthConstraints(button);
         toolbar.add(button);

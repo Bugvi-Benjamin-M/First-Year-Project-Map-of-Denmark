@@ -113,8 +113,6 @@ public final class SearchToolController extends Controller {
         else if(allowSearch) {
             this.saveHistory(searchTool.getText());
 
-            //searchTool.getField().getEditor().selectAll();
-            //searchTool.getField().requestFocus();
 
             ToolbarController.getInstance().transferFocusToCanvas();
             allowSearch = true;
@@ -237,6 +235,7 @@ public final class SearchToolController extends Controller {
             setToDefaultText();
             allowSearch = false;
             searchTool.getField().hidePopup();
+            ToolbarController.getInstance().requestCanvasRepaint();
 
         }
     }
