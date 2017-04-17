@@ -102,7 +102,7 @@ public class CoastlineFactory {
                 paths.add(path);
             }
 
-            if (coast.size() == 683) System.out.println(coast.toString());
+            // if (coast.size() == 683) System.out.println(coast.toString());
         }
         List<Path2D> returnable = new ArrayList<>();
         for (Path2D path : paths) {

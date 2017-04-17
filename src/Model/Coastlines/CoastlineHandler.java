@@ -153,7 +153,7 @@ public class CoastlineHandler implements ContentHandler {
             merged.addAll(before.subList(0, before.size()-1));
         }
         merged.addAll(way);
-        if (after != null) {
+        if (after != null && before != after) {
             merged.addAll(after.subList(1, after.size()));
         }
         coastlines.put(merged.getFromNode(), merged);

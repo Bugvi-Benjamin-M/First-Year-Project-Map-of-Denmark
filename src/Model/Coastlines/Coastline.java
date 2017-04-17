@@ -29,9 +29,6 @@ public class Coastline extends OSMWay {
         Point2D node = this.getFromNode();
         path.moveTo(node.getX(), node.getY());
 
-        if (size() == 683) allGeneratePath(path,0,this.size());
-
-        /*
         int lastI = 0; int increase = ZoomLevel.getNodesAtMaxLevel();
         for (int i = 0; i < size() - 1; ) {
             i += increase;
@@ -45,14 +42,9 @@ public class Coastline extends OSMWay {
                 path.append(qualityGeneratePath(lastI,i,ZoomLevel.LEVEL_6),true);
             } else {
                 path.append(quickGeneratePath(lastI,i),true);
-                // simpleSimply(path,lastI,i);
             }
             lastI = i;
-        }*/
-
-        // quickGeneratePath(path,lastI,this.size()-1);
-
-        // oldQuickSimplify(path);
+        }
 
         // Finish path (loop back)
         path.closePath();
