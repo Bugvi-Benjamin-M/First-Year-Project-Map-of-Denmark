@@ -4,13 +4,14 @@ import Controller.Controller;
 import Enums.ToolType;
 import Helpers.ThemeHelper;
 import Helpers.OSDetector;
-import Theme.Theme;
 import View.SearchTool;
-import java.util.Arrays;
+
 
 import java.util.Iterator;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -22,6 +23,7 @@ import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -32,7 +34,7 @@ import org.json.simple.parser.ParseException;
  */
 public final class SearchToolController extends Controller {
 
-    private static final String defaultText = "Addresses, points of interest...";
+    private static final String defaultText = "Type an address, point of interest...";
 
     private static SearchToolController instance;
     private SearchTool searchTool;
@@ -41,6 +43,8 @@ public final class SearchToolController extends Controller {
     private JSONArray searchHistory;
 
     private String currentQuery;
+    private final int[] prohibitedKeys = new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_ALT, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
+    KeyEvent.VK_UP, KeyEvent.VK_DOWN};
 
     private SearchToolController() {
         super();
@@ -158,24 +162,30 @@ public final class SearchToolController extends Controller {
         return searchTool.getField().getEditor().getEditorComponent().hasFocus();
     }
 
-
+    private boolean checkForProhibitedKey(KeyEvent e) {
+        for(int key : prohibitedKeys) {
+            if(e.getKeyCode() == key) return true;
+        }
+        return false;
+    }
+    //Todo fix bug regarding the list appearing when pressing the down key
     private void specifyKeyBindings() {
         searchTool.getField().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                if(e.getKeyCode() == KeyEvent.VK_SHIFT || e.getKeyCode() == KeyEvent.VK_CONTROL) {
-                    return;
-                }
+                if (checkForProhibitedKey(e)) return;
+
                 switch (e.getKeyChar()) {
                     case KeyEvent.VK_ENTER:
                         searchActivatedEvent();
                         break;
                     case KeyEvent.VK_ESCAPE:
-                        if(searchTool.getField().getEditor().getEditorComponent().hasFocus()) ToolbarController.getInstance().transferFocusToCanvas();
+                        if (searchTool.getField().getEditor().getEditorComponent().hasFocus())
+                            ToolbarController.getInstance().transferFocusToCanvas();
                         break;
                     default:
-                        if(e.getKeyChar() != KeyEvent.VK_BACK_SPACE){
+                        if (e.getKeyChar() != KeyEvent.VK_BACK_SPACE) {
                             currentQuery = searchTool.getText();
                             showMatchingResults();
                             searchTool.setText(currentQuery);
@@ -183,15 +193,18 @@ public final class SearchToolController extends Controller {
                         break;
                 }
             }
+
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                if(e.getKeyChar() == KeyEvent.VK_ENTER) {
+                if (checkForProhibitedKey(e)) return;
+
+                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
                     if (!searchTool.getText().isEmpty()) {
                         allowSearch = true;
                     }
                 }
-                if(searchTool.getText().isEmpty()){
+                if (searchTool.getText().isEmpty()) {
                     ToolbarController.getInstance().requestCanvasRepaint();
                     searchTool.getField().hidePopup();
                     showHistory();
@@ -199,7 +212,6 @@ public final class SearchToolController extends Controller {
             }
         });
     }
-
 
     private class SearchToolFocusHandler extends FocusAdapter {
 
