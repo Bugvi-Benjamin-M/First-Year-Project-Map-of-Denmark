@@ -76,6 +76,31 @@ public class NightTheme implements Theme {
     }
 
     @Override
+    public Color grassland(){
+        return new Color(0x04701B);
+    }
+
+    @Override
+    public Color grass() {
+        return new Color(0x04701B);
+    }
+
+    @Override
+    public Color heath() {
+        return new Color(0x616F37);
+    }
+
+    @Override
+    public Color meadow() {
+        return new Color(0x04701B);
+    }
+
+    @Override
+    public Color farmland() {
+        return new Color(0x616F37);
+    }
+
+    @Override
     public Color sand() {
         return new Color(0x84816A);
     }
@@ -90,7 +115,7 @@ public class NightTheme implements Theme {
         return new Color(0xD37386);
     }
     public Color trunkRoad(){
-        return new Color(0xD12D00);
+        return new Color(0xD37386);
     }
     public Color primaryRoad(){
         return new Color(0xC27102);

@@ -53,7 +53,6 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> quarterNames;
     private ArrayList<Pointer> neighbourhoodNames;
     private boolean specialRelationCase = false;
-    private boolean specialWayCase = false;
     private boolean isArea = false;
 
 
@@ -175,10 +174,7 @@ public final class OSMHandler implements ContentHandler {
                 if(relationID == 2365410){ //Dont draw Sydhavnen (Only works wit coastlines)
                     specialRelationCase = true;
                 }
-                // takes care of ways that are in the wrong order.
-                if(!specialWayCase) {
-                    reverseSpecialCaseWays();
-                }
+
                 relation = new OSMRelation();
                 elementType = ElementType.UNKNOWN;
                 loadedRelations++;
@@ -293,6 +289,15 @@ public final class OSMHandler implements ContentHandler {
             case "forest":
                 elementType = ElementType.FOREST;
                 break;
+            case "farmland":
+                elementType = ElementType.FARMLAND;
+                break;
+            case "meadow":
+                elementType = ElementType.MEADOW;
+                break;
+            case "grass":
+                elementType = ElementType.GRASS;
+                break;
         }
     }
 
@@ -346,6 +351,13 @@ public final class OSMHandler implements ContentHandler {
             case "water":
                 elementType = ElementType.WATER;
                 break;
+            case "grassland":
+                elementType = ElementType.GRASSLAND;
+                break;
+            case "heath":
+                elementType = ElementType.HEATH;
+                break;
+
         }
     }
 
@@ -489,6 +501,11 @@ public final class OSMHandler implements ContentHandler {
                         break;
                     case PARK:
                     case FOREST:
+                    case GRASSLAND:
+                    case FARMLAND:
+                    case GRASS:
+                    case MEADOW:
+                    case HEATH:
                         addBiome(elementType, false);
                         break;
                     case UNKNOWN:
@@ -503,6 +520,11 @@ public final class OSMHandler implements ContentHandler {
                         break;
                     case PARK:
                     case FOREST:
+                    case GRASSLAND:
+                    case FARMLAND:
+                    case GRASS:
+                    case MEADOW:
+                    case HEATH:
                         addBiome(elementType, true);
                         break;
                 }
@@ -641,33 +663,6 @@ public final class OSMHandler implements ContentHandler {
             }
         }
     }
-
-    public void reverseSpecialCaseWays(){
-        //Skoven ved himmelbjerget
-        OSMWay specialWay = idToWay.get(480309120L);
-        Collections.reverse(specialWay);
-        idToWay.remove(480309120L);
-        idToWay.put(480309120L, specialWay);
-
-        OSMWay specialWay1 = idToWay.get(478349664L);
-        Collections.reverse(specialWay1);
-        idToWay.remove(478349664L);
-        idToWay.put(478349664L, specialWay1);
-        //
-
-        OSMWay specialWay2 = idToWay.get(176968799L);
-        Collections.reverse(specialWay2);
-        idToWay.remove(176968799L);
-        idToWay.put(176968799L, specialWay2);
-
-        OSMWay specialWay3 = idToWay.get(176968802L);
-        Collections.reverse(specialWay3);
-        idToWay.remove(176968802L);
-        idToWay.put(176968802L, specialWay3);
-
-        specialWayCase = true;
-    }
-
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {

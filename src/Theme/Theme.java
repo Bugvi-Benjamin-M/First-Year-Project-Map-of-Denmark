@@ -21,6 +21,11 @@ public interface Theme {
     public abstract Color water();
     public abstract Color park();
     public abstract Color forest();
+    public abstract Color grassland();
+    public abstract Color grass();
+    public abstract Color heath();
+    public abstract Color farmland();
+    public abstract Color meadow();
     public abstract Color sand();
     public abstract Color building();
 

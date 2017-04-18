@@ -43,31 +43,30 @@ public class DynamicMultiPolygonApprox extends  MultiPolygonApprox{
         public void next() {
             float fx = coords[index];
             float fy = coords[index + 1];
-            if(ZoomLevel.getZoomLevel().getNodesAtLevel() > 3) {
-                if (ZoomLevel.getZoomLevel().getNodesAtLevel() % 2 == 1) {
-                    if (waySegments[currentWay] > index + ZoomLevel.getZoomLevel().getNodesAtLevel() + 1) {
-                        index += ZoomLevel.getZoomLevel().getNodesAtLevel() + 1;
-                    } else {
-                        index += 2;
-                        if (waySegments[currentWay] < index) {
-                            if (waySegments.length > currentWay + 1) currentWay++;
+            if(ZoomLevel.getZoomLevel().getNodesAtLevel() > 11) {
+                switch(ZoomLevel.getZoomLevel()){
+                    case LEVEL_5:
+                        if (waySegments[currentWay] > index + 8) {
+                            index += 8;
+                        } else {
+                            index += 2;
                         }
-                    }
-                } else {
-                    if (waySegments[currentWay] > ZoomLevel.getZoomLevel().getNodesAtLevel()) {
-                        index += ZoomLevel.getZoomLevel().getNodesAtLevel();
-                    } else {
-                        index += 2;
-                        if (waySegments[currentWay] < index) {
-                            if (waySegments.length > currentWay + 1) currentWay++;
+                        break;
+                    case LEVEL_6:
+                        if (waySegments[currentWay] > index + 16) {
+                            index += 16;
+                        } else {
+                            index += 2;
                         }
-                    }
+                        break;
                 }
+
             }else{
                 index += 2;
-                if (waySegments[currentWay] < index) {
-                    if (waySegments.length > currentWay + 1) currentWay++;
-                }
+            }
+
+            if (waySegments[currentWay] < index) {
+                if (waySegments.length > currentWay + 1) currentWay++;
             }
 
             while (index < coords.length - 2 && pointtypes[(index >> 1) + 1] == PathIterator.SEG_LINETO &&

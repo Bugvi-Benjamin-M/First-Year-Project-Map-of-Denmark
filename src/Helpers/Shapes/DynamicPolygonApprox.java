@@ -8,6 +8,8 @@ import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static Enums.ZoomLevel.LEVEL_1;
+
 /**
  * Created by Nik on 12/04/17.
  */
@@ -34,15 +36,21 @@ public class DynamicPolygonApprox extends PolygonApprox{
         public void next() {
             float fx = coords[index];
             float fy = coords[index + 1];
-            if (ZoomLevel.getZoomLevel().getNodesAtLevel() % 2 == 1) {
-                index += ZoomLevel.getZoomLevel().getNodesAtLevel() + 1;
-            } else index += ZoomLevel.getZoomLevel().getNodesAtLevel();
+            if(ZoomLevel.getZoomLevel().getNodesAtLevel() > 11) {
+                switch(ZoomLevel.getZoomLevel()){
+                    case LEVEL_5: index += 4;
+                    break;
+                    case LEVEL_6: index += 16;
+                    break;
+                }
+            }else index += 2;
             while (index < coords.length - 2 &&
                     distSq(fx, fy, coords[index], coords[index + 1]) < approx) {
                 if (ZoomLevel.getZoomLevel().getNodesAtLevel() % 2 == 1) {
                     index += ZoomLevel.getZoomLevel().getNodesAtLevel() + 1;
                 } else index += ZoomLevel.getZoomLevel().getNodesAtLevel();
             }
+
         }
     }
 }

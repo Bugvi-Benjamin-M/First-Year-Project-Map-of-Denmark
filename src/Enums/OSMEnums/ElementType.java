@@ -13,8 +13,14 @@ public enum ElementType {
 
     WATER, //Søer og lign.
 
+    //BIOMES
     PARK,
     FOREST,
+    GRASSLAND,
+    HEATH,
+    GRASS,
+    FARMLAND,
+    MEADOW,
 
     //PLACES - NAMES
     CITY_NAME, //navne på byer over 100k
