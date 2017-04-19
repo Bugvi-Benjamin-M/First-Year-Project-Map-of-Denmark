@@ -62,7 +62,6 @@ public final class SearchToolController extends Controller {
         addFocusListenerToSearchTool();
         setToDefaultText();
         specifyKeyBindings();
-
         try {
             Object obj = parser.parse(new FileReader(OSDetector.getTemporaryPath()  + "searchHistory.json"));
             JSONObject jsonObject = (JSONObject) obj;
@@ -71,14 +70,17 @@ public final class SearchToolController extends Controller {
             searchHistory = new JSONArray();
         }
     }
-
     public void resetInstance() {
         instance = null;
     }
 
-
     protected void themeHasChanged() {
         setToDefaultText();
+        if(!searchTool.getText().equals(defaultText)) {
+            String text = searchTool.getText();
+            searchTool.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
+            searchTool.setText(text);
+        }
     }
 
     protected void searchToolResizeEvent() {
@@ -174,7 +176,10 @@ public final class SearchToolController extends Controller {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                if (checkForProhibitedKey(e)) return;
+                if (checkForProhibitedKey(e)) {
+                    return;
+                }
+
 
                 switch (e.getKeyChar()) {
                     case KeyEvent.VK_ENTER:
@@ -197,7 +202,9 @@ public final class SearchToolController extends Controller {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                if (checkForProhibitedKey(e)) return;
+                if (checkForProhibitedKey(e)) {
+                    return;
+                }
 
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {
                     if (!searchTool.getText().isEmpty()) {
@@ -247,7 +254,6 @@ public final class SearchToolController extends Controller {
             allowSearch = false;
             searchTool.getField().hidePopup();
             ToolbarController.getInstance().requestCanvasRepaint();
-
         }
     }
 
