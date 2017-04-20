@@ -3,23 +3,16 @@ package View;
 import Enums.BoundType;
 import Enums.OSMEnums.ElementType;
 import Enums.ZoomLevel;
-import Helpers.Shapes.PolygonApprox;
-import Helpers.ThemeHelper;
-import Helpers.Utilities.DebugWindow;
-import KDtree.*;
-import KDtree.Point;
-import Main.Main;
-import Model.Elements.*;
 import Helpers.GlobalValue;
+import Helpers.Shapes.PolygonApprox;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
 import KDtree.KDTree;
 import Main.Main;
-import Model.Elements.Element;
-import Model.Elements.PlaceName;
+import Model.Elements.*;
 import Model.Model;
-import Theme.Theme;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.EnumMap;
@@ -47,6 +40,7 @@ public class MapCanvas extends View {
     private Rectangle2D currentRectangle;
     private EnumMap<ElementType, KDTree> elements;
     private boolean antiAliasing;
+    private JToolTip toolTip;
 
     /**
      * The base Constructor for the MapCanvas.
@@ -56,6 +50,16 @@ public class MapCanvas extends View {
         setBackgroundColor();
         antiAliasing = false;
         grabFocus();
+    }
+
+    @Override
+    public JToolTip createToolTip() {
+        toolTip = new MapCanvasToolTip();
+        return toolTip;
+    }
+
+    public boolean isToolTipVisible() {
+        return toolTip.isVisible();
     }
 
     public void setBackgroundColor() {

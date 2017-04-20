@@ -62,6 +62,10 @@ public final class CanvasController extends Controller implements Observer {
         addInteractionHandlerToCanvas();
     }
 
+    private void setToolTip(String text) {
+        mapCanvas.setToolTipText(text);
+    }
+
     private void addInteractionHandlerToCanvas() {
         handler = new CanvasInteractionHandler(JComponent.WHEN_FOCUSED);
         mapCanvas.addMouseListener(handler);
@@ -246,6 +250,11 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.pan(dx, dy);
     }
 
+    private void mouseMovedEvent(MouseEvent e) {
+        //Todo make sure the tooltip disappears when mouse is moved
+        setToolTip(e.getPoint().toString());
+    }
+
     private void keyboardZoomEvent(double keyboardZoomFactor) {
         double dx = mapCanvas.getVisibleRect().getWidth()/2;
         double dy = mapCanvas.getVisibleRect().getHeight()/2;
@@ -327,6 +336,12 @@ public final class CanvasController extends Controller implements Observer {
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
             mouseWheelMovedEvent(e);
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            super.mouseMoved(e);
+            mouseMovedEvent(e);
         }
     }
 
