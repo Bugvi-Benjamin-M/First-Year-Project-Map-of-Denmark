@@ -133,6 +133,14 @@ public final class MainWindowController extends WindowController {
         window.getFrame().addComponentListener(handler);
     }
 
+    public void notifyKeyToggle(boolean status) {
+        CanvasController.getInstance().toggleKeyBindings(status);
+        ToolbarController.getInstance().toggleKeyBindings(status);
+        SettingsWindowController.getInstance().toggleKeyBindings(status);
+        MainWindowController.getInstance().toggleKeyBindings(status);
+        InfobarController.getInstance().toggleKeyBindings(status);
+    }
+
     public void resetInstance() {
         instance = null;
     }

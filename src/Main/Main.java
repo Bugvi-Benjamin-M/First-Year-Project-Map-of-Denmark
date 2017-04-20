@@ -102,18 +102,6 @@ public class Main {
       screen.setScreenVisible(true);
     }
 
-    public static void notifyAntiAliasingToggle(boolean status) {
-        CanvasController.getInstance().toggleAntiAliasing(status);
-    }
-
-    public static void notifyKeyToggle(boolean status) {
-        CanvasController.getInstance().toggleKeyBindings(status);
-        ToolbarController.getInstance().toggleKeyBindings(status);
-        SettingsWindowController.getInstance().toggleKeyBindings(status);
-        MainWindowController.getInstance().toggleKeyBindings(status);
-        InfobarController.getInstance().toggleKeyBindings(status);
-    }
-
     public static boolean didTheProgramLoadDefault() {
         return programLoadedDefault;
     }

@@ -1,7 +1,6 @@
 package Controller;
 
 import Helpers.ThemeHelper;
-import Main.Main;
 import View.*;
 import View.Window;
 
@@ -134,14 +133,13 @@ public final class SettingsWindowController extends WindowController {
             themeSettings.setSelectedThemeToDefault();
             MainWindowController.getInstance().themeHasChanged();
         }
-        //Todo refactor to avoid contact with main class
         if(!keysActiveStatus) {
             keysActiveStatus = true;
-            Main.notifyKeyToggle(keysActiveStatus);
+            MainWindowController.getInstance().notifyKeyToggle(keysActiveStatus);
         }
         if(antiAliasingStatus) {
             antiAliasingStatus = false;
-            Main.notifyAntiAliasingToggle(antiAliasingStatus);
+            CanvasController.getInstance().toggleAntiAliasing(antiAliasingStatus);
         }
         if(!canvasrealTimeInformationStatus) {
             canvasrealTimeInformationStatus = true;
@@ -162,17 +160,17 @@ public final class SettingsWindowController extends WindowController {
         //Todo refactor to avoid contact with main class
         if(!keyboardKeysToggle.isToggleSelected()) {
             keysActiveStatus = false;
-            Main.notifyKeyToggle(keysActiveStatus);
+            MainWindowController.getInstance().notifyKeyToggle(keysActiveStatus);
         } else {
             keysActiveStatus = true;
-            Main.notifyKeyToggle(keysActiveStatus);
+            MainWindowController.getInstance().notifyKeyToggle(keysActiveStatus);
         }
         if(antiAliasingToggle.isToggleSelected()) {
             antiAliasingStatus = true;
-            Main.notifyAntiAliasingToggle(antiAliasingStatus);
+            CanvasController.getInstance().toggleAntiAliasing(antiAliasingStatus);
         } else {
             antiAliasingStatus = false;
-            Main.notifyAntiAliasingToggle(antiAliasingStatus);
+            CanvasController.getInstance().toggleAntiAliasing(antiAliasingStatus);
         }
         if(canvasRealTimeInformationToggle.isToggleSelected()) {
             canvasrealTimeInformationStatus = true;

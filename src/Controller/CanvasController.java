@@ -45,6 +45,7 @@ public final class CanvasController extends Controller implements Observer {
 
     private Point2D lastMousePosition;
     private CanvasInteractionHandler handler;
+    private CanvasFocusHandler focusHandler;
     private static double zoom_value;
 
     private CanvasController() {
@@ -70,6 +71,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.setPreferredSize(new Dimension(window.getFrame().getWidth(), window.getFrame().getHeight() - GlobalValue.getToolbarHeight()));
         mapCanvas.setElements(model.getElements());
         addInteractionHandlerToCanvas();
+        addFocusHandlerToCanvas();
     }
 
     private void addInteractionHandlerToCanvas() {
@@ -78,6 +80,11 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.addMouseMotionListener(handler);
         mapCanvas.addMouseWheelListener(handler);
         specifyKeyBindings();
+    }
+
+    private void addFocusHandlerToCanvas() {
+        focusHandler = new CanvasFocusHandler();
+        mapCanvas.addFocusListener(focusHandler);
     }
 
     public void popupActivated(boolean canvasrealTimeInformationStatus) {
@@ -262,23 +269,24 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void mouseMovedEvent(MouseEvent e) {
-
-        if (!popup.isVisible()) {
-            popup.setLocation((int) e.getLocationOnScreen().getX() + POPUP_XOFFSET, (int) e.getLocationOnScreen().getY() + POPUP_YOFFSET);
-            setPopupContent(e);
-            if (toolTipTimer == null) {
-                toolTipTimer = new Timer(DELAY, a -> {
-                    if(a.getSource() == toolTipTimer) {
-                        if(popup != null) popup.showPopupMenu();
-                        toolTipTimer.stop();
-                        toolTipTimer = null;
-                    }
-                });
-                toolTipTimer.start();
-            } else toolTipTimer.restart();
-        } else {
-            popup.hidePopupMenu();
-            mapCanvas.grabFocus();
+        if (mapCanvas.hasFocus()) {
+            if (!popup.isVisible()) {
+                popup.setLocation((int) e.getLocationOnScreen().getX() + POPUP_XOFFSET, (int) e.getLocationOnScreen().getY() + POPUP_YOFFSET);
+                setPopupContent(e);
+                if (toolTipTimer == null) {
+                    toolTipTimer = new Timer(DELAY, a -> {
+                        if (a.getSource() == toolTipTimer) {
+                            if (popup != null) popup.showPopupMenu();
+                            toolTipTimer.stop();
+                            toolTipTimer = null;
+                        }
+                    });
+                    toolTipTimer.start();
+                } else toolTipTimer.restart();
+            } else {
+                popup.hidePopupMenu();
+                mapCanvas.grabFocus();
+            }
         }
     }
 
@@ -403,4 +411,15 @@ public final class CanvasController extends Controller implements Observer {
 
     }
 
+    private class CanvasFocusHandler extends FocusAdapter {
+
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            if(popup != null) {
+                if(popup.isVisible()) popup.hidePopupMenu();
+            }
+        }
+
+    }
 }
