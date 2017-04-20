@@ -122,6 +122,9 @@ public final class SearchToolController extends Controller {
     }
 
     private void showMatchingResults(){
+        //Todo check if this line fixes the windows issue
+        //Todo implement proper search
+        if(searchTool.getField().isPopupVisible()) searchTool.getField().hidePopup();
         searchTool.getField().removeAllItems();
         searchTool.getField().addItem("Cat");
         searchTool.getField().addItem("Horse");

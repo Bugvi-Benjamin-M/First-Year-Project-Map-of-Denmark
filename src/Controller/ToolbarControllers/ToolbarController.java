@@ -63,7 +63,7 @@ public final class ToolbarController extends Controller {
     public void setupToolbar(ToolbarType type) {
         toolbar = new Toolbar();
         toolbarLayout = toolbar.getLayout();
-        toolbar.setPreferredSize(new Dimension(window.getFrame().getWidth(), GlobalValue.getToolbarWidth()));
+        toolbar.setPreferredSize(new Dimension(window.getFrame().getWidth(), GlobalValue.getToolbarHeight()));
         this.type = type;
         switch (type) {
             case LARGE:

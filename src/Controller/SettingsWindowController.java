@@ -25,8 +25,10 @@ public final class SettingsWindowController extends WindowController {
     private SettingsButtons southButtons;
     private Toggle keyboardKeysToggle;
     private Toggle antiAliasingToggle;
+    private Toggle canvasRealTimeInformationToggle;
     private boolean keysActiveStatus;
     private boolean antiAliasingStatus;
+    private boolean canvasrealTimeInformationStatus;
     private Settings settings;
 
     private SettingsWindowController() {
@@ -81,8 +83,11 @@ public final class SettingsWindowController extends WindowController {
         keyboardKeysToggle = new KeyboardKeysToggle();
         southButtons = new SettingsButtons();
         antiAliasingToggle = new AntiAliasingToggle();
+        canvasRealTimeInformationToggle = new CanvasRealTimeInformationToggle();
         keysActiveStatus = true;
         antiAliasingStatus = false;
+        canvasrealTimeInformationStatus = true;
+        CanvasController.getInstance().popupActivated(canvasrealTimeInformationStatus);
     }
 
     /**
@@ -94,7 +99,9 @@ public final class SettingsWindowController extends WindowController {
         settings.addSetting(keyboardKeysToggle);
         settings.createSpace(new Dimension(0,20));
         settings.addSetting(antiAliasingToggle);
-        settings.createSpace(new Dimension(0,460));
+        settings.createSpace(new Dimension(0,20));
+        settings.addSetting(canvasRealTimeInformationToggle);
+        settings.createSpace(new Dimension(0,440));
     }
 
     /**
@@ -127,6 +134,7 @@ public final class SettingsWindowController extends WindowController {
             themeSettings.setSelectedThemeToDefault();
             MainWindowController.getInstance().themeHasChanged();
         }
+        //Todo refactor to avoid contact with main class
         if(!keysActiveStatus) {
             keysActiveStatus = true;
             Main.notifyKeyToggle(keysActiveStatus);
@@ -134,6 +142,10 @@ public final class SettingsWindowController extends WindowController {
         if(antiAliasingStatus) {
             antiAliasingStatus = false;
             Main.notifyAntiAliasingToggle(antiAliasingStatus);
+        }
+        if(!canvasrealTimeInformationStatus) {
+            canvasrealTimeInformationStatus = true;
+            CanvasController.getInstance().popupActivated(canvasrealTimeInformationStatus);
         }
         setToCurrentSettingsAndClose();
     }
@@ -147,6 +159,7 @@ public final class SettingsWindowController extends WindowController {
             ThemeHelper.setTheme(themeSettings.getSelectedTheme());
             MainWindowController.getInstance().themeHasChanged();
         }
+        //Todo refactor to avoid contact with main class
         if(!keyboardKeysToggle.isToggleSelected()) {
             keysActiveStatus = false;
             Main.notifyKeyToggle(keysActiveStatus);
@@ -160,6 +173,13 @@ public final class SettingsWindowController extends WindowController {
         } else {
             antiAliasingStatus = false;
             Main.notifyAntiAliasingToggle(antiAliasingStatus);
+        }
+        if(canvasRealTimeInformationToggle.isToggleSelected()) {
+            canvasrealTimeInformationStatus = true;
+            CanvasController.getInstance().popupActivated(canvasrealTimeInformationStatus);
+        } else {
+            canvasrealTimeInformationStatus = false;
+            CanvasController.getInstance().popupActivated(canvasrealTimeInformationStatus);
         }
         setToCurrentSettingsAndClose();
     }

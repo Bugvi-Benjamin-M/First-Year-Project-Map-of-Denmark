@@ -73,7 +73,7 @@ public final class MainWindowController extends WindowController {
 
     private void adjustBounds() {
         layeredPane.setBounds(new Rectangle(window.getFrame().getWidth(), window.getFrame().getHeight()));
-        ToolbarController.getInstance().getToolbar().setBounds(0,0,window.getFrame().getWidth(), GlobalValue.getToolbarWidth());
+        ToolbarController.getInstance().getToolbar().setBounds(0,0,window.getFrame().getWidth(), GlobalValue.getToolbarHeight());
         CanvasController.getInstance().getMapCanvas().setBounds(0,0,window.getFrame().getWidth(), window.getFrame().getHeight());
     }
 
