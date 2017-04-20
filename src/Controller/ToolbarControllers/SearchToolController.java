@@ -2,32 +2,26 @@ package Controller.ToolbarControllers;
 
 import Controller.Controller;
 import Enums.ToolType;
-import Helpers.ThemeHelper;
 import Helpers.OSDetector;
+import Helpers.ThemeHelper;
 import View.SearchTool;
-
-
-import java.util.Iterator;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import javax.swing.*;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
 import java.io.File;
-import java.io.FileWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 
 //import com.sun.xml.internal.bind.v2.TODO;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  * Created by Búgvi Magnussen on 02-04-2017.
@@ -44,7 +38,7 @@ public final class SearchToolController extends Controller {
 
     private String currentQuery;
     private final int[] prohibitedKeys = new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_ALT, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
-    KeyEvent.VK_UP, KeyEvent.VK_DOWN};
+    KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_META};
 
     private SearchToolController() {
         super();
@@ -105,6 +99,10 @@ public final class SearchToolController extends Controller {
 
     private void addFocusListenerToSearchTool() {
         searchTool.getField().getEditor().getEditorComponent().addFocusListener(new SearchToolFocusHandler());
+    }
+
+    protected void setToolTip() {
+        searchTool.getField().setToolTipText("Search");
     }
 
     protected void searchActivatedEvent() {
@@ -170,7 +168,8 @@ public final class SearchToolController extends Controller {
         }
         return false;
     }
-    //Todo fix bug regarding the list appearing when pressing the down key
+    //Todo, make sure that the up and down arrows can be used when history is not empty
+    //Todo fix bug regarding the list appearing when pressing the down key. Seems to be a Windows issue.
     private void specifyKeyBindings() {
         searchTool.getField().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override

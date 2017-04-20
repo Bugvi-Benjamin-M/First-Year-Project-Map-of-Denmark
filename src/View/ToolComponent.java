@@ -2,6 +2,7 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * Class details:
@@ -27,4 +28,9 @@ public abstract class ToolComponent extends JPanel {
         return defaultColor;
     }
 
+
+    @Override
+    public Point getToolTipLocation(MouseEvent event) {
+        return new Point((int) event.getPoint().getX()+20,(int) event.getPoint().getY()+20);
+    }
 }

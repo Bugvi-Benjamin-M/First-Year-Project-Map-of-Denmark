@@ -22,7 +22,6 @@ public final class ThemeHelper {
     }
 
     public static Color color(String input) {
-        input.trim().toLowerCase();
         try {
             Method method = currentTheme.getClass().getDeclaredMethod(input, null);
             return (Color) method.invoke(currentTheme, null);

@@ -4,6 +4,7 @@ import Controller.ToolbarControllers.ToolbarController;
 import Enums.ToolbarType;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
+import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
 import View.PopupWindow;
 import View.Window;
@@ -51,7 +52,13 @@ public final class MainWindowController extends WindowController {
         setupLayeredPane();
         addInteractionHandlerToWindow();
         CanvasController.adjustToBounds();
+        setToolTipTheme();
         hideWindow();
+    }
+
+    private void setToolTipTheme() {
+        UIManager.put("ToolTip.background", ThemeHelper.color("toolTipBackground"));
+        UIManager.put("ToolTip.foreground", ThemeHelper.color("toolTipForeground"));
     }
 
     private void setupLayeredPane() {
@@ -90,13 +97,10 @@ public final class MainWindowController extends WindowController {
     }
 
     public void themeHasChanged() {
-        //layeredPane.remove(ToolbarController.getInstance().getToolbar());
         ToolbarController.getInstance().themeHasChanged();
         CanvasController.getInstance().themeHasChanged();
+        setToolTipTheme();
         transferFocusToMapCanvas();
-        //ToolbarController.getInstance().getToolbar().setOpaque(true);
-        //adjustBounds();
-        //layeredPane.add(ToolbarController.getInstance().getToolbar(), new Integer(2));
     }
 
     @Override

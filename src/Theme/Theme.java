@@ -18,6 +18,9 @@ public interface Theme {
     public abstract Color searchfield();
     public abstract Color defaulttext();
 
+    public abstract Color toolTipBackground();
+    public abstract Color toolTipForeground();
+
     public abstract Color water();
     public abstract Color park();
     public abstract Color forest();
