@@ -64,8 +64,8 @@ public class MapCanvas extends View {
     public void setCurrentRectangle() {
         Rectangle2D rectangle = getVisibleRect();
         rectangle.setRect(rectangle.getX(), rectangle.getY() + GlobalValue.getToolbarWidth(), rectangle.getWidth(), rectangle.getHeight());
-        Point2D point = toModelCoords(new Point2D.Double(350, 100 + GlobalValue.getToolbarWidth()));
-        Point2D factor = toModelCoords(new Point2D.Double(rectangle.getWidth()-350, rectangle.getHeight()-100));
+        Point2D point = toModelCoords(new Point2D.Double(10, 10 + GlobalValue.getToolbarWidth()));
+        Point2D factor = toModelCoords(new Point2D.Double(rectangle.getWidth()-10, rectangle.getHeight()-10));
         double xBounds = factor.getX() - point.getX();
         double yBounds = factor.getY() - point.getY();
         currentRectangle = new Rectangle2D.Double(point.getX(), point.getY(), xBounds, yBounds);
