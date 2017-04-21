@@ -15,6 +15,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 /**
  * Created by Búgvi Magnussen on 14-03-2017.
  */
@@ -131,6 +134,13 @@ public final class MainWindowController extends WindowController {
         super.addInteractionHandlerToWindow();
         MainWindowInteractionHandler handler = new MainWindowInteractionHandler();
         window.getFrame().addComponentListener(handler);
+
+        window.getFrame().addWindowFocusListener(new WindowAdapter() {
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+                CanvasController.getInstance().hidden();
+            }
+        });
     }
 
     public void notifyKeyToggle(boolean status) {

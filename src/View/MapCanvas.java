@@ -94,7 +94,7 @@ public class MapCanvas extends View {
         drawCoastlines(g2D);
 
 
-        if (Main.didTheProgramLoadDefault()) {
+        if (GlobalValue.getDidProgramLoadDefault()) {
             drawElements(g2D);
         }
 
@@ -840,6 +840,7 @@ public class MapCanvas extends View {
             //The polygon coords
             float[] coords = polygon.getCoords();
 
+            if (coords.length < 4) break;
             float longestVectorX1 = coords[0];
             float longestVectorY1 = coords[1];
             float longestVectorX2 = coords[2];

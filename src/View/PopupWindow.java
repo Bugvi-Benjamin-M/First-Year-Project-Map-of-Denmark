@@ -63,5 +63,9 @@ public class PopupWindow {
         return JOptionPane.showConfirmDialog(relativeTo, message, title, options);
     }
 
-
+    public static int confirmBox(JFrame relativeTo, String message, String title,
+                                 Object[] options, Object initialValue) {
+        return JOptionPane.showOptionDialog(relativeTo,message,title,JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,null,options,initialValue);
+    }
 }

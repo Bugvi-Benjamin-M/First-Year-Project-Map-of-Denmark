@@ -73,6 +73,13 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.repaint();
     }
 
+    public void hidden() {
+        //TODO: This does not work
+        if(popup != null){
+            popup.hidePopupMenu();
+        }
+    }
+
     public void setupCanvas() {
         mapCanvas = new MapCanvas();
         mapCanvas.setPreferredSize(new Dimension(window.getFrame().getWidth(), window.getFrame().getHeight() - GlobalValue.getToolbarHeight()));
@@ -211,8 +218,6 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     public static void adjustToDynamicBounds(){
-        ZoomLevel.resetZoomFactor();
-        zoom_value = 0;
         double distancetoreach = 0;
         double currentdistance = 1;
         resetBounds();
@@ -227,8 +232,9 @@ public final class CanvasController extends Controller implements Observer {
             currentdistance = rightcorner.getX() - leftcorner.getX();
             mapCanvas.zoom(Math.pow(ZOOM_FACTOR, -1));
             mapCanvas.repaint();
-            changeZoomLevel(-1);
+            changeZoomLevel(+10);
         }
+        GlobalValue.setMaxZoom(ZoomLevel.getZoomFactor()-50);
     }
 
     public static void resetBounds(){
@@ -254,7 +260,7 @@ public final class CanvasController extends Controller implements Observer {
 
     private void mouseDraggedEvent(MouseEvent event) {
         mapCanvas.grabFocus();
-        popup.hidePopupMenu();
+        if (popup != null) popup.hidePopupMenu();
         Point2D currentMousePosition = event.getPoint();
         double dx = currentMousePosition.getX() - lastMousePosition.getX();
         double dy = currentMousePosition.getY() - lastMousePosition.getY();
@@ -263,7 +269,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void mouseWheelMovedEvent(MouseWheelEvent event) {
-        popup.hidePopupMenu();
+        if (popup != null) popup.hidePopupMenu();
         mapCanvas.grabFocus();
         double wheel_rotation = event.getPreciseWheelRotation();
         double factor = Math.pow(ZOOM_FACTOR, wheel_rotation);
@@ -272,13 +278,7 @@ public final class CanvasController extends Controller implements Observer {
         double dy = currentMousePosition.getY();
 
         double increase = -wheel_rotation*10;
-        if ((zoom_value > -30 || increase > 0) &&
-                (zoom_value < 700 || increase < 0)) {
-            mapCanvas.pan(-dx, -dy);
-            mapCanvas.zoom(factor);
-            changeZoomLevel(increase);
-            mapCanvas.pan(dx, dy);
-        }
+        zoomEvent(dx,dy,increase,factor);
     }
 
     private void mouseMovedEvent(MouseEvent e) {
@@ -335,10 +335,14 @@ public final class CanvasController extends Controller implements Observer {
         double dy = mapCanvas.getVisibleRect().getHeight()/2;
         double increase = -keyboardZoomFactor*10;
 
-        if ((zoom_value > -30 || increase > 0) &&
+        zoomEvent(dx,dy,increase,Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
+    }
+
+    private static void zoomEvent(double dx, double dy, double increase, double zoomFactor) {
+        if ((zoom_value > GlobalValue.getMaxZoom() || increase > 0) &&
                 (zoom_value < 700 || increase < 0)) {
             mapCanvas.pan(-dx, -dy);
-            mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
+            mapCanvas.zoom(zoomFactor);
             changeZoomLevel(increase);
             mapCanvas.pan(dx, dy);
         }
@@ -352,7 +356,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private String calculateNearestNeighbour(float x, float y){
-        roads = model.getElements().get(ElementType.HIGHWAY).getSection(x, y);
+        roads = model.getElements().get(ElementType.HIGHWAY).getManySections(x - 1f, y - 1f, x + 1f, y + 1f);
         float minDist = 1000;
         Road e = null;
         for(Element element : roads){
