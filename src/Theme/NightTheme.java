@@ -14,7 +14,7 @@ public class NightTheme implements Theme {
 
     @Override
     public Color rail() {
-        return new Color(0xC74838);
+        return new Color(0x999999);
     }
 
     @Override
