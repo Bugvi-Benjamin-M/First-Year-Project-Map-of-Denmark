@@ -247,6 +247,7 @@ public final class CanvasController extends Controller implements Observer {
 
     private void mouseDraggedEvent(MouseEvent event) {
         mapCanvas.grabFocus();
+        popup.hidePopupMenu();
         Point2D currentMousePosition = event.getPoint();
         double dx = currentMousePosition.getX() - lastMousePosition.getX();
         double dy = currentMousePosition.getY() - lastMousePosition.getY();
@@ -337,6 +338,8 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     public void themeHasChanged() {
+        popup = null;
+        popup = new CanvasPopup();
         mapCanvas.revalidate();
         mapCanvas.repaint();
     }
