@@ -1,10 +1,8 @@
 package Controller.ToolbarControllers;
 
 import Controller.Controller;
-import Controller.MainWindowController;
 import Enums.ToolType;
 import Helpers.OSDetector;
-import Helpers.ThemeHelper;
 import View.MenuTool;
 import View.ToolComponent;
 import View.Toolbar;
@@ -52,10 +50,7 @@ public final class MenuToolController extends Controller {
 
     protected void setupMenuTool() {
         toolbar = ToolbarController.getInstance().getToolbar();
-        //if(popupMenu != null && popupMenu.isVisible()) popupMenu.hidePopupMenu();
         popupMenu = new MenuTool();
-        //setupLayoutForMenuTool();
-        //setToCurrentTheme();
         addFocusListener();
         addActionsToToolsMenu();
     }

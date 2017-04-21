@@ -27,7 +27,7 @@ public class GlobalValue {
     }
 
 
-    public static int getToolbarWidth() {
+    public static int getToolbarHeight() {
         return 100;
     }
 

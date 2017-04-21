@@ -15,6 +15,8 @@ import View.PopupWindow;
 import javax.swing.*;
 
 
+import Parser.Address;
+
 /**
  * Created by Jakob on 06-03-2017.
  */
@@ -24,13 +26,13 @@ public class Main {
     private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
 
     private static final boolean DEBUG_MODE_ACTIVE = false;  // CHANGE ME TO PREVENT LOADING DEFAULT
+    private static final boolean SAVE_AFTER_LOAD = true;     // CHANGE ME TO PREVENT SAVING BIN
 
     public static long LOAD_TIME;
     private static SplashScreen screen;
     private static boolean programLoadedDefault;
 
     public static void main(String[] args) {
-
 
         long startTime = System.nanoTime();
 
@@ -98,18 +100,6 @@ public class Main {
       screen = new SplashScreen(myImage);
       screen.setLocationRelativeTo(null);
       screen.setScreenVisible(true);
-    }
-
-    public static void notifyAntiAliasingToggle(boolean status) {
-        CanvasController.getInstance().toggleAntiAliasing(status);
-    }
-
-    public static void notifyKeyToggle(boolean status) {
-        CanvasController.getInstance().toggleKeyBindings(status);
-        ToolbarController.getInstance().toggleKeyBindings(status);
-        SettingsWindowController.getInstance().toggleKeyBindings(status);
-        MainWindowController.getInstance().toggleKeyBindings(status);
-        InfobarController.getInstance().toggleKeyBindings(status);
     }
 
     public static boolean didTheProgramLoadDefault() {

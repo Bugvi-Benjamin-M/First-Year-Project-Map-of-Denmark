@@ -10,7 +10,7 @@ import java.awt.*;
  */
 public class DefaultTheme implements Theme {
 
-    private static String name = "Default";
+    private String name = "Default";
 
     @Override
     public Color rail() {
@@ -50,6 +50,19 @@ public class DefaultTheme implements Theme {
     public Color defaulttext() {
         return new Color(0xA0A39F);
     }
+
+    public Color toolTipBackground() {return new Color(0xB9B7B3);}
+
+    public Color toolTipForeground() {return new Color(0x050505);}
+
+    public Color canvasPopupBackground() {
+        return new Color(0xDED0A9);
+    }
+
+    public Color canvasPopupForeground() {
+        return new Color(0x000000);
+    }
+
     public Color cityName() { return new Color(0x000000); }
     public Color roadName() {return new Color(0x000000);}
     public Color barName(){
