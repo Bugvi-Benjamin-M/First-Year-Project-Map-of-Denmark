@@ -281,7 +281,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void calculateNearestNeighbour(float x, float y){
-        roads = model.getElements().get(ElementType.HIGHWAY).getSection(x, y);
+        roads = model.getElements().get(ElementType.HIGHWAY).getManySections(x - 1f, y - 1f, x + 1f, y + 1f);
         float minDist = 1000;
         Road e = null;
         for(Element element : roads){
