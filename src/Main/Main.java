@@ -40,16 +40,16 @@ public class Main {
 
         Model model = Model.getInstance();
         SwingUtilities.invokeLater(() -> {
-        try {
-            loadDefaultResource();
-            splashScreenDestruct();
-            programLoadedDefault = true;
-        } catch (FileWasNotFoundException e) {
-            splashScreenDestruct();
-            PopupWindow.warningBox(null,e.getMessage());
-            model.loadFromCoastlines();
-            programLoadedDefault = false;
-        }
+            try {
+                loadDefaultResource();
+                splashScreenDestruct();
+                programLoadedDefault = true;
+            } catch (FileWasNotFoundException e) {
+                splashScreenDestruct();
+                PopupWindow.warningBox(null,e.getMessage());
+                model.loadFromCoastlines();
+                programLoadedDefault = false;
+            }
             createControllers();
             MainWindowController.getInstance().setupMainWindow();
             SettingsWindowController.getInstance().setupSettingsWindow();
@@ -58,9 +58,9 @@ public class Main {
             MainWindowController.getInstance().transferFocusToMapCanvas();
         });
 
-            LOAD_TIME = System.nanoTime() - startTime;
-            System.out.println("System loadtime: "+(LOAD_TIME / 1000000) + " ms");
-            DebugWindow.getInstance().setLoadtimeLabel();
+        LOAD_TIME = System.nanoTime() - startTime;
+        System.out.println("System loadtime: "+(LOAD_TIME / 1000000) + " ms");
+        DebugWindow.getInstance().setLoadtimeLabel();
     }
 
     private static void createControllers() {
