@@ -4,6 +4,7 @@ import Enums.BoundType;
 import Helpers.GlobalValue;
 import Helpers.HelperFunctions;
 import Model.Model;
+import OSM.OSMWay;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -51,9 +52,11 @@ public class CoastlineFactory {
         return bounds.get(type);
     }
 
-    protected void insertCoastline(Collection<Point2D> nodes) {
+    protected void insertCoastline(OSMWay nodes) {
         Coastline object = new Coastline();
-        object.addAll(nodes);
+        for (int i = 0; i < nodes.size(); i++) {
+            object.add(nodes.get(i));
+        }
         coastlines.add(object);
     }
 
@@ -71,11 +74,12 @@ public class CoastlineFactory {
 
     public List<Path2D> getCoastlinePolygons() {
         HashSet<Path2D> paths = new HashSet<>();
+        List<Integer> sizes = new ArrayList<>();
         for (Coastline coast: coastlines) {
             double size = (HelperFunctions.sizeOfPolygon(coast)*100000);
+            sizes.add(coast.size());
 
-            /*
-            System.out.println("Coast: "+coast.size()+" points ("+ size +" size)");
+            /*System.out.println("Coast: "+coast.size()+" points ("+ size +" size)");
             System.out.println("... From: "+coast.getFromNode().getX()+", "+coast.getFromNode().getY());
             System.out.println("... To:   "+coast.getToNode().getX()+", "+coast.getToNode().getY()+"\n");
             */
@@ -97,10 +101,21 @@ public class CoastlineFactory {
             if (path != null) {
                 paths.add(path);
             }
+
+            // if (coast.size() == 683) System.out.println(coast.toString());
         }
         List<Path2D> returnable = new ArrayList<>();
         for (Path2D path : paths) {
             returnable.add(path);
+        }
+
+        // System.out.println("Finished retrieving");
+
+        if (false) {
+            Collections.sort(sizes);
+            for (Integer size : sizes) {
+                System.out.println(size);
+            }
         }
         return returnable;
     }

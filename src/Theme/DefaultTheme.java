@@ -47,7 +47,6 @@ public class DefaultTheme implements Theme {
         return new Color(0xFFF9FC);
     }
 
-    @Override
     public Color defaulttext() {
         return new Color(0xA0A39F);
     }
@@ -57,6 +56,19 @@ public class DefaultTheme implements Theme {
     public Color toolTipForeground() {return new Color(0x050505);}
 
     public Color cityName() { return new Color(0x000000); }
+    public Color roadName() {return new Color(0x000000);}
+    public Color barName(){
+        return new Color(0x000000);
+    }
+    public Color nightClubName(){
+        return new Color(0x000000);
+    }
+    public Color fastFoodName(){
+        return new Color(0x000000);
+    }
+    public Color iceCreamName(){
+        return new Color(0x000000);
+    }
 
     @Override
     public Color water() {
@@ -69,8 +81,33 @@ public class DefaultTheme implements Theme {
     }
 
     @Override
-    public Color forest(){
+    public Color forest() {
         return new Color(0x9DCA8A);
+    }
+
+    @Override
+    public Color grassland() {
+        return new Color(0xC0E48F);
+    }
+
+    @Override
+    public Color grass() {
+        return new Color(0xC0E48F);
+    }
+
+    @Override
+    public Color heath() {
+        return new Color(0xCCE478);
+    }
+
+    @Override
+    public Color meadow() {
+        return new Color(0xC0E48F);
+    }
+
+    @Override
+    public Color farmland() {
+        return new Color(0xCCE478);
     }
 
     @Override
@@ -87,7 +124,7 @@ public class DefaultTheme implements Theme {
         return new Color(0xE27B90);
     }
     public Color trunkRoad() {
-        return new Color(0xF13400);
+        return new Color(0xE27B90);
     }
     public Color primaryRoad(){
         return new Color(0xF18C03);

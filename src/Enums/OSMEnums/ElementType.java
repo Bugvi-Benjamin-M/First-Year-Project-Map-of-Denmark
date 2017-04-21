@@ -13,8 +13,14 @@ public enum ElementType {
 
     WATER, //Søer og lign.
 
+    //BIOMES
     PARK,
     FOREST,
+    GRASSLAND,
+    HEATH,
+    GRASS,
+    FARMLAND,
+    MEADOW,
 
     //PLACES - NAMES
     CITY_NAME, //navne på byer over 100k
@@ -25,6 +31,7 @@ public enum ElementType {
     QUARTER_NAME, //Kvarter (mindre end suburb men større end neighbourhood)
     NEIGHBOURHOOD_NAME, //navngivet nabolag
 
+    HIGHWAY, //All roads (Used for nearestNeighbourSearch)
     //ROADS
     MOTORWAY, //Motorvej
     MOTORWAY_LINK,
@@ -52,5 +59,14 @@ public enum ElementType {
     PATH, //Temporary setting
     ROAD, //Temporary setting
 
-    RAIL
+    RAIL,
+
+    //AMENITIES
+    BAR, //night
+    NIGHT_CLUB, //Night
+
+    FAST_FOOD, //Children
+    ICE_CREAM, //Children
+
+    HOSPITAL,
 }

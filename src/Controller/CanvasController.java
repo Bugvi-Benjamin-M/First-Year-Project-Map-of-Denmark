@@ -1,17 +1,22 @@
 package Controller;
 
+import Enums.OSMEnums.ElementType;
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
+import Model.Elements.Element;
+import Model.Elements.Road;
 import Model.Model;
 import View.CanvasPopup;
 import View.MapCanvas;
+import View.PopupWindow;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -47,6 +52,7 @@ public final class CanvasController extends Controller implements Observer {
     private CanvasInteractionHandler handler;
     private CanvasFocusHandler focusHandler;
     private static double zoom_value;
+    private HashSet<Element> roads;
 
     private CanvasController() {
         super();
@@ -243,6 +249,7 @@ public final class CanvasController extends Controller implements Observer {
         Point2D mousePosition = event.getPoint();
         Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
         mapCanvas.setCurrentPoint(mouseInModel);
+        calculateNearestNeighbour((float) mouseInModel.getX(), (float) mouseInModel.getY());
     }
 
     private void mouseDraggedEvent(MouseEvent event) {
@@ -318,6 +325,24 @@ public final class CanvasController extends Controller implements Observer {
         changeZoomLevel(keyboardZoomFactor);
         mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
         mapCanvas.pan(dx, dy);
+    }
+
+    private void calculateNearestNeighbour(float x, float y){
+        roads = model.getElements().get(ElementType.HIGHWAY).getSection(x, y);
+        float minDist = 1000;
+        Road e = null;
+        for(Element element : roads){
+            Road r = (Road) element;
+            if(r.getShape().distTo(new Point2D.Float(x, y)) < minDist){
+                if(!r.getName().equals("")) {
+                    e = r;
+                    minDist = (float) r.getShape().distTo(new Point2D.Float(x, y));
+                }
+            }
+        }
+        if(e != null)  {
+            new PopupWindow().infoBox(null, e.getName(), "Nearest Road");
+        }
     }
 
     private static void changeZoomLevel(double zoomFactor) {
