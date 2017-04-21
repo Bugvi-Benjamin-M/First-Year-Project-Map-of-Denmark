@@ -391,3 +391,36 @@ Next Time:
 - Wednesday the 19th of April
 
 ## Next logbook...
+
+## Logbook 21/4 (Scribe Jakob)
+What we did since last time:
+- Vacation
+- Coastline are done
+- Nearest neighbour works 
+- Path generalisation is working with reliations
+- Draw road names
+- Refactoring the GUI
+- tooltips for roads
+- handyman/Sexy guy worked on the address parser
+- more vacation and painting eggs
+- even more vacation and eating eggs
+- Poop
+- We bombed north Korea
+
+What we will do until next time:
+- Prepare release and presentation
+- version 1 of the address parser
+- restricted zoom / panning
+- More amenities
+- tooltips on amenities
+- (Make child theme)
+- improme/extends nearest neighbour search
+- Tenary search trie for addresses
+
+Impediments:
+- Frida brings cake <3
+
+Next Time:
+- Monday 24/4 at 10.00
+
+## Next logbook...
