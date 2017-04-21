@@ -2,7 +2,7 @@ package Parser;
 
 class Builder {
   protected String street = null, house = null, floor = null, side = null,
-                 postcode = null, city = null;
+                   postcode = null, city = null;
   protected Builder street(String _street) {
     street = _street;
     return this;

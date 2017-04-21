@@ -7,7 +7,7 @@ public class Address {
 
   private final String street, house, floor, side, postcode, city;
   protected Address(String _street, String _house, String _floor, String _side,
-                  String _postcode, String _city) {
+                    String _postcode, String _city) {
     street = _street;
     house = _house;
     floor = _floor;
