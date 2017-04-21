@@ -253,7 +253,7 @@ public final class CanvasController extends Controller implements Observer {
 
     private void mouseDraggedEvent(MouseEvent event) {
         mapCanvas.grabFocus();
-        popup.hidePopupMenu();
+        if (popup != null) popup.hidePopupMenu();
         Point2D currentMousePosition = event.getPoint();
         double dx = currentMousePosition.getX() - lastMousePosition.getX();
         double dy = currentMousePosition.getY() - lastMousePosition.getY();
@@ -262,7 +262,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void mouseWheelMovedEvent(MouseWheelEvent event) {
-        popup.hidePopupMenu();
+        if (popup != null) popup.hidePopupMenu();
         mapCanvas.grabFocus();
         double wheel_rotation = event.getPreciseWheelRotation();
         double factor = Math.pow(ZOOM_FACTOR, wheel_rotation);

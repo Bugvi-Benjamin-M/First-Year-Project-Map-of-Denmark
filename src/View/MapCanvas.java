@@ -94,7 +94,7 @@ public class MapCanvas extends View {
         drawCoastlines(g2D);
 
 
-        if (Main.didTheProgramLoadDefault()) {
+        if (GlobalValue.getDidProgramLoadDefault()) {
             drawElements(g2D);
         }
 
