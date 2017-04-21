@@ -57,6 +57,10 @@ public interface Theme {
 
     public abstract Color cityName();
     public abstract Color roadName();
+    public abstract Color barName();
+    public abstract Color nightClubName();
+    public abstract Color fastFoodName();
+    public abstract Color iceCreamName();
 
 
     public abstract String getName();

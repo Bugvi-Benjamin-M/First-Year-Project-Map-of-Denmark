@@ -47,16 +47,23 @@ public class DefaultTheme implements Theme {
         return new Color(0xFFF9FC);
     }
 
-    @Override
     public Color defaulttext() {
         return new Color(0xA0A39F);
     }
-
-    @Override
     public Color cityName() { return new Color(0x000000); }
-
-    @Override
     public Color roadName() {return new Color(0x000000);}
+    public Color barName(){
+        return new Color(0x000000);
+    }
+    public Color nightClubName(){
+        return new Color(0x000000);
+    }
+    public Color fastFoodName(){
+        return new Color(0x000000);
+    }
+    public Color iceCreamName(){
+        return new Color(0x000000);
+    }
 
     @Override
     public Color water() {

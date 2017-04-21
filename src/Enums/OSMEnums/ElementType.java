@@ -58,5 +58,14 @@ public enum ElementType {
     PATH, //Temporary setting
     ROAD, //Temporary setting
 
-    RAIL
+    RAIL,
+
+    //AMENITIES
+    BAR, //night
+    NIGHT_CLUB, //Night
+
+    FAST_FOOD, //Children
+    ICE_CREAM, //Children
+
+    HOSPITAL,
 }

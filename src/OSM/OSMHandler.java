@@ -52,6 +52,10 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> suburbNames;
     private ArrayList<Pointer> quarterNames;
     private ArrayList<Pointer> neighbourhoodNames;
+    private ArrayList<Pointer> bars;
+    private ArrayList<Pointer> nightClubs;
+    private ArrayList<Pointer> fastFoods;
+    private ArrayList<Pointer> iceCreams;
     private boolean specialRelationCase = false;
     private boolean isArea = false;
 
@@ -68,6 +72,10 @@ public final class OSMHandler implements ContentHandler {
         suburbNames = new ArrayList<>();
         quarterNames = new ArrayList<>();
         neighbourhoodNames = new ArrayList<>();
+        bars = new ArrayList<>();
+        nightClubs = new ArrayList<>();
+        fastFoods = new ArrayList<>();
+        iceCreams = new ArrayList<>();
     }
 
     public void parseDefault(Boolean mode){
@@ -224,6 +232,26 @@ public final class OSMHandler implements ContentHandler {
                         model.getElements().get(ElementType.NEIGHBOURHOOD_NAME).putPointer(p);
                     }
                     //neighbourhoodNames = null;
+
+                    for(Pointer p : bars){
+                        model.getElements().get(ElementType.BAR).putPointer(p);
+                    }
+                    bars.clear();
+
+                    for(Pointer p : nightClubs){
+                        model.getElements().get(ElementType.NIGHT_CLUB).putPointer(p);
+                    }
+                    nightClubs.clear();
+
+                    for(Pointer p : fastFoods){
+                        model.getElements().get(ElementType.FAST_FOOD).putPointer(p);
+                    }
+                    //fastFoods = null;
+
+                    for(Pointer p : iceCreams){
+                        model.getElements().get(ElementType.ICE_CREAM).putPointer(p);
+                    }
+                    //iceCreams = null;
                 }
 
                 way = new OSMWay();
@@ -267,6 +295,9 @@ public final class OSMHandler implements ContentHandler {
                         break;
                     case "landuse":
                         determineLanduse(v);
+                        break;
+                    case "amenity":
+                        determineAmenity(v);
                         break;
                     case "area":
                         switch(v){
@@ -316,6 +347,26 @@ public final class OSMHandler implements ContentHandler {
             case "tram":
             case "monorail":
                 elementType = ElementType.RAIL;
+                break;
+        }
+    }
+
+    private void determineAmenity(String value){
+        switch(value){
+            case "bar":
+            case "biergarten":
+            case "pub":
+                place = ElementType.BAR;
+                break;
+            case "nightclub":
+                place = ElementType.NIGHT_CLUB;
+                break;
+            case "fast_food":
+                place = ElementType.FAST_FOOD;
+                break;
+            case "ice_cream":
+                place = ElementType.ICE_CREAM;
+                break;
         }
     }
 
@@ -455,6 +506,12 @@ public final class OSMHandler implements ContentHandler {
                     case QUARTER_NAME:
                     case NEIGHBOURHOOD_NAME:
                         addName(place);
+                        break;
+                    case BAR:
+                    case NIGHT_CLUB:
+                    case FAST_FOOD:
+                    case ICE_CREAM:
+                        addAmenity(place);
                         break;
                 }
                 break;
@@ -661,6 +718,33 @@ public final class OSMHandler implements ContentHandler {
                     } else continue;
                 }
             }
+        }
+    }
+
+    private void addAmenity(ElementType type){
+        Amenity amenity;
+        Pointer p;
+        switch (type){
+            case BAR:
+                amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
+                bars.add(p);
+                break;
+            case NIGHT_CLUB:
+                amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
+                nightClubs.add(p);
+                break;
+            case FAST_FOOD:
+                amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
+                fastFoods.add(p);
+                break;
+            case ICE_CREAM:
+                amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
+                iceCreams.add(p);
+                break;
         }
     }
 

@@ -225,6 +225,7 @@ public class MapCanvas extends View {
                 drawRoadNames(g, ElementType.TRUNK_ROAD);
                 drawRoadNames(g, ElementType.MOTORWAY);
 
+                drawNight(g);
                 break;
             case LEVEL_1:
                 drawWater(g, ThemeHelper.color("water"), 0.00005);
@@ -797,7 +798,6 @@ public class MapCanvas extends View {
         }
     }
 
-    //Draw water
     private void drawWater(Graphics2D g, Color color, Double minSizeToBeSignificant) {
         setCurrentSection(ElementType.WATER);
         for (Element element : currentSection) {
@@ -811,7 +811,6 @@ public class MapCanvas extends View {
         }
     }
 
-    //Draw buildings
     private  void drawBuilding(Graphics2D g, Color color){
         setCurrentSection(ElementType.BUILDING);
         Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .9f);
@@ -825,7 +824,6 @@ public class MapCanvas extends View {
         g.setComposite(c);
     }
 
-    //Draw road names
     private void drawRoadNames(Graphics2D g, ElementType type){
         setCurrentSection(type);  //TODO Se drawCityNames for a more generic version
 
@@ -833,7 +831,7 @@ public class MapCanvas extends View {
         float scaleFactor =  0.1f * 397.522f * (float) (Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
 
         //Font
-        Font font = new Font("Arial", Font.BOLD, 12);
+        Font font = new Font("Times New Roman", Font.PLAIN, 12);
 
         //Transparency
         Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f); //TODO want transparency for road names ?
@@ -941,13 +939,6 @@ public class MapCanvas extends View {
         return Math.acos(cosAngle);
     }
 
-
-
-
-
-
-
-    //Draw City Names
     private void drawCityNames(Graphics2D g, ElementType type, float scaling){
         setCurrentSection(type);
         if(ZoomLevel.getZoomFactor() > -60){
@@ -975,13 +966,38 @@ public class MapCanvas extends View {
         }
     }
     private void drawString (String s , Graphics2D g , float x , float y, Font font, float scaleFactor, boolean isShiftedLeft){
-        if(s.length() > 2){
+        if(s.length() > 0){
             if(isShiftedLeft) x = x - ((getFontMetrics(font).charWidth(s.charAt(s.length()/2))*scaleFactor) * s.length()/2);
             for (int i = 0 ; i < s.length() ; i++){
                 char ch = s.charAt(i);
                 g.drawString(ch + "", x, y) ;
                 x += ((getFontMetrics(font).charWidth(ch)))*scaleFactor;
             }
+        }
+    }
+
+    private void drawNight(Graphics2D g){
+        switch(ThemeHelper.getCurrentTheme()){
+            case "Night":
+                if(ZoomLevel.getZoomFactor() >= 650){
+                    float scaleFactor = 0.5f * (float) (Math.pow(ZoomLevel.getZoomFactor(), -2f));
+                    setCurrentSection(ElementType.BAR);
+                    for (Element element : currentSection){
+                        Amenity amenity = (Amenity) element;
+                        g.setColor(ThemeHelper.color("barName"));
+                        Font font = Helpers.FontAwesome.getFontAwesome();
+                        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+                        drawString("\uf000" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
+                    }
+                    setCurrentSection(ElementType.NIGHT_CLUB);
+                    for (Element element : currentSection){
+                        Amenity amenity = (Amenity) element;
+                        g.setColor(ThemeHelper.color("nightClubName"));
+                        Font font = Helpers.FontAwesome.getFontAwesome();
+                        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+                        drawString("\uf001" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
+                    }
+                }
         }
     }
 }
