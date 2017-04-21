@@ -9,12 +9,18 @@ import Enums.ToolbarType;
 import Helpers.FileHandler;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
-import View.*;
+import View.PopupWindow;
+import View.ToolComponent;
+import View.ToolFeature;
+import View.Toolbar;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import static javax.swing.SpringLayout.*;
 
@@ -36,7 +42,7 @@ public final class ToolbarController extends Controller {
     private ToolbarType type;
 
     private final int MARGIN_SMALL_LEFT = 20;
-    private final int MARGIN_SMALL_RIGHT = -40;
+    private final int MARGIN_SMALL_RIGHT = -20;
     private final int MARGIN_SMALLEST_LEFT = 10;
     private final int MARGIN_SMALLEST_RIGHT = -10;
     private final int MARGIN_TOP = 20;
@@ -57,7 +63,7 @@ public final class ToolbarController extends Controller {
     public void setupToolbar(ToolbarType type) {
         toolbar = new Toolbar();
         toolbarLayout = toolbar.getLayout();
-        toolbar.setPreferredSize(new Dimension(window.getFrame().getWidth(), GlobalValue.getToolbarWidth()));
+        toolbar.setPreferredSize(new Dimension(window.getFrame().getWidth(), GlobalValue.getToolbarHeight()));
         this.type = type;
         switch (type) {
             case LARGE:
@@ -72,6 +78,7 @@ public final class ToolbarController extends Controller {
         SearchToolController.getInstance().setupSearchTool();
         MenuToolController.getInstance().setupMenuTool();
         addInteractionHandlersToTools();
+        setToolTips();
     }
 
     public void setupLargeToolbar() {
@@ -87,6 +94,31 @@ public final class ToolbarController extends Controller {
         addMenuToolToSmallToolbar();
         addSearchToolToSmallToolbar(addSearchButtonToolToSmallToolbar());
         type = ToolbarType.SMALL;
+    }
+
+    private void setToolTips() {
+        for(ToolType tool : toolbar.getAllTools().keySet()) {
+            switch (tool) {
+                case LOAD:
+                    toolbar.getTool(tool).setToolTipText("Load a chosen file");
+                    break;
+                case SAVE:
+                    toolbar.getTool(tool).setToolTipText("Save the current state of the map");
+                    break;
+                case SEARCHBAR:
+                    SearchToolController.getInstance().setToolTip();
+                    break;
+                case SEARCHBUTTON:
+                    toolbar.getTool(tool).setToolTipText("Initialise search");
+                    break;
+                case SETTINGS:
+                    toolbar.getTool(tool).setToolTipText("Open settings window");
+                    break;
+                case MENU:
+                    toolbar.getTool(tool).setToolTipText("Access tools");
+                    break;
+            }
+        }
     }
 
     public void resizeEvent() {

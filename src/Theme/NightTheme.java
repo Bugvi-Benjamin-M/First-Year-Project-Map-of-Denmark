@@ -52,6 +52,10 @@ public class NightTheme implements Theme {
         return new Color(0xA4ADDE);
     }
 
+    public Color toolTipBackground() {return new Color(0x555258);}
+
+    public Color toolTipForeground() {return new Color(0xFEFDFF);}
+
     public Color cityName() { return new Color(0xA4ADDE); }
 
     @Override

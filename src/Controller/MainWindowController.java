@@ -4,6 +4,7 @@ import Controller.ToolbarControllers.ToolbarController;
 import Enums.ToolbarType;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
+import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
 import View.PopupWindow;
 import View.Window;
@@ -51,7 +52,13 @@ public final class MainWindowController extends WindowController {
         setupLayeredPane();
         addInteractionHandlerToWindow();
         CanvasController.adjustToBounds();
+        setToolTipTheme();
         hideWindow();
+    }
+
+    private void setToolTipTheme() {
+        UIManager.put("ToolTip.background", ThemeHelper.color("toolTipBackground"));
+        UIManager.put("ToolTip.foreground", ThemeHelper.color("toolTipForeground"));
     }
 
     private void setupLayeredPane() {
@@ -66,7 +73,7 @@ public final class MainWindowController extends WindowController {
 
     private void adjustBounds() {
         layeredPane.setBounds(new Rectangle(window.getFrame().getWidth(), window.getFrame().getHeight()));
-        ToolbarController.getInstance().getToolbar().setBounds(0,0,window.getFrame().getWidth(), GlobalValue.getToolbarWidth());
+        ToolbarController.getInstance().getToolbar().setBounds(0,0,window.getFrame().getWidth(), GlobalValue.getToolbarHeight());
         CanvasController.getInstance().getMapCanvas().setBounds(0,0,window.getFrame().getWidth(), window.getFrame().getHeight());
     }
 
@@ -90,13 +97,10 @@ public final class MainWindowController extends WindowController {
     }
 
     public void themeHasChanged() {
-        //layeredPane.remove(ToolbarController.getInstance().getToolbar());
         ToolbarController.getInstance().themeHasChanged();
         CanvasController.getInstance().themeHasChanged();
+        setToolTipTheme();
         transferFocusToMapCanvas();
-        //ToolbarController.getInstance().getToolbar().setOpaque(true);
-        //adjustBounds();
-        //layeredPane.add(ToolbarController.getInstance().getToolbar(), new Integer(2));
     }
 
     @Override
@@ -127,6 +131,14 @@ public final class MainWindowController extends WindowController {
         super.addInteractionHandlerToWindow();
         MainWindowInteractionHandler handler = new MainWindowInteractionHandler();
         window.getFrame().addComponentListener(handler);
+    }
+
+    public void notifyKeyToggle(boolean status) {
+        CanvasController.getInstance().toggleKeyBindings(status);
+        ToolbarController.getInstance().toggleKeyBindings(status);
+        SettingsWindowController.getInstance().toggleKeyBindings(status);
+        MainWindowController.getInstance().toggleKeyBindings(status);
+        InfobarController.getInstance().toggleKeyBindings(status);
     }
 
     public void resetInstance() {

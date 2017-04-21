@@ -34,11 +34,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-
-        Address addr = Address.parse("Rued Langgaardsvej 7, 2300 København S");
-        System.out.println(addr.city());
-        System.out.println(addr.street());
-
         long startTime = System.nanoTime();
 
         splashScreenInit();
@@ -106,18 +101,6 @@ public class Main {
       screen = new SplashScreen(myImage);
       screen.setLocationRelativeTo(null);
       screen.setScreenVisible(true);
-    }
-
-    public static void notifyAntiAliasingToggle(boolean status) {
-        CanvasController.getInstance().toggleAntiAliasing(status);
-    }
-
-    public static void notifyKeyToggle(boolean status) {
-        CanvasController.getInstance().toggleKeyBindings(status);
-        ToolbarController.getInstance().toggleKeyBindings(status);
-        SettingsWindowController.getInstance().toggleKeyBindings(status);
-        MainWindowController.getInstance().toggleKeyBindings(status);
-        InfobarController.getInstance().toggleKeyBindings(status);
     }
 
     public static boolean didTheProgramLoadDefault() {

@@ -2,7 +2,9 @@ package Controller;
 
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
+import Helpers.ThemeHelper;
 import Model.Model;
+import View.CanvasPopup;
 import View.MapCanvas;
 
 import javax.swing.*;
@@ -21,6 +23,14 @@ public final class CanvasController extends Controller implements Observer {
     private static final double ZOOM_FACTOR = 0.9;
     private static final double KEYBOARD_ZOOM_FACTOR = 1.0;
     private static final double PAN_FACTOR = 38.5;
+    private static final int POPUP_XOFFSET = 20;
+    private static final int POPUP_YOFFSET = 10;
+
+    private CanvasPopup popup;
+    private boolean popupToggle;
+
+    private final int DELAY = 1000;
+    private Timer toolTipTimer;
 
     private enum PanType {
         LEFT,
@@ -35,6 +45,7 @@ public final class CanvasController extends Controller implements Observer {
 
     private Point2D lastMousePosition;
     private CanvasInteractionHandler handler;
+    private CanvasFocusHandler focusHandler;
     private static double zoom_value;
 
     private CanvasController() {
@@ -57,9 +68,10 @@ public final class CanvasController extends Controller implements Observer {
 
     public void setupCanvas() {
         mapCanvas = new MapCanvas();
-        mapCanvas.setPreferredSize(new Dimension(window.getFrame().getWidth(), window.getFrame().getHeight() - GlobalValue.getToolbarWidth()));
+        mapCanvas.setPreferredSize(new Dimension(window.getFrame().getWidth(), window.getFrame().getHeight() - GlobalValue.getToolbarHeight()));
         mapCanvas.setElements(model.getElements());
         addInteractionHandlerToCanvas();
+        addFocusHandlerToCanvas();
     }
 
     private void addInteractionHandlerToCanvas() {
@@ -68,6 +80,15 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.addMouseMotionListener(handler);
         mapCanvas.addMouseWheelListener(handler);
         specifyKeyBindings();
+    }
+
+    private void addFocusHandlerToCanvas() {
+        focusHandler = new CanvasFocusHandler();
+        mapCanvas.addFocusListener(focusHandler);
+    }
+
+    public void popupActivated(boolean canvasrealTimeInformationStatus) {
+        popupToggle = canvasrealTimeInformationStatus;
     }
 
     private void specifyKeyBindings() {
@@ -226,6 +247,7 @@ public final class CanvasController extends Controller implements Observer {
 
     private void mouseDraggedEvent(MouseEvent event) {
         mapCanvas.grabFocus();
+        popup.hidePopupMenu();
         Point2D currentMousePosition = event.getPoint();
         double dx = currentMousePosition.getX() - lastMousePosition.getX();
         double dy = currentMousePosition.getY() - lastMousePosition.getY();
@@ -234,6 +256,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void mouseWheelMovedEvent(MouseWheelEvent event) {
+        popup.hidePopupMenu();
         mapCanvas.grabFocus();
         double wheel_rotation = event.getPreciseWheelRotation();
         double factor = Math.pow(ZOOM_FACTOR, wheel_rotation);
@@ -244,6 +267,48 @@ public final class CanvasController extends Controller implements Observer {
         changeZoomLevel(wheel_rotation);
         mapCanvas.zoom(factor);
         mapCanvas.pan(dx, dy);
+    }
+
+    private void mouseMovedEvent(MouseEvent e) {
+        if (mapCanvas.hasFocus()) {
+            if (!popup.isVisible()) {
+                popup.setLocation((int) e.getLocationOnScreen().getX() + POPUP_XOFFSET, (int) e.getLocationOnScreen().getY() + POPUP_YOFFSET);
+                setPopupContent(e);
+                if (toolTipTimer == null) {
+                    toolTipTimer = new Timer(DELAY, a -> {
+                        if (a.getSource() == toolTipTimer) {
+                            if (popup != null) popup.showPopupMenu();
+                            toolTipTimer.stop();
+                            toolTipTimer = null;
+                        }
+                    });
+                    toolTipTimer.start();
+                } else toolTipTimer.restart();
+            } else {
+                popup.hidePopupMenu();
+                mapCanvas.grabFocus();
+            }
+        }
+    }
+
+    private void setPopupContent(MouseEvent event) {
+        popup.setSize(60, 50);
+        JLabel label = new JLabel("\uf044");
+        label.setFont(Helpers.FontAwesome.getFontAwesome());
+        label.setForeground(ThemeHelper.color("toolTipForeground"));
+        label.setBackground(ThemeHelper.color("toolTipBackground"));
+        label.setSize(60, 50);
+        label.setVisible(true);
+        popup.addToPopup(label);
+
+    }
+
+    private void mouseEnteredEvent(MouseEvent e) {
+        popup = new CanvasPopup();
+    }
+
+    private void mouseExitedEvent(MouseEvent e) {
+        popup = null;
     }
 
     private void keyboardZoomEvent(double keyboardZoomFactor) {
@@ -273,6 +338,8 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     public void themeHasChanged() {
+        popup = null;
+        popup = new CanvasPopup();
         mapCanvas.revalidate();
         mapCanvas.repaint();
     }
@@ -328,6 +395,34 @@ public final class CanvasController extends Controller implements Observer {
         public void mouseWheelMoved(MouseWheelEvent e) {
             mouseWheelMovedEvent(e);
         }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            if(popupToggle) mouseMovedEvent(e);
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            if(popupToggle) mouseEnteredEvent(e);
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            if(popupToggle) mouseExitedEvent(e);
+        }
+
+
     }
 
+    private class CanvasFocusHandler extends FocusAdapter {
+
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            if(popup != null) {
+                if(popup.isVisible()) popup.hidePopupMenu();
+            }
+        }
+
+    }
 }
