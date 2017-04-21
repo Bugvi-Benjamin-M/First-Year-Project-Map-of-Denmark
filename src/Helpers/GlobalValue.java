@@ -11,11 +11,25 @@ import static Enums.ZoomLevel.LEVEL_3;
  */
 public class GlobalValue {
 
+    public static final String DEFAULT_COASTLINE_FILE = "/coastlines.zip";
+    public static final String DEFAULT_BIN_RESOURCE = "/Danmark.bin";
+    public static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
+    public static final boolean DEBUG_MODE_ACTIVE = false;  // CHANGE ME TO PREVENT LOADING DEFAULT
     public static final int MAX_ZOOM_DECREASE = -30;
+
+    private static ZoomLevel zoomLevel = ZoomLevel.LEVEL_6;
     private static double maxZoom = MAX_ZOOM_DECREASE;
 
     private static boolean markCoastlines = false;
-    private static ZoomLevel zoomLevel = ZoomLevel.LEVEL_6;
+    private static boolean didProgramLoadDefault = false;
+
+    public static void setDidProgramLoadDefault(boolean truth_value) {
+        didProgramLoadDefault = truth_value;
+    }
+
+    public static boolean getDidProgramLoadDefault() {
+        return didProgramLoadDefault;
+    }
 
     public static void setMaxZoom(double zoom_value) {
         maxZoom = zoom_value;

@@ -11,6 +11,7 @@ import Model.Coastlines.CoastlineHandler;
 import Model.Model;
 import OSM.OSMHandler;
 import View.PopupWindow;
+import jdk.nashorn.internal.objects.Global;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -20,13 +21,15 @@ import java.io.*;
 import java.util.EnumMap;
 import java.util.zip.ZipInputStream;
 
+import static Helpers.GlobalValue.DEBUG_MODE_ACTIVE;
+import static Helpers.GlobalValue.DEFAULT_COASTLINE_FILE;
+
 /**
  * Created by Jakob on 06-03-2017.
  */
 public class FileHandler {
 
     private static String pathStart = OSDetector.getPathPrefix();
-
 
     public static void loadResource(String fileName, boolean isLoadingFromStart) {
         try {
@@ -62,6 +65,32 @@ public class FileHandler {
             }
         }catch(FileNotFoundException | FileWasNotFoundException e ){
             e.printStackTrace();
+        }
+    }
+
+    public static void loadDefaultResource() {
+        try {
+            try {
+                long startTime = System.currentTimeMillis();
+                if (!DEBUG_MODE_ACTIVE) {
+                    try {
+                        FileHandler.loadBin(GlobalValue.DEFAULT_BIN_RESOURCE, true);
+                    } catch (FileWasNotFoundException e) {
+                        FileHandler.loadResource(GlobalValue.DEFAULT_RESOURCE, true);
+                    }
+                }
+                long stopTime = System.currentTimeMillis();
+                System.out.println("Resource load time: "+(stopTime-startTime)+" ms");
+                if (DEBUG_MODE_ACTIVE) throw new FileWasNotFoundException("");
+            } catch (FileWasNotFoundException e) {
+                throw new FileWasNotFoundException("Program was not able to load default resource \""+GlobalValue.DEFAULT_RESOURCE+"\"" +
+                        "\nLoading from coastlines instead.");
+            }
+            GlobalValue.setDidProgramLoadDefault(true);
+        } catch (FileWasNotFoundException e) {
+            PopupWindow.warningBox(null,e.getMessage());
+            Model.getInstance().loadFromCoastlines();
+            GlobalValue.setDidProgramLoadDefault(false);
         }
     }
 
@@ -169,7 +198,7 @@ public class FileHandler {
         try {
             XMLReader reader = XMLReaderFactory.createXMLReader();
             reader.setContentHandler(handler);
-            InputStream stream = FileHandler.class.getResourceAsStream("/coastlines.zip");
+            InputStream stream = FileHandler.class.getResourceAsStream(DEFAULT_COASTLINE_FILE);
             ZipInputStream zip = new ZipInputStream(new BufferedInputStream(stream));
             zip.getNextEntry();
             InputSource source = new InputSource(zip);

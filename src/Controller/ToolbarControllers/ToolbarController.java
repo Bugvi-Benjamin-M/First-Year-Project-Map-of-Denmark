@@ -1,6 +1,7 @@
 package Controller.ToolbarControllers;
 
 import Controller.Controller;
+import Controller.CanvasController;
 import Controller.MainWindowController;
 import Controller.SettingsWindowController;
 import Enums.FileType;
@@ -9,6 +10,7 @@ import Enums.ToolbarType;
 import Helpers.FileHandler;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
+import Model.Model;
 import View.PopupWindow;
 import View.ToolComponent;
 import View.ToolFeature;
@@ -301,6 +303,37 @@ public final class ToolbarController extends Controller {
     }
 
     private void loadEvent() {
+        Object[] options = new Object[] {"Load default","Select file"};
+        int selected = PopupWindow.confirmBox(null,"Do you want to load the default " +
+                "file or select your own file to load from?","Load file options",
+                options,options[1]);
+        switch (selected) {
+            case JOptionPane.YES_OPTION:
+                loadDefaultFile();
+                break;
+            case JOptionPane.NO_OPTION:
+                loadNewFile();
+                break;
+            case JOptionPane.CLOSED_OPTION:
+                break;
+        }
+    }
+
+    private void loadDefaultFile() {
+        Main.Main.splashScreenInit();
+        SwingUtilities.invokeLater(() -> {
+            MainWindowController.getInstance().hideWindow();
+            FileHandler.loadDefaultResource();
+            CanvasController.getInstance().getMapCanvas().setElements(
+                    Model.getInstance().getElements());
+            Model.getInstance().modelHasChanged();
+            GlobalValue.setMaxZoom(GlobalValue.MAX_ZOOM_DECREASE);
+            MainWindowController.getInstance().showWindow();
+            Main.Main.splashScreenDestruct();
+        });
+    }
+
+    private void loadNewFile() {
         FileNameExtensionFilter[] filters = new FileNameExtensionFilter[]{
                 new FileNameExtensionFilter("OSM Files", FileType.OSM.toString()),
                 new FileNameExtensionFilter("ZIP Files", FileType.ZIP.toString()),
