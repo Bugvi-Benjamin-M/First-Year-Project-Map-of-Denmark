@@ -73,6 +73,13 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.repaint();
     }
 
+    public void hidden() {
+        //TODO: This does not work
+        if(popup != null){
+            popup.hidePopupMenu();
+        }
+    }
+
     public void setupCanvas() {
         mapCanvas = new MapCanvas();
         mapCanvas.setPreferredSize(new Dimension(window.getFrame().getWidth(), window.getFrame().getHeight() - GlobalValue.getToolbarHeight()));
