@@ -138,7 +138,7 @@ public final class MainWindowController extends WindowController {
         window.getFrame().addWindowFocusListener(new WindowAdapter() {
             @Override
             public void windowLostFocus(WindowEvent e) {
-                CanvasController.getInstance().hidden();
+                CanvasController.getInstance().disablePopup();
             }
         });
     }

@@ -73,10 +73,12 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.repaint();
     }
 
-    public void hidden() {
-        //TODO: This does not work
-        if(popup != null){
-            popup.hidePopupMenu();
+    public void disablePopup() {
+        if(popupToggle) {
+            if (popup != null) {
+                popup.hidePopupMenu();
+            }
+            popup = null;
         }
     }
 
@@ -269,7 +271,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void mouseWheelMovedEvent(MouseWheelEvent event) {
-        if (popup != null) popup.hidePopupMenu();
+        disablePopup();
         mapCanvas.grabFocus();
         double wheel_rotation = event.getPreciseWheelRotation();
         double factor = Math.pow(ZOOM_FACTOR, wheel_rotation);
@@ -282,9 +284,9 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void mouseMovedEvent(MouseEvent e) {
-        if (mapCanvas.hasFocus()) {
-            if (!popup.isVisible()) {
-                popup = null;
+        if (popupToggle) {
+            if (mapCanvas.hasFocus()) {
+                disablePopup();
                 popup = new CanvasPopup();
                 popup.setLocation((int) e.getLocationOnScreen().getX() + POPUP_XOFFSET, (int) e.getLocationOnScreen().getY() + POPUP_YOFFSET);
                 setPopupContent(e);
@@ -298,12 +300,10 @@ public final class CanvasController extends Controller implements Observer {
                     });
                     toolTipTimer.start();
                 } else toolTipTimer.restart();
-            } else {
-                popup.hidePopupMenu();
-                mapCanvas.grabFocus();
             }
         }
     }
+
 
     private void setPopupContent(MouseEvent event) {
         Point2D point2D = mapCanvas.toModelCoords(event.getPoint());
@@ -315,19 +315,15 @@ public final class CanvasController extends Controller implements Observer {
         JLabel label = new JLabel(content);
         label.setForeground(ThemeHelper.color("canvasPopupForeground"));
         label.setBackground(ThemeHelper.color("canvasPopupBackground"));
-        label.setSize(textWidth+15, 30);
+        label.setSize(textWidth+15, 25);
         popup.setSize(label.getWidth(),label.getHeight());
         label.setVisible(true);
         popup.addToPopup(label);
 
     }
 
-    private void mouseEnteredEvent(MouseEvent e) {
-        popup = new CanvasPopup();
-    }
-
     private void mouseExitedEvent(MouseEvent e) {
-        popup = null;
+        if(popupToggle) disablePopup();
     }
 
     private void keyboardZoomEvent(double keyboardZoomFactor) {
@@ -374,7 +370,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     public void themeHasChanged() {
-        popup = null;
+        disablePopup();
         popup = new CanvasPopup();
         mapCanvas.setBackgroundColor();
         mapCanvas.revalidate();
@@ -435,17 +431,12 @@ public final class CanvasController extends Controller implements Observer {
 
         @Override
         public void mouseMoved(MouseEvent e) {
-            if(popupToggle) mouseMovedEvent(e);
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-            if(popupToggle) mouseEnteredEvent(e);
+            mouseMovedEvent(e);
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
-            if(popupToggle) mouseExitedEvent(e);
+            mouseExitedEvent(e);
         }
 
 
@@ -456,9 +447,7 @@ public final class CanvasController extends Controller implements Observer {
 
         @Override
         public void focusLost(FocusEvent e) {
-            if(popup != null) {
-                if(popup.isVisible()) popup.hidePopupMenu();
-            }
+            disablePopup();
         }
 
     }

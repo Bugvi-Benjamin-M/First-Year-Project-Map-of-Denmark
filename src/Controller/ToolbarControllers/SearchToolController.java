@@ -35,9 +35,9 @@ public final class SearchToolController extends Controller {
     private JSONArray searchHistory;
 
     private String currentQuery;
-    //Todo accept down and up key when the lisst is not empty
+    //Todo accept down and up key when the list is not empty
     private final int[] prohibitedKeys = new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_ALT, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
-    KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_META};
+    KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_META, KeyEvent.VK_WINDOWS, KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_UNDEFINED};
 
     private SearchToolController() {
         super();
@@ -122,7 +122,7 @@ public final class SearchToolController extends Controller {
 
     private void showMatchingResults(){
         //Todo implement proper search
-        if(searchTool.getField().isPopupVisible()) searchTool.getField().hidePopup();
+        if(searchTool.getField().isPopupVisible() && searchTool.getField().getItemCount() == 0) searchTool.getField().hidePopup();
         searchTool.getField().removeAllItems();
         searchTool.getField().addItem("Cat");
         searchTool.getField().addItem("Horse");
