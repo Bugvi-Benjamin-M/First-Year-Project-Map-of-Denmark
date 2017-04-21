@@ -15,6 +15,8 @@ import View.PopupWindow;
 import javax.swing.*;
 
 
+import Parser.Address;
+
 /**
  * Created by Jakob on 06-03-2017.
  */
@@ -24,14 +26,13 @@ public class Main {
     private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
 
     private static final boolean DEBUG_MODE_ACTIVE = false;  // CHANGE ME TO PREVENT LOADING DEFAULT
-    private static final boolean SAVE_AFTER_LOAD = false;     // CHANGE ME TO PREVENT SAVING BIN
+    private static final boolean SAVE_AFTER_LOAD = true;     // CHANGE ME TO PREVENT SAVING BIN
 
     public static long LOAD_TIME;
     private static SplashScreen screen;
     private static boolean programLoadedDefault;
 
     public static void main(String[] args) {
-
 
         long startTime = System.nanoTime();
 
