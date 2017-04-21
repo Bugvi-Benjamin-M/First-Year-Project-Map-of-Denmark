@@ -55,6 +55,14 @@ public class DefaultTheme implements Theme {
 
     public Color toolTipForeground() {return new Color(0x050505);}
 
+    public Color canvasPopupBackground() {
+        return new Color(0xDED0A9);
+    }
+
+    public Color canvasPopupForeground() {
+        return new Color(0x000000);
+    }
+
     public Color cityName() { return new Color(0x000000); }
     public Color roadName() {return new Color(0x000000);}
     public Color barName(){

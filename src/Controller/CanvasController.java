@@ -9,11 +9,12 @@ import Model.Elements.Road;
 import Model.Model;
 import View.CanvasPopup;
 import View.MapCanvas;
-import View.PopupWindow;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
@@ -249,7 +250,6 @@ public final class CanvasController extends Controller implements Observer {
         Point2D mousePosition = event.getPoint();
         Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
         mapCanvas.setCurrentPoint(mouseInModel);
-        calculateNearestNeighbour((float) mouseInModel.getX(), (float) mouseInModel.getY());
     }
 
     private void mouseDraggedEvent(MouseEvent event) {
@@ -279,6 +279,8 @@ public final class CanvasController extends Controller implements Observer {
     private void mouseMovedEvent(MouseEvent e) {
         if (mapCanvas.hasFocus()) {
             if (!popup.isVisible()) {
+                popup = null;
+                popup = new CanvasPopup();
                 popup.setLocation((int) e.getLocationOnScreen().getX() + POPUP_XOFFSET, (int) e.getLocationOnScreen().getY() + POPUP_YOFFSET);
                 setPopupContent(e);
                 if (toolTipTimer == null) {
@@ -299,12 +301,17 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void setPopupContent(MouseEvent event) {
-        popup.setSize(60, 50);
-        JLabel label = new JLabel("\uf044");
-        label.setFont(Helpers.FontAwesome.getFontAwesome());
-        label.setForeground(ThemeHelper.color("toolTipForeground"));
-        label.setBackground(ThemeHelper.color("toolTipBackground"));
-        label.setSize(60, 50);
+        Point2D point2D = mapCanvas.toModelCoords(event.getPoint());
+        String content = calculateNearestNeighbour((float)point2D.getX(), (float)point2D.getY());
+        AffineTransform transform = new AffineTransform();
+        FontRenderContext context = new FontRenderContext(transform, true, true);
+        Font font = new Font("Verdana", Font.PLAIN, 12);
+        int textWidth = (int) (font.getStringBounds(content, context).getWidth());
+        JLabel label = new JLabel(content);
+        label.setForeground(ThemeHelper.color("canvasPopupForeground"));
+        label.setBackground(ThemeHelper.color("canvasPopupBackground"));
+        label.setSize(textWidth+15, 30);
+        popup.setSize(label.getWidth(),label.getHeight());
         label.setVisible(true);
         popup.addToPopup(label);
 
@@ -327,7 +334,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.pan(dx, dy);
     }
 
-    private void calculateNearestNeighbour(float x, float y){
+    private String calculateNearestNeighbour(float x, float y){
         roads = model.getElements().get(ElementType.HIGHWAY).getSection(x, y);
         float minDist = 1000;
         Road e = null;
@@ -341,8 +348,8 @@ public final class CanvasController extends Controller implements Observer {
             }
         }
         if(e != null)  {
-            new PopupWindow().infoBox(null, e.getName(), "Nearest Road");
-        }
+            return e.getName();
+        } else return "error";
     }
 
     private static void changeZoomLevel(double zoomFactor) {
@@ -365,6 +372,7 @@ public final class CanvasController extends Controller implements Observer {
     public void themeHasChanged() {
         popup = null;
         popup = new CanvasPopup();
+        mapCanvas.setBackgroundColor();
         mapCanvas.revalidate();
         mapCanvas.repaint();
     }

@@ -21,6 +21,9 @@ public interface Theme {
     public abstract Color toolTipBackground();
     public abstract Color toolTipForeground();
 
+    public abstract Color canvasPopupBackground();
+    public abstract Color canvasPopupForeground();
+
     public abstract Color water();
     public abstract Color park();
     public abstract Color forest();

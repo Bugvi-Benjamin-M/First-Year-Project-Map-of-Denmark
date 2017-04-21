@@ -19,7 +19,7 @@ public class CanvasPopup extends View {
         popupMenu = new JPopupMenu() {
             @Override
             public void paintComponent(Graphics g) {
-                g.setColor(ThemeHelper.color("toolTipBackground"));
+                g.setColor(ThemeHelper.color("canvasPopupBackground"));
                 g.fillRect(0,0, getWidth(), getHeight());
             }
         };

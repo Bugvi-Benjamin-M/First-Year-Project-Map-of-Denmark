@@ -55,7 +55,14 @@ public class NightTheme implements Theme {
 
     public Color toolTipForeground() {return new Color(0xFEFDFF);}
 
-    public Color cityName() { return new Color(0xA4ADDE); }
+    public Color canvasPopupBackground() {
+        return new Color(0x7562A9);
+    }
+
+    public Color canvasPopupForeground() {
+        return new Color(0xFFFFFF);
+    }
+
     public Color cityName() { return new Color(0xCCC9C7); }
     public Color roadName() {
         return new Color(0x000000);

@@ -7,19 +7,12 @@ import Helpers.GlobalValue;
 import Helpers.Shapes.PolygonApprox;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
-import Main.Main;
-import Model.Elements.*;
-import Helpers.GlobalValue;
 import KDtree.KDTree;
 import Main.Main;
 import Model.Elements.*;
-import Model.Elements.Element;
-import Model.Elements.PlaceName;
 import Model.Model;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.awt.geom.*;
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -46,7 +39,6 @@ public class MapCanvas extends View {
     private Rectangle2D currentRectangle;
     private EnumMap<ElementType, KDTree> elements;
     private boolean antiAliasing;
-    private JToolTip toolTip;
 
     /**
      * The base Constructor for the MapCanvas.
@@ -57,25 +49,6 @@ public class MapCanvas extends View {
         antiAliasing = false;
         grabFocus();
     }
-
-    @Override
-    public JToolTip createToolTip() {
-        toolTip = new JToolTip() {
-
-            @Override
-            public Font getFont() {
-                return new Font("Verdana",Font.PLAIN, 20);
-            }
-
-            @Override
-            public Point getToolTipLocation(MouseEvent event) {
-                return event.getPoint();
-            }
-
-        };
-        return toolTip;
-    }
-
 
     public void setBackgroundColor() {
         setBackground(ThemeHelper.color("water"));
