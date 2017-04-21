@@ -227,7 +227,7 @@ public final class CanvasController extends Controller implements Observer {
             mapCanvas.repaint();
             changeZoomLevel(+10);
         }
-        GlobalValue.setMaxZoom(ZoomLevel.getZoomFactor()+GlobalValue.MAX_ZOOM_DECREASE);
+        GlobalValue.setMaxZoom(ZoomLevel.getZoomFactor()-50);
     }
 
     public static void resetBounds(){
