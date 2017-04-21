@@ -19,7 +19,9 @@ public class DynamicMultiPolygonApprox extends  MultiPolygonApprox{
         waySegments[0] = rel.get(0).size() * 2 - 1;
         int i = 1;
         while(i < rel.size()){
-            waySegments[i] = ((rel.get(i).size() * 2)) + waySegments[i - 1];
+            if(rel.get(i) != null) {
+                waySegments[i] = ((rel.get(i).size() * 2)) + waySegments[i - 1];
+            }
             i++;
         }
 
