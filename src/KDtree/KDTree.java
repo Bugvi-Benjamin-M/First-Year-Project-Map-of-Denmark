@@ -11,6 +11,7 @@ import java.util.HashSet;
 public class KDTree implements Serializable{
     private Node root;
     private HashSet<Element> elementsToReturn;
+    private HashSet<Element> sectionToReturn;
 
     public void clear(){
         if(root != null)
@@ -27,47 +28,73 @@ public class KDTree implements Serializable{
         }
     }
 
-    public HashSet<Element> getManyElements(float minX, float minY, float maxX, float maxY){
+    public HashSet<Element> getManySections(float minX, float minY, float maxX, float maxY){
         elementsToReturn = new HashSet<>();
 
         if(root != null) {
-            getManyElements(root, minX, minY, maxX, maxY);
+            getManySections(root, minX, minY, maxX, maxY);
             return elementsToReturn;
         }
         //TODO ?make null return value to an exception?
         return null;
     }
 
-    private void getManyElements(Node currentNode, float minX, float minY, float maxX, float maxY){
-        if(currentNode.getPointers() == null){
-            if(currentNode.getDepth() % 2 == 0){
-                if(currentNode.getX() > minX && currentNode.getX() > maxX){
-                    getManyElements(currentNode.getLeft(), minX, minY, maxX, maxY);
+    private void getManySections(Node currentNode, float minX, float minY, float maxX, float maxY) {
+        if (currentNode.getPointers() == null) {
+            if (currentNode.getDepth() % 2 == 0) {
+                if (currentNode.getX() > minX && currentNode.getX() > maxX) {
+                    getManySections(currentNode.getLeft(), minX, minY, maxX, maxY);
+                } else if (currentNode.getX() < minX && currentNode.getX() < maxX) {
+                    getManySections(currentNode.getRight(), minX, minY, maxX, maxY);
+                } else {
+                    getManySections(currentNode.getLeft(), minX, minY, currentNode.getX(), maxY);
+                    getManySections(currentNode.getRight(), currentNode.getX(), minY, maxX, maxY);
                 }
-                else if (currentNode.getX() < minX && currentNode.getX() < maxX){
-                    getManyElements(currentNode.getRight(), minX, minY, maxX, maxY);
-                }
-                else{
-                    getManyElements(currentNode.getLeft(), minX, minY, currentNode.getX(), maxY);
-                    getManyElements(currentNode.getRight(), currentNode.getX(), minY, maxX, maxY);
+            } else {
+                if (currentNode.getY() > minY && currentNode.getY() > maxY) {
+                    getManySections(currentNode.getLeft(), minX, minY, maxX, maxY);
+                } else if (currentNode.getY() < minY && currentNode.getY() < maxY) {
+                    getManySections(currentNode.getRight(), minX, minY, maxX, maxY);
+                } else {
+                    getManySections(currentNode.getLeft(), minX, minY, maxX, currentNode.getY());
+                    getManySections(currentNode.getRight(), minX, currentNode.getY(), maxX, maxY);
                 }
             }
-            else{
-                if(currentNode.getY() > minY && currentNode.getY() > maxY){
-                    getManyElements(currentNode.getLeft(), minX, minY, maxX, maxY);
-                }
-                else if (currentNode.getY() < minY && currentNode.getY() < maxY){
-                    getManyElements(currentNode.getRight(), minX, minY, maxX, maxY);
-                }
-                else{
-                    getManyElements(currentNode.getLeft(), minX, minY, maxX, currentNode.getY());
-                    getManyElements(currentNode.getRight(), minX, currentNode.getY(), maxX, maxY);
-                }
+        } else {
+            for (Pointer pointer : currentNode.getPointers()) {
+                elementsToReturn.add(pointer.getElement());
             }
         }
-        else{
-            for(Pointer pointer : currentNode.getPointers()){
-                elementsToReturn.add(pointer.getElement());
+    }
+
+    public HashSet<Element> getSection(float x, float y){
+        sectionToReturn = new HashSet<>();
+        if(root != null){
+            getSection(root, x, y);
+            return sectionToReturn;
+        }
+        return null;
+    }
+
+    public void getSection(Node currentNode, float x, float y){
+        if(currentNode.getPointers() == null){
+            if(currentNode.getDepth() % 2 == 0){
+                if(currentNode.getX() >= x){
+                    getSection(currentNode.getLeft(), x, y);
+                }else{
+                    getSection(currentNode.getRight(), x, y);
+                }
+            }
+            if(currentNode.getDepth() % 2 == 1){
+               if(currentNode.getY() >= y){
+                   getSection(currentNode.getLeft(), x, y);
+               }else{
+                   getSection(currentNode.getRight(), x, y);
+               }
+            }
+        }else{
+            for (Pointer pointer : currentNode.getPointers()) {
+                sectionToReturn.add(pointer.getElement());
             }
         }
     }

@@ -550,12 +550,10 @@ public final class OSMHandler implements ContentHandler {
                             isArea = false;
                         }
                         break;
-                    case WATER:
-                        addWater(elementType, false);
-                        break;
                     case BUILDING:
                         addBuilding(elementType, false);
                         break;
+                    case WATER:
                     case PARK:
                     case FOREST:
                     case GRASSLAND:
@@ -573,8 +571,6 @@ public final class OSMHandler implements ContentHandler {
             case "relation":
                 switch(elementType){
                     case WATER:
-                        addWater(elementType, true);
-                        break;
                     case PARK:
                     case FOREST:
                     case GRASSLAND:
@@ -649,6 +645,7 @@ public final class OSMHandler implements ContentHandler {
             for (int i = 0; i < way.size(); i+=5) {
                 Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
+                model.getElements().get(ElementType.HIGHWAY).putPointer(p);
             }
         }
         else {
@@ -660,6 +657,7 @@ public final class OSMHandler implements ContentHandler {
                 for (int j = 0; i < relation.get(i).size(); j+=5){
                     Pointer p = new Pointer((float) relation.get(i).get(0).getX(), (float) relation.get(i).get(0).getY(), road);
                     model.getElements().get(type).putPointer(p);
+                    model.getElements().get(ElementType.HIGHWAY).putPointer(p);
                 }
             }
         }
@@ -686,33 +684,6 @@ public final class OSMHandler implements ContentHandler {
                     if (relation.get(i) != null) {
                         for (int j = 0; j < relation.get(i).size(); j += 5) {
                             Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), biome);
-                            model.getElements().get(type).putPointer(p);
-                        }
-                    } else continue;
-                }
-            }
-        }
-    }
-
-    private void addWater(ElementType type, boolean isRelation) {
-        if(specialRelationCase == true){
-            specialRelationCase = false;
-        }else {
-            if (!isRelation) {
-                DynamicPolygonApprox polygonApprox;
-                polygonApprox = new DynamicPolygonApprox(way);
-                Water water = new Water(polygonApprox, name);
-                for (int i = 0; i < way.size(); i += 5) {
-                    Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), water);
-                    model.getElements().get(type).putPointer(p);
-                }
-            } else {DynamicMultiPolygonApprox multiPolygonApprox;
-                multiPolygonApprox = new DynamicMultiPolygonApprox(relation);
-                Water water = new Water(multiPolygonApprox, name);
-                for (int i = 0; i < relation.size() - 1; i++) {
-                    if (relation.get(i) != null) {
-                        for (int j = 0; j < relation.get(i).size(); j += 5) {
-                            Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), water);
                             model.getElements().get(type).putPointer(p);
                         }
                     } else continue;

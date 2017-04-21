@@ -31,6 +31,7 @@ public enum ElementType {
     QUARTER_NAME, //Kvarter (mindre end suburb men større end neighbourhood)
     NEIGHBOURHOOD_NAME, //navngivet nabolag
 
+    HIGHWAY, //All roads (Used for nearestNeighbourSearch)
     //ROADS
     MOTORWAY, //Motorvej
     MOTORWAY_LINK,

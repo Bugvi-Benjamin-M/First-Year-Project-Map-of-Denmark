@@ -2,10 +2,9 @@ import KDtree.*;
 import org.junit.Before;
 import org.junit.Test;
 import Model.Elements.*;
-import java.awt.*;
+
 import java.awt.geom.*;
 import java.util.HashSet;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -44,7 +43,7 @@ public class TestKD {
 
     @Test
     public void testGetManyElementsLittleSquare(){
-        HashSet<Element> set = tree.getManyElements(-1, -1, 3, 3);
+        HashSet<Element> set = tree.getManySections(-1, -1, 3, 3);
 
         assertEquals(5, set.size());
 
@@ -56,7 +55,7 @@ public class TestKD {
 
     @Test
     public void testGetManyElementsBigSquare(){
-        HashSet<Element> set = tree.getManyElements(-1, -1, 10, 20);
+        HashSet<Element> set = tree.getManySections(-1, -1, 10, 20);
 
         assertEquals(10, set.size());
 
@@ -68,7 +67,7 @@ public class TestKD {
 
     @Test
     public void testGetManyElementsOutOfRangeSquare(){
-        HashSet<Element> set = tree.getManyElements(-1, -1, -2, -2);
+        HashSet<Element> set = tree.getManySections(-1, -1, -2, -2);
 
         assertEquals(2, set.size());
 
@@ -80,7 +79,7 @@ public class TestKD {
 
     @Test
     public void testGetManyElementsMiddleSquare(){
-        HashSet<Element> set = tree.getManyElements(5, 5, 7, 7);
+        HashSet<Element> set = tree.getManySections(5, 5, 7, 7);
 
         assertEquals(3, set.size());
 
@@ -92,7 +91,7 @@ public class TestKD {
 
     @Test
     public void testGetManyElementsCornerTopLeft(){
-        HashSet<Element> set = tree.getManyElements(0, 30, -1, 31);
+        HashSet<Element> set = tree.getManySections(0, 30, -1, 31);
 
         assertEquals(3, set.size());
 
@@ -104,7 +103,7 @@ public class TestKD {
 
     @Test
     public void testGetManyElementsCornerTopRight(){
-        HashSet<Element> set = tree.getManyElements(30, 30, 30, 30);
+        HashSet<Element> set = tree.getManySections(30, 30, 30, 30);
 
         assertEquals(2, set.size());
 
@@ -116,7 +115,7 @@ public class TestKD {
 
     @Test
     public void testGetManyElementsCornerBottomRight(){
-        HashSet<Element> set = tree.getManyElements(30, 0, 31, -1);
+        HashSet<Element> set = tree.getManySections(30, 0, 31, -1);
 
         assertEquals(3, set.size());
 
@@ -129,7 +128,7 @@ public class TestKD {
     @Test
     public void testClear(){
         tree.clear();
-        HashSet<Element> set = tree.getManyElements(-1, -1, 10, 20);
+        HashSet<Element> set = tree.getManySections(-1, -1, 10, 20);
 
         assertEquals(0, set.size());
 
@@ -142,9 +141,9 @@ public class TestKD {
     @Test
     public void testEmptyKD(){
         tree = new KDTree();
-        assertEquals(null, tree.getManyElements(0,0,0,0));
+        assertEquals(null, tree.getManySections(0,0,0,0));
         tree.clear();
-        assertEquals(null, tree.getManyElements(0,0,0,0));
+        assertEquals(null, tree.getManySections(0,0,0,0));
     }
 
 

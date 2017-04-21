@@ -1,6 +1,9 @@
 package Model.Elements;
 
+import Helpers.Shapes.MultiPolygonApprox;
 import Helpers.Shapes.PolygonApprox;
+
+import java.awt.*;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -28,8 +31,12 @@ public class Road extends Element {
         this.area = area;
     }
 
-    public boolean isArea(){
+    public boolean isArea() {
         return area;
+    }
+
+    public PolygonApprox getShape(){
+        return (PolygonApprox) super.getShape();
     }
 
     public String getName() {
