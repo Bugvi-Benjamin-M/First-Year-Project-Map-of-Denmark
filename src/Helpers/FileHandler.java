@@ -6,6 +6,7 @@ import Enums.FileType;
 import Enums.OSMEnums.ElementType;
 import Exceptions.FileWasNotFoundException;
 import KDtree.KDTree;
+import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
 import Model.Coastlines.CoastlineHandler;
 import Model.Model;
@@ -93,7 +94,7 @@ public class FileHandler {
                 Model.getInstance().setDynamicBound(BoundType.MIN_LATITUDE, in.readFloat());
                 Model.getInstance().setDynamicBound(BoundType.MAX_LATITUDE, in.readFloat());
             }
-            //CanvasController.getInstance().getMapCanvas().setElements(Model.getInstance().getElements());
+            Model.getInstance().setTst((TenarySearchTrie) in.readObject());
             time += System.nanoTime();
             if(!isLoadingFromStart) {
                 CanvasController.adjustToDynamicBounds();
@@ -115,6 +116,7 @@ public class FileHandler {
             out.writeFloat(Model.getInstance().getMaxLongitude(dynamic));
             out.writeFloat(Model.getInstance().getMinLatitude(dynamic));
             out.writeFloat(Model.getInstance().getMaxLatitude(dynamic));
+            out.writeObject(Model.getInstance().getTst());
             System.out.println("DONE");
         } catch (IOException e) {
             e.printStackTrace();

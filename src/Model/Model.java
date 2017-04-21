@@ -3,6 +3,7 @@ import Enums.BoundType;
 import Enums.OSMEnums.ElementType;
 import Helpers.Utilities.DebugWindow;
 import KDtree.*;
+import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
 
 import java.awt.geom.Path2D;
@@ -15,6 +16,8 @@ import java.util.*;
 public final class Model extends Observable {
 
     private EnumMap<ElementType, KDTree> elements;
+
+    private TenarySearchTrie tst;
 
     private static Model instance;
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
@@ -35,10 +38,10 @@ public final class Model extends Observable {
         }
 
         elements = new EnumMap<>(ElementType.class);
+        tst = new TenarySearchTrie();
         for(ElementType type : ElementType.values()) {
             elements.put(type, new KDTree());
         }
-        //Todo remember to clean up the constructor
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
     }
 
@@ -63,6 +66,14 @@ public final class Model extends Observable {
 
     public List<Path2D> getCoastlines() {
         return coastlineFactory.getCoastlinePolygons();
+    }
+
+    public TenarySearchTrie getTst() {
+        return tst;
+    }
+
+    public void setTst(TenarySearchTrie tst) {
+        this.tst = tst;
     }
 
     public void loadFromCoastlines() {

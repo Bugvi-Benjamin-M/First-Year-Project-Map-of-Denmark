@@ -2,24 +2,22 @@ package OSM;
 
 import Enums.BoundType;
 import Enums.OSMEnums.ElementType;
-import Helpers.*;
+import Helpers.LongToPointMap;
 import Helpers.Shapes.DynamicMultiPolygonApprox;
 import Helpers.Shapes.DynamicPolygonApprox;
 import Helpers.Shapes.MultiPolygonApprox;
 import Helpers.Shapes.PolygonApprox;
 import KDtree.NodeGenerator;
 import KDtree.Pointer;
-import Model.Model;
 import Model.Elements.*;
+import Model.Model;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +56,13 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> iceCreams;
     private boolean specialRelationCase = false;
     private boolean isArea = false;
+
+    private String roadName;
+    private String roadNumber;
+    private String zipCode;
+    private String cityName;
+
+    private boolean isAddress;
 
 
     private OSMHandler() {
@@ -170,6 +175,11 @@ public final class OSMHandler implements ContentHandler {
                 }
 
                 name = "";
+                roadName = "";
+                roadNumber = "";
+                cityName = "";
+                zipCode = "";
+                isAddress = false;
                 place = ElementType.UNKNOWN;
 
                 loadednodes++;
@@ -305,6 +315,22 @@ public final class OSMHandler implements ContentHandler {
                                 isArea = true;
                                 break;
                         }
+                        break;
+                    case "addr:city":
+                        cityName = v;
+                        isAddress = true;
+                        break;
+                    case "addr:housenumber":
+                        roadNumber = v;
+                        isAddress = true;
+                        break;
+                    case "addr:postcode":
+                        zipCode = v;
+                        isAddress = true;
+                        break;
+                    case "addr:street":
+                        roadName = v;
+                        isAddress = true;
                         break;
                 }
                 break;
@@ -514,6 +540,12 @@ public final class OSMHandler implements ContentHandler {
                         addAmenity(place);
                         break;
                 }
+                if(isAddress) {
+                    String key1 = zipCode + cityName + roadName + roadNumber;
+                    Point2D.Float value = new Point2D.Float(longitude * longitudeFactor, -latitude);
+                    model.getTst().put(key1, value);
+                }
+
                 break;
             case "way":
                 switch (elementType){

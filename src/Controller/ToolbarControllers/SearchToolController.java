@@ -21,8 +21,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
-//import com.sun.xml.internal.bind.v2.TODO;
-
 /**
  * Created by Búgvi Magnussen on 02-04-2017.
  */
@@ -37,6 +35,7 @@ public final class SearchToolController extends Controller {
     private JSONArray searchHistory;
 
     private String currentQuery;
+    //Todo accept down and up key when the lisst is not empty
     private final int[] prohibitedKeys = new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_ALT, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
     KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_META};
 
@@ -122,7 +121,6 @@ public final class SearchToolController extends Controller {
     }
 
     private void showMatchingResults(){
-        //Todo check if this line fixes the windows issue
         //Todo implement proper search
         if(searchTool.getField().isPopupVisible()) searchTool.getField().hidePopup();
         searchTool.getField().removeAllItems();
