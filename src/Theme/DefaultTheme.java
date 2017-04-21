@@ -63,6 +63,8 @@ public class DefaultTheme implements Theme {
         return new Color(0x000000);
     }
 
+    public Color toolActivated() { return new Color(0x939393);}
+
     public Color cityName() { return new Color(0x000000); }
     public Color roadName() {return new Color(0x000000);}
     public Color barName(){

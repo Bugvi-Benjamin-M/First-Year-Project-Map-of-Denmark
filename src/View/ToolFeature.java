@@ -62,5 +62,15 @@ public class ToolFeature extends ToolComponent {
     public void setTheme() {
         label.setForeground(ThemeHelper.color("icon"));
         iconLabel.setForeground(ThemeHelper.color("icon"));
+
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        if(!getActivatedStatus()) g.setColor(ThemeHelper.color("toolbar"));
+        else g.setColor(ThemeHelper.color("toolActivated"));
+        g.fillRect(0,0, getWidth(), getHeight());
+        label.repaint();
+        iconLabel.repaint();
     }
 }

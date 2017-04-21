@@ -303,6 +303,7 @@ public final class ToolbarController extends Controller {
     }
 
     private void loadEvent() {
+        toolbar.getTool(ToolType.LOAD).toggleActivate();
         Object[] options = new Object[] {"Load default","Select file"};
         int selected = PopupWindow.confirmBox(null,"Do you want to load the default " +
                 "file or select your own file to load from?","Load file options",
@@ -317,6 +318,7 @@ public final class ToolbarController extends Controller {
             case JOptionPane.CLOSED_OPTION:
                 break;
         }
+        toolbar.getTool(ToolType.LOAD).toggleActivate();
     }
 
     private void loadDefaultFile() {
