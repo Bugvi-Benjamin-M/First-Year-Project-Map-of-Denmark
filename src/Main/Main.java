@@ -24,7 +24,6 @@ public class Main {
     private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
 
     private static final boolean DEBUG_MODE_ACTIVE = false;  // CHANGE ME TO PREVENT LOADING DEFAULT
-    private static final boolean SAVE_AFTER_LOAD = false;     // CHANGE ME TO PREVENT SAVING BIN
 
     public static long LOAD_TIME;
     private static SplashScreen screen;
@@ -78,7 +77,6 @@ public class Main {
                     FileHandler.loadBin("/Danmark.bin", true);
                 } catch (FileWasNotFoundException e) {
                     FileHandler.loadResource(DEFAULT_RESOURCE, true);
-                    if (SAVE_AFTER_LOAD) FileHandler.saveBin("/Danmark.bin",true);
                 }
             }
             long stopTime = System.currentTimeMillis();
