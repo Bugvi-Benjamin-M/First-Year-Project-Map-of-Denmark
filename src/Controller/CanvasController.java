@@ -270,10 +270,15 @@ public final class CanvasController extends Controller implements Observer {
         Point2D currentMousePosition = event.getPoint();
         double dx = currentMousePosition.getX();
         double dy = currentMousePosition.getY();
-        mapCanvas.pan(-dx, -dy);
-        changeZoomLevel(wheel_rotation);
-        mapCanvas.zoom(factor);
-        mapCanvas.pan(dx, dy);
+
+        double increase = -wheel_rotation*10;
+        if ((zoom_value > -30 || increase > 0) &&
+                (zoom_value < 700 || increase < 0)) {
+            mapCanvas.pan(-dx, -dy);
+            mapCanvas.zoom(factor);
+            changeZoomLevel(increase);
+            mapCanvas.pan(dx, dy);
+        }
     }
 
     private void mouseMovedEvent(MouseEvent e) {
@@ -328,10 +333,22 @@ public final class CanvasController extends Controller implements Observer {
     private void keyboardZoomEvent(double keyboardZoomFactor) {
         double dx = mapCanvas.getVisibleRect().getWidth()/2;
         double dy = mapCanvas.getVisibleRect().getHeight()/2;
-        mapCanvas.pan(-dx, -dy);
-        changeZoomLevel(keyboardZoomFactor);
-        mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
-        mapCanvas.pan(dx, dy);
+        double increase = -keyboardZoomFactor*10;
+
+        if ((zoom_value > -30 || increase > 0) &&
+                (zoom_value < 700 || increase < 0)) {
+            mapCanvas.pan(-dx, -dy);
+            mapCanvas.zoom(Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
+            changeZoomLevel(increase);
+            mapCanvas.pan(dx, dy);
+        }
+    }
+
+    private static void changeZoomLevel(double zoomFactor) {
+        if (zoomFactor != 0.0) {
+            zoom_value += zoomFactor;
+            GlobalValue.setZoomLevel(zoom_value);
+        }
     }
 
     private String calculateNearestNeighbour(float x, float y){
@@ -350,23 +367,6 @@ public final class CanvasController extends Controller implements Observer {
         if(e != null)  {
             return e.getName();
         } else return "error";
-    }
-
-    private static void changeZoomLevel(double zoomFactor) {
-        Model model = Model.getInstance();
-        double increase = -zoomFactor*10;
-        //if ((zoom_value > -50 || increase > 0) && (zoom_value < 500 || increase < 0)) {
-            // ZoomLevel lastLevel = GlobalValue.getZoomLevel();
-            if (zoomFactor != 0.0) zoom_value += increase;
-            //System.out.println("Increase zoom: " + increase + "\nZoom value: " + zoom_value);
-            GlobalValue.setZoomLevel(zoom_value);
-            /*
-            ZoomLevel newLevel = GlobalValue.getZoomLevel();
-            if (!lastLevel.equals(newLevel)) {
-                System.out.println("changed level: "+newLevel.toString());
-            }
-            */
-        //}
     }
 
     public void themeHasChanged() {

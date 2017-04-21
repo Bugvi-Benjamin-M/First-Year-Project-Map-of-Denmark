@@ -11,7 +11,8 @@ import static Enums.ZoomLevel.LEVEL_3;
  */
 public class GlobalValue {
 
-    private static ZoomLevel zoomLevel = LEVEL_3;
+    private static boolean markCoastlines = false;
+    private static ZoomLevel zoomLevel = ZoomLevel.LEVEL_6;
 
     public static int getSearchFieldLargeSize() {
         return (int) (MainWindowController.getInstance().getWindow().getFrame().getWidth() / 3.2);
@@ -41,4 +42,11 @@ public class GlobalValue {
         DebugWindow.getInstance().setZoomFactorLabel();
     }
 
+    public static void toogleMarkCoastlines() {
+        markCoastlines = !markCoastlines;
+    }
+
+    public static boolean getMarkCoastlines() {
+        return markCoastlines;
+    }
 }

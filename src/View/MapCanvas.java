@@ -136,8 +136,7 @@ public class MapCanvas extends View {
             g.fill(path);
         }
         //Creates outline
-        boolean markCoastlines = true;
-        if (markCoastlines) {
+        if (GlobalValue.getMarkCoastlines()) {
             g.setStroke(new BasicStroke(Float.MIN_VALUE));
             g.setColor(Color.black);
             for (Path2D path : coastlines) {

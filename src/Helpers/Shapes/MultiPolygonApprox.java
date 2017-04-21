@@ -15,18 +15,22 @@ public class MultiPolygonApprox extends PolygonApprox {
 	
 	public MultiPolygonApprox(List<? extends List<? extends Point2D>> rel) {
 		int npoints = 0;
-		for (List<?> l : rel) npoints += l.size();
+		for (List<?> l : rel) {
+			if(l != null) npoints += l.size();
+		}
 		coords = new float[npoints<<1];
 		pointtypes = new byte[npoints];
 		Arrays.fill(pointtypes, (byte) PathIterator.SEG_LINETO);
 		int coord = 0;
 		int point = 0;
 		for (List<? extends Point2D> l : rel) {
+			if(l != null){
 			pointtypes[point] = (byte) PathIterator.SEG_MOVETO;
 			point += l.size();
 			for (Point2D p : l) {
-				coords[coord++] = (float)p.getX();
-				coords[coord++] = (float)p.getY();
+				coords[coord++] = (float) p.getX();
+				coords[coord++] = (float) p.getY();
+				}
 			}
 		}
 		init();

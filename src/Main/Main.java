@@ -15,8 +15,6 @@ import View.PopupWindow;
 import javax.swing.*;
 
 
-import Parser.Address;
-
 /**
  * Created by Jakob on 06-03-2017.
  */
@@ -79,7 +77,6 @@ public class Main {
                     FileHandler.loadBin("/Danmark.bin", true);
                 } catch (FileWasNotFoundException e) {
                     FileHandler.loadResource(DEFAULT_RESOURCE, true);
-                    if (SAVE_AFTER_LOAD) FileHandler.saveBin("/Danmark.bin",true);
                 }
             }
             long stopTime = System.currentTimeMillis();
