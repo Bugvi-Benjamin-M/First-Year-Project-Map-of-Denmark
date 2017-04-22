@@ -52,6 +52,7 @@ public interface Theme {
     public abstract Color track();
     public abstract Color steps();
     public abstract Color footway();
+    public abstract Color footwayArea();
     public abstract Color bridleway();
     public abstract Color cycleway();
     public abstract Color path();

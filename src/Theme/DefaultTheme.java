@@ -176,6 +176,9 @@ public class DefaultTheme implements Theme {
     public Color footway(){
         return new Color(0x000000);
     }
+    public Color footwayArea(){
+        return new Color(0xD5D4E3);
+    }
     public Color bridleway(){
         return new Color(0x000000);
     }

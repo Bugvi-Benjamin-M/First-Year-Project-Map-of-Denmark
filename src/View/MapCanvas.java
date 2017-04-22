@@ -157,7 +157,7 @@ public class MapCanvas extends View {
                 drawFarmland(g, ThemeHelper.color("farmland"), 0.000001);
                 drawMeadow(g, ThemeHelper.color("meadow"), 0.000001);
                 drawHeath(g, ThemeHelper.color("heath"), 0.000001);
-                drawFootways(g, ThemeHelper.color("footway"), 0.000004f);
+                drawFootways(g, ThemeHelper.color("footway"), ThemeHelper.color("footwayArea"), 0.000004f);
                 drawBridleways(g, ThemeHelper.color("bridleway"), 0.000004f);
                 drawCycleways(g, ThemeHelper.color("cycleway"), 0.000004f);
                 drawPaths(g, ThemeHelper.color("path"), 0.000004f);
@@ -475,161 +475,161 @@ public class MapCanvas extends View {
     //Draw Roads Methods
     private void drawMotorways(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.MOTORWAY);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawMotorwayLinks(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.MOTORWAY_LINK);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawTrunkRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TRUNK_ROAD);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawTrunkRoadLinks(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.TRUNK_ROAD_LINK);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawPrimaryRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.PRIMARY_ROAD);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawPrimaryRoadLinks(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.PRIMARY_ROAD_LINK);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawSecondaryRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.SECONDARY_ROAD);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawSecondaryRoadLinks(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.SECONDARY_ROAD_LINK);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawTertiaryRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.TERTIARY_ROAD);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawTertiaryRoadLinks(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.TERTIARY_ROAD_LINK);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawUnclassifiedRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.UNCLASSIFIED_ROAD);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawResidentialRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.RESIDENTIAL_ROAD);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawLivingStreets(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.LIVING_STREET);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawServiceRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.SERVICE_ROAD);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawBusGuideways(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.BUS_GUIDEWAY);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width));
             g.draw(element.getShape());
         }
     }
     private void drawEscapes(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.ESCAPE);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width));
             g.draw(element.getShape());
         }
     }
     private void drawRaceways(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.RACEWAY);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawPedestrianStreets(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.PEDESTRIAN_STREET);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             Road road = (Road) element;
             if(road.isArea()) g.fill(element.getShape());
             g.draw(element.getShape());
@@ -637,78 +637,84 @@ public class MapCanvas extends View {
     }
     private void drawTracks(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.TRACK);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
     private void drawSteps(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.STEPS);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width,
+                BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER,
+                10.0f, new float[]{0.00001f}, 0.0f));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,
-                    BasicStroke.CAP_BUTT,
-                    BasicStroke.JOIN_MITER,
-                    10.0f, new float[]{0.00001f}, 0.0f));
             g.draw(element.getShape());
         }
     }
-    private void drawFootways(Graphics2D g, Color color, float width){
+    private void drawFootways(Graphics2D g, Color color, Color areaColor, float width){
         setCurrentSection(ElementType.FOOTWAY);
+        g.setStroke(new BasicStroke(width,
+                BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER,
+                10.0f, new float[]{0.00001f}, 0.0f));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,
-                    BasicStroke.CAP_BUTT,
-                    BasicStroke.JOIN_MITER,
-                    10.0f, new float[]{0.00001f}, 0.0f));
-            g.draw(element.getShape());
+            Road r = (Road) element;
+            if(r.isArea()){
+                g.setColor(areaColor);
+                g.fill(element.getShape());
+            }else {
+                g.setColor(color);
+                g.draw(element.getShape());
+            }
         }
     }
     private void drawBridleways(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.BRIDLEWAY);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width,
+                BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER,
+                10.0f, new float[]{0.00001f}, 0.0f));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,
-                    BasicStroke.CAP_BUTT,
-                    BasicStroke.JOIN_MITER,
-                    10.0f, new float[]{0.00001f}, 0.0f));
             g.draw(element.getShape());
         }
     }
     private void drawCycleways(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.CYCLEWAY);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width));
             g.draw(element.getShape());
         }
     }
     private void drawPaths(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.PATH);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width,
+                BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER,
+                10.0f, new float[]{0.00001f}, 0.0f));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width,
-                    BasicStroke.CAP_BUTT,
-                    BasicStroke.JOIN_MITER,
-                    10.0f, new float[]{0.00001f}, 0.0f));
             g.draw(element.getShape());
         }
     }
     private void drawRoads(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.ROAD);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width));
             g.draw(element.getShape());
         }
     }
 
     private void drawPark(Graphics2D g, Color color, Double minSizeToBeSignificant) {
         setCurrentSection(ElementType.PARK);
+        g.setColor(color);
         for (Element element : currentSection) {
-            g.setColor(color);
             Biome biome = (Biome) element;
             float size = biome.getShape().getSize();
             if(size > minSizeToBeSignificant) {
@@ -719,8 +725,8 @@ public class MapCanvas extends View {
 
     private void drawForest(Graphics2D g, Color color, Double minSizeToBeSignificant) {
         setCurrentSection(ElementType.FOREST);
+        g.setColor(color);
         for (Element element : currentSection) {
-            g.setColor(color);
             Biome biome = (Biome) element;
             float size = biome.getShape().getSize();
             if(size > minSizeToBeSignificant) {
@@ -731,8 +737,8 @@ public class MapCanvas extends View {
 
     private void drawGrassland(Graphics2D g, Color color, Double minSizeToBeSignificant){
         setCurrentSection(ElementType.GRASSLAND);
+        g.setColor(color);
         for (Element element : currentSection) {
-            g.setColor(color);
             Biome biome = (Biome) element;
             float size = biome.getShape().getSize();
             if(size > minSizeToBeSignificant) {
@@ -743,8 +749,8 @@ public class MapCanvas extends View {
 
     private void drawGrass(Graphics2D g, Color color, Double minSizeToBeSignificant){
         setCurrentSection(ElementType.GRASS);
+        g.setColor(color);
         for (Element element : currentSection) {
-            g.setColor(color);
             Biome biome = (Biome) element;
             float size = biome.getShape().getSize();
             if(size > minSizeToBeSignificant) {
@@ -755,8 +761,8 @@ public class MapCanvas extends View {
 
     private void drawMeadow(Graphics2D g, Color color, Double minSizeToBeSignificant){
         setCurrentSection(ElementType.MEADOW);
+        g.setColor(color);
         for (Element element : currentSection) {
-            g.setColor(color);
             Biome biome = (Biome) element;
             float size = biome.getShape().getSize();
             if(size > minSizeToBeSignificant) {
@@ -767,8 +773,8 @@ public class MapCanvas extends View {
 
     private void drawFarmland(Graphics2D g, Color color, Double minSizeToBeSignificant){
         setCurrentSection(ElementType.FARMLAND);
+        g.setColor(color);
         for (Element element : currentSection) {
-            g.setColor(color);
             Biome biome = (Biome) element;
             float size = biome.getShape().getSize();
             if(size > minSizeToBeSignificant) {
@@ -779,8 +785,8 @@ public class MapCanvas extends View {
 
     private void drawHeath(Graphics2D g, Color color, Double minSizeToBeSignificant){
         setCurrentSection(ElementType.HEATH);
+        g.setColor(color);
         for (Element element : currentSection) {
-            g.setColor(color);
             Biome biome = (Biome) element;
             float size = biome.getShape().getSize();
             if(size > minSizeToBeSignificant) {
@@ -791,9 +797,9 @@ public class MapCanvas extends View {
 
     private void drawWater(Graphics2D g, Color color, Double minSizeToBeSignificant) {
         setCurrentSection(ElementType.WATER);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(0.00001f));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(0.00001f));
             Biome biome = (Biome) element;
             float size = biome.getShape().getSize();
             if(size > minSizeToBeSignificant) {
@@ -806,9 +812,9 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.BUILDING);
         Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .9f);
         g.setComposite(c);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(0.00001f));
         for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(0.00001f));
             g.fill(element.getShape());
         }
         c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);

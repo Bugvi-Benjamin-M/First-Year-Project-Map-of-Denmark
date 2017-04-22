@@ -570,6 +570,38 @@ public final class OSMHandler implements ContentHandler {
                 } break;
             case "relation":
                 switch(elementType){
+                    case MOTORWAY:
+                    case MOTORWAY_LINK:
+                    case TRUNK_ROAD:
+                    case TRUNK_ROAD_LINK:
+                    case PRIMARY_ROAD:
+                    case PRIMARY_ROAD_LINK:
+                    case SECONDARY_ROAD:
+                    case SECONDARY_ROAD_LINK:
+                    case TERTIARY_ROAD:
+                    case TERTIARY_ROAD_LINK:
+                    case UNCLASSIFIED_ROAD:
+                    case RESIDENTIAL_ROAD:
+                    case PEDESTRIAN_STREET:
+                    case LIVING_STREET:
+                    case SERVICE_ROAD:
+                    case BUS_GUIDEWAY:
+                    case ESCAPE:
+                    case RACEWAY:
+                    case TRACK:
+                    case STEPS:
+                    case FOOTWAY:
+                    case BRIDLEWAY:
+                    case CYCLEWAY:
+                    case PATH:
+                    case ROAD:
+                    case RAIL:
+                            addRoad(elementType, true, true);
+                            isArea = false;
+                        break;
+                    case BUILDING:
+                        addBuilding(elementType, true);
+                        break;
                     case WATER:
                     case PARK:
                     case FOREST:
@@ -600,9 +632,13 @@ public final class OSMHandler implements ContentHandler {
             multiPolygonApprox = new MultiPolygonApprox(relation);
             Building building = new Building(multiPolygonApprox);
             for (int i = 0; i < relation.size(); i++){
-                for (int j = 0; i < relation.get(i).size(); j+=5){
-                    Pointer p = new Pointer((float) relation.get(i).get(0).getX(), (float) relation.get(i).get(0).getY(), building);
-                    model.getElements().get(type).putPointer(p);
+                if(relation.get(i) != null) {
+                    for (int j = 0; j < relation.get(i).size(); j += 5) {
+                        if (relation.get(i).size() > j) {
+                            Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), building);
+                            model.getElements().get(type).putPointer(p);
+                        }
+                    }
                 }
             }
         }
@@ -641,7 +677,7 @@ public final class OSMHandler implements ContentHandler {
             PolygonApprox polygonApprox = new PolygonApprox(way);
             Road road;
             if(!area) road = new Road(polygonApprox, name);
-            else road = new Road(polygonApprox, name, true);
+            else road = new Road(polygonApprox, name, area);
             for (int i = 0; i < way.size(); i+=5) {
                 Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
@@ -654,10 +690,14 @@ public final class OSMHandler implements ContentHandler {
             if(!area) road = new Road(multiPolygonApprox, name);
             else road = new Road(multiPolygonApprox, name, true);
             for (int i = 0; i < relation.size(); i++){
-                for (int j = 0; i < relation.get(i).size(); j+=5){
-                    Pointer p = new Pointer((float) relation.get(i).get(0).getX(), (float) relation.get(i).get(0).getY(), road);
-                    model.getElements().get(type).putPointer(p);
-                    model.getElements().get(ElementType.HIGHWAY).putPointer(p);
+                if(relation.get(i) != null) {
+                    for (int j = 0; j < relation.get(i).size(); j += 5) {
+                        if (relation.get(i).size() > j) {
+                            Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), road);
+                            model.getElements().get(type).putPointer(p);
+                            model.getElements().get(ElementType.HIGHWAY).putPointer(p);
+                        }
+                    }
                 }
             }
         }

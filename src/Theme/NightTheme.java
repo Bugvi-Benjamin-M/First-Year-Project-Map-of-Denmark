@@ -177,6 +177,9 @@ public class NightTheme implements Theme {
     public Color footway(){
         return new Color(0x787878);
     }
+    public Color footwayArea(){
+        return new Color(0x45444E);
+    }
     public Color bridleway(){
         return new Color(0x787878);
     }
