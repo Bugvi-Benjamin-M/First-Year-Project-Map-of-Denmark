@@ -14,7 +14,7 @@ import java.awt.*;
 public class CanvasPopup extends View {
 
     private JPopupMenu popupMenu;
-    private final int DISMISS_DELAY = 2500;
+    private final int DISMISS_DELAY = 3000;
     private Timer dismisstimer;
 
     public CanvasPopup() {
