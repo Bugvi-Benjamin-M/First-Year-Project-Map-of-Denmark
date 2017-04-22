@@ -58,6 +58,10 @@ public class HelperFunctionsTest {
         assertEquals(4.24,distance,0.1);
         distance = HelperFunctions.distanceBetweenPointAndPath(A,B,E);
         assertEquals(6.36,distance,0.1);
+        distance = HelperFunctions.distanceBetweenPointAndPath(B,D,C);
+        assertEquals(4,distance,0.1);
+        distance = HelperFunctions.distanceBetweenPointAndPath(A,E,B);
+        assertEquals(5.37,distance,0.1);
     }
 
     @Test

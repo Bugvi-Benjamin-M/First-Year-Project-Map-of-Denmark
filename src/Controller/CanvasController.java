@@ -233,8 +233,8 @@ public final class CanvasController extends Controller implements Observer {
                 distanceToLowerEdge > 1 && distanceToRightEdge > 1) {
             mapCanvas.pan(dx, dy);
         }
-        System.out.println("left: "+distanceToLeftEdge+"; right: "+distanceToRightEdge);
-        System.out.println("upper: "+distanceToUpperEdge+"; lower: "+distanceToLowerEdge);
+        //System.out.println("left: "+distanceToLeftEdge+"; right: "+distanceToRightEdge);
+        //System.out.println("upper: "+distanceToUpperEdge+"; lower: "+distanceToLowerEdge);
     }
 
     public static void adjustToBounds() {
