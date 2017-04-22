@@ -76,7 +76,7 @@ public final class CanvasController extends Controller implements Observer {
     public void disablePopup() {
         if(popupToggle) {
             if (popup != null) {
-                popup.hidePopupMenu();
+                if(popup.getPopupMenu() != null) popup.hidePopupMenu();
             }
             popup = null;
         }
@@ -293,13 +293,19 @@ public final class CanvasController extends Controller implements Observer {
                 if (toolTipTimer == null) {
                     toolTipTimer = new Timer(DELAY, a -> {
                         if (a.getSource() == toolTipTimer) {
-                            if (popup != null) popup.showPopupMenu();
                             toolTipTimer.stop();
                             toolTipTimer = null;
+                            if (popup != null) {
+                                popup.showPopupMenu();
+                                popup.startDismissTimer();
+                            }
                         }
                     });
                     toolTipTimer.start();
-                } else toolTipTimer.restart();
+                } else {
+                    toolTipTimer.restart();
+                    popup.stopDismissTimer();
+                }
             }
         }
     }
