@@ -30,8 +30,8 @@ public abstract class ToolComponent extends JPanel {
         return defaultColor;
     }
 
-    public void toggleActivate() {
-        activated = !activated;
+    public void toggleActivate(boolean state) {
+        activated = state;
         paintComponent(getGraphics());
     }
 

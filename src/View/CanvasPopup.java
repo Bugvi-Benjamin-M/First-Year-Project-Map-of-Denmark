@@ -15,6 +15,7 @@ public class CanvasPopup extends View {
 
     private JPopupMenu popupMenu;
 
+
     public CanvasPopup() {
         popupMenu = new JPopupMenu() {
             @Override

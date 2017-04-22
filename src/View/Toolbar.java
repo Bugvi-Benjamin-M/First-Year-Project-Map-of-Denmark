@@ -1,7 +1,6 @@
 package View;
 
 import Enums.ToolType;
-import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
@@ -74,6 +73,7 @@ public class Toolbar extends View {
             tools.put(ToolType.MENU, new ToolFeature("\uf0c9", ToolType.MENU));
             tools.put(ToolType.SEARCHBAR, new SearchTool());
             tools.put(ToolType.SEARCHBUTTON, new ToolFeature("\uf002", ToolType.SEARCHBUTTON));
+            tools.put(ToolType.POI, new ToolFeature("\uf041", ToolType.POI));
             return tools;
         }
     }

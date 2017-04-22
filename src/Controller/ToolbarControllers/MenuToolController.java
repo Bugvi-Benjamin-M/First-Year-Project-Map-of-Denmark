@@ -26,10 +26,11 @@ import static javax.swing.SpringLayout.WEST;
 public final class MenuToolController extends Controller {
 
     private final int POPUP_MARGIN_LEFT = 10;
-    private final int POPUP_MARGIN_HEIGHT = 205;
+    private final int POPUP_MARGIN_HEIGHT = 282;
     private final int POPUP_MARGIN_WIDTH = 60;
     private final int POPUP_MARGIN_TOP = 10;
     private final int POPUP_MARGIN_BETWEEN_TOOLS = 63;
+    private final int POPUP_MARGIN_LARGER_BETWEEN_TOOLS = 70;
     private final int POPUPMENU_LEFT_OFFSET = 10;
     private final int POPUPMENU_YAXIS_OFFSET = 15;
 
@@ -68,9 +69,13 @@ public final class MenuToolController extends Controller {
         popupMenu.getLayout().putConstraint(WEST, save, POPUP_MARGIN_LEFT, WEST, popupMenu.getPopupMenu());
         popupMenu.getLayout().putConstraint(NORTH, save, POPUP_MARGIN_BETWEEN_TOOLS, NORTH, load);
         popupMenu.addTool(toolbar.getTool(ToolType.SAVE));
+        ToolComponent poi = toolbar.getTool(ToolType.POI);
+        popupMenu.getLayout().putConstraint(WEST, poi, POPUP_MARGIN_LEFT, WEST, popupMenu.getPopupMenu());
+        popupMenu.getLayout().putConstraint(NORTH, poi, POPUP_MARGIN_BETWEEN_TOOLS, NORTH, save);
+        popupMenu.addTool(toolbar.getTool(ToolType.POI));
         ToolComponent settings = toolbar.getTool(ToolType.SETTINGS);
         popupMenu.getLayout().putConstraint(WEST, settings, POPUP_MARGIN_LEFT, WEST, popupMenu.getPopupMenu());
-        popupMenu.getLayout().putConstraint(NORTH, settings, POPUP_MARGIN_BETWEEN_TOOLS, NORTH, save);
+        popupMenu.getLayout().putConstraint(NORTH, settings, POPUP_MARGIN_LARGER_BETWEEN_TOOLS, NORTH, poi);
         popupMenu.addTool(toolbar.getTool(ToolType.SETTINGS));
         toolbar.getTool(ToolType.MENU).add(popupMenu.getPopupMenu());
         popupMenu.getPopupMenu().setPopupSize(POPUP_MARGIN_WIDTH, POPUP_MARGIN_HEIGHT);
@@ -114,6 +119,7 @@ public final class MenuToolController extends Controller {
         }
         else {
             popupMenu.hidePopupMenu();
+            ToolbarController.getInstance().getToolbar().getTool(ToolType.MENU).toggleActivate(false);
         }
         popupMenu.setLocation(calculatePosition());
     }
@@ -140,6 +146,7 @@ public final class MenuToolController extends Controller {
         public void focusLost(FocusEvent e) {
             super.focusLost(e);
             popupMenu.hidePopupMenu();
+            ToolbarController.getInstance().getToolbar().getTool(ToolType.MENU).toggleActivate(false);
         }
     }
 }

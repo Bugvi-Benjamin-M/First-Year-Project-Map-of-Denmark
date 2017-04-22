@@ -48,7 +48,7 @@ public final class MainWindowController extends WindowController {
                 .layout(new BorderLayout())
                 .icon()
                 .hide();
-        window.setMinimumWindowSize(new Dimension(650, 500));
+        window.setMinimumWindowSize(new Dimension(650, 650));
         setupToolbar();
         setupCanvas();
         setupInfobar();
@@ -167,6 +167,7 @@ public final class MainWindowController extends WindowController {
             adjustBounds();
             ToolbarController.getInstance().resizeEvent();
             CanvasController.getInstance().resizeEvent();
+            CanvasController.getInstance().disablePopup();
         }
 
 
@@ -174,6 +175,13 @@ public final class MainWindowController extends WindowController {
         public void componentMoved(ComponentEvent e) {
             super.componentMoved(e);
             ToolbarController.getInstance().moveEvent();
+            CanvasController.getInstance().disablePopup();
+        }
+
+        @Override
+        public void componentHidden(ComponentEvent e) {
+            super.componentHidden(e);
+            CanvasController.getInstance().disablePopup();
         }
     }
 }

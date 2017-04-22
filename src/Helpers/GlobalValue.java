@@ -4,8 +4,6 @@ import Controller.MainWindowController;
 import Enums.ZoomLevel;
 import Helpers.Utilities.DebugWindow;
 
-import static Enums.ZoomLevel.LEVEL_3;
-
 /**
  * Created by Búgvi Magnussen on 02-04-2017.
  */
@@ -42,7 +40,7 @@ public class GlobalValue {
     }
 
     public static int getSearchFieldSmallSize() {
-        return (int) (MainWindowController.getInstance().getWindow().getFrame().getWidth() / 1.7);
+        return (int) (MainWindowController.getInstance().getWindow().getFrame().getWidth() / 1.5);
     }
 
     public static int getSearchFieldStartX() {

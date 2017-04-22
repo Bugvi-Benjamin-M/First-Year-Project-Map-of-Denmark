@@ -32,7 +32,7 @@ public class ToolFeature extends ToolComponent {
         this.type = type;
         this.icon = icon;
         setupLayout();
-        this.setPreferredSize(new Dimension(60,58));
+        this.setPreferredSize(new Dimension(45,60));
     }
 
     /**
@@ -63,6 +63,14 @@ public class ToolFeature extends ToolComponent {
         label.setForeground(ThemeHelper.color("icon"));
         iconLabel.setForeground(ThemeHelper.color("icon"));
 
+    }
+
+    public void overrideStandardLabelFontSize(int size) {
+        label.setFont(new Font(label.getFont().getName(), Font.PLAIN, size));
+    }
+
+    public void createSpaceBetweenLabelAndIcon(int size) {
+        this.add(Box.createRigidArea(new Dimension(0, size)), 1);
     }
 
     @Override

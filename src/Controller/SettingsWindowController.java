@@ -1,5 +1,8 @@
 package Controller;
 
+import Controller.ToolbarControllers.ToolbarController;
+import Enums.ToolType;
+import Enums.ToolbarType;
 import Helpers.ThemeHelper;
 import View.*;
 import View.Window;
@@ -157,7 +160,6 @@ public final class SettingsWindowController extends WindowController {
             ThemeHelper.setTheme(themeSettings.getSelectedTheme());
             MainWindowController.getInstance().themeHasChanged();
         }
-        //Todo refactor to avoid contact with main class
         if(!keyboardKeysToggle.isToggleSelected()) {
             keysActiveStatus = false;
             MainWindowController.getInstance().notifyKeyToggle(keysActiveStatus);
@@ -228,6 +230,7 @@ public final class SettingsWindowController extends WindowController {
         keyboardKeysToggle.setSelectedStatus(keysActiveStatus);
         antiAliasingToggle.setSelectedStatus(antiAliasingStatus);
         window.hide();
+        if(ToolbarController.getInstance().getType() == ToolbarType.LARGE) ToolbarController.getInstance().getToolbar().getTool(ToolType.SETTINGS).toggleActivate(false);
     }
 
     /**

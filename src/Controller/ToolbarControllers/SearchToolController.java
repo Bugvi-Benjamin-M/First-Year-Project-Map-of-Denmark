@@ -170,7 +170,6 @@ public final class SearchToolController extends Controller {
         return false;
     }
     //Todo, make sure that the up and down arrows can be used when history is not empty
-    //Todo fix bug regarding the list appearing when pressing the down key. Seems to be a Windows issue.
     private void specifyKeyBindings() {
         searchTool.getField().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
