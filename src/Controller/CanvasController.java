@@ -3,6 +3,7 @@ package Controller;
 import Enums.OSMEnums.ElementType;
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
+import Helpers.HelperFunctions;
 import Helpers.ThemeHelper;
 import Model.Elements.Element;
 import Model.Elements.Road;
@@ -208,7 +209,32 @@ public final class CanvasController extends Controller implements Observer {
                 dy = 0;
                 break;
         }
-        mapCanvas.pan(dx, dy);
+        panEvent(dx,dy);
+    }
+
+    private void panEvent(double dx, double dy) {
+        Model model = Model.getInstance();
+        double width = mapCanvas.getVisibleRect().width;
+        double height = mapCanvas.getVisibleRect().height;
+        double canvasX = width / 2;
+        double canvasY = height / 2;
+        Point2D centerPoint = mapCanvas.toModelCoords(new Point2D.Double(canvasX,canvasY));
+        // TODO: Prevent panning past bounds
+        Point2D newCenterPoint = new Point2D.Double(centerPoint.getX()+dx,centerPoint.getY()+dy);
+        Point2D upperLeft = new Point2D.Double(model.getMinLongitude(false),model.getMinLatitude(false));
+        Point2D upperRight = new Point2D.Double(model.getMaxLongitude(false),model.getMinLatitude(false));
+        Point2D lowerLeft = new Point2D.Double(model.getMinLongitude(false),model.getMaxLatitude(false));
+        Point2D lowerRight = new Point2D.Double(model.getMaxLongitude(false),model.getMaxLatitude(false));
+        double distanceToLeftEdge = HelperFunctions.distanceBetweenPointAndPath(lowerLeft,upperLeft,newCenterPoint);
+        double distanceToRightEdge = HelperFunctions.distanceBetweenPointAndPath(lowerRight,upperRight,newCenterPoint);
+        double distanceToUpperEdge = HelperFunctions.distanceBetweenPointAndPath(upperLeft,upperRight,newCenterPoint);
+        double distanceToLowerEdge = HelperFunctions.distanceBetweenPointAndPath(lowerLeft,lowerRight,newCenterPoint);
+        if (distanceToLeftEdge > 1 && distanceToUpperEdge > 1 &&
+                distanceToLowerEdge > 1 && distanceToRightEdge > 1) {
+            mapCanvas.pan(dx, dy);
+        }
+        System.out.println("left: "+distanceToLeftEdge+"; right: "+distanceToRightEdge);
+        System.out.println("upper: "+distanceToUpperEdge+"; lower: "+distanceToLowerEdge);
     }
 
     public static void adjustToBounds() {
@@ -264,7 +290,7 @@ public final class CanvasController extends Controller implements Observer {
         Point2D currentMousePosition = event.getPoint();
         double dx = currentMousePosition.getX() - lastMousePosition.getX();
         double dy = currentMousePosition.getY() - lastMousePosition.getY();
-        mapCanvas.pan(dx, dy);
+        panEvent(dx,dy);
         lastMousePosition = currentMousePosition;
     }
 

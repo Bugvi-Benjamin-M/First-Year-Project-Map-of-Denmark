@@ -93,7 +93,6 @@ public class MapCanvas extends View {
 
         drawCoastlines(g2D);
 
-
         if (GlobalValue.getDidProgramLoadDefault()) {
             drawElements(g2D);
         }
@@ -105,7 +104,7 @@ public class MapCanvas extends View {
         drawBoundaries(g2D);
 
         Main.FPS_COUNTER.interrupt();
-        DebugWindow.getInstance();
+        DebugWindow.getInstance().setFPSLabel();
 
         /*
         //Test text på Langeland, rotate text, successfull, saved this bit of code to look at at later times.
@@ -414,7 +413,6 @@ public class MapCanvas extends View {
     public void zoom(double factor) {
         DebugWindow.getInstance().setZoomLabel();
         DebugWindow.getInstance().setZoomFactorLabel();
-        DebugWindow.getInstance().setFPSLabel();
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         repaint();
     }
@@ -435,7 +433,6 @@ public class MapCanvas extends View {
      */
     public void pan(double dx, double dy) {
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
-        DebugWindow.getInstance().setFPSLabel();
         repaint();
     }
 
