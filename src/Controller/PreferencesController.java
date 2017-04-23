@@ -26,7 +26,11 @@ public final class PreferencesController {
     private PreferencesController() {
         super();
         //Ignore warnings that occur due to JDK bug.
-        PlatformLogger.getLogger("java.util.prefs").setLevel(PlatformLogger.Level.OFF);
+        try {
+            PlatformLogger.getLogger("java.util.prefs").setLevel(PlatformLogger.Level.OFF);
+        } catch (RuntimeException e) {
+            System.out.println("Could not suppress Preferences warning");
+        }
     }
 
     public static PreferencesController getInstance() {

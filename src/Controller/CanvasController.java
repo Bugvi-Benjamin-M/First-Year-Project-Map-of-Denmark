@@ -70,7 +70,7 @@ public final class CanvasController extends Controller implements Observer {
 
     public void resizeEvent() {
         mapCanvas.revalidate();
-        mapCanvas.repaint();
+        //mapCanvas.repaint();
     }
 
     public void disablePopup() {
@@ -86,6 +86,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas = new MapCanvas();
         mapCanvas.setPreferredSize(new Dimension(window.getFrame().getWidth(), window.getFrame().getHeight() - GlobalValue.getToolbarHeight()));
         mapCanvas.setElements(model.getElements());
+        mapCanvas.toggleAntiAliasing(PreferencesController.getInstance().getAntiAliasingSetting());
         addInteractionHandlerToCanvas();
         addFocusHandlerToCanvas();
         toggleKeyBindings();
@@ -394,8 +395,8 @@ public final class CanvasController extends Controller implements Observer {
         }
     }
 
-    public void toggleAntiAliasing(boolean status) {
-        mapCanvas.toggleAntiAliasing(status);
+    public void toggleAntiAliasing() {
+        mapCanvas.toggleAntiAliasing(PreferencesController.getInstance().getAntiAliasingSetting());
     }
 
     public MapCanvas getMapCanvas(){

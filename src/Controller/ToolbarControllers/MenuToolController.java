@@ -2,6 +2,7 @@ package Controller.ToolbarControllers;
 
 import Controller.Controller;
 import Enums.ToolType;
+import Enums.ToolbarType;
 import Helpers.OSDetector;
 import View.MenuTool;
 import View.ToolComponent;
@@ -146,7 +147,7 @@ public final class MenuToolController extends Controller {
         public void focusLost(FocusEvent e) {
             super.focusLost(e);
             popupMenu.hidePopupMenu();
-            ToolbarController.getInstance().getToolbar().getTool(ToolType.MENU).toggleActivate(false);
+            if(ToolbarController.getInstance().getType() == ToolbarType.SMALL) ToolbarController.getInstance().getToolbar().getTool(ToolType.MENU).toggleActivate(false);
         }
     }
 }

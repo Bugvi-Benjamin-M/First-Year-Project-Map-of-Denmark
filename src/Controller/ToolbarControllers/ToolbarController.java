@@ -106,6 +106,15 @@ public final class ToolbarController extends Controller {
         type = ToolbarType.SMALL;
     }
 
+    private void removeActivationFromTools() {
+        if(toolbar.getComponents().length == 0) return;
+        for(Component component : toolbar.getComponents()) {
+            if(component instanceof ToolFeature) {
+                ((ToolFeature) component).toggleActivate(false);
+            }
+        }
+    }
+
     public ToolbarType getType() {
         return type;
     }
@@ -140,11 +149,13 @@ public final class ToolbarController extends Controller {
 
     public void resizeEvent() {
         if(type == ToolbarType.LARGE && MainWindowController.getInstance().getWindow().getFrame().getWidth() < SMALL_LARGE_EVENT_WIDTH) {
+            removeActivationFromTools();
             setupSmallToolbar();
             return;
         }
         if(type == ToolbarType.SMALL && MainWindowController.getInstance().getWindow().getFrame().getWidth() >= SMALL_LARGE_EVENT_WIDTH) {
             MenuToolController.getInstance().hidePopupMenu();
+            removeActivationFromTools();
             setupLargeToolbar();
             return;
         }

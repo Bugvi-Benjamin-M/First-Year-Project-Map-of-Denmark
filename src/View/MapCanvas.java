@@ -46,7 +46,6 @@ public class MapCanvas extends View {
     public MapCanvas() {
         transform = new AffineTransform();
         setBackgroundColor();
-        antiAliasing = false;
         grabFocus();
     }
 
@@ -62,8 +61,8 @@ public class MapCanvas extends View {
     public void setCurrentRectangle() {
         Rectangle2D rectangle = getVisibleRect();
         rectangle.setRect(rectangle.getX(), rectangle.getY() + GlobalValue.getToolbarHeight(), rectangle.getWidth(), rectangle.getHeight());
-        Point2D point = toModelCoords(new Point2D.Double(10, 10 + GlobalValue.getToolbarHeight()));
-        Point2D factor = toModelCoords(new Point2D.Double(rectangle.getWidth()-10, rectangle.getHeight()-10));
+        Point2D point = toModelCoords(new Point2D.Double(0, GlobalValue.getToolbarHeight()));
+        Point2D factor = toModelCoords(new Point2D.Double(rectangle.getWidth(), rectangle.getHeight()));
         double xBounds = factor.getX() - point.getX();
         double yBounds = factor.getY() - point.getY();
         currentRectangle = new Rectangle2D.Double(point.getX(), point.getY(), xBounds, yBounds);
@@ -81,31 +80,30 @@ public class MapCanvas extends View {
      */
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2D = (Graphics2D) g;
-        g2D.setTransform(transform);
-        if(antiAliasing) g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        else g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-        // setBackgroundColor();
-        drawBackground(g2D);
+            super.paintComponent(g);
+            Graphics2D g2D = (Graphics2D) g;
+            g2D.setTransform(transform);
+            if (antiAliasing) g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            else g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+            drawBackground(g2D);
 
-        setCurrentRectangle();
+            setCurrentRectangle();
 
-        drawCoastlines(g2D);
+            drawCoastlines(g2D);
 
 
-        if (GlobalValue.getDidProgramLoadDefault()) {
-            drawElements(g2D);
-        }
+            if (GlobalValue.getDidProgramLoadDefault()) {
+                drawElements(g2D);
+            }
 
-        g2D.setColor(Color.black);
-        g2D.setStroke(new BasicStroke(0.00001f));
-        g2D.draw(currentRectangle);
+            g2D.setColor(Color.black);
+            g2D.setStroke(new BasicStroke(0.00001f));
+            g2D.draw(currentRectangle);
 
-        drawBoundaries(g2D);
+            drawBoundaries(g2D);
 
-        Main.FPS_COUNTER.interrupt();
-        DebugWindow.getInstance();
+            Main.FPS_COUNTER.interrupt();
+            DebugWindow.getInstance();
 
         /*
         //Test text på Langeland, rotate text, successfull, saved this bit of code to look at at later times.
@@ -115,6 +113,7 @@ public class MapCanvas extends View {
         g.drawString("Hello", 6, -55);
         g2D.setTransform(old);
         */
+
     }
 
     private void drawBackground(Graphics2D g) {
