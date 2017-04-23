@@ -341,6 +341,7 @@ public final class CanvasController extends Controller implements Observer {
         double increase = -keyboardZoomFactor*10;
 
         zoomEvent(dx,dy,increase,Math.pow(ZOOM_FACTOR, keyboardZoomFactor));
+
     }
 
     private static void zoomEvent(double dx, double dy, double increase, double zoomFactor) {

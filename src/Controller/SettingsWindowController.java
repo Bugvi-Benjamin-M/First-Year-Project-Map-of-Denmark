@@ -161,13 +161,6 @@ public final class SettingsWindowController extends WindowController {
         MainWindowController.getInstance().themeHasChanged();
         MainWindowController.getInstance().setKeyToggle();
         setToCurrentSettings();
-        /*if(!keyboardKeysToggle.isToggleSelected()) {
-            keysActiveStatus = false;
-            MainWindowController.getInstance().setKeyToggle(keysActiveStatus);
-        } else {
-            keysActiveStatus = true;
-            MainWindowController.getInstance().setKeyToggle(keysActiveStatus);
-        }*/
         if(antiAliasingToggle.isToggleSelected()) {
             antiAliasingStatus = true;
             CanvasController.getInstance().toggleAntiAliasing(antiAliasingStatus);
@@ -175,11 +168,6 @@ public final class SettingsWindowController extends WindowController {
             antiAliasingStatus = false;
             CanvasController.getInstance().toggleAntiAliasing(antiAliasingStatus);
         }
-        /*if(canvasRealTimeInformationToggle.isToggleSelected()) {
-            PreferencesController.getInstance().setCanvasRealTimeInformationSetting(true);
-        } else {
-            PreferencesController.getInstance().setCanvasRealTimeInformationSetting(false);
-        }*/
         setToCurrentSettingsAndClose();
     }
 
