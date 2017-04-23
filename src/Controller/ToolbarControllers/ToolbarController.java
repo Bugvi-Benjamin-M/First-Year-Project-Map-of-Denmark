@@ -4,6 +4,7 @@ import Controller.Controller;
 import Controller.CanvasController;
 import Controller.MainWindowController;
 import Controller.SettingsWindowController;
+import Controller.PreferencesController;
 import Enums.FileType;
 import Enums.ToolType;
 import Enums.ToolbarType;
@@ -85,7 +86,8 @@ public final class ToolbarController extends Controller {
         setToolTips();
         customisePOITool();
         customiseSearchButtonTool();
-        customiseSetingsTool();
+        customiseSettingsTool();
+        toggleKeyBindings();
     }
 
     public void setupLargeToolbar() {
@@ -176,7 +178,7 @@ public final class ToolbarController extends Controller {
         searchButtonFeature.createSpaceBetweenLabelAndIcon(4);
     }
 
-    private void customiseSetingsTool() {
+    private void customiseSettingsTool() {
         ToolFeature settingsFeature = (ToolFeature) toolbar.getTool(ToolType.SETTINGS);
         settingsFeature.overrideStandardLabelFontSize(12);
         settingsFeature.createSpaceBetweenLabelAndIcon(6);
@@ -434,11 +436,11 @@ public final class ToolbarController extends Controller {
         toolbar.applyTheme();
     }
 
-    public void toggleKeyBindings(boolean status) {
+    public void toggleKeyBindings() {
         for (ToolType type : toolbar.getAllTools().keySet()) {
             if (toolbar.getTool(type).getActionMap().keys() == null) continue;
             for (Object key : toolbar.getTool(type).getActionMap().keys()) {
-                toolbar.getTool(type).getActionMap().get(key).setEnabled(status);
+                toolbar.getTool(type).getActionMap().get(key).setEnabled(PreferencesController.getInstance().getKeyBindingsSetting());
             }
         }
     }

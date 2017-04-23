@@ -41,19 +41,19 @@ public final class PreferencesController {
     }
 
     public boolean getAntiAliasingSetting() {
-        return preferences.getBoolean("AntiAliasing", DefaultSettings.antiAliasing);
+        return preferences.getBoolean("AntiAliasing", DefaultSettings.ANTI_ALIASING);
     }
 
     public boolean getKeyBindingsSetting() {
-        return preferences.getBoolean("KeyBindings", DefaultSettings.toggleKeyBindings);
+        return preferences.getBoolean("KeyBindings", DefaultSettings.TOGGLE_KEY_BINDINGS);
     }
 
     public boolean getCanvasRealTimeInformationSetting() {
-        return preferences.getBoolean("CanvasRealTimeInformation", DefaultSettings.canvasRealTimeInformation);
+        return preferences.getBoolean("CanvasRealTimeInformation", DefaultSettings.CANVAS_REALTIME_INFORMATION);
     }
 
     public String getThemeSetting() {
-        return preferences.get("Theme", DefaultSettings.Theme);
+        return preferences.get("Theme", DefaultSettings.THEME);
     }
 
     public void setAntiAliasingSetting(boolean setting) {
@@ -73,10 +73,10 @@ public final class PreferencesController {
     }
 
     public void setToDefaultSettings() {
-        preferences.putBoolean("AntiAliasing", DefaultSettings.antiAliasing);
-        preferences.putBoolean("CanvasRealTimeInformation", DefaultSettings.canvasRealTimeInformation);
-        preferences.putBoolean("KeyBindings", DefaultSettings.toggleKeyBindings);
-        preferences.put("Theme", DefaultSettings.Theme);
+        preferences.putBoolean("AntiAliasing", DefaultSettings.ANTI_ALIASING);
+        preferences.putBoolean("CanvasRealTimeInformation", DefaultSettings.CANVAS_REALTIME_INFORMATION);
+        preferences.putBoolean("KeyBindings", DefaultSettings.TOGGLE_KEY_BINDINGS);
+        preferences.put("Theme", DefaultSettings.THEME);
     }
 
 }

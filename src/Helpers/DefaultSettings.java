@@ -5,13 +5,13 @@ package Helpers;
  */
 public class DefaultSettings {
 
-    public static final boolean antiAliasing = false;
+    public static final boolean ANTI_ALIASING = false;
 
-    public static final boolean toggleKeyBindings = true;
+    public static final boolean TOGGLE_KEY_BINDINGS = true;
 
-    public static final boolean canvasRealTimeInformation = true;
+    public static final boolean CANVAS_REALTIME_INFORMATION = true;
 
-    public static final String Theme = "Default";
+    public static final String THEME = "Default";
 
     public static final String defaultFileLoad = "";
 

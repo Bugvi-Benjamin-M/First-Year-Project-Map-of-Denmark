@@ -87,6 +87,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.setElements(model.getElements());
         addInteractionHandlerToCanvas();
         addFocusHandlerToCanvas();
+        toggleKeyBindings();
     }
 
     private void addInteractionHandlerToCanvas() {
@@ -377,9 +378,9 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.repaint();
     }
 
-    public void toggleKeyBindings(boolean status) {
+    public void toggleKeyBindings() {
         for(Object key : mapCanvas.getActionMap().keys()) {
-            mapCanvas.getActionMap().get(key).setEnabled(status);
+            mapCanvas.getActionMap().get(key).setEnabled(PreferencesController.getInstance().getKeyBindingsSetting());
         }
     }
 

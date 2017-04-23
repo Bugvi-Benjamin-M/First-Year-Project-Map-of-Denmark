@@ -76,6 +76,7 @@ public final class SettingsWindowController extends WindowController {
         addSettingsToWindow();
         buildSettings();
         addInteractionHandlerToWindow();
+        toggleKeyBindings();
         hideWindow();
     }
 
@@ -90,10 +91,9 @@ public final class SettingsWindowController extends WindowController {
     }
 
     private void setToCurrentSettings() {
-        keysActiveStatus = true;
         antiAliasingStatus = false;
-        //canvasrealTimeInformationStatus = PreferencesController.getInstance().getCanvasRealTimeInformationSetting();
         canvasRealTimeInformationToggle.setSelectedStatus(PreferencesController.getInstance().getCanvasRealTimeInformationSetting());
+        keyboardKeysToggle.setSelectedStatus(PreferencesController.getInstance().getKeyBindingsSetting());
         themeSettings.setSelectedTheme(PreferencesController.getInstance().getThemeSetting());
     }
 
@@ -138,25 +138,14 @@ public final class SettingsWindowController extends WindowController {
     private void defaultButtonActivated() {
         PreferencesController.getInstance().setToDefaultSettings();
         ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
+        MainWindowController.getInstance().themeHasChanged();
+        MainWindowController.getInstance().setKeyToggle();
         setToCurrentSettings();
-        /*if(!ThemeHelper.getCurrentTheme().equals("Default")) {
-            ThemeHelper.setTheme("Default");
-            themeSettings.setSelectedThemeToDefault();
-            MainWindowController.getInstance().themeHasChanged();
-        }*/
-        if(!keysActiveStatus) {
-            keysActiveStatus = true;
-            MainWindowController.getInstance().notifyKeyToggle(keysActiveStatus);
-        }
+
         if(antiAliasingStatus) {
             antiAliasingStatus = false;
             CanvasController.getInstance().toggleAntiAliasing(antiAliasingStatus);
         }
-        canvasRealTimeInformationToggle.setSelectedStatus(PreferencesController.getInstance().getCanvasRealTimeInformationSetting());
-        /*if(!canvasrealTimeInformationStatus) {
-            canvasrealTimeInformationStatus = true;
-            CanvasController.getInstance().popupActivated(canvasrealTimeInformationStatus);
-        }*/
         setToCurrentSettingsAndClose();
     }
 
@@ -166,19 +155,19 @@ public final class SettingsWindowController extends WindowController {
      */
     private void applyButtonActivated() {
         PreferencesController.getInstance().setThemeSetting(themeSettings.getSelectedTheme());
+        PreferencesController.getInstance().setCanvasRealTimeInformationSetting(canvasRealTimeInformationToggle.isToggleSelected());
+        PreferencesController.getInstance().setKeyBindingsSetting(keyboardKeysToggle.isToggleSelected());
         ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
         MainWindowController.getInstance().themeHasChanged();
-        /*if(!ThemeHelper.getCurrentTheme().equals(themeSettings.getSelectedTheme())) {
-            ThemeHelper.setTheme(themeSettings.getSelectedTheme());
-            MainWindowController.getInstance().themeHasChanged();
-        }*/
-        if(!keyboardKeysToggle.isToggleSelected()) {
+        MainWindowController.getInstance().setKeyToggle();
+        setToCurrentSettings();
+        /*if(!keyboardKeysToggle.isToggleSelected()) {
             keysActiveStatus = false;
-            MainWindowController.getInstance().notifyKeyToggle(keysActiveStatus);
+            MainWindowController.getInstance().setKeyToggle(keysActiveStatus);
         } else {
             keysActiveStatus = true;
-            MainWindowController.getInstance().notifyKeyToggle(keysActiveStatus);
-        }
+            MainWindowController.getInstance().setKeyToggle(keysActiveStatus);
+        }*/
         if(antiAliasingToggle.isToggleSelected()) {
             antiAliasingStatus = true;
             CanvasController.getInstance().toggleAntiAliasing(antiAliasingStatus);
@@ -186,15 +175,11 @@ public final class SettingsWindowController extends WindowController {
             antiAliasingStatus = false;
             CanvasController.getInstance().toggleAntiAliasing(antiAliasingStatus);
         }
-        if(canvasRealTimeInformationToggle.isToggleSelected()) {
+        /*if(canvasRealTimeInformationToggle.isToggleSelected()) {
             PreferencesController.getInstance().setCanvasRealTimeInformationSetting(true);
-            //canvasrealTimeInformationStatus = true;
-            //CanvasController.getInstance().popupActivated(PreferencesController.getInstance().getCanvasRealTimeInformationSetting());
         } else {
-            //canvasrealTimeInformationStatus = false;
             PreferencesController.getInstance().setCanvasRealTimeInformationSetting(false);
-            //CanvasController.getInstance().popupActivated(PreferencesController.getInstance().getCanvasRealTimeInformationSetting());
-        }
+        }*/
         setToCurrentSettingsAndClose();
     }
 

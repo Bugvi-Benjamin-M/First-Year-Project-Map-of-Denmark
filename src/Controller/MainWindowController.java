@@ -57,6 +57,7 @@ public final class MainWindowController extends WindowController {
         addInteractionHandlerToWindow();
         CanvasController.adjustToBounds();
         setToolTipTheme();
+        toggleKeyBindings();
         hideWindow();
     }
 
@@ -144,12 +145,12 @@ public final class MainWindowController extends WindowController {
         });
     }
 
-    public void notifyKeyToggle(boolean status) {
-        CanvasController.getInstance().toggleKeyBindings(status);
-        ToolbarController.getInstance().toggleKeyBindings(status);
-        SettingsWindowController.getInstance().toggleKeyBindings(status);
-        MainWindowController.getInstance().toggleKeyBindings(status);
-        InfobarController.getInstance().toggleKeyBindings(status);
+    public void setKeyToggle() {
+        CanvasController.getInstance().toggleKeyBindings();
+        ToolbarController.getInstance().toggleKeyBindings();
+        SettingsWindowController.getInstance().toggleKeyBindings();
+        MainWindowController.getInstance().toggleKeyBindings();
+        InfobarController.getInstance().toggleKeyBindings();
     }
 
     public void resetInstance() {
