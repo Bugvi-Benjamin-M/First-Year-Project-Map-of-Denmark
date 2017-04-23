@@ -31,11 +31,11 @@ public class Main {
         splashScreenInit();
 
         Model model = Model.getInstance();
+        FileHandler.loadDefaultResource();
+        splashScreenDestruct();
+        createControllers();
+        PreferencesController.getInstance().setupPreferences();
         SwingUtilities.invokeLater(() -> {
-            FileHandler.loadDefaultResource();
-            splashScreenDestruct();
-            createControllers();
-            PreferencesController.getInstance().setupPreferences();
             MainWindowController.getInstance().setupMainWindow();
             SettingsWindowController.getInstance().setupSettingsWindow();
             model.modelHasChanged();
