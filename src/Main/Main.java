@@ -1,17 +1,11 @@
 package Main;
 
-import Controller.CanvasController;
-import Controller.InfobarController;
-import Controller.MainWindowController;
-import Controller.SettingsWindowController;
+import Controller.*;
 import Controller.ToolbarControllers.ToolbarController;
-import Exceptions.FileWasNotFoundException;
 import Helpers.FileHandler;
-import Helpers.GlobalValue;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Model;
-import View.PopupWindow;
 
 import javax.swing.*;
 
@@ -41,6 +35,7 @@ public class Main {
             FileHandler.loadDefaultResource();
             splashScreenDestruct();
             createControllers();
+            PreferencesController.getInstance().setupPreferences();
             MainWindowController.getInstance().setupMainWindow();
             SettingsWindowController.getInstance().setupSettingsWindow();
             model.modelHasChanged();
@@ -54,6 +49,7 @@ public class Main {
     }
 
     private static void createControllers() {
+        PreferencesController.getInstance();
         MainWindowController.getInstance();
         ToolbarController.getInstance();
         CanvasController.getInstance();

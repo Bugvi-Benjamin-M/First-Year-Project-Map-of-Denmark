@@ -9,7 +9,8 @@ package Enums;
 public enum FileType {
     OSM,
     ZIP,
-    BIN;
+    BIN,
+    TXT;
 
     @Override
     public String toString() {

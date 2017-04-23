@@ -1,5 +1,6 @@
 package Helpers;
 
+import Controller.PreferencesController;
 import Theme.*;
 
 import java.awt.*;
@@ -15,7 +16,7 @@ import java.lang.reflect.Method;
  */
 public final class ThemeHelper {
 
-    private static Theme currentTheme = new DefaultTheme();
+    private static Theme currentTheme;
 
     public static String getCurrentTheme() {
         return currentTheme.getName();

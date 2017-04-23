@@ -86,10 +86,15 @@ public final class SettingsWindowController extends WindowController {
         southButtons = new SettingsButtons();
         antiAliasingToggle = new AntiAliasingToggle();
         canvasRealTimeInformationToggle = new CanvasRealTimeInformationToggle();
+        setToCurrentSettings();
+    }
+
+    private void setToCurrentSettings() {
         keysActiveStatus = true;
         antiAliasingStatus = false;
-        canvasrealTimeInformationStatus = true;
-        CanvasController.getInstance().popupActivated(canvasrealTimeInformationStatus);
+        //canvasrealTimeInformationStatus = PreferencesController.getInstance().getCanvasRealTimeInformationSetting();
+        canvasRealTimeInformationToggle.setSelectedStatus(PreferencesController.getInstance().getCanvasRealTimeInformationSetting());
+        themeSettings.setSelectedTheme(PreferencesController.getInstance().getThemeSetting());
     }
 
     /**
@@ -131,11 +136,14 @@ public final class SettingsWindowController extends WindowController {
      * Method is called when deafault button is pressed. Returns all settings to default.
      */
     private void defaultButtonActivated() {
-        if(!ThemeHelper.getCurrentTheme().equals("Default")) {
+        PreferencesController.getInstance().setToDefaultSettings();
+        ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
+        setToCurrentSettings();
+        /*if(!ThemeHelper.getCurrentTheme().equals("Default")) {
             ThemeHelper.setTheme("Default");
             themeSettings.setSelectedThemeToDefault();
             MainWindowController.getInstance().themeHasChanged();
-        }
+        }*/
         if(!keysActiveStatus) {
             keysActiveStatus = true;
             MainWindowController.getInstance().notifyKeyToggle(keysActiveStatus);
@@ -144,10 +152,11 @@ public final class SettingsWindowController extends WindowController {
             antiAliasingStatus = false;
             CanvasController.getInstance().toggleAntiAliasing(antiAliasingStatus);
         }
-        if(!canvasrealTimeInformationStatus) {
+        canvasRealTimeInformationToggle.setSelectedStatus(PreferencesController.getInstance().getCanvasRealTimeInformationSetting());
+        /*if(!canvasrealTimeInformationStatus) {
             canvasrealTimeInformationStatus = true;
             CanvasController.getInstance().popupActivated(canvasrealTimeInformationStatus);
-        }
+        }*/
         setToCurrentSettingsAndClose();
     }
 
@@ -156,10 +165,13 @@ public final class SettingsWindowController extends WindowController {
      * window accurately reflects the current settings.
      */
     private void applyButtonActivated() {
-        if(!ThemeHelper.getCurrentTheme().equals(themeSettings.getSelectedTheme())) {
+        PreferencesController.getInstance().setThemeSetting(themeSettings.getSelectedTheme());
+        ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
+        MainWindowController.getInstance().themeHasChanged();
+        /*if(!ThemeHelper.getCurrentTheme().equals(themeSettings.getSelectedTheme())) {
             ThemeHelper.setTheme(themeSettings.getSelectedTheme());
             MainWindowController.getInstance().themeHasChanged();
-        }
+        }*/
         if(!keyboardKeysToggle.isToggleSelected()) {
             keysActiveStatus = false;
             MainWindowController.getInstance().notifyKeyToggle(keysActiveStatus);
@@ -175,11 +187,13 @@ public final class SettingsWindowController extends WindowController {
             CanvasController.getInstance().toggleAntiAliasing(antiAliasingStatus);
         }
         if(canvasRealTimeInformationToggle.isToggleSelected()) {
-            canvasrealTimeInformationStatus = true;
-            CanvasController.getInstance().popupActivated(canvasrealTimeInformationStatus);
+            PreferencesController.getInstance().setCanvasRealTimeInformationSetting(true);
+            //canvasrealTimeInformationStatus = true;
+            //CanvasController.getInstance().popupActivated(PreferencesController.getInstance().getCanvasRealTimeInformationSetting());
         } else {
-            canvasrealTimeInformationStatus = false;
-            CanvasController.getInstance().popupActivated(canvasrealTimeInformationStatus);
+            //canvasrealTimeInformationStatus = false;
+            PreferencesController.getInstance().setCanvasRealTimeInformationSetting(false);
+            //CanvasController.getInstance().popupActivated(PreferencesController.getInstance().getCanvasRealTimeInformationSetting());
         }
         setToCurrentSettingsAndClose();
     }

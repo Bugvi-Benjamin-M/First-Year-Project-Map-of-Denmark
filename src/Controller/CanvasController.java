@@ -33,7 +33,6 @@ public final class CanvasController extends Controller implements Observer {
     private static final int POPUP_YOFFSET = 10;
 
     private CanvasPopup popup;
-    private boolean popupToggle;
 
     private final int DELAY = 1000;
     private Timer toolTipTimer;
@@ -74,7 +73,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     public void disablePopup() {
-        if(popupToggle) {
+        if(PreferencesController.getInstance().getCanvasRealTimeInformationSetting()) {
             if (popup != null) {
                 if(popup.getPopupMenu() != null) popup.hidePopupMenu();
             }
@@ -101,10 +100,6 @@ public final class CanvasController extends Controller implements Observer {
     private void addFocusHandlerToCanvas() {
         focusHandler = new CanvasFocusHandler();
         mapCanvas.addFocusListener(focusHandler);
-    }
-
-    public void popupActivated(boolean canvasrealTimeInformationStatus) {
-        popupToggle = canvasrealTimeInformationStatus;
     }
 
     private void specifyKeyBindings() {
@@ -284,7 +279,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void mouseMovedEvent(MouseEvent e) {
-        if (popupToggle) {
+        if (PreferencesController.getInstance().getCanvasRealTimeInformationSetting()) {
             if (mapCanvas.hasFocus()) {
                 disablePopup();
                 popup = new CanvasPopup();
@@ -325,11 +320,10 @@ public final class CanvasController extends Controller implements Observer {
         popup.setSize(label.getWidth(),label.getHeight());
         label.setVisible(true);
         popup.addToPopup(label);
-
     }
 
     private void mouseExitedEvent(MouseEvent e) {
-        if(popupToggle) disablePopup();
+        disablePopup();
     }
 
     private void keyboardZoomEvent(double keyboardZoomFactor) {

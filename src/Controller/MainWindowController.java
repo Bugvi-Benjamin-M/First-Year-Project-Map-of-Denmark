@@ -23,7 +23,7 @@ import java.awt.event.WindowEvent;
  */
 public final class MainWindowController extends WindowController {
 
-    private static final String MAIN_TITLE = "OSM Map Viewer v0.3";
+    private static final String MAIN_TITLE = "OSM Map Viewer v0.4";
     private static MainWindowController instance;
     private JLayeredPane layeredPane;
 
@@ -49,6 +49,7 @@ public final class MainWindowController extends WindowController {
                 .icon()
                 .hide();
         window.setMinimumWindowSize(new Dimension(650, 650));
+        ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
         setupToolbar();
         setupCanvas();
         setupInfobar();
