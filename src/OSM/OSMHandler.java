@@ -541,7 +541,7 @@ public final class OSMHandler implements ContentHandler {
                         break;
                 }
                 if(isAddress) {
-                    String key1 = zipCode + cityName + roadName + roadNumber;
+                    String key1 = zipCode + " " + cityName + " " + roadName + " " + roadNumber;
                     Point2D.Float value = new Point2D.Float(longitude * longitudeFactor, -latitude);
                     model.getTst().put(key1, value);
                 }

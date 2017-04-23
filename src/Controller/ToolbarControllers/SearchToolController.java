@@ -4,6 +4,7 @@ import Controller.Controller;
 import Enums.ToolType;
 import Helpers.OSDetector;
 import Helpers.ThemeHelper;
+import Model.Model;
 import View.SearchTool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,10 +16,13 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -112,8 +116,10 @@ public final class SearchToolController extends Controller {
             searchTool.getField().requestFocus();
         }
         else if(allowSearch) {
+            //TODO Does not work as intended
             this.saveHistory(searchTool.getText());
-
+            Point2D p = Model.getInstance().getTst().get(searchTool.getText());
+            System.out.println(Model.getInstance().getTst().get(searchTool.getText()));
 
             ToolbarController.getInstance().transferFocusToCanvas();
             allowSearch = true;
@@ -124,12 +130,15 @@ public final class SearchToolController extends Controller {
         //Todo implement proper search
         if(searchTool.getField().isPopupVisible() && searchTool.getField().getItemCount() == 0) searchTool.getField().hidePopup();
         searchTool.getField().removeAllItems();
-        searchTool.getField().addItem("Cat");
-        searchTool.getField().addItem("Horse");
+        ArrayList<String> list = Model.getInstance().getTst().keysThatMatch(currentQuery);
+        for(String s : list) {
+            searchTool.getField().addItem(s);
+        }
         searchTool.getField().showPopup();
     }
 
     private void showHistory(){
+        //Todo does not work as intended
         if(searchHistory.isEmpty()) return;
         searchTool.getField().removeAllItems();
         Iterator<String> iterator = searchHistory.iterator();
@@ -189,13 +198,6 @@ public final class SearchToolController extends Controller {
                         if (searchTool.getField().getEditor().getEditorComponent().hasFocus())
                             ToolbarController.getInstance().transferFocusToCanvas();
                         break;
-                    default:
-                        if (e.getKeyChar() != KeyEvent.VK_BACK_SPACE) {
-                            currentQuery = searchTool.getText();
-                            showMatchingResults();
-                            searchTool.setText(currentQuery);
-                        }
-                        break;
                 }
             }
 
@@ -204,6 +206,12 @@ public final class SearchToolController extends Controller {
                 super.keyReleased(e);
                 if (checkForProhibitedKey(e)) {
                     return;
+                }
+
+                if (e.getKeyChar() != KeyEvent.VK_BACK_SPACE && e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE) {
+                    currentQuery = searchTool.getText();
+                    showMatchingResults();
+                    searchTool.setText(currentQuery);
                 }
 
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {
