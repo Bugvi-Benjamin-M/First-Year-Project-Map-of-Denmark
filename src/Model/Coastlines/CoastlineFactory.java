@@ -21,38 +21,43 @@ import java.util.stream.Collectors;
 public class CoastlineFactory {
 
     private HashSet<Coastline> coastlines;
-    private EnumMap<BoundType,Float> bounds;
+    private EnumMap<BoundType, Float> bounds;
     private static float longitudeFactor;
 
-    protected CoastlineFactory() {
+    protected CoastlineFactory()
+    {
         coastlines = new HashSet<>();
         bounds = new EnumMap<>(BoundType.class);
     }
 
-    public void setLongitudeFactor(float minLatitude, float maxLatitude) {
-        double avglat = minLatitude + (maxLatitude - minLatitude)/2;
-        longitudeFactor = (float) Math.cos(avglat/180*Math.PI);
+    public void setLongitudeFactor(float minLatitude, float maxLatitude)
+    {
+        double avglat = minLatitude + (maxLatitude - minLatitude) / 2;
+        longitudeFactor = (float)Math.cos(avglat / 180 * Math.PI);
         // System.out.println("... set longitude factor to "+longitudeFactor);
     }
 
-    public void setLongitudeFactor() {
-        setLongitudeFactor(bounds.get(BoundType.MIN_LATITUDE),bounds.get(BoundType.MAX_LATITUDE));
+    public void setLongitudeFactor()
+    {
+        setLongitudeFactor(bounds.get(BoundType.MIN_LATITUDE),
+            bounds.get(BoundType.MAX_LATITUDE));
     }
 
-    public float getLongitudeFactor() {
-        return longitudeFactor;
+    public float getLongitudeFactor() { return longitudeFactor; }
+
+    protected void addBound(BoundType type, float value)
+    {
+        bounds.put(type, value);
     }
 
-    protected void addBound(BoundType type, float value) {
-        bounds.put(type,value);
-    }
-
-    public float getBound(BoundType type) {
+    public float getBound(BoundType type)
+    {
         // System.out.println(type + ": " + bounds.get(type));
         return bounds.get(type);
     }
 
-    protected void insertCoastline(OSMWay nodes) {
+    protected void insertCoastline(OSMWay nodes)
+    {
         Coastline object = new Coastline();
         for (int i = 0; i < nodes.size(); i++) {
             object.add(nodes.get(i));
@@ -60,43 +65,49 @@ public class CoastlineFactory {
         coastlines.add(object);
     }
 
-    public int getNumberOfCoastlines() {
-        return coastlines.size();
-    }
+    public int getNumberOfCoastlines() { return coastlines.size(); }
 
-    public int getNumberOfCoastlinePoints() {
+    public int getNumberOfCoastlinePoints()
+    {
         int size = 0;
-        for (Coastline way: coastlines) {
+        for (Coastline way : coastlines) {
             size += way.size();
         }
         return size;
     }
 
-    public List<Path2D> getCoastlinePolygons() {
+    public List<Path2D> getCoastlinePolygons()
+    {
         HashSet<Path2D> paths = new HashSet<>();
         List<Integer> sizes = new ArrayList<>();
-        for (Coastline coast: coastlines) {
-            double size = (HelperFunctions.sizeOfPolygon(coast)*100000);
+        for (Coastline coast : coastlines) {
+            double size = (HelperFunctions.sizeOfPolygon(coast) * 100000);
             sizes.add(coast.size());
 
             /*System.out.println("Coast: "+coast.size()+" points ("+ size +" size)");
-            System.out.println("... From: "+coast.getFromNode().getX()+", "+coast.getFromNode().getY());
-            System.out.println("... To:   "+coast.getToNode().getX()+", "+coast.getToNode().getY()+"\n");
-            */
+      System.out.println("... From: "+coast.getFromNode().getX()+",
+      "+coast.getFromNode().getY());
+      System.out.println("... To:   "+coast.getToNode().getX()+",
+      "+coast.getToNode().getY()+"\n");
+      */
             Path2D path = null;
             switch (GlobalValue.getZoomLevel()) {
-                case LEVEL_6:
-                    if (size > 1) path = coast.toPath2D();
-                    break;
-                case LEVEL_5:
-                    if (size > 0.1) path = coast.toPath2D();
-                case LEVEL_4:
-                    if (size > 0.01) path = coast.toPath2D();
-                case LEVEL_3:
-                    if (size > 0.001) path = coast.toPath2D();
-                default:
+            case LEVEL_6:
+                if (size > 1)
                     path = coast.toPath2D();
-                    break;
+                break;
+            case LEVEL_5:
+                if (size > 0.1)
+                    path = coast.toPath2D();
+            case LEVEL_4:
+                if (size > 0.01)
+                    path = coast.toPath2D();
+            case LEVEL_3:
+                if (size > 0.001)
+                    path = coast.toPath2D();
+            default:
+                path = coast.toPath2D();
+                break;
             }
             if (path != null) {
                 paths.add(path);

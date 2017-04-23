@@ -8,7 +8,5 @@ package View;
  */
 public class CanvasRealTimeInformationToggle extends Toggle {
 
-    public CanvasRealTimeInformationToggle() {
-        super("Real-time Information:");
-    }
+    public CanvasRealTimeInformationToggle() { super("Real-time Information:"); }
 }

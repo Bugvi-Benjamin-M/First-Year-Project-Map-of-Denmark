@@ -11,9 +11,9 @@ import Parser.Address;
  */
 public class TestParser {
 
-
     @Test
-    public void fullAddress(){
+    public void fullAddress()
+    {
         Address addr = Address.parse("Kongevej 4, 1234 Frederiksby");
         assertEquals("Kongevej", addr.street());
         assertEquals("4", addr.house());
@@ -21,13 +21,15 @@ public class TestParser {
         assertEquals("Frederiksby", addr.city());
     }
 
-    public void city(){
+    public void city()
+    {
         Address addr = Address.parse("1234 Frederiksby");
         assertEquals("1234", addr.postcode());
         assertEquals("Frederiksby", addr.city());
     }
 
-    public void road(){
+    public void road()
+    {
         Address addr = Address.parse("Kongevej 4");
         assertEquals("Kongevej", addr.street());
         assertEquals("4", addr.house());

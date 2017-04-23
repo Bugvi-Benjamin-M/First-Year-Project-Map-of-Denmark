@@ -17,8 +17,8 @@ public abstract class ToolComponent extends JPanel {
     private Color defaultColor;
     private boolean activated;
 
-
-    ToolComponent() {
+    ToolComponent()
+    {
         super();
         defaultColor = Helpers.ThemeHelper.color("icon");
         activated = false;
@@ -26,16 +26,13 @@ public abstract class ToolComponent extends JPanel {
 
     abstract void setupLayout();
 
-    public Color getDefaultColor() {
-        return defaultColor;
-    }
+    public Color getDefaultColor() { return defaultColor; }
 
-    public void toggleActivate(boolean state) {
+    public void toggleActivate(boolean state)
+    {
         activated = state;
         paintComponent(getGraphics());
     }
 
-    protected boolean getActivatedStatus() {
-        return activated;
-    }
+    protected boolean getActivatedStatus() { return activated; }
 }

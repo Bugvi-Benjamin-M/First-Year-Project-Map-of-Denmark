@@ -7,9 +7,10 @@ import java.util.Collections;
 /**
  * Created by Jakob on 06-03-2017.
  */
-public class OSMRelation extends ArrayList<OSMWay>{
+public class OSMRelation extends ArrayList<OSMWay> {
 
-    public Path2D toPath2D(boolean connected) {
+    public Path2D toPath2D(boolean connected)
+    {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         for (OSMWay way : this) {
             if (way != null) {
@@ -20,12 +21,13 @@ public class OSMRelation extends ArrayList<OSMWay>{
     }
 
     @Override
-    public boolean add(OSMWay way) {
+    public boolean add(OSMWay way)
+    {
         boolean b = super.add(way);
         if (size() > 1) {
             OSMWay before = get(size() - 2);
             OSMWay current = get(size() - 1);
-            if(before != null && current != null) {
+            if (before != null && current != null) {
                 double x = before.get(before.size() - 1).getX();
                 double y = before.get(before.size() - 1).getY();
 
@@ -36,11 +38,10 @@ public class OSMRelation extends ArrayList<OSMWay>{
                     double x2 = current.get(current.size() - 1).getX();
                     double y2 = current.get(current.size() - 1).getY();
 
-                    if (x == x2 && y == y2) Collections.reverse(current);
+                    if (x == x2 && y == y2)
+                        Collections.reverse(current);
                 }
             }
-
-
         }
         return b;
     }

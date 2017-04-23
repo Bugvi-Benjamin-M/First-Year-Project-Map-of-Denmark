@@ -14,33 +14,28 @@ public class Road extends Element {
     private int maxSpeed;
     private boolean area = false;
 
-    public Road(PolygonApprox polygon, String name, boolean oneWay, int maxSpeed){
+    public Road(PolygonApprox polygon, String name, boolean oneWay,
+        int maxSpeed)
+    {
         super(polygon);
         this.name = name;
         this.oneWay = oneWay;
         this.maxSpeed = maxSpeed;
     }
-    public Road(PolygonApprox polygon){
-        this(polygon, "", false, 50);
-    }
-    public Road(PolygonApprox polygon, String name){
+    public Road(PolygonApprox polygon) { this(polygon, "", false, 50); }
+    public Road(PolygonApprox polygon, String name)
+    {
         this(polygon, name, false, 50);
     }
-    public Road(PolygonApprox polygon, String name, boolean area){
+    public Road(PolygonApprox polygon, String name, boolean area)
+    {
         this(polygon, name, false, 10);
         this.area = area;
     }
 
-    public boolean isArea() {
-        return area;
-    }
+    public boolean isArea() { return area; }
 
-    public PolygonApprox getShape(){
-        return (PolygonApprox) super.getShape();
-    }
+    public PolygonApprox getShape() { return (PolygonApprox)super.getShape(); }
 
-    public String getName() {
-        return name;
-    }
-
+    public String getName() { return name; }
 }

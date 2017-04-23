@@ -29,60 +29,69 @@ public class DebugWindow extends WindowAdapter {
     private TextView container;
     private static final String TITLE = "DEBUG WINDOW";
 
-    private DebugWindow(FPSCounter fpsCounter) {
+    private DebugWindow(FPSCounter fpsCounter)
+    {
         this.fpsCounter = fpsCounter;
 
         container = new TextView();
-        window = new Window().title(TITLE)
-                .dimension(new Dimension(480,480))
-                .layout(new BorderLayout())
-                .relativeTo(null);
+        window = new Window()
+                     .title(TITLE)
+                     .dimension(new Dimension(480, 480))
+                     .layout(new BorderLayout())
+                     .relativeTo(null);
         window.getFrame().pack();
         setupWindow();
     }
 
-    private void setupWindow() {
+    private void setupWindow()
+    {
         container.reset();
-        container.addJLabel("loadtime","loadtime");
-        container.addJLabel("lonlabel","lonlabel");
-        container.addJLabel("latlabel","latlabel");
-        container.addJLabel("camera","camera");
-        container.addJLabel("fpscount","fpscount");
-        container.addJLabel("zoomlabel","zoomlabel");
-        container.addJLabel("zoomfactor","zoomfactor");
-        container.addJLabel("coastlines","coastlines");
+        container.addJLabel("loadtime", "loadtime");
+        container.addJLabel("lonlabel", "lonlabel");
+        container.addJLabel("latlabel", "latlabel");
+        container.addJLabel("camera", "camera");
+        container.addJLabel("fpscount", "fpscount");
+        container.addJLabel("zoomlabel", "zoomlabel");
+        container.addJLabel("zoomfactor", "zoomfactor");
+        container.addJLabel("coastlines", "coastlines");
 
         window.addWindowAdapter(this);
-        window.addBorderLayoutComponent(BorderLayout.CENTER,container,false);
+        window.addBorderLayoutComponent(BorderLayout.CENTER, container, false);
     }
 
-    public static DebugWindow getInstance() {
+    public static DebugWindow getInstance()
+    {
         if (instance == null) {
             instance = new DebugWindow(Main.FPS_COUNTER);
         }
         return instance;
     }
 
-    public void setFPSLabel() {
+    public void setFPSLabel()
+    {
         JLabel retrieved = container.getJLabel("fpscount");
         String label = "FPS: " + fpsCounter.getFPS();
-        if(retrieved != null) {
+        if (retrieved != null) {
             retrieved.setText(label);
         } else {
             System.out.println("fps label not found");
         }
     }
 
-    public void setZoomLabel() {
+    public void setZoomLabel()
+    {
         JLabel retrieved = container.getJLabel("zoomlabel");
         String label = ZoomLevel.getZoomLevel().toString();
-        if (retrieved != null)  retrieved.setText(label);
-        else System.out.println("zoom label not found");
+        if (retrieved != null)
+            retrieved.setText(label);
+        else
+            System.out.println("zoom label not found");
     }
 
-    public void setZoomFactorLabel() {
+    public void setZoomFactorLabel()
+    {
         JLabel retrieved = container.getJLabel("zoomfactor");
-        String label = "Zoom Factor: "+ZoomLevel.getZoomFactor();
+        String label = "Zoom Factor: " + ZoomLevel.getZoomFactor();
         if (retrieved != null) {
             retrieved.setText(label);
         } else {
@@ -90,21 +99,23 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
-    public void setLongitudeLabel() {
+    public void setLongitudeLabel()
+    {
         JLabel retrieved = container.getJLabel("lonlabel");
         Model model = Model.getInstance();
-        String label = "Longitude Bounds: Min='"+model.getMinLongitude(false)+"' Max='"+model.getMaxLongitude(false)+"'";
-        if (retrieved != null){
+        String label = "Longitude Bounds: Min='" + model.getMinLongitude(false) + "' Max='" + model.getMaxLongitude(false) + "'";
+        if (retrieved != null) {
             retrieved.setText(label);
         } else {
             System.out.println("lon label not found");
         }
     }
 
-    public void setLatitudeLabel() {
+    public void setLatitudeLabel()
+    {
         JLabel retrieved = container.getJLabel("latlabel");
         Model model = Model.getInstance();
-        String label = "Latitude Bounds: Min='"+model.getMinLatitude(false)+"' Max='"+model.getMaxLatitude(false)+"'";
+        String label = "Latitude Bounds: Min='" + model.getMinLatitude(false) + "' Max='" + model.getMaxLatitude(false) + "'";
         if (retrieved != null) {
             retrieved.setText(label);
         } else {
@@ -112,15 +123,14 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
-    public void setLoadtimeLabel() {
+    public void setLoadtimeLabel()
+    {
         JLabel retrieved = container.getJLabel("loadtime");
         long loadtime = Main.LOAD_TIME;
         long loadtimeMilliseconds = loadtime / 1000000;
         long loadtimeSeconds = loadtimeMilliseconds / 1000;
         long loadtimeMinutes = loadtimeSeconds / 60;
-        String label = "Load time: "+loadtimeMinutes+" m, "
-                +(loadtimeSeconds - (loadtimeMinutes * 60))+" s, "
-                +(loadtimeMilliseconds - (loadtimeSeconds * 1000))+ " ms";
+        String label = "Load time: " + loadtimeMinutes + " m, " + (loadtimeSeconds - (loadtimeMinutes * 60)) + " s, " + (loadtimeMilliseconds - (loadtimeSeconds * 1000)) + " ms";
         // System.out.println(label);
         if (retrieved != null) {
             retrieved.setText(label);
@@ -129,11 +139,11 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
-    public void setCoastlineLabel() {
+    public void setCoastlineLabel()
+    {
         JLabel retrieved = container.getJLabel("coastlines");
         CoastlineFactory factory = Model.getInstance().getCoastlineFactory();
-        String label = "Total coastlines: "+factory.getNumberOfCoastlines()+
-                " with "+factory.getNumberOfCoastlinePoints()+" points";
+        String label = "Total coastlines: " + factory.getNumberOfCoastlines() + " with " + factory.getNumberOfCoastlinePoints() + " points";
         if (retrieved != null) {
             retrieved.setText(label);
         } else {
@@ -141,13 +151,11 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
-    public void setCameraBoundsLabel() {
+    public void setCameraBoundsLabel()
+    {
         JLabel retrieved = container.getJLabel("camera");
         Model model = Model.getInstance();
-        String label = "Camera: ("+model.getCameraBound(BoundType.MIN_LONGITUDE)+"; "
-                + model.getCameraBound(BoundType.MAX_LONGITUDE)+") - ("
-                + model.getCameraBound(BoundType.MIN_LATITUDE)+ "; "
-                + model.getCameraBound(BoundType.MAX_LATITUDE) + ")";
+        String label = "Camera: (" + model.getCameraBound(BoundType.MIN_LONGITUDE) + "; " + model.getCameraBound(BoundType.MAX_LONGITUDE) + ") - (" + model.getCameraBound(BoundType.MIN_LATITUDE) + "; " + model.getCameraBound(BoundType.MAX_LATITUDE) + ")";
         if (retrieved != null) {
             retrieved.setText(label);
         } else {
@@ -156,7 +164,8 @@ public class DebugWindow extends WindowAdapter {
     }
 
     @Override
-    public void windowOpened(WindowEvent e) {
+    public void windowOpened(WindowEvent e)
+    {
         super.windowOpened(e);
         setupWindow();
         setLoadtimeLabel();
@@ -172,16 +181,13 @@ public class DebugWindow extends WindowAdapter {
     }
 
     @Override
-    public void windowClosed(WindowEvent e) {
+    public void windowClosed(WindowEvent e)
+    {
         super.windowClosed(e);
         fpsCounter.stopThread();
     }
 
-    public void show() {
-        window.show();
-    }
+    public void show() { window.show(); }
 
-    public void hide() {
-        window.hide();
-    }
+    public void hide() { window.hide(); }
 }

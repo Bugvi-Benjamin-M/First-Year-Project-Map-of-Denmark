@@ -8,7 +8,5 @@ package Exceptions;
  */
 public class IncorrectLayoutException extends RuntimeException {
 
-    public IncorrectLayoutException(String message) {
-        super(message);
-    }
+    public IncorrectLayoutException(String message) { super(message); }
 }

@@ -21,24 +21,28 @@ public class TestCoastlineFileGenerator {
     private static CoastlineFileGenerator generator;
 
     @Before
-    public void setUp() {
+    public void setUp()
+    {
         generator = CoastlineFileGenerator.getInstance();
     }
 
     @After
-    public void tearDown() {
+    public void tearDown()
+    {
         generator.resetInstance();
     }
 
     @Test
-    public void testSingleton() {
+    public void testSingleton()
+    {
         assertNotNull(generator);
         CoastlineFileGenerator referenceTwo = CoastlineFileGenerator.getInstance();
-        assertEquals(generator,referenceTwo);
+        assertEquals(generator, referenceTwo);
     }
 
     @Test
-    public void testAddElement() {
+    public void testAddElement()
+    {
         // generator.startElement(null,null,"", new AttributesImpl());
         // generator.endElement();
     }
@@ -70,5 +74,4 @@ public class TestCoastlineFileGenerator {
 
     @Test
     public void testSkippedEntity() {}
-
 }

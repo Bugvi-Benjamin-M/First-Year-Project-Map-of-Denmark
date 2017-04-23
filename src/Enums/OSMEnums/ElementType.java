@@ -7,13 +7,13 @@ public enum ElementType {
     COASTLINE,
     COUNTRY_BOUNDARY_LAND,
 
-    BUILDING, //pt alle bygninger
+    BUILDING, // pt alle bygninger
 
-    UNKNOWN, //ukendte elementer
+    UNKNOWN, // ukendte elementer
 
-    WATER, //Søer og lign.
+    WATER, // Søer og lign.
 
-    //BIOMES
+    // BIOMES
     PARK,
     FOREST,
     GRASSLAND,
@@ -22,20 +22,20 @@ public enum ElementType {
     FARMLAND,
     MEADOW,
 
-    //PLACES - NAMES
-    CITY_NAME, //navne på byer over 100k
-    TOWN_NAME, //navne på byer 10k-100k
-    VILLAGE_NAME, //navne på landsbyer -10k
-    HAMLET_NAME, //navne på byer -200
-    SUBURB_NAME, //navne på forstader
-    QUARTER_NAME, //Kvarter (mindre end suburb men større end neighbourhood)
-    NEIGHBOURHOOD_NAME, //navngivet nabolag
+    // PLACES - NAMES
+    CITY_NAME, // navne på byer over 100k
+    TOWN_NAME, // navne på byer 10k-100k
+    VILLAGE_NAME, // navne på landsbyer -10k
+    HAMLET_NAME, // navne på byer -200
+    SUBURB_NAME, // navne på forstader
+    QUARTER_NAME, // Kvarter (mindre end suburb men større end neighbourhood)
+    NEIGHBOURHOOD_NAME, // navngivet nabolag
 
-    HIGHWAY, //All roads (Used for nearestNeighbourSearch)
-    //ROADS
-    MOTORWAY, //Motorvej
+    HIGHWAY, // All roads (Used for nearestNeighbourSearch)
+    // ROADS
+    MOTORWAY, // Motorvej
     MOTORWAY_LINK,
-    TRUNK_ROAD, //Landevej
+    TRUNK_ROAD, // Landevej
     TRUNK_ROAD_LINK,
     PRIMARY_ROAD,
     PRIMARY_ROAD_LINK,
@@ -45,29 +45,29 @@ public enum ElementType {
     TERTIARY_ROAD_LINK,
     UNCLASSIFIED_ROAD,
     RESIDENTIAL_ROAD,
-    LIVING_STREET, //Stillevej
+    LIVING_STREET, // Stillevej
     SERVICE_ROAD,
     BUS_GUIDEWAY,
-    ESCAPE, //sikkerhedsveje ?
+    ESCAPE, // sikkerhedsveje ?
     RACEWAY,
-    PEDESTRIAN_STREET, //Gågader
-    TRACK, //Markvej
+    PEDESTRIAN_STREET, // Gågader
+    TRACK, // Markvej
     STEPS,
     FOOTWAY,
-    BRIDLEWAY, //Ridesti
+    BRIDLEWAY, // Ridesti
     CYCLEWAY,
-    PATH, //Temporary setting
-    ROAD, //Temporary setting
+    PATH, // Temporary setting
+    ROAD, // Temporary setting
 
     RAIL,
 
-    //AMENITIES
-    BAR, //night
-    NIGHT_CLUB, //Night
+    // AMENITIES
+    BAR, // night
+    NIGHT_CLUB, // Night
 
-    FAST_FOOD, //Children
-    ICE_CREAM, //Children
+    FAST_FOOD, // Children
+    ICE_CREAM, // Children
 
-    HOSPITAL, //Default
-    PLACE_OF_WORSHIP, //Default
+    HOSPITAL, // Default
+    PLACE_OF_WORSHIP, // Default
 }

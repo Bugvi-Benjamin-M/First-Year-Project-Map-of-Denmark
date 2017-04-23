@@ -26,126 +26,145 @@ public final class Model extends Observable {
 
     private EnumMap<BoundType, Float> bounds;
     private EnumMap<BoundType, Float> dynamicBounds;
-    private EnumMap<BoundType,Float> camera_bounds;
+    private EnumMap<BoundType, Float> camera_bounds;
 
-    private Model(){
+    private Model()
+    {
         bounds = new EnumMap<>(BoundType.class);
         dynamicBounds = new EnumMap<>(BoundType.class);
         camera_bounds = new EnumMap<>(BoundType.class);
-        for (BoundType type: BoundType.values()) {
-            bounds.put(type,0.0f);
-            camera_bounds.put(type,0.0f);
+        for (BoundType type : BoundType.values()) {
+            bounds.put(type, 0.0f);
+            camera_bounds.put(type, 0.0f);
         }
 
         elements = new EnumMap<>(ElementType.class);
         tst = new TenarySearchTrie();
-        for(ElementType type : ElementType.values()) {
+        for (ElementType type : ElementType.values()) {
             elements.put(type, new KDTree());
         }
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
     }
 
-    public static Model getInstance() {
-        if(instance == null) {
+    public static Model getInstance()
+    {
+        if (instance == null) {
             instance = new Model();
         }
         return instance;
     }
 
-    public EnumMap<ElementType, KDTree> getElements() {
-        return elements;
-    }
+    public EnumMap<ElementType, KDTree> getElements() { return elements; }
 
-    public void setElements(EnumMap<ElementType, KDTree> elements){
+    public void setElements(EnumMap<ElementType, KDTree> elements)
+    {
         this.elements = elements;
     }
 
-    public void addWayElement(ElementType type, Pointer pointer){
+    public void addWayElement(ElementType type, Pointer pointer)
+    {
         elements.get(type).putPointer(pointer);
     }
 
-    public List<Path2D> getCoastlines() {
+    public List<Path2D> getCoastlines()
+    {
         return coastlineFactory.getCoastlinePolygons();
     }
 
-    public TenarySearchTrie getTst() {
-        return tst;
-    }
+    public TenarySearchTrie getTst() { return tst; }
 
-    public void setTst(TenarySearchTrie tst) {
-        this.tst = tst;
-    }
+    public void setTst(TenarySearchTrie tst) { this.tst = tst; }
 
-    public void loadFromCoastlines() {
+    public void loadFromCoastlines()
+    {
         coastlineFactory.setLongitudeFactor();
         float lonfactor = coastlineFactory.getLongitudeFactor();
-        this.setBound(BoundType.MIN_LONGITUDE, coastlineFactory.getBound(BoundType.MIN_LONGITUDE)*lonfactor);
-        this.setBound(BoundType.MAX_LONGITUDE, coastlineFactory.getBound(BoundType.MAX_LONGITUDE)*lonfactor);
-        this.setBound(BoundType.MIN_LATITUDE, coastlineFactory.getBound(BoundType.MIN_LATITUDE));
-        this.setBound(BoundType.MAX_LATITUDE, coastlineFactory.getBound(BoundType.MAX_LATITUDE));
+        this.setBound(BoundType.MIN_LONGITUDE,
+            coastlineFactory.getBound(BoundType.MIN_LONGITUDE) * lonfactor);
+        this.setBound(BoundType.MAX_LONGITUDE,
+            coastlineFactory.getBound(BoundType.MAX_LONGITUDE) * lonfactor);
+        this.setBound(BoundType.MIN_LATITUDE,
+            coastlineFactory.getBound(BoundType.MIN_LATITUDE));
+        this.setBound(BoundType.MAX_LATITUDE,
+            coastlineFactory.getBound(BoundType.MAX_LATITUDE));
         DebugWindow.getInstance().setLongitudeLabel();
         DebugWindow.getInstance().setLatitudeLabel();
     }
 
-    public void clear() {
-        for(ElementType type : ElementType.values()){
+    public void clear()
+    {
+        for (ElementType type : ElementType.values()) {
             elements.get(type).clear();
         }
     }
 
-    public void modelHasChanged(){
+    public void modelHasChanged()
+    {
         setChanged();
         notifyObservers();
     }
 
-    public void setBound(BoundType type, float value) {
-        bounds.put(type,value);
-        dynamicBounds.put(type,value);
-    }
-
-    public void setDynamicBound(BoundType type, float value){
+    public void setBound(BoundType type, float value)
+    {
+        bounds.put(type, value);
         dynamicBounds.put(type, value);
     }
 
-    public void setCameraBound(BoundType type, float value) {
-        camera_bounds.put(type,value);
+    public void setDynamicBound(BoundType type, float value)
+    {
+        dynamicBounds.put(type, value);
     }
 
-    public float getCameraBound(BoundType type) {return camera_bounds.get(type);}
-
-    public float getMinLatitude(boolean dynamic) {
-        if(dynamic) return dynamicBounds.get(BoundType.MIN_LATITUDE);
-        else return bounds.get(BoundType.MIN_LATITUDE);
+    public void setCameraBound(BoundType type, float value)
+    {
+        camera_bounds.put(type, value);
     }
 
-    public float getMaxLatitude(boolean dynamic) {
-        if(dynamic) return dynamicBounds.get(BoundType.MAX_LATITUDE);
-        else return bounds.get(BoundType.MAX_LATITUDE);
+    public float getCameraBound(BoundType type)
+    {
+        return camera_bounds.get(type);
     }
 
-    public float getMinLongitude(boolean dynamic) {
-        if(dynamic) return dynamicBounds.get(BoundType.MIN_LONGITUDE);
-        else return bounds.get(BoundType.MIN_LONGITUDE);
+    public float getMinLatitude(boolean dynamic)
+    {
+        if (dynamic)
+            return dynamicBounds.get(BoundType.MIN_LATITUDE);
+        else
+            return bounds.get(BoundType.MIN_LATITUDE);
     }
 
-    public float getMaxLongitude(boolean dynamic) {
-        if(dynamic) return dynamicBounds.get(BoundType.MAX_LONGITUDE);
-        else return bounds.get(BoundType.MAX_LONGITUDE);
+    public float getMaxLatitude(boolean dynamic)
+    {
+        if (dynamic)
+            return dynamicBounds.get(BoundType.MAX_LATITUDE);
+        else
+            return bounds.get(BoundType.MAX_LATITUDE);
     }
 
-    public ArrayList<Point2D> getMedianpoints() {
-        return medianpoints;
+    public float getMinLongitude(boolean dynamic)
+    {
+        if (dynamic)
+            return dynamicBounds.get(BoundType.MIN_LONGITUDE);
+        else
+            return bounds.get(BoundType.MIN_LONGITUDE);
     }
 
-    public void addMedianPoints(Double longitude,Double latitude){
+    public float getMaxLongitude(boolean dynamic)
+    {
+        if (dynamic)
+            return dynamicBounds.get(BoundType.MAX_LONGITUDE);
+        else
+            return bounds.get(BoundType.MAX_LONGITUDE);
+    }
+
+    public ArrayList<Point2D> getMedianpoints() { return medianpoints; }
+
+    public void addMedianPoints(Double longitude, Double latitude)
+    {
         medianpoints.add(new Point2D.Double(longitude, latitude));
     }
 
-    public void resetInstance() {
-        instance = null;
-    }
+    public void resetInstance() { instance = null; }
 
-    public CoastlineFactory getCoastlineFactory() {
-        return coastlineFactory;
-    }
+    public CoastlineFactory getCoastlineFactory() { return coastlineFactory; }
 }

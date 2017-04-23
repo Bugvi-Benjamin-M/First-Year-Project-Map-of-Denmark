@@ -14,5 +14,4 @@ public class DefaultSettings {
     public static final String THEME = "Default";
 
     public static final String defaultFileLoad = "";
-
 }

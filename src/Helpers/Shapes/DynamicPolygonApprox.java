@@ -13,44 +13,47 @@ import static Enums.ZoomLevel.LEVEL_1;
 /**
  * Created by Nik on 12/04/17.
  */
-public class DynamicPolygonApprox extends PolygonApprox{
-    public DynamicPolygonApprox(List<? extends Point2D> points){
-        super(points);
-    }
+public class DynamicPolygonApprox extends PolygonApprox {
+    public DynamicPolygonApprox(List<? extends Point2D> points) { super(points); }
 
-
-    public PathIterator getPathIterator(AffineTransform at, float pixelsq) {
+    public PathIterator getPathIterator(AffineTransform at, float pixelsq)
+    {
         return new DynamicPolygonApproxIterator(at, pixelsq);
     }
 
-    public PathIterator getPathIterator(AffineTransform at, double flatness) {
-        return new DynamicPolygonApproxIterator(at, (float) (flatness * flatness));
+    public PathIterator getPathIterator(AffineTransform at, double flatness)
+    {
+        return new DynamicPolygonApproxIterator(at, (float)(flatness * flatness));
     }
 
     class DynamicPolygonApproxIterator extends PolygonApproxIterator {
 
-        public DynamicPolygonApproxIterator(AffineTransform _at, float _pixelsq) {
+        public DynamicPolygonApproxIterator(AffineTransform _at, float _pixelsq)
+        {
             super(_at, _pixelsq);
         }
 
-        public void next() {
+        public void next()
+        {
             float fx = coords[index];
             float fy = coords[index + 1];
-            if(ZoomLevel.getZoomLevel().getNodesAtLevel() > 11) {
-                switch(ZoomLevel.getZoomLevel()){
-                    case LEVEL_5: index += 4;
+            if (ZoomLevel.getZoomLevel().getNodesAtLevel() > 11) {
+                switch (ZoomLevel.getZoomLevel()) {
+                case LEVEL_5:
+                    index += 4;
                     break;
-                    case LEVEL_6: index += 16;
+                case LEVEL_6:
+                    index += 16;
                     break;
                 }
-            }else index += 2;
-            while (index < coords.length - 2 &&
-                    distSq(fx, fy, coords[index], coords[index + 1]) < approx) {
+            } else
+                index += 2;
+            while (index < coords.length - 2 && distSq(fx, fy, coords[index], coords[index + 1]) < approx) {
                 if (ZoomLevel.getZoomLevel().getNodesAtLevel() % 2 == 1) {
                     index += ZoomLevel.getZoomLevel().getNodesAtLevel() + 1;
-                } else index += ZoomLevel.getZoomLevel().getNodesAtLevel();
+                } else
+                    index += ZoomLevel.getZoomLevel().getNodesAtLevel();
             }
-
         }
     }
 }

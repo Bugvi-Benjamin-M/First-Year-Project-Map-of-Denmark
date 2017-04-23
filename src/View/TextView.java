@@ -25,33 +25,30 @@ public class TextView extends View {
     private final int MARGIN_TOP = 30;
     private final int MARGIN_LEFT = 20;
 
-    public TextView() {
+    public TextView()
+    {
         layout = new SpringLayout();
         this.setLayout(layout);
         labels = new HashMap<>();
     }
 
-    public void addJLabel(String key, String message) {
+    public void addJLabel(String key, String message)
+    {
         JLabel newLabel = new JLabel(message);
-        newLabel.setPreferredSize(new Dimension(getWidth(),40));
-        labels.put(key,newLabel);
-        layout.putConstraint(WEST,newLabel,
-                MARGIN_LEFT,
-                WEST,this);
+        newLabel.setPreferredSize(new Dimension(getWidth(), 40));
+        labels.put(key, newLabel);
+        layout.putConstraint(WEST, newLabel, MARGIN_LEFT, WEST, this);
         if (lastInserted == null) {
-            layout.putConstraint(NORTH,newLabel,
-                    10,
-                    NORTH,this);
+            layout.putConstraint(NORTH, newLabel, 10, NORTH, this);
         } else {
-            layout.putConstraint(NORTH,newLabel,
-                    MARGIN_TOP,
-                    NORTH,lastInserted);
+            layout.putConstraint(NORTH, newLabel, MARGIN_TOP, NORTH, lastInserted);
         }
         this.add(newLabel);
         lastInserted = newLabel;
     }
 
-    public void removeJLabel(String key) {
+    public void removeJLabel(String key)
+    {
         JLabel removed = labels.get(key);
         if (removed != null) {
             labels.remove(key);
@@ -59,11 +56,10 @@ public class TextView extends View {
         }
     }
 
-    public JLabel getJLabel(String key) {
-        return labels.get(key);
-    }
+    public JLabel getJLabel(String key) { return labels.get(key); }
 
-    public void reset() {
+    public void reset()
+    {
         labels = new HashMap<>();
         lastInserted = null;
     }

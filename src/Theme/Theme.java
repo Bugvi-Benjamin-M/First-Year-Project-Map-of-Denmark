@@ -37,7 +37,7 @@ public interface Theme {
     public abstract Color sand();
     public abstract Color building();
 
-    //Roads
+    // Roads
     public abstract Color motorway();
     public abstract Color trunkRoad();
     public abstract Color primaryRoad();
@@ -63,7 +63,6 @@ public interface Theme {
 
     public abstract Color rail();
 
-
     public abstract Color cityName();
     public abstract Color roadName();
     public abstract Color barName();
@@ -73,7 +72,6 @@ public interface Theme {
 
     public abstract Color hospital();
     public abstract Color placeOfWorship();
-
 
     public abstract String getName();
 }

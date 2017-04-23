@@ -25,12 +25,14 @@ import static org.junit.Assert.assertTrue;
 public class TestToolbarController {
 
     @Test
-    public void test() {
+    public void test()
+    {
         assertEquals(true, true);
     }
 
     @Before
-    public void buildUp() {
+    public void buildUp()
+    {
         Model.getInstance().resetInstance();
         CanvasController.getInstance().resetInstance();
         ToolbarController.getInstance().resetInstance();
@@ -38,7 +40,8 @@ public class TestToolbarController {
     }
 
     @Test
-    public void testToolListeners(){
+    public void testToolListeners()
+    {
         Model.getInstance();
         WindowController mainWindowController = MainWindowController.getInstance();
         CanvasController.getInstance();
@@ -50,19 +53,15 @@ public class TestToolbarController {
         assertEquals(1, savetool.getListeners(MouseListener.class).length);
         JPanel settingsTool = toolbar.getTool(ToolType.SETTINGS);
         assertEquals(1, settingsTool.getListeners(MouseListener.class).length);
-
     }
 
     @Test
-    public void testSingleton() {
+    public void testSingleton()
+    {
         Model.getInstance();
         CanvasController.getInstance();
         ToolbarController toolbarController = ToolbarController.getInstance();
         ToolbarController toolbarController2 = ToolbarController.getInstance();
         assertTrue(toolbarController.equals(toolbarController2));
     }
-
-
-
-
 }
