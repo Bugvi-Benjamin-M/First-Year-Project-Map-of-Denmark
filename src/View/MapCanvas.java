@@ -105,15 +105,6 @@ public class MapCanvas extends View {
 
         Main.FPS_COUNTER.interrupt();
         DebugWindow.getInstance().setFPSLabel();
-
-        /*
-        //Test text på Langeland, rotate text, successfull, saved this bit of code to look at at later times.
-        AffineTransform old = g2D.getTransform();
-        g2D.rotate(Math.PI / 4, 6, -55);
-        g2D.setColor(Color.BLACK);
-        g.drawString("Hello", 6, -55);
-        g2D.setTransform(old);
-        */
     }
 
     private void drawBackground(Graphics2D g) {
@@ -215,7 +206,9 @@ public class MapCanvas extends View {
                 drawRoadNames(g, ElementType.TRUNK_ROAD);
                 drawRoadNames(g, ElementType.MOTORWAY);
 
+                //Amenities
                 drawNight(g);
+                drawAmenity(g);
                 break;
             case LEVEL_1:
                 drawWater(g, ThemeHelper.color("water"), 0.00005);
@@ -265,6 +258,9 @@ public class MapCanvas extends View {
                 drawRoadNames(g, ElementType.PRIMARY_ROAD);
                 drawRoadNames(g, ElementType.TRUNK_ROAD);
                 drawRoadNames(g, ElementType.MOTORWAY);
+
+                //Amenities
+                drawAmenity(g);
                 break;
             case LEVEL_2:
                 drawWater(g, ThemeHelper.color("water"), 0.00008);
@@ -993,6 +989,39 @@ public class MapCanvas extends View {
                         drawString("\uf001" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
                     }
                 }
+        }
+    }
+    private void drawAmenity(Graphics2D g){
+        drawHospital(g);
+        drawPlaceOfWorship(g);
+    }
+    private void drawHospital(Graphics2D g){
+        float scaleFactor;
+        scaleFactor = 1.5f * (float) (Math.pow(ZoomLevel.getZoomFactor(), -2f));
+        setCurrentSection(ElementType.HOSPITAL);
+        for (Element element : currentSection){
+            Amenity amenity = (Amenity) element;
+            g.setColor(ThemeHelper.color("hospital"));
+            Font font = Helpers.FontAwesome.getFontAwesome();
+            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+            drawString("\uf0fe" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
+        }
+    }
+    private void drawPlaceOfWorship(Graphics2D g){
+        float scaleFactor;
+        scaleFactor = 1.5f * (float) (Math.pow(ZoomLevel.getZoomFactor(), -2f));
+        setCurrentSection(ElementType.PLACE_OF_WORSHIP);
+        for (Element element : currentSection){
+            Amenity amenity = (Amenity) element;
+            g.setColor(ThemeHelper.color("placeOfWorship"));
+            Font font = new Font("Wingdings", Font.PLAIN, 36);
+            //Font font = new Font("Ariel", Font.PLAIN, 12);
+            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+
+            float y = amenity.getY();
+            y += ((getFontMetrics(font).charWidth('\uf055'))/2)*scaleFactor;
+
+            drawString("\uf055" + "", g, amenity.getX(), y, font, scaleFactor, false);
         }
     }
 }

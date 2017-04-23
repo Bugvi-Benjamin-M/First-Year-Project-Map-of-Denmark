@@ -69,6 +69,9 @@ public interface Theme {
     public abstract Color fastFoodName();
     public abstract Color iceCreamName();
 
+    public abstract Color hospital();
+    public abstract Color placeOfWorship();
+
 
     public abstract String getName();
 }

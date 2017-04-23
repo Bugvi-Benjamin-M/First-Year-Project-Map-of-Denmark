@@ -78,6 +78,13 @@ public class NightTheme implements Theme {
     }
     public Color iceCreamName(){ return new Color(0x000000); }
 
+    public Color hospital(){
+        return new Color(0xD30408);
+    }
+    public Color placeOfWorship(){
+        return new Color(0x000000);
+    }
+
     @Override
     public Color water() {
         return new Color(0x515c6d);

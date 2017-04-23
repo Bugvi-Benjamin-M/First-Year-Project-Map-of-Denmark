@@ -257,6 +257,7 @@ public final class OSMHandler implements ContentHandler {
                 way = new OSMWay();
                 id = Long.parseLong(atts.getValue("id"));
                 elementType = ElementType.UNKNOWN;
+                place = ElementType.UNKNOWN;
                 idToWay.put(id, way);
                 name = "";
                 loadedWays++;
@@ -366,6 +367,12 @@ public final class OSMHandler implements ContentHandler {
                 break;
             case "ice_cream":
                 place = ElementType.ICE_CREAM;
+                break;
+            case "hospital":
+                place = ElementType.HOSPITAL;
+                break;
+            case "place_of_worship":
+                place = ElementType.PLACE_OF_WORSHIP;
                 break;
         }
     }
@@ -567,7 +574,16 @@ public final class OSMHandler implements ContentHandler {
                         //UnknownWay unknownWay = new UnknownWay(path);
                         //model.addWayElement(elementType, unknownWay);
                         break;
-                } break;
+                }
+                switch (place){
+                    case HOSPITAL:
+                        addAmenity(place);
+                        break;
+                    case PLACE_OF_WORSHIP:
+                        addAmenity(place);
+                        break;
+                }
+                break;
             case "relation":
                 switch(elementType){
                     case MOTORWAY:
@@ -735,6 +751,7 @@ public final class OSMHandler implements ContentHandler {
     private void addAmenity(ElementType type){
         Amenity amenity;
         Pointer p;
+        PolygonApprox polygonApprox;
         switch (type){
             case BAR:
                 amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
@@ -755,6 +772,18 @@ public final class OSMHandler implements ContentHandler {
                 amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
                 p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
                 iceCreams.add(p);
+                break;
+            case HOSPITAL:
+                polygonApprox = new PolygonApprox(way);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                model.getElements().get(ElementType.HOSPITAL).putPointer(p);
+                break;
+            case PLACE_OF_WORSHIP:
+                polygonApprox = new PolygonApprox(way);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                model.getElements().get(ElementType.PLACE_OF_WORSHIP).putPointer(p);
                 break;
         }
     }

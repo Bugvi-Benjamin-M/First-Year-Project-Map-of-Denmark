@@ -68,5 +68,6 @@ public enum ElementType {
     FAST_FOOD, //Children
     ICE_CREAM, //Children
 
-    HOSPITAL,
+    HOSPITAL, //Default
+    PLACE_OF_WORSHIP, //Default
 }
