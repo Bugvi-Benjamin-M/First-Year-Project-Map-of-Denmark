@@ -6,12 +6,6 @@ import Helpers.ThemeHelper;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.InputMethodListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 
 /**
@@ -68,6 +62,8 @@ public class SearchTool extends ToolComponent {
                 super.setForeground(ThemeHelper.color("icon"));
             }
         });
+        JTextField textField = (JTextField) field.getEditor().getEditorComponent();
+        textField.setCaretColor(ThemeHelper.color("icon"));
     }
 
 

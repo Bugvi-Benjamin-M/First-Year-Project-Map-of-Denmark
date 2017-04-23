@@ -1,22 +1,14 @@
 package Main;
 
-import Controller.CanvasController;
-import Controller.InfobarController;
-import Controller.MainWindowController;
-import Controller.SettingsWindowController;
+import Controller.*;
 import Controller.ToolbarControllers.ToolbarController;
-import Exceptions.FileWasNotFoundException;
 import Helpers.FileHandler;
-import Helpers.GlobalValue;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Model;
-import View.PopupWindow;
 
 import javax.swing.*;
 
-
-import Parser.Address;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -27,6 +19,7 @@ public class Main {
     private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
 
     private static final boolean DEBUG_MODE_ACTIVE = false;  // CHANGE ME TO PREVENT LOADING DEFAULT
+    private static final boolean SAVE_AFTER_LOAD = true;     // CHANGE ME TO PREVENT SAVING BIN
 
     public static long LOAD_TIME;
     private static SplashScreen screen;
@@ -34,14 +27,14 @@ public class Main {
     public static void main(String[] args) {
 
         long startTime = System.nanoTime();
-
         splashScreenInit();
 
         Model model = Model.getInstance();
+        FileHandler.loadDefaultResource();
+        splashScreenDestruct();
+        createControllers();
+        PreferencesController.getInstance().setupPreferences();
         SwingUtilities.invokeLater(() -> {
-            FileHandler.loadDefaultResource();
-            splashScreenDestruct();
-            createControllers();
             MainWindowController.getInstance().setupMainWindow();
             SettingsWindowController.getInstance().setupSettingsWindow();
             model.modelHasChanged();
@@ -55,6 +48,7 @@ public class Main {
     }
 
     private static void createControllers() {
+        PreferencesController.getInstance();
         MainWindowController.getInstance();
         ToolbarController.getInstance();
         CanvasController.getInstance();

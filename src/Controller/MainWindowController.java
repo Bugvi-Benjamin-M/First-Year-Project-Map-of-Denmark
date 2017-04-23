@@ -23,7 +23,7 @@ import java.awt.event.WindowEvent;
  */
 public final class MainWindowController extends WindowController {
 
-    private static final String MAIN_TITLE = "OSM Map Viewer v0.3";
+    private static final String MAIN_TITLE = "OSM Map Viewer v0.4";
     private static MainWindowController instance;
     private JLayeredPane layeredPane;
 
@@ -48,7 +48,8 @@ public final class MainWindowController extends WindowController {
                 .layout(new BorderLayout())
                 .icon()
                 .hide();
-        window.setMinimumWindowSize(new Dimension(650, 500));
+        window.setMinimumWindowSize(new Dimension(650, 650));
+        ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
         setupToolbar();
         setupCanvas();
         setupInfobar();
@@ -56,6 +57,7 @@ public final class MainWindowController extends WindowController {
         addInteractionHandlerToWindow();
         CanvasController.adjustToBounds();
         setToolTipTheme();
+        toggleKeyBindings();
         hideWindow();
     }
 
@@ -138,17 +140,17 @@ public final class MainWindowController extends WindowController {
         window.getFrame().addWindowFocusListener(new WindowAdapter() {
             @Override
             public void windowLostFocus(WindowEvent e) {
-                CanvasController.getInstance().hidden();
+                CanvasController.getInstance().disablePopup();
             }
         });
     }
 
-    public void notifyKeyToggle(boolean status) {
-        CanvasController.getInstance().toggleKeyBindings(status);
-        ToolbarController.getInstance().toggleKeyBindings(status);
-        SettingsWindowController.getInstance().toggleKeyBindings(status);
-        MainWindowController.getInstance().toggleKeyBindings(status);
-        InfobarController.getInstance().toggleKeyBindings(status);
+    public void setKeyToggle() {
+        CanvasController.getInstance().toggleKeyBindings();
+        ToolbarController.getInstance().toggleKeyBindings();
+        SettingsWindowController.getInstance().toggleKeyBindings();
+        MainWindowController.getInstance().toggleKeyBindings();
+        InfobarController.getInstance().toggleKeyBindings();
     }
 
     public void resetInstance() {
@@ -167,6 +169,7 @@ public final class MainWindowController extends WindowController {
             adjustBounds();
             ToolbarController.getInstance().resizeEvent();
             CanvasController.getInstance().resizeEvent();
+            CanvasController.getInstance().disablePopup();
         }
 
 
@@ -174,6 +177,13 @@ public final class MainWindowController extends WindowController {
         public void componentMoved(ComponentEvent e) {
             super.componentMoved(e);
             ToolbarController.getInstance().moveEvent();
+            CanvasController.getInstance().disablePopup();
+        }
+
+        @Override
+        public void componentHidden(ComponentEvent e) {
+            super.componentHidden(e);
+            CanvasController.getInstance().disablePopup();
         }
     }
 }

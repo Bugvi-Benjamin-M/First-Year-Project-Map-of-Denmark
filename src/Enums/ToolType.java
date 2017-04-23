@@ -10,7 +10,8 @@ public enum ToolType {
     SEARCHBAR("Search"),
     UNKNOWN("Unknown"),
     MENU("Menu"),
-    SEARCHBUTTON("Search");
+    SEARCHBUTTON("Search"),
+    POI("Points of" + "\n" + "Interest");
 
     private String tag;
 

@@ -21,8 +21,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
-//import com.sun.xml.internal.bind.v2.TODO;
-
 /**
  * Created by Búgvi Magnussen on 02-04-2017.
  */
@@ -37,8 +35,9 @@ public final class SearchToolController extends Controller {
     private JSONArray searchHistory;
 
     private String currentQuery;
+    //Todo accept down and up key when the list is not empty
     private final int[] prohibitedKeys = new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_ALT, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
-    KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_META};
+    KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_META, KeyEvent.VK_WINDOWS, KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_UNDEFINED};
 
     private SearchToolController() {
         super();
@@ -122,9 +121,8 @@ public final class SearchToolController extends Controller {
     }
 
     private void showMatchingResults(){
-        //Todo check if this line fixes the windows issue
         //Todo implement proper search
-        if(searchTool.getField().isPopupVisible()) searchTool.getField().hidePopup();
+        if(searchTool.getField().isPopupVisible() && searchTool.getField().getItemCount() == 0) searchTool.getField().hidePopup();
         searchTool.getField().removeAllItems();
         searchTool.getField().addItem("Cat");
         searchTool.getField().addItem("Horse");
@@ -172,7 +170,6 @@ public final class SearchToolController extends Controller {
         return false;
     }
     //Todo, make sure that the up and down arrows can be used when history is not empty
-    //Todo fix bug regarding the list appearing when pressing the down key. Seems to be a Windows issue.
     private void specifyKeyBindings() {
         searchTool.getField().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override

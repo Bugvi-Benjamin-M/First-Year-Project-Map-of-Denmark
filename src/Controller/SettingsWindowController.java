@@ -1,5 +1,8 @@
 package Controller;
 
+import Controller.ToolbarControllers.ToolbarController;
+import Enums.ToolType;
+import Enums.ToolbarType;
 import Helpers.ThemeHelper;
 import View.*;
 import View.Window;
@@ -25,9 +28,6 @@ public final class SettingsWindowController extends WindowController {
     private Toggle keyboardKeysToggle;
     private Toggle antiAliasingToggle;
     private Toggle canvasRealTimeInformationToggle;
-    private boolean keysActiveStatus;
-    private boolean antiAliasingStatus;
-    private boolean canvasrealTimeInformationStatus;
     private Settings settings;
 
     private SettingsWindowController() {
@@ -51,8 +51,11 @@ public final class SettingsWindowController extends WindowController {
      */
     @Override
     public void showWindow() {
+        MainWindowController.getInstance().getWindow().getFrame().setEnabled(false);
+        MainWindowController.getInstance().getWindow().getFrame().setFocusable(false);
         window.relativeTo(null);
         window.show();
+        window.getFrame().setAlwaysOnTop(true);
     }
 
     /**
@@ -73,6 +76,7 @@ public final class SettingsWindowController extends WindowController {
         addSettingsToWindow();
         buildSettings();
         addInteractionHandlerToWindow();
+        toggleKeyBindings();
         hideWindow();
     }
 
@@ -83,10 +87,14 @@ public final class SettingsWindowController extends WindowController {
         southButtons = new SettingsButtons();
         antiAliasingToggle = new AntiAliasingToggle();
         canvasRealTimeInformationToggle = new CanvasRealTimeInformationToggle();
-        keysActiveStatus = true;
-        antiAliasingStatus = false;
-        canvasrealTimeInformationStatus = true;
-        CanvasController.getInstance().popupActivated(canvasrealTimeInformationStatus);
+        setToCurrentSettings();
+    }
+
+    private void setToCurrentSettings() {
+        antiAliasingToggle.setSelectedStatus(PreferencesController.getInstance().getAntiAliasingSetting());
+        canvasRealTimeInformationToggle.setSelectedStatus(PreferencesController.getInstance().getCanvasRealTimeInformationSetting());
+        keyboardKeysToggle.setSelectedStatus(PreferencesController.getInstance().getKeyBindingsSetting());
+        themeSettings.setSelectedTheme(PreferencesController.getInstance().getThemeSetting());
     }
 
     /**
@@ -125,27 +133,16 @@ public final class SettingsWindowController extends WindowController {
     }
 
     /**
-     * Method is called when deafault button is pressed. Returns all settings to default.
+     * Method is called when default button is pressed. Returns all settings to default.
      */
     private void defaultButtonActivated() {
-        if(!ThemeHelper.getCurrentTheme().equals("Default")) {
-            ThemeHelper.setTheme("Default");
-            themeSettings.setSelectedThemeToDefault();
-            MainWindowController.getInstance().themeHasChanged();
-        }
-        if(!keysActiveStatus) {
-            keysActiveStatus = true;
-            MainWindowController.getInstance().notifyKeyToggle(keysActiveStatus);
-        }
-        if(antiAliasingStatus) {
-            antiAliasingStatus = false;
-            CanvasController.getInstance().toggleAntiAliasing(antiAliasingStatus);
-        }
-        if(!canvasrealTimeInformationStatus) {
-            canvasrealTimeInformationStatus = true;
-            CanvasController.getInstance().popupActivated(canvasrealTimeInformationStatus);
-        }
-        setToCurrentSettingsAndClose();
+        PreferencesController.getInstance().setToDefaultSettings();
+        ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
+        MainWindowController.getInstance().themeHasChanged();
+        MainWindowController.getInstance().setKeyToggle();
+        CanvasController.getInstance().toggleAntiAliasing();
+        setToCurrentSettings();
+        hideWindow();
     }
 
     /**
@@ -153,33 +150,16 @@ public final class SettingsWindowController extends WindowController {
      * window accurately reflects the current settings.
      */
     private void applyButtonActivated() {
-        if(!ThemeHelper.getCurrentTheme().equals(themeSettings.getSelectedTheme())) {
-            ThemeHelper.setTheme(themeSettings.getSelectedTheme());
-            MainWindowController.getInstance().themeHasChanged();
-        }
-        //Todo refactor to avoid contact with main class
-        if(!keyboardKeysToggle.isToggleSelected()) {
-            keysActiveStatus = false;
-            MainWindowController.getInstance().notifyKeyToggle(keysActiveStatus);
-        } else {
-            keysActiveStatus = true;
-            MainWindowController.getInstance().notifyKeyToggle(keysActiveStatus);
-        }
-        if(antiAliasingToggle.isToggleSelected()) {
-            antiAliasingStatus = true;
-            CanvasController.getInstance().toggleAntiAliasing(antiAliasingStatus);
-        } else {
-            antiAliasingStatus = false;
-            CanvasController.getInstance().toggleAntiAliasing(antiAliasingStatus);
-        }
-        if(canvasRealTimeInformationToggle.isToggleSelected()) {
-            canvasrealTimeInformationStatus = true;
-            CanvasController.getInstance().popupActivated(canvasrealTimeInformationStatus);
-        } else {
-            canvasrealTimeInformationStatus = false;
-            CanvasController.getInstance().popupActivated(canvasrealTimeInformationStatus);
-        }
-        setToCurrentSettingsAndClose();
+        PreferencesController.getInstance().setThemeSetting(themeSettings.getSelectedTheme());
+        PreferencesController.getInstance().setCanvasRealTimeInformationSetting(canvasRealTimeInformationToggle.isToggleSelected());
+        PreferencesController.getInstance().setKeyBindingsSetting(keyboardKeysToggle.isToggleSelected());
+        PreferencesController.getInstance().setAntiAliasingSetting(antiAliasingToggle.isToggleSelected());
+        ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
+        MainWindowController.getInstance().themeHasChanged();
+        MainWindowController.getInstance().setKeyToggle();
+        CanvasController.getInstance().toggleAntiAliasing();
+        setToCurrentSettings();
+        hideWindow();
     }
 
     /**
@@ -190,7 +170,8 @@ public final class SettingsWindowController extends WindowController {
         handler.addKeyBinding(KeyEvent.VK_ESCAPE, KeyEvent.VK_UNDEFINED, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setToCurrentSettingsAndClose();
+                setToCurrentSettings();
+                hideWindow();
             }
         });
         handler.addKeyBinding(KeyEvent.VK_ENTER, KeyEvent.VK_UNDEFINED, new AbstractAction() {
@@ -212,22 +193,20 @@ public final class SettingsWindowController extends WindowController {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
-                setToCurrentSettingsAndClose();
+                setToCurrentSettings();
+                hideWindow();
             }
         });
     }
 
-
-    /**
-     * Sets the settings to the current settings. This method makes sure that the current settings are
-     * displayed properly the next time the settings window is opened.
-     *
-     */
-    private void setToCurrentSettingsAndClose() {
-        themeSettings.setSelectedTheme(ThemeHelper.getCurrentTheme());
-        keyboardKeysToggle.setSelectedStatus(keysActiveStatus);
-        antiAliasingToggle.setSelectedStatus(antiAliasingStatus);
+    @Override
+    public void hideWindow() {
+        MainWindowController.getInstance().getWindow().getFrame().setEnabled(true);
+        MainWindowController.getInstance().getWindow().getFrame().setFocusable(true);
+        window.getFrame().setAlwaysOnTop(true);
         window.hide();
+        if(ToolbarController.getInstance().getType() == ToolbarType.LARGE) ToolbarController.getInstance().getToolbar().getTool(ToolType.SETTINGS).toggleActivate(false);
+        MainWindowController.getInstance().transferFocusToMapCanvas();
     }
 
     /**

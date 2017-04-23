@@ -42,10 +42,10 @@ public abstract class WindowController extends Controller {
 
     public abstract void resetInstance();
 
-    public void toggleKeyBindings(boolean status) {
+    public void toggleKeyBindings() {
         JPanel content = (JPanel) window.getFrame().getContentPane();
         for(Object key : content.getActionMap().keys()) {
-            content.getActionMap().get(key).setEnabled(status);
+            content.getActionMap().get(key).setEnabled(PreferencesController.getInstance().getKeyBindingsSetting());
         }
     }
 

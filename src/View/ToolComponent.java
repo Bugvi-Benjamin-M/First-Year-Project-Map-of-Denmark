@@ -15,10 +15,13 @@ import java.awt.*;
 public abstract class ToolComponent extends JPanel {
 
     private Color defaultColor;
+    private boolean activated;
+
 
     ToolComponent() {
         super();
         defaultColor = Helpers.ThemeHelper.color("icon");
+        activated = false;
     }
 
     abstract void setupLayout();
@@ -27,4 +30,12 @@ public abstract class ToolComponent extends JPanel {
         return defaultColor;
     }
 
+    public void toggleActivate(boolean state) {
+        activated = state;
+        paintComponent(getGraphics());
+    }
+
+    protected boolean getActivatedStatus() {
+        return activated;
+    }
 }
