@@ -443,7 +443,6 @@ public class MapCanvas extends View {
             return transform.inverseTransform(mousePosition, null);
 
         }catch(NoninvertibleTransformException e){
-            //System.out.println("NoninvertibleTransformException blev kastet i toModelCoords");
             throw new RuntimeException();
         }
     }
