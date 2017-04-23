@@ -34,7 +34,8 @@ public final class CanvasController extends Controller implements Observer {
 
     private CanvasPopup popup;
 
-    private final int DELAY = 1000;
+    private final int DELAY = 1100;
+    private final float MINIMUM_ACCEPTED_DISTANCE = 0.09f;
     private Timer toolTipTimer;
 
     private enum PanType {
@@ -186,6 +187,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void panEvent(PanType type) {
+        disablePopup();
         double dx = 0.0;
         double dy = 0.0;
         switch (type) {
@@ -257,8 +259,8 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void mouseDraggedEvent(MouseEvent event) {
+        disablePopup();
         mapCanvas.grabFocus();
-        if (popup != null) popup.hidePopupMenu();
         Point2D currentMousePosition = event.getPoint();
         double dx = currentMousePosition.getX() - lastMousePosition.getX();
         double dy = currentMousePosition.getY() - lastMousePosition.getY();
@@ -286,6 +288,10 @@ public final class CanvasController extends Controller implements Observer {
                 popup = new CanvasPopup();
                 popup.setLocation((int) e.getLocationOnScreen().getX() + POPUP_XOFFSET, (int) e.getLocationOnScreen().getY() + POPUP_YOFFSET);
                 setPopupContent(e);
+                if(popup.getPopupMenu().getComponentCount() == 0) {
+                    disablePopup();
+                    return;
+                }
                 if (toolTipTimer == null) {
                     toolTipTimer = new Timer(DELAY, a -> {
                         if (a.getSource() == toolTipTimer) {
@@ -310,6 +316,7 @@ public final class CanvasController extends Controller implements Observer {
     private void setPopupContent(MouseEvent event) {
         Point2D point2D = mapCanvas.toModelCoords(event.getPoint());
         String content = calculateNearestNeighbour((float)point2D.getX(), (float)point2D.getY());
+        if(content == null) return;
         AffineTransform transform = new AffineTransform();
         FontRenderContext context = new FontRenderContext(transform, true, true);
         Font font = new Font("Verdana", Font.PLAIN, 12);
@@ -328,6 +335,7 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void keyboardZoomEvent(double keyboardZoomFactor) {
+        disablePopup();
         double dx = mapCanvas.getVisibleRect().getWidth()/2;
         double dy = mapCanvas.getVisibleRect().getHeight()/2;
         double increase = -keyboardZoomFactor*10;
@@ -365,6 +373,7 @@ public final class CanvasController extends Controller implements Observer {
                 }
             }
         }
+        if(minDist > MINIMUM_ACCEPTED_DISTANCE) return null;
         if(e != null)  {
             return e.getName();
         } else return "error";

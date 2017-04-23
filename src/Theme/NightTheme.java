@@ -63,7 +63,7 @@ public class NightTheme implements Theme {
         return new Color(0xFFFFFF);
     }
 
-    public Color toolActivated() { return new Color(0x8D79C8);}
+    public Color toolActivated() { return new Color(0xB2ACB1);}
 
     public Color cityName() { return new Color(0xCCC9C7); }
     public Color roadName() {
