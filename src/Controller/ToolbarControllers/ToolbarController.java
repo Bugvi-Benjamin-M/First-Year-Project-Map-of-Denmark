@@ -10,6 +10,7 @@ import Enums.ToolbarType;
 import Helpers.FileHandler;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
+import Helpers.ThemeHelper;
 import Model.Model;
 import View.PopupWindow;
 import View.ToolComponent;
@@ -165,6 +166,7 @@ public final class ToolbarController extends Controller {
         poiFeature.remove(1);
         JLabel iconLabel = new JLabel("<html>Points of<br>Interest</html>");
         iconLabel.setFont(new Font(iconLabel.getFont().getName(), Font.PLAIN, 9));
+        iconLabel.setForeground(ThemeHelper.color("icon"));
         poiFeature.add(iconLabel, 1);
     }
 

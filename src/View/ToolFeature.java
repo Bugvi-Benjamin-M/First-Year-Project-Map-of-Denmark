@@ -60,9 +60,9 @@ public class ToolFeature extends ToolComponent {
     }
 
     public void setTheme() {
-        label.setForeground(ThemeHelper.color("icon"));
-        iconLabel.setForeground(ThemeHelper.color("icon"));
-
+        for(Component component : getComponents()) component.setForeground(ThemeHelper.color("icon"));
+        //label.setForeground(ThemeHelper.color("icon"));
+        //iconLabel.setForeground(ThemeHelper.color("icon"));
     }
 
     public void overrideStandardLabelFontSize(int size) {
