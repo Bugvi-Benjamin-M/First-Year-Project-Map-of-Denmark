@@ -245,11 +245,6 @@ public final class OSMHandler implements ContentHandler {
                     model.getElements().get(ElementType.FAST_FOOD).putPointer(p);
                 }
                 // fastFoods = null;
-
-                for (Pointer p : iceCreams) {
-                    model.getElements().get(ElementType.ICE_CREAM).putPointer(p);
-                }
-                // iceCreams = null;
             }
 
             way = new OSMWay();
@@ -271,56 +266,62 @@ public final class OSMHandler implements ContentHandler {
             String k = atts.getValue("k");
             String v = atts.getValue("v");
             switch (k) {
-            case "highway":
-                determineHighway(v);
-                break;
-            case "railway":
-                determineRailway(v);
-                break;
-            case "name":
-                name = v;
-                break;
-            case "natural":
-                determineNatural(v);
-                break;
-            case "place":
-                determinePlace(v);
-                break;
-            case "building":
-                elementType = ElementType.BUILDING;
-                break;
-            case "leisure":
-                determineLeisure(v);
-                break;
-            case "landuse":
-                determineLanduse(v);
-                break;
-            case "amenity":
-                determineAmenity(v);
-                break;
-            case "area":
-                switch (v) {
-                case ("yes"):
-                    isArea = true;
+                case "highway":
+                    determineHighway(v);
                     break;
-                }
-                break;
-            case "addr:city":
-                cityName = v;
-                isAddress = true;
-                break;
-            case "addr:housenumber":
-                roadNumber = v;
-                isAddress = true;
-                break;
-            case "addr:postcode":
-                zipCode = v;
-                isAddress = true;
-                break;
-            case "addr:street":
-                roadName = v;
-                isAddress = true;
-                break;
+                case "railway":
+                    determineRailway(v);
+                    break;
+                case "name":
+                    name = v;
+                    break;
+                case "natural":
+                    determineNatural(v);
+                    break;
+                case "barrier":
+                    determineBarrier(v);
+                    break;
+                case "place":
+                    determinePlace(v);
+                    break;
+                case "building":
+                    elementType = ElementType.BUILDING;
+                    break;
+                case "man_made":
+                    determineManMade(v);
+                    break;
+                case "leisure":
+                    determineLeisure(v);
+                    break;
+                case "landuse":
+                    determineLanduse(v);
+                    break;
+                case "amenity":
+                    determineAmenity(v);
+                    break;
+                case "area":
+                    switch (v) {
+                        case ("yes"):
+                            isArea = true;
+                            break;
+                    }
+                    break;
+                case "addr:city":
+                    cityName = v;
+                    isAddress = true;
+                    break;
+                case "addr:housenumber":
+                    roadNumber = v;
+                    isAddress = true;
+                    break;
+                case "addr:postcode":
+                    zipCode = v;
+                    isAddress = true;
+                    break;
+                case "addr:street":
+                    roadName = v;
+                    isAddress = true;
+                    break;
             }
             break;
         case "member":
@@ -330,193 +331,247 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    private void determineLanduse(String value)
-    {
+    private void determineLanduse(String value) {
         switch (value) {
-        case "forest":
-            elementType = ElementType.FOREST;
-            break;
-        case "farmland":
-            elementType = ElementType.FARMLAND;
-            break;
-        case "meadow":
-            elementType = ElementType.MEADOW;
-            break;
-        case "grass":
-            elementType = ElementType.GRASS;
-            break;
+            case "forest":
+                elementType = ElementType.FOREST;
+                break;
+            case "farmland":
+            case "farmyard":
+                elementType = ElementType.FARMLAND;
+                break;
+            case "meadow":
+                elementType = ElementType.MEADOW;
+                break;
+            case "grass":
+            case "recreation_ground":
+            case "vineyard":
+            case "allotments":
+            case "cemetery":
+            case "greenhouse_horticulture":
+            case "orchard":
+            case "village_green":
+                elementType = ElementType.GRASS;
+                break;
+            case "construction":
+                elementType = ElementType.BUILDING;
+                break;
+            case "basin":
+                elementType = ElementType.WATER;
+                break;
         }
     }
 
-    private void determineLeisure(String value)
-    {
-        switch (value) {
-        case "park":
-            elementType = ElementType.PARK;
-            break;
+    private void determineManMade(String value){
+        switch (value){
+            case "bridge":
+            case "pier":
+                elementType = ElementType.BRIDGE;
+                break;
         }
     }
 
-    private void determineRailway(String value)
-    {
-        switch (value) {
-        case "light_rail":
-        case "rail":
-        case "tram":
-        case "monorail":
-            elementType = ElementType.RAIL;
-            break;
+    private void determineBarrier (String value){
+        switch (value){
+            case "hedge":
+                elementType = ElementType.FOREST;
+                break;
         }
     }
 
-    private void determineAmenity(String value)
-    {
+    private void determineLeisure(String value) {
         switch (value) {
-        case "bar":
-        case "biergarten":
-        case "pub":
-            place = ElementType.BAR;
-            break;
-        case "nightclub":
-            place = ElementType.NIGHT_CLUB;
-            break;
-        case "fast_food":
-            place = ElementType.FAST_FOOD;
-            break;
-        case "ice_cream":
-            place = ElementType.ICE_CREAM;
-            break;
-        case "hospital":
-            place = ElementType.HOSPITAL;
-            break;
-        case "place_of_worship":
-            place = ElementType.PLACE_OF_WORSHIP;
-            break;
+            case "park":
+            case "dog_park":
+            case "garden":
+                elementType = ElementType.PARK;
+                break;
+            case "common":
+                elementType = ElementType.COMMON_LAND;
+                break;
+            case "pitch":
+                elementType = ElementType.SPORTSPITCH;
+                break;
+            case "playground":
+                elementType = ElementType.PLAYGROUND;
+                break;
+            case "swimming_pool":
+                elementType = ElementType.WATER;
+                break;
+            case "track":
+                elementType = ElementType.SPORTSTRACK;
+                break;
         }
     }
 
-    private void determinePlace(String value)
-    {
+    private void determineRailway(String value) {
         switch (value) {
-        case "city":
-            place = ElementType.CITY_NAME;
-            break;
-        case "town":
-            place = ElementType.TOWN_NAME;
-            break;
-        case "village":
-            place = ElementType.VILLAGE_NAME;
-            break;
-        case "hamlet":
-            place = ElementType.HAMLET_NAME;
-            break;
-        case "suburb":
-            place = ElementType.SUBURB_NAME;
-            break;
-        case "quarter":
-            place = ElementType.QUARTER_NAME;
-            break;
-        case "neighbourhood":
-            place = ElementType.NEIGHBOURHOOD_NAME;
-            break;
+            case "light_rail":
+            case "rail":
+            case "tram":
+            case "monorail":
+                elementType = ElementType.RAIL;
+                break;
         }
     }
 
-    private void determineNatural(String value)
-    {
+    private void determineAmenity(String value) {
+        switch (value) {
+            case "bar":
+            case "biergarten":
+            case "pub":
+                place = ElementType.BAR;
+                break;
+            case "nightclub":
+                place = ElementType.NIGHT_CLUB;
+                break;
+            case "fast_food":
+                place = ElementType.FAST_FOOD;
+                break;
+            case "hospital":
+                place = ElementType.HOSPITAL;
+                break;
+            case "place_of_worship":
+                place = ElementType.PLACE_OF_WORSHIP;
+                break;
+            case "parking":
+                place = ElementType.PARKING;
+                elementType = ElementType.PARKING;
+                break;
+        }
+    }
+
+    private void determinePlace(String value) {
+        switch (value) {
+            case "city":
+                place = ElementType.CITY_NAME;
+                break;
+            case "town":
+                place = ElementType.TOWN_NAME;
+                break;
+            case "village":
+                place = ElementType.VILLAGE_NAME;
+                break;
+            case "hamlet":
+                place = ElementType.HAMLET_NAME;
+                break;
+            case "suburb":
+                place = ElementType.SUBURB_NAME;
+                break;
+            case "quarter":
+                place = ElementType.QUARTER_NAME;
+                break;
+            case "neighbourhood":
+                place = ElementType.NEIGHBOURHOOD_NAME;
+                break;
+        }
+    }
+
+    private void determineNatural(String value) {
         elementType = elementType.UNKNOWN;
         switch (value) {
-        case "water":
-            elementType = ElementType.WATER;
-            break;
-        case "grassland":
-            elementType = ElementType.GRASSLAND;
-            break;
-        case "heath":
-            elementType = ElementType.HEATH;
-            break;
+            case "water":
+                elementType = ElementType.WATER;
+                break;
+            case "wetland":
+                elementType = ElementType.WETLAND;
+                break;
+            case "grassland":
+                elementType = ElementType.GRASSLAND;
+                break;
+            case "heath":
+                elementType = ElementType.HEATH;
+                break;
+            case "wood":
+            case "scrub":
+            case "tree_row":
+                elementType = ElementType.FOREST;
+                break;
+            case "beach":
+            case "sand":
+                elementType = ElementType.BEACH;
+                break;
         }
     }
 
-    private void determineHighway(String value)
-    {
+    private void determineHighway(String value) {
         elementType = ElementType.UNKNOWN;
         switch (value) {
-        case "motorway":
-            elementType = ElementType.MOTORWAY;
-            break;
-        case "motorway_link":
-            elementType = ElementType.MOTORWAY_LINK;
-            break;
-        case "trunk":
-            elementType = ElementType.TRUNK_ROAD;
-            break;
-        case "trunk_link":
-            elementType = ElementType.TRUNK_ROAD_LINK;
-            break;
-        case "primary":
-            elementType = ElementType.PRIMARY_ROAD;
-            break;
-        case "primary_link":
-            elementType = ElementType.PRIMARY_ROAD_LINK;
-            break;
-        case "secondary":
-            elementType = ElementType.SECONDARY_ROAD;
-            break;
-        case "seconday_link":
-            elementType = ElementType.SECONDARY_ROAD_LINK;
-            break;
-        case "tertiary":
-            elementType = ElementType.TERTIARY_ROAD;
-            break;
-        case "tertiary_link":
-            elementType = ElementType.TERTIARY_ROAD_LINK;
-            break;
-        case "unclassified":
-            elementType = ElementType.UNCLASSIFIED_ROAD;
-            break;
-        case "residential":
-            elementType = ElementType.RESIDENTIAL_ROAD;
-            break;
-        case "living_street":
-            elementType = ElementType.LIVING_STREET;
-            break;
-        case "service":
-            elementType = ElementType.SERVICE_ROAD;
-            break;
-        case "bus_guideway":
-            elementType = ElementType.BUS_GUIDEWAY;
-            break;
-        case "escape":
-            elementType = ElementType.ESCAPE;
-            break;
-        case "raceway":
-            elementType = ElementType.RACEWAY;
-            break;
-        case "pedestrian":
-            elementType = ElementType.PEDESTRIAN_STREET;
-            break;
-        case "track":
-            elementType = ElementType.TRACK;
-            break;
-        case "steps":
-            elementType = ElementType.STEPS;
-            break;
-        case "footway":
-            elementType = ElementType.FOOTWAY;
-            break;
-        case "bridleway":
-            elementType = ElementType.BRIDLEWAY;
-            break;
-        case "cycleway":
-            elementType = ElementType.CYCLEWAY;
-            break;
-        case "path":
-            elementType = ElementType.PATH;
-            break;
-        case "road":
-            elementType = ElementType.ROAD;
-            break;
+            case "motorway":
+                elementType = ElementType.MOTORWAY;
+                break;
+            case "motorway_link":
+                elementType = ElementType.MOTORWAY_LINK;
+                break;
+            case "trunk":
+                elementType = ElementType.TRUNK_ROAD;
+                break;
+            case "trunk_link":
+                elementType = ElementType.TRUNK_ROAD_LINK;
+                break;
+            case "primary":
+                elementType = ElementType.PRIMARY_ROAD;
+                break;
+            case "primary_link":
+                elementType = ElementType.PRIMARY_ROAD_LINK;
+                break;
+            case "secondary":
+                elementType = ElementType.SECONDARY_ROAD;
+                break;
+            case "seconday_link":
+                elementType = ElementType.SECONDARY_ROAD_LINK;
+                break;
+            case "tertiary":
+                elementType = ElementType.TERTIARY_ROAD;
+                break;
+            case "tertiary_link":
+                elementType = ElementType.TERTIARY_ROAD_LINK;
+                break;
+            case "unclassified":
+                elementType = ElementType.UNCLASSIFIED_ROAD;
+                break;
+            case "residential":
+                elementType = ElementType.RESIDENTIAL_ROAD;
+                break;
+            case "living_street":
+                elementType = ElementType.LIVING_STREET;
+                break;
+            case "service":
+                elementType = ElementType.SERVICE_ROAD;
+                break;
+            case "bus_guideway":
+                elementType = ElementType.BUS_GUIDEWAY;
+                break;
+            case "escape":
+                elementType = ElementType.ESCAPE;
+                break;
+            case "raceway":
+                elementType = ElementType.RACEWAY;
+                break;
+            case "pedestrian":
+                elementType = ElementType.PEDESTRIAN_STREET;
+                break;
+            case "track":
+                elementType = ElementType.TRACK;
+                break;
+            case "steps":
+                elementType = ElementType.STEPS;
+                break;
+            case "footway":
+                elementType = ElementType.FOOTWAY;
+                break;
+            case "bridleway":
+                elementType = ElementType.BRIDLEWAY;
+                break;
+            case "cycleway":
+                elementType = ElementType.CYCLEWAY;
+                break;
+            case "path":
+                elementType = ElementType.PATH;
+                break;
+            case "road":
+                elementType = ElementType.ROAD;
+                break;
         }
     }
 
@@ -539,7 +594,6 @@ public final class OSMHandler implements ContentHandler {
             case BAR:
             case NIGHT_CLUB:
             case FAST_FOOD:
-            case ICE_CREAM:
                 addAmenity(place);
                 break;
             }
@@ -552,112 +606,126 @@ public final class OSMHandler implements ContentHandler {
             break;
         case "way":
             switch (elementType) {
-            case MOTORWAY:
-            case MOTORWAY_LINK:
-            case TRUNK_ROAD:
-            case TRUNK_ROAD_LINK:
-            case PRIMARY_ROAD:
-            case PRIMARY_ROAD_LINK:
-            case SECONDARY_ROAD:
-            case SECONDARY_ROAD_LINK:
-            case TERTIARY_ROAD:
-            case TERTIARY_ROAD_LINK:
-            case UNCLASSIFIED_ROAD:
-            case RESIDENTIAL_ROAD:
-            case PEDESTRIAN_STREET:
-            case LIVING_STREET:
-            case SERVICE_ROAD:
-            case BUS_GUIDEWAY:
-            case ESCAPE:
-            case RACEWAY:
-            case TRACK:
-            case STEPS:
-            case FOOTWAY:
-            case BRIDLEWAY:
-            case CYCLEWAY:
-            case PATH:
-            case ROAD:
-            case RAIL:
-                if (isArea == false) {
-                    addRoad(elementType, false, false);
-                } else {
-                    addRoad(elementType, false, true);
-                    isArea = false;
+                case MOTORWAY:
+                case MOTORWAY_LINK:
+                case TRUNK_ROAD:
+                case TRUNK_ROAD_LINK:
+                case PRIMARY_ROAD:
+                case PRIMARY_ROAD_LINK:
+                case SECONDARY_ROAD:
+                case SECONDARY_ROAD_LINK:
+                case TERTIARY_ROAD:
+                case TERTIARY_ROAD_LINK:
+                case UNCLASSIFIED_ROAD:
+                case RESIDENTIAL_ROAD:
+                case PEDESTRIAN_STREET:
+                case LIVING_STREET:
+                case SERVICE_ROAD:
+                case BUS_GUIDEWAY:
+                case ESCAPE:
+                case RACEWAY:
+                case TRACK:
+                case STEPS:
+                case FOOTWAY:
+                case BRIDLEWAY:
+                case CYCLEWAY:
+                case PATH:
+                case ROAD:
+                case RAIL:
+                    if (isArea == false) {
+                        addRoad(elementType, false, false);
+                    } else {
+                        addRoad(elementType, false, true);
+                        isArea = false;
+                    }
+                    break;
+                case BUILDING:
+                    addBuilding(elementType, false);
+                    break;
+                case WATER:
+                case WETLAND:
+                case PARK:
+                case FOREST:
+                case GRASSLAND:
+                case HEATH:
+                case GRASS:
+                case FARMLAND:
+                case MEADOW:
+                case COMMON_LAND:
+                case BEACH:
+                case SPORTSPITCH:
+                case SPORTSTRACK:
+                case PLAYGROUND:
+                case BRIDGE:
+                case PARKING:
+                    addBiome(elementType, false);
+                    break;
+                case UNKNOWN:
+                    // UnknownWay unknownWay = new UnknownWay(path);
+                    // model.addWayElement(elementType, unknownWay);
+                    break;
+                }
+                switch (place) {
+                case HOSPITAL:
+                    addAmenity(place);
+                    break;
+                case PLACE_OF_WORSHIP:
+                    addAmenity(place);
+                    break;
                 }
                 break;
-            case BUILDING:
-                addBuilding(elementType, false);
+            case "relation":
+                switch (elementType) {
+                    case MOTORWAY:
+                    case MOTORWAY_LINK:
+                    case TRUNK_ROAD:
+                    case TRUNK_ROAD_LINK:
+                    case PRIMARY_ROAD:
+                    case PRIMARY_ROAD_LINK:
+                    case SECONDARY_ROAD:
+                    case SECONDARY_ROAD_LINK:
+                    case TERTIARY_ROAD:
+                    case TERTIARY_ROAD_LINK:
+                    case UNCLASSIFIED_ROAD:
+                    case RESIDENTIAL_ROAD:
+                    case PEDESTRIAN_STREET:
+                    case LIVING_STREET:
+                    case SERVICE_ROAD:
+                    case BUS_GUIDEWAY:
+                    case ESCAPE:
+                    case RACEWAY:
+                    case TRACK:
+                    case STEPS:
+                    case FOOTWAY:
+                    case BRIDLEWAY:
+                    case CYCLEWAY:
+                    case PATH:
+                    case ROAD:
+                    case RAIL:
+                        addRoad(elementType, true, true);
+                        isArea = false;
+                        break;
+                    case BUILDING:
+                        addBuilding(elementType, true);
+                        break;
+                    case WATER:
+                    case WETLAND:
+                    case PARK:
+                    case FOREST:
+                    case GRASSLAND:
+                    case HEATH:
+                    case GRASS:
+                    case FARMLAND:
+                    case MEADOW:
+                    case COMMON_LAND:
+                    case BEACH:
+                    case SPORTSPITCH:
+                    case SPORTSTRACK:
+                    case PLAYGROUND:
+                        addBiome(elementType, true);
+                        break;
+                }
                 break;
-            case WATER:
-            case PARK:
-            case FOREST:
-            case GRASSLAND:
-            case FARMLAND:
-            case GRASS:
-            case MEADOW:
-            case HEATH:
-                addBiome(elementType, false);
-                break;
-            case UNKNOWN:
-                // UnknownWay unknownWay = new UnknownWay(path);
-                // model.addWayElement(elementType, unknownWay);
-                break;
-            }
-            switch (place) {
-            case HOSPITAL:
-                addAmenity(place);
-                break;
-            case PLACE_OF_WORSHIP:
-                addAmenity(place);
-                break;
-            }
-            break;
-        case "relation":
-            switch (elementType) {
-            case MOTORWAY:
-            case MOTORWAY_LINK:
-            case TRUNK_ROAD:
-            case TRUNK_ROAD_LINK:
-            case PRIMARY_ROAD:
-            case PRIMARY_ROAD_LINK:
-            case SECONDARY_ROAD:
-            case SECONDARY_ROAD_LINK:
-            case TERTIARY_ROAD:
-            case TERTIARY_ROAD_LINK:
-            case UNCLASSIFIED_ROAD:
-            case RESIDENTIAL_ROAD:
-            case PEDESTRIAN_STREET:
-            case LIVING_STREET:
-            case SERVICE_ROAD:
-            case BUS_GUIDEWAY:
-            case ESCAPE:
-            case RACEWAY:
-            case TRACK:
-            case STEPS:
-            case FOOTWAY:
-            case BRIDLEWAY:
-            case CYCLEWAY:
-            case PATH:
-            case ROAD:
-            case RAIL:
-                addRoad(elementType, true, true);
-                isArea = false;
-                break;
-            case BUILDING:
-                addBuilding(elementType, true);
-                break;
-            case WATER:
-            case PARK:
-            case FOREST:
-            case GRASSLAND:
-            case FARMLAND:
-            case GRASS:
-            case MEADOW:
-            case HEATH:
-                addBiome(elementType, true);
-                break;
-            }
-            break;
         }
     }
 
@@ -757,15 +825,14 @@ public final class OSMHandler implements ContentHandler {
         // System.out.println(name + " Added :)");
     }
 
-    private void addBiome(ElementType type, boolean isRelation)
-    {
+    private void addBiome(ElementType type, boolean isRelation) {
         if (specialRelationCase == true) {
             specialRelationCase = false;
         } else {
             if (!isRelation) {
                 DynamicPolygonApprox polygonApprox;
                 polygonApprox = new DynamicPolygonApprox(way);
-                Biome biome = new Biome(polygonApprox, name);
+                Biome biome = new Biome(polygonApprox);
                 for (int i = 0; i < way.size(); i += 5) {
                     Pointer p = new Pointer((float)way.get(i).getX(),
                         (float)way.get(i).getY(), biome);
@@ -774,7 +841,7 @@ public final class OSMHandler implements ContentHandler {
             } else {
                 DynamicMultiPolygonApprox multiPolygonApprox;
                 multiPolygonApprox = new DynamicMultiPolygonApprox(relation);
-                Biome biome = new Biome(multiPolygonApprox, name);
+                Biome biome = new Biome(multiPolygonApprox);
                 for (int i = 0; i < relation.size() - 1; i++) {
                     if (relation.get(i) != null) {
                         for (int j = 0; j < relation.get(i).size(); j += 5) {
@@ -809,11 +876,6 @@ public final class OSMHandler implements ContentHandler {
             amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
             p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
             fastFoods.add(p);
-            break;
-        case ICE_CREAM:
-            amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
-            p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
-            iceCreams.add(p);
             break;
         case HOSPITAL:
             polygonApprox = new PolygonApprox(way);
