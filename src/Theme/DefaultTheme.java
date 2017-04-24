@@ -148,7 +148,7 @@ public class DefaultTheme implements Theme {
     public Color busGuideway() { return new Color(0xFFFFFF); }
     public Color escape() { return new Color(0xFFFFFF); }
     public Color raceway() { return new Color(0xFFFFFF); }
-    public Color pedestrianStreet() { return new Color(0xD5D4E3); }
+    public Color pedestrianStreet() { return new Color(0xF2F2F2); }
     public Color track() { return new Color(0xFFFFFF); }
     public Color steps() { return new Color(0x000000); }
     public Color footway() { return new Color(0x000000); }
