@@ -178,6 +178,7 @@ public class MapCanvas extends View {
             drawBusGuideways(g, ThemeHelper.color("busGuideway"), 0.00006f);
 
             // roadborders
+            /*
             drawPedestrianStreets(g, ThemeHelper.color("roadBorder"), 0.000045f);
             drawServiceRoads(g, ThemeHelper.color("roadBorder"), 0.000045f);
             drawLivingStreets(g, ThemeHelper.color("roadBorder"), 0.000055f);
@@ -193,6 +194,7 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("roadBorder"), 0.00015f);
             drawMotorways(g, ThemeHelper.color("roadBorder"), 0.000155f);
             drawMotorwayLinks(g, ThemeHelper.color("roadBorder"), 0.000125f);
+            */
 
             // roads
             drawPedestrianStreets(g, ThemeHelper.color("pedestrianStreet"), 0.00004f);
@@ -260,20 +262,13 @@ public class MapCanvas extends View {
 
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
-            drawBuilding(g, ThemeHelper.color("building"));
+            //drawBuilding(g, ThemeHelper.color("building"));
 
             drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
             drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
             drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
             drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
 
-            drawRoadNames(g, ElementType.PEDESTRIAN_STREET);
-            drawRoadNames(g, ElementType.SERVICE_ROAD);
-            drawRoadNames(g, ElementType.LIVING_STREET);
-            drawRoadNames(g, ElementType.RESIDENTIAL_ROAD);
-            drawRoadNames(g, ElementType.UNCLASSIFIED_ROAD);
-            drawRoadNames(g, ElementType.TERTIARY_ROAD);
-            drawRoadNames(g, ElementType.SECONDARY_ROAD);
             drawRoadNames(g, ElementType.PRIMARY_ROAD);
             drawRoadNames(g, ElementType.TRUNK_ROAD);
             drawRoadNames(g, ElementType.MOTORWAY);
@@ -1125,12 +1120,10 @@ public class MapCanvas extends View {
             g.setFont(font.deriveFont(
                 AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
 
+            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
             float y = amenity.getY();
             y += ((getFontMetrics(font).charWidth('\uf055')) / 2) * scaleFactor;
-
-            drawString("\uf055"
-                    + "",
-                g, amenity.getX(), y, font, scaleFactor, false);
+            drawString("\uf055" + "", g, amenity.getX(), y, font, scaleFactor, false);
         }
     }
 }
