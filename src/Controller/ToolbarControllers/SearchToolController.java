@@ -244,7 +244,7 @@ public final class SearchToolController extends Controller {
         public void focusGained(FocusEvent e) {
             super.focusGained(e);
             if(editor.getItem().equals(defaultText)) {
-                showHistory();
+                //showHistory();
                 searchTool.setText("");
             } else {
                 showMatchingResults();

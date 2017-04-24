@@ -169,7 +169,7 @@ public class MapCanvas extends View {
                 drawBusGuideways(g, ThemeHelper.color("busGuideway"), 0.00006f);
 
                 //roadborders
-                drawPedestrianStreets(g, ThemeHelper.color("roadBorder"), 0.000045f);
+                /*drawPedestrianStreets(g, ThemeHelper.color("roadBorder"), 0.000045f);
                 drawServiceRoads(g, ThemeHelper.color("roadBorder"), 0.000045f);
                 drawLivingStreets(g, ThemeHelper.color("roadBorder"), 0.000055f);
                 drawResidentialRoads(g, ThemeHelper.color("roadBorder"), 0.000055f);
@@ -183,7 +183,7 @@ public class MapCanvas extends View {
                 drawTrunkRoads(g, ThemeHelper.color("roadBorder"), 0.000125f);
                 drawTrunkRoadLinks(g, ThemeHelper.color("roadBorder"), 0.00015f);
                 drawMotorways(g, ThemeHelper.color("roadBorder"), 0.000155f);
-                drawMotorwayLinks(g, ThemeHelper.color("roadBorder"), 0.000125f);
+                drawMotorwayLinks(g, ThemeHelper.color("roadBorder"), 0.000125f);*/
 
                 //roads
                 drawPedestrianStreets(g, ThemeHelper.color("pedestrianStreet"), 0.00004f);
