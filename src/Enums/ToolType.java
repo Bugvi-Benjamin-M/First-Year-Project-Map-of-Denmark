@@ -18,9 +18,7 @@ public enum ToolType {
     ,
     SEARCHBUTTON("Search")
     ,
-    POI("Points of"
-        + "\n"
-        + "Interest");
+    POI("Places");
 
     private String tag;
 

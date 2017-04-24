@@ -27,7 +27,7 @@ public final class PreferencesController {
     private PreferencesController()
     {
         super();
-        // Ignore warnings that occur due to JDK bug.
+        // Ignore warnings that occur due to JDK bug
     }
 
     public static PreferencesController getInstance()

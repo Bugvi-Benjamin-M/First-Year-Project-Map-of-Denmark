@@ -22,7 +22,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -253,6 +252,7 @@ public final class SearchToolController extends Controller {
             }
             editorComponent.setForeground(ThemeHelper.color("icon"));
             allowSearch = true;
+            ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBUTTON).toggleActivate(true);
         }
 
         @Override
@@ -261,6 +261,7 @@ public final class SearchToolController extends Controller {
             setToDefaultText();
             allowSearch = false;
             searchTool.getField().hidePopup();
+            ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBUTTON).toggleActivate(false);
             ToolbarController.getInstance().requestCanvasRepaint();
         }
     }

@@ -4,6 +4,7 @@ import Enums.ToolType;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -21,6 +22,7 @@ public class ToolFeature extends ToolComponent {
     private ToolType type;
     private JLabel label;
     private JLabel iconLabel;
+    private Dimension standardSize;
 
     /**
    * Constructor for a ToolFeature
@@ -30,10 +32,11 @@ public class ToolFeature extends ToolComponent {
     public ToolFeature(String icon, ToolType type)
     {
         super();
+        standardSize = new Dimension(45, 60);
         this.type = type;
         this.icon = icon;
         setupLayout();
-        this.setPreferredSize(new Dimension(45, 60));
+        this.setPreferredSize(standardSize);
     }
 
     /**
@@ -74,15 +77,9 @@ public class ToolFeature extends ToolComponent {
         this.add(Box.createRigidArea(new Dimension(0, size)), 1);
     }
 
-    @Override
-    public void paintComponent(Graphics g)
-    {
-        if (!getActivatedStatus())
-            g.setColor(ThemeHelper.color("toolbar"));
-        else
-            g.setColor(ThemeHelper.color("toolActivated"));
-        g.fillRect(0, 0, getWidth(), getHeight());
-        label.repaint();
-        iconLabel.repaint();
+    public void createSpaceBeforeIcon(int size) {
+        this.remove(iconLabel);
+        iconLabel.setBorder(new EmptyBorder(0, size, 0, 0));
+        this.add(iconLabel, 0);
     }
 }

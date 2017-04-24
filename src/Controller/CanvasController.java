@@ -3,7 +3,6 @@ package Controller;
 import Enums.OSMEnums.ElementType;
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
-import Helpers.HelperFunctions;
 import Helpers.ThemeHelper;
 import Model.Elements.Element;
 import Model.Elements.Road;
@@ -35,9 +34,11 @@ public final class CanvasController extends Controller implements Observer {
 
     private CanvasPopup popup;
 
-    private final int DELAY = 1100;
+    private final int POPUP_DELAY = 1100;
+    private final int ANTIALIASING_ZOOM_DELAY = 200;
     private final float MINIMUM_ACCEPTED_DISTANCE = 0.09f;
     private Timer toolTipTimer;
+    private Timer antiAliasingZoomTimer;
 
     private enum PanType { LEFT,
         RIGHT,
@@ -308,6 +309,7 @@ public final class CanvasController extends Controller implements Observer {
     {
         mapCanvas.grabFocus();
         lastMousePosition = event.getPoint();
+        if(PreferencesController.getInstance().getAntiAliasingSetting()) mapCanvas.toggleAntiAliasing(false);
     }
 
     private void mouseClickedEvent(MouseEvent event)
@@ -333,6 +335,7 @@ public final class CanvasController extends Controller implements Observer {
     {
         disablePopup();
         mapCanvas.grabFocus();
+        if(PreferencesController.getInstance().getAntiAliasingSetting()) mapCanvas.toggleAntiAliasing(false);
         double wheel_rotation = event.getPreciseWheelRotation();
         double factor = Math.pow(ZOOM_FACTOR, wheel_rotation);
         Point2D currentMousePosition = event.getPoint();
@@ -341,6 +344,18 @@ public final class CanvasController extends Controller implements Observer {
 
         double increase = -wheel_rotation * 10;
         zoomEvent(dx, dy, increase, factor);
+        if(PreferencesController.getInstance().getAntiAliasingSetting()) {
+            if(antiAliasingZoomTimer == null) {
+                antiAliasingZoomTimer = new Timer(ANTIALIASING_ZOOM_DELAY, a -> {
+                    if(a.getSource() == antiAliasingZoomTimer) {
+                        antiAliasingZoomTimer.stop();
+                        antiAliasingZoomTimer = null;
+                        mapCanvas.toggleAntiAliasing(true);
+                    }
+                });
+                antiAliasingZoomTimer.start();
+            } else antiAliasingZoomTimer.restart();
+        }
     }
 
     private void mouseMovedEvent(MouseEvent e)
@@ -358,7 +373,7 @@ public final class CanvasController extends Controller implements Observer {
                     return;
                 }
                 if (toolTipTimer == null) {
-                    toolTipTimer = new Timer(DELAY, a -> {
+                    toolTipTimer = new Timer(POPUP_DELAY, a -> {
                         if (a.getSource() == toolTipTimer) {
                             toolTipTimer.stop();
                             toolTipTimer = null;
@@ -375,6 +390,10 @@ public final class CanvasController extends Controller implements Observer {
                 }
             }
         }
+    }
+
+    private void mouseReleasedEvent(MouseEvent e) {
+        if(PreferencesController.getInstance().getAntiAliasingSetting()) mapCanvas.toggleAntiAliasing(true);
     }
 
     private void setPopupContent(MouseEvent event)
@@ -506,10 +525,10 @@ public final class CanvasController extends Controller implements Observer {
             mousePressedEvent(e);
         }
 
-        /*@Override
-    public void mouseReleased(MouseEvent e) {
-        mouseReleasedEvent(e);
-    }*/
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            mouseReleasedEvent(e);
+        }
 
         @Override
         public void mouseDragged(MouseEvent e)

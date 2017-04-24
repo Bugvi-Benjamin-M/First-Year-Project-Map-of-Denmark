@@ -1,17 +1,12 @@
 package Controller.ToolbarControllers;
 
-import Controller.Controller;
-import Controller.CanvasController;
-import Controller.MainWindowController;
-import Controller.SettingsWindowController;
-import Controller.PreferencesController;
+import Controller.*;
 import Enums.FileType;
 import Enums.ToolType;
 import Enums.ToolbarType;
 import Helpers.FileHandler;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
-import Helpers.ThemeHelper;
 import Model.Model;
 import View.PopupWindow;
 import View.ToolComponent;
@@ -193,11 +188,7 @@ public final class ToolbarController extends Controller {
     private void customisePOITool()
     {
         ToolFeature poiFeature = (ToolFeature)toolbar.getTool(ToolType.POI);
-        poiFeature.remove(1);
-        JLabel iconLabel = new JLabel("<html>Points of<br>Interest</html>");
-        iconLabel.setFont(new Font(iconLabel.getFont().getName(), Font.PLAIN, 9));
-        iconLabel.setForeground(ThemeHelper.color("icon"));
-        poiFeature.add(iconLabel, 1);
+        poiFeature.createSpaceBeforeIcon(9);
     }
 
     private void customiseSearchButtonTool()
