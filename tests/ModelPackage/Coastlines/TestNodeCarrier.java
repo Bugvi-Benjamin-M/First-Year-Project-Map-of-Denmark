@@ -18,25 +18,28 @@ public class TestNodeCarrier {
 
     private CoastlineFileGenerator.NodeCarrier node;
     private long ref;
-    private float lon,lat;
+    private float lon, lat;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         ref = 1;
         lon = 0.0f;
         lat = 0.0f;
-        node = new CoastlineFileGenerator.NodeCarrier(ref,lon,lat);
+        node = new CoastlineFileGenerator.NodeCarrier(ref, lon, lat);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws Exception
+    {
         node = null;
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() throws Exception
+    {
         String output = node.toString();
-        assertEquals(output,"<node id=\""+ ref +"\" " + "lat=\""+lat+"\" lon=\""+lon+"\"/>");
+        assertEquals(output, "<node id=\"" + ref + "\" "
+                + "lat=\"" + lat + "\" lon=\"" + lon + "\"/>");
     }
-
 }

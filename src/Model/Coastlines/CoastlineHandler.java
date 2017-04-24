@@ -26,15 +26,16 @@ public class CoastlineHandler implements ContentHandler {
 
     private static Map<Long, Point2D> idToNode;
     private static Map<Long, OSMWay> idToWay;
-    private static Map<Point2D,Long> coastlineIDs;
-    private static Map<Point2D,OSMWay> coastlines;
+    private static Map<Point2D, Long> coastlineIDs;
+    private static Map<Point2D, OSMWay> coastlines;
 
     private OSMWay way;
     private ElementType elementType;
     private float longFactor;
     private long coastlineID;
 
-    private CoastlineHandler() {
+    private CoastlineHandler()
+    {
         factory = new CoastlineFactory();
         idToNode = new HashMap<>();
         idToWay = new HashMap<>();
@@ -42,43 +43,43 @@ public class CoastlineHandler implements ContentHandler {
         coastlineIDs = new HashMap<>();
     }
 
-    public static CoastlineHandler getInstance() {
+    public static CoastlineHandler getInstance()
+    {
         if (instance == null) {
             instance = new CoastlineHandler();
         }
         return instance;
     }
 
-    public static void resetInstance() {
-        instance = null;
-    }
+    public static void resetInstance() { instance = null; }
 
-    public CoastlineFactory getCoastlineFactory() {
-        return factory;
-    }
+    public CoastlineFactory getCoastlineFactory() { return factory; }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+    public void startElement(String uri, String localName, String qName,
+        Attributes atts) throws SAXException
+    {
         switch (qName) {
-            case "bounds":
-                handleBounds(atts);
-                break;
-            case "node":
-                handleNode(atts);
-                break;
-            case "way":
-                handleWay(atts);
-                break;
-            case "nd":
-                handleWayNode(atts);
-                break;
-            case "tag":
-                handleTag(atts);
-                break;
+        case "bounds":
+            handleBounds(atts);
+            break;
+        case "node":
+            handleNode(atts);
+            break;
+        case "way":
+            handleWay(atts);
+            break;
+        case "nd":
+            handleWayNode(atts);
+            break;
+        case "tag":
+            handleTag(atts);
+            break;
         }
     }
 
-    private void handleBounds(Attributes attributes) {
+    private void handleBounds(Attributes attributes)
+    {
         float minLatitude, maxLatitude, minLongitude, maxLongitude;
         minLatitude = Float.parseFloat(attributes.getValue("minlat"));
         // System.out.println("minlat: "+minLatitude);
@@ -88,22 +89,24 @@ public class CoastlineHandler implements ContentHandler {
         // System.out.println("minlon: "+minLongitude);
         maxLongitude = Float.parseFloat(attributes.getValue("maxlon"));
         // System.out.println("maxlon: "+maxLongitude);
-        factory.addBound(BoundType.MIN_LONGITUDE,minLongitude);
-        factory.addBound(BoundType.MAX_LONGITUDE,maxLongitude);
-        factory.setLongitudeFactor(minLatitude,maxLatitude);
+        factory.addBound(BoundType.MIN_LONGITUDE, minLongitude);
+        factory.addBound(BoundType.MAX_LONGITUDE, maxLongitude);
+        factory.setLongitudeFactor(minLatitude, maxLatitude);
         longFactor = factory.getLongitudeFactor();
-        factory.addBound(BoundType.MIN_LATITUDE,-minLatitude);
-        factory.addBound(BoundType.MAX_LATITUDE,-maxLatitude);
+        factory.addBound(BoundType.MIN_LATITUDE, -minLatitude);
+        factory.addBound(BoundType.MAX_LATITUDE, -maxLatitude);
     }
 
-    private void handleNode(Attributes attributes) {
+    private void handleNode(Attributes attributes)
+    {
         long id = Long.parseLong(attributes.getValue("id"));
         float latitude = Float.parseFloat(attributes.getValue("lat"));
         float longitude = Float.parseFloat(attributes.getValue("lon"));
-        idToNode.put(id,new Point2D.Float(longitude* longFactor,-latitude));
+        idToNode.put(id, new Point2D.Float(longitude * longFactor, -latitude));
     }
 
-    private void handleWay(Attributes attributes) {
+    private void handleWay(Attributes attributes)
+    {
         way = new OSMWay();
         long id = Long.parseLong(attributes.getValue("id"));
         elementType = ElementType.UNKNOWN;
@@ -111,46 +114,51 @@ public class CoastlineHandler implements ContentHandler {
         coastlineID = id;
     }
 
-    private void handleWayNode(Attributes attributes) {
+    private void handleWayNode(Attributes attributes)
+    {
         long ref = Long.parseLong(attributes.getValue("ref"));
         way.add(idToNode.get(ref));
-        coastlineIDs.put(idToNode.get(ref),coastlineID);
+        coastlineIDs.put(idToNode.get(ref), coastlineID);
     }
 
-    private void handleTag(Attributes attributes) {
+    private void handleTag(Attributes attributes)
+    {
         String k = attributes.getValue("k");
         String v = attributes.getValue("v");
         switch (k) {
-            case "natural":
-                if (v.equals(Coastline.OSM_IDENTIFIER)) {
-                    elementType = ElementType.COASTLINE;
-                }
-                break;
+        case "natural":
+            if (v.equals(Coastline.OSM_IDENTIFIER)) {
+                elementType = ElementType.COASTLINE;
+            }
+            break;
         }
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName)
+        throws SAXException
+    {
         switch (qName) {
-            case "way":
-                switch (elementType){
-                    case COASTLINE:
-                        coastLineFix();
-                        break;
-                }
+        case "way":
+            switch (elementType) {
+            case COASTLINE:
+                coastLineFix();
                 break;
-            case "osm":
-                handleEndOfFile();
-                break;
+            }
+            break;
+        case "osm":
+            handleEndOfFile();
+            break;
         }
     }
 
-    private void coastLineFix() {
+    private void coastLineFix()
+    {
         OSMWay before = coastlines.remove(way.getFromNode());
         OSMWay after = coastlines.remove(way.getToNode());
         OSMWay merged = new OSMWay();
         if (before != null) {
-            merged.addAll(before.subList(0, before.size()-1));
+            merged.addAll(before.subList(0, before.size() - 1));
         }
         merged.addAll(way);
         if (after != null && before != after) {
@@ -160,8 +168,9 @@ public class CoastlineHandler implements ContentHandler {
         coastlines.put(merged.getToNode(), merged);
     }
 
-    private void handleEndOfFile() {
-        for (OSMWay way: coastlines.values()) {
+    private void handleEndOfFile()
+    {
+        for (OSMWay way : coastlines.values()) {
             factory.insertCoastline(way);
         }
     }
@@ -169,48 +178,34 @@ public class CoastlineHandler implements ContentHandler {
     /* ---------------- IGNORE REST OF CLASS (NOT USED) ---------------- */
 
     @Override
-    public void characters(char[] ch, int start, int length) throws SAXException {
-
+    public void characters(char[] ch, int start, int length) throws SAXException
+    {
     }
 
     @Override
-    public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-
-    }
-
-    @Override
-    public void processingInstruction(String target, String data) throws SAXException {
-
-    }
+    public void ignorableWhitespace(char[] ch, int start, int length)
+        throws SAXException {}
 
     @Override
-    public void skippedEntity(String name) throws SAXException {
-
-    }
-
-    @Override
-    public void setDocumentLocator(Locator locator) {
-
-    }
+    public void processingInstruction(String target, String data)
+        throws SAXException {}
 
     @Override
-    public void startDocument() throws SAXException {
-
-    }
+    public void skippedEntity(String name) throws SAXException {}
 
     @Override
-    public void endDocument() throws SAXException {
-
-    }
+    public void setDocumentLocator(Locator locator) {}
 
     @Override
-    public void startPrefixMapping(String prefix, String uri) throws SAXException {
-
-    }
+    public void startDocument() throws SAXException {}
 
     @Override
-    public void endPrefixMapping(String prefix) throws SAXException {
+    public void endDocument() throws SAXException {}
 
-    }
+    @Override
+    public void startPrefixMapping(String prefix, String uri)
+        throws SAXException {}
 
+    @Override
+    public void endPrefixMapping(String prefix) throws SAXException {}
 }

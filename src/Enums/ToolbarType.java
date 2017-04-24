@@ -6,7 +6,5 @@ package Enums;
  * @author bugvimagnussen
  * @version 09/04/2017
  */
-public enum ToolbarType {
-    LARGE,
-    SMALL
-}
+public enum ToolbarType { LARGE,
+    SMALL }

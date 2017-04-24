@@ -14,39 +14,35 @@ public final class InfobarController extends Controller {
     private Infobar infobar;
     private static InfobarController instance;
 
-    private InfobarController() {
-        super();
-    }
+    private InfobarController() { super(); }
 
-    public static InfobarController getInstance() {
-        if(instance == null) {
+    public static InfobarController getInstance()
+    {
+        if (instance == null) {
             return new InfobarController();
         }
         return instance;
     }
 
-    public void setupInfobar() {
+    public void setupInfobar()
+    {
         infobar = new Infobar();
         toggleVisibility();
     }
 
-    public void toggleVisibility() {
-        infobar.toggleVisibility();
+    public void toggleVisibility() { infobar.toggleVisibility(); }
+
+    public Infobar getInfobar() { return infobar; }
+
+    public void resetInstance() { instance = null; }
+
+    public void themeHasChanged()
+    {
+        // Todo fix
     }
 
-    public Infobar getInfobar() {
-        return infobar;
-    }
-
-    public void resetInstance() {
-        instance = null;
-    }
-
-    public void themeHasChanged() {
-        //Todo fix
-    }
-
-    public void toggleKeyBindings(boolean status) {
-        //Todo fix
+    public void toggleKeyBindings()
+    {
+        // Todo fix
     }
 }

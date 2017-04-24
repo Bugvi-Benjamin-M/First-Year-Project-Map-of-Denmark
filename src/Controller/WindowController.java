@@ -16,11 +16,10 @@ public abstract class WindowController extends Controller {
 
     protected WindowInteractionHandler handler;
 
-    protected WindowController() {
-        super();
-    }
+    protected WindowController() { super(); }
 
-    protected void addInteractionHandlerToWindow() {
+    protected void addInteractionHandlerToWindow()
+    {
         handler = new WindowInteractionHandler();
         window.getFrame().addComponentListener(handler);
         specifyKeyBindings();
@@ -28,24 +27,20 @@ public abstract class WindowController extends Controller {
 
     protected abstract void specifyKeyBindings();
 
-    public void showWindow() {
-        window.show();
-    }
+    public void showWindow() { window.show(); }
 
-    public void hideWindow() {
-        window.hide();
-    }
+    public void hideWindow() { window.hide(); }
 
-    public Window getWindow() {
-        return window;
-    }
+    public Window getWindow() { return window; }
 
     public abstract void resetInstance();
 
-    public void toggleKeyBindings(boolean status) {
-        JPanel content = (JPanel) window.getFrame().getContentPane();
-        for(Object key : content.getActionMap().keys()) {
-            content.getActionMap().get(key).setEnabled(status);
+    public void toggleKeyBindings()
+    {
+        JPanel content = (JPanel)window.getFrame().getContentPane();
+        for (Object key : content.getActionMap().keys()) {
+            content.getActionMap().get(key).setEnabled(
+                PreferencesController.getInstance().getKeyBindingsSetting());
         }
     }
 
@@ -53,27 +48,29 @@ public abstract class WindowController extends Controller {
 
         protected JPanel content;
 
-        protected WindowInteractionHandler() {
-            this.content = (JPanel) window.getFrame().getContentPane();
+        protected WindowInteractionHandler()
+        {
+            this.content = (JPanel)window.getFrame().getContentPane();
         }
 
         @Override
-        public void componentResized(ComponentEvent e) {
+        public void componentResized(ComponentEvent e)
+        {
             super.componentResized(e);
         }
 
         @Override
-        public void componentHidden(ComponentEvent e) {
+        public void componentHidden(ComponentEvent e)
+        {
             super.componentHidden(e);
         }
 
-
-        protected void addKeyBinding(int key, int activationKey, AbstractAction event) {
-            content.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).
-                    put(KeyStroke.getKeyStroke(key, activationKey), event.toString());
+        protected void addKeyBinding(int key, int activationKey,
+            AbstractAction event)
+        {
+            content.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke.getKeyStroke(key, activationKey), event.toString());
             content.getActionMap().put(event.toString(), event);
-
         }
-
     }
 }

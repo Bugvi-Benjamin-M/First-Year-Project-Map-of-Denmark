@@ -8,12 +8,11 @@ import Model.Elements.Element;
 public class Pointer extends Point {
     private Element element;
 
-    public Pointer(float x, float y, Element element){
+    public Pointer(float x, float y, Element element)
+    {
         super(x, y);
         this.element = element;
     }
 
-    public Element getElement() {
-        return element;
-    }
+    public Element getElement() { return element; }
 }

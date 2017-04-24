@@ -390,8 +390,6 @@ Impediments:
 Next Time:
 - Wednesday the 19th of April
 
-## Next logbook...
-
 ## Logbook 21/4 (Scribe Jakob)
 What we did since last time:
 - Vacation
@@ -418,9 +416,29 @@ What we will do until next time:
 - Tenary search trie for addresses
 
 Impediments:
-- Frida brings cake <3
+- Frida brings cake <3 (She did not)
 
 Next Time:
 - Monday 24/4 at 10.00
+
+## Logbook 24/4 (Scribe Hedam)
+What we did since last time:
+- Amenities are drawn correctly with icons
+- Autocomplete and address parser BETA/WIP done on feature
+- Zoom panning restriction
+- Path generalisation of relations
+- 
+
+
+What we will do until next time:
+- Presentation
+- Tries (Address parser)
+- Add final missing elements
+
+Impediments:
+- Presentation at 14pm
+
+Next Time:
+- Wednesday the 26th of April
 
 ## Next logbook...

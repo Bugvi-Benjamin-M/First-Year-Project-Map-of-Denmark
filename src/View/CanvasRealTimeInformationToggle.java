@@ -8,8 +8,5 @@ package View;
  */
 public class CanvasRealTimeInformationToggle extends Toggle {
 
-    public CanvasRealTimeInformationToggle() {
-        super("Real-time Information:");
-        toggleBox.setSelected(true);
-    }
+    public CanvasRealTimeInformationToggle() { super("Real-time Information:"); }
 }

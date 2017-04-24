@@ -18,34 +18,35 @@ public class SettingsButtons extends View {
     private JButton defaultSet;
     private List<JButton> buttons;
 
-    public SettingsButtons() {
+    public SettingsButtons()
+    {
         buttons = new ArrayList<>();
         setPreferredSize(new Dimension(400, 50));
         createButtons();
         addButtons();
     }
 
-    private void createButtons() {
+    private void createButtons()
+    {
         buttons.add(apply = new JButton("Apply Changes"));
         buttons.add(defaultSet = new JButton("Default Settings"));
     }
 
-    public void addActionToApplyButton(ActionListener e) {
+    public void addActionToApplyButton(ActionListener e)
+    {
         apply.addActionListener(e);
     }
 
-    public void addActionToDefaultButton(ActionListener e) {
+    public void addActionToDefaultButton(ActionListener e)
+    {
 
         defaultSet.addActionListener(e);
-
     }
 
-    private void addButtons() {
+    private void addButtons()
+    {
         for (JButton button : buttons) {
             add(button);
         }
     }
-
-
-
 }

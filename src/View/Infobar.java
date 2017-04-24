@@ -15,50 +15,44 @@ import java.awt.event.*;
  */
 public class Infobar extends View {
 
-
     private JLabel widthLabel, heightLabel;
 
     /** Constructor of the Infobar */
-    public Infobar() {
+    public Infobar()
+    {
         setBackground(Color.blue);
-        setPreferredSize(new Dimension(400,500));
-        widthLabel = new JLabel(""+getWidth());
-        heightLabel = new JLabel(""+getHeight());
+        setPreferredSize(new Dimension(400, 500));
+        widthLabel = new JLabel("" + getWidth());
+        heightLabel = new JLabel("" + getHeight());
         this.add(widthLabel);
         this.add(heightLabel);
         addComponentListener();
     }
 
     /**
-     * Toggles the visibility of the infobar (default false)
-     */
-    public void toggleVisibility() {
-        setVisible(!isVisible());
-    }
+   * Toggles the visibility of the infobar (default false)
+   */
+    public void toggleVisibility() { setVisible(!isVisible()); }
 
     /** Adds an ComponentListener */
-    private void addComponentListener() {
+    private void addComponentListener()
+    {
         this.addComponentListener(new ComponentListener() {
             @Override
-            public void componentResized(ComponentEvent e) {
-                widthLabel.setText(""+getWidth());
-                heightLabel.setText(""+getHeight());
+            public void componentResized(ComponentEvent e)
+            {
+                widthLabel.setText("" + getWidth());
+                heightLabel.setText("" + getHeight());
             }
 
             @Override
-            public void componentMoved(ComponentEvent e) {
-
-            }
+            public void componentMoved(ComponentEvent e) {}
 
             @Override
-            public void componentShown(ComponentEvent e) {
-
-            }
+            public void componentShown(ComponentEvent e) {}
 
             @Override
-            public void componentHidden(ComponentEvent e) {
-
-            }
+            public void componentHidden(ComponentEvent e) {}
         });
     }
 }

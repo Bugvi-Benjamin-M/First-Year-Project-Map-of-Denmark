@@ -7,8 +7,5 @@ package Model.Addresses;
  * @version 21/04/2017
  */
 public class AddressNode {
-
     private String key;
-
-
 }

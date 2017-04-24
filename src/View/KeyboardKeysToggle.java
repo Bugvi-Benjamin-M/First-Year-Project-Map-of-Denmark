@@ -5,8 +5,5 @@ package View;
  */
 public class KeyboardKeysToggle extends Toggle {
 
-    public KeyboardKeysToggle() {
-        super("Toggle Keyboard Shortcuts:");
-        toggleBox.setSelected(true);
-    }
+    public KeyboardKeysToggle() { super("Toggle Keyboard Shortcuts:"); }
 }

@@ -9,11 +9,10 @@ public abstract class Controller {
 
     protected Window window;
 
-    public Controller() {
-            //
+    public Controller()
+    {
+        //
     }
 
-    public void specifyWindow(Window window) {
-        this.window = window;
-    }
+    public void specifyWindow(Window window) { this.window = window; }
 }

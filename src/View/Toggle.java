@@ -15,7 +15,8 @@ public abstract class Toggle extends View {
     protected JLabel toggleLabel;
     protected Dimension dimension;
 
-    public Toggle(String description) {
+    public Toggle(String description)
+    {
         setPreferredSize(dimension = new Dimension(400, 40));
         toggleBox = new JCheckBox();
         toggleLabel = new JLabel(description);
@@ -23,13 +24,10 @@ public abstract class Toggle extends View {
         add(toggleBox);
     }
 
-    public boolean isToggleSelected() {
-        return toggleBox.isSelected();
-    }
+    public boolean isToggleSelected() { return toggleBox.isSelected(); }
 
-    public void setSelectedStatus(boolean isSelected) {
+    public void setSelectedStatus(boolean isSelected)
+    {
         toggleBox.setSelected(isSelected);
     }
-
-
 }

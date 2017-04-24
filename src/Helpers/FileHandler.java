@@ -32,23 +32,26 @@ public class FileHandler {
 
     private static String pathStart = OSDetector.getPathPrefix();
 
-    public static void loadResource(String fileName, boolean isLoadingFromStart) {
+    public static void loadResource(String fileName, boolean isLoadingFromStart)
+    {
         try {
             if (fileExists(fileName) && fileName.endsWith(FileType.OSM.getExtension())) {
-                if(isLoadingFromStart){
+                if (isLoadingFromStart) {
                     OSMHandler.getInstance().parseDefault(true);
-                    FileHandler.loadOSM(new InputSource(FileHandler.class.getResourceAsStream(fileName)));
-                }else {
+                    FileHandler.loadOSM(
+                        new InputSource(FileHandler.class.getResourceAsStream(fileName)));
+                } else {
                     OSMHandler.getInstance().parseDefault(false);
                     FileHandler.loadOSM(new InputSource(pathStart + fileName));
                     CanvasController.adjustToDynamicBounds();
                 }
             } else if (fileExists(fileName) && fileName.endsWith(FileType.ZIP.getExtension())) {
                 ZipInputStream zip;
-                if(isLoadingFromStart){
+                if (isLoadingFromStart) {
                     OSMHandler.getInstance().parseDefault(true);
-                    zip = new ZipInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(fileName)));
-                }else {
+                    zip = new ZipInputStream(new BufferedInputStream(
+                        FileHandler.class.getResourceAsStream(fileName)));
+                } else {
                     OSMHandler.getInstance().parseDefault(false);
                     zip = new ZipInputStream(new FileInputStream(fileName));
                 }
@@ -58,18 +61,21 @@ public class FileHandler {
                     e.printStackTrace();
                 }
                 loadOSM(new InputSource(zip));
-                if(!isLoadingFromStart) CanvasController.adjustToDynamicBounds();
+                if (!isLoadingFromStart)
+                    CanvasController.adjustToDynamicBounds();
             } else if (fileExists(fileName) || fileName.endsWith(FileType.BIN.getExtension())) {
                 loadBin(fileName, isLoadingFromStart);
             } else {
-                PopupWindow.errorBox(null, "Unsupported File Type. Please Select a New File!");
+                PopupWindow.errorBox(
+                    null, "Unsupported File Type. Please Select a New File!");
             }
-        }catch(FileNotFoundException | FileWasNotFoundException e ){
+        } catch (FileNotFoundException | FileWasNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public static void loadDefaultResource() {
+    public static void loadDefaultResource()
+    {
         try {
             try {
                 long startTime = System.currentTimeMillis();
@@ -81,54 +87,67 @@ public class FileHandler {
                     }
                 }
                 long stopTime = System.currentTimeMillis();
-                System.out.println("Resource load time: "+(stopTime-startTime)+" ms");
-                if (DEBUG_MODE_ACTIVE) throw new FileWasNotFoundException("");
+                System.out.println("Resource load time: " + (stopTime - startTime) + " ms");
+                if (DEBUG_MODE_ACTIVE)
+                    throw new FileWasNotFoundException("");
             } catch (FileWasNotFoundException e) {
-                throw new FileWasNotFoundException("Program was not able to load default resource \""+GlobalValue.DEFAULT_RESOURCE+"\"" +
-                        "\nLoading from coastlines instead.");
+                throw new FileWasNotFoundException(
+                    "Program was not able to load default resource \"" + GlobalValue.DEFAULT_RESOURCE + "\""
+                    + "\nLoading from coastlines instead.");
             }
             GlobalValue.setDidProgramLoadDefault(true);
         } catch (FileWasNotFoundException e) {
-            PopupWindow.warningBox(null,e.getMessage());
+            PopupWindow.warningBox(null, e.getMessage());
             Model.getInstance().loadFromCoastlines();
             GlobalValue.setDidProgramLoadDefault(false);
         }
     }
 
-
-    public static boolean fileExists(String fileName){
-        if(Model.class.getResourceAsStream(fileName) != null)return true;
-        else if(new InputSource(pathStart + fileName) != null) return true;
+    public static boolean fileExists(String fileName)
+    {
+        if (Model.class.getResourceAsStream(fileName) != null)
+            return true;
+        else if (new InputSource(pathStart + fileName) != null)
+            return true;
         return false;
     }
 
-    public static void loadBin(String filename, Boolean isLoadingFromStart) throws FileWasNotFoundException{
+    public static void loadBin(String filename, Boolean isLoadingFromStart)
+        throws FileWasNotFoundException
+    {
         try {
             ObjectInputStream in;
-            if(isLoadingFromStart){
-                in = new ObjectInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(filename)));
-            }else {
+            if (isLoadingFromStart) {
+                in = new ObjectInputStream(new BufferedInputStream(
+                    FileHandler.class.getResourceAsStream(filename)));
+            } else {
                 in = new ObjectInputStream(new FileInputStream(filename));
             }
             long time = -System.nanoTime();
-            Model.getInstance().setElements((EnumMap<ElementType, KDTree>) in.readObject());
-            if(isLoadingFromStart) {
+            Model.getInstance().setElements(
+                (EnumMap<ElementType, KDTree>)in.readObject());
+            if (isLoadingFromStart) {
                 Model.getInstance().setBound(BoundType.MIN_LONGITUDE, in.readFloat());
                 Model.getInstance().setBound(BoundType.MAX_LONGITUDE, in.readFloat());
                 Model.getInstance().setBound(BoundType.MIN_LATITUDE, in.readFloat());
                 Model.getInstance().setBound(BoundType.MAX_LATITUDE, in.readFloat());
-            }else{
-                Model.getInstance().setDynamicBound(BoundType.MIN_LONGITUDE, in.readFloat());
-                Model.getInstance().setDynamicBound(BoundType.MAX_LONGITUDE, in.readFloat());
-                Model.getInstance().setDynamicBound(BoundType.MIN_LATITUDE, in.readFloat());
-                Model.getInstance().setDynamicBound(BoundType.MAX_LATITUDE, in.readFloat());
+            } else {
+                Model.getInstance().setDynamicBound(BoundType.MIN_LONGITUDE,
+                    in.readFloat());
+                Model.getInstance().setDynamicBound(BoundType.MAX_LONGITUDE,
+                    in.readFloat());
+                Model.getInstance().setDynamicBound(BoundType.MIN_LATITUDE,
+                    in.readFloat());
+                Model.getInstance().setDynamicBound(BoundType.MAX_LATITUDE,
+                    in.readFloat());
             }
-            Model.getInstance().setTst((TenarySearchTrie) in.readObject());
+            Model.getInstance().setTst((TenarySearchTrie)in.readObject());
             time += System.nanoTime();
-            if(!isLoadingFromStart) {
+            if (!isLoadingFromStart) {
                 CanvasController.adjustToDynamicBounds();
             }
-            System.out.printf("Object deserialization: %f s\n", time / 1000000 / 1000d);
+            System.out.printf("Object deserialization: %f s\n",
+                time / 1000000 / 1000d);
             Model.getInstance().modelHasChanged();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -136,9 +155,10 @@ public class FileHandler {
         }
     }
 
-    public static void saveBin(String fileName, boolean dynamic) {
-        //File f = new File(fileName);
-        //if(f.exists()) f.delete();
+    public static void saveBin(String fileName, boolean dynamic)
+    {
+        // File f = new File(fileName);
+        // if(f.exists()) f.delete();
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
             out.writeObject(Model.getInstance().getElements());
             out.writeFloat(Model.getInstance().getMinLongitude(dynamic));
@@ -152,7 +172,8 @@ public class FileHandler {
         }
     }
 
-    public static void saveTreeStructure(String fileName){
+    public static void saveTreeStructure(String fileName)
+    {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
             out.writeObject(Model.getInstance().getElements());
             System.out.println("DONE");
@@ -163,27 +184,33 @@ public class FileHandler {
         }
     }
 
-    public static void loadTreeStructure(String fileName){
-        try(ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(FileHandler.class.getResourceAsStream(fileName)));){
-            Model.getInstance().setElements((EnumMap<ElementType, KDTree>) in.readObject());
-        }catch (FileNotFoundException e) {
+    public static void loadTreeStructure(String fileName)
+    {
+        try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(
+                 FileHandler.class.getResourceAsStream(fileName)));) {
+            Model.getInstance().setElements(
+                (EnumMap<ElementType, KDTree>)in.readObject());
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public static void fileChooserSave(String fileName){
+    public static void fileChooserSave(String fileName)
+    {
         saveBin(fileName, true);
     }
 
-    public static void fileChooserLoad(String fileName) {
+    public static void fileChooserLoad(String fileName)
+    {
         loadResource(fileName, false);
     }
 
-    public static void loadOSM(InputSource inputSource) {
+    public static void loadOSM(InputSource inputSource)
+    {
         try {
             Model.getInstance().clear();
             XMLReader reader = XMLReaderFactory.createXMLReader();
@@ -195,7 +222,8 @@ public class FileHandler {
         }
     }
 
-    public static CoastlineFactory loadCoastlines() {
+    public static CoastlineFactory loadCoastlines()
+    {
         CoastlineHandler handler = CoastlineHandler.getInstance();
         try {
             XMLReader reader = XMLReaderFactory.createXMLReader();

@@ -20,24 +20,27 @@ public class TestWayCarrier {
     private long ref;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         ref = 12345678L;
         way = new CoastlineFileGenerator.WayCarrier(ref);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws Exception
+    {
         way = null;
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() throws Exception
+    {
         String emptyWay = way.toString();
-        assertEquals(emptyWay,"<way id=\""+ref+"\"></way>");
-        way.add(new CoastlineFileGenerator.NodeCarrier(1,0,0));
+        assertEquals(emptyWay, "<way id=\"" + ref + "\"></way>");
+        way.add(new CoastlineFileGenerator.NodeCarrier(1, 0, 0));
         String nonEmptyWay = way.toString();
-        assertNotEquals(nonEmptyWay,emptyWay);
-        assertEquals(nonEmptyWay,"<way id=\""+ref+"\"><nd ref=\""+1+"\"/></way>");
+        assertNotEquals(nonEmptyWay, emptyWay);
+        assertEquals(nonEmptyWay,
+            "<way id=\"" + ref + "\"><nd ref=\"" + 1 + "\"/></way>");
     }
-
 }

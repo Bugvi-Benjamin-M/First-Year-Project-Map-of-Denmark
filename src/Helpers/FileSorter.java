@@ -20,14 +20,15 @@ import java.util.Collections;
  */
 public class FileSorter {
 
-    public static void main(String[] args) {
-        if (args.length != 1) throw new RuntimeException("Requires file name as parameter.");
+    public static void main(String[] args)
+    {
+        if (args.length != 1)
+            throw new RuntimeException("Requires file name as parameter.");
         try {
             ArrayList<Integer> input = new ArrayList<>();
             Path file = Paths.get("./resources/" + args[0]);
             try (InputStream in = Files.newInputStream(file);
-                 BufferedReader reader =
-                         new BufferedReader(new InputStreamReader(in))) {
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     input.add(Integer.parseInt(line));
@@ -43,6 +44,4 @@ public class FileSorter {
             System.err.println(e);
         }
     }
-
-
 }

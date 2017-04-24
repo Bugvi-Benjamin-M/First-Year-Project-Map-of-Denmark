@@ -24,16 +24,17 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestCanvasController {
 
-
     @Before
-    public void buildUp() {
+    public void buildUp()
+    {
         Model.getInstance().resetInstance();
         CanvasController.getInstance().resetInstance();
         MainWindowController.getInstance().resetInstance();
     }
 
     @Test
-    public void TestSingleton() {
+    public void TestSingleton()
+    {
         Model.getInstance();
         CanvasController canvasController = CanvasController.getInstance();
         CanvasController canvasController2 = CanvasController.getInstance();
@@ -41,7 +42,8 @@ public class TestCanvasController {
     }
 
     @Test
-    public void testCanvasListener() {
+    public void testCanvasListener()
+    {
         Model.getInstance();
         WindowController mainWindowController = MainWindowController.getInstance();
         CanvasController canvasController = CanvasController.getInstance();
@@ -52,7 +54,8 @@ public class TestCanvasController {
     }
 
     @Test
-    public void testGetCanvas() {
+    public void testGetCanvas()
+    {
         Model.getInstance();
         MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
         assertNotNull(canvas);
@@ -60,27 +63,29 @@ public class TestCanvasController {
     }
 
     @Test
-    public void testAdjustToBounds() {
+    public void testAdjustToBounds()
+    {
         Model.getInstance();
         MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
-        canvas.getVisibleRect().contains(2,2); //Todo Check if point is on screen
-        //Todo implement properly
-        //Need to find a way to test this properly
-    }
-
-
-
-    @Test
-    public void testResetBounds() {
-        //Todo implement properly
-        //Maybe consider Robot class
-        //Transform is always identity, need to find a valid way to test this methof
+        canvas.getVisibleRect().contains(2, 2); // Todo Check if point is on screen
+        // Todo implement properly
+        // Need to find a way to test this properly
     }
 
     @Test
-    public void testUpdate() {
+    public void testResetBounds()
+    {
+        // Todo implement properly
+        // Maybe consider Robot class
+        // Transform is always identity, need to find a valid way to test this
+        // methof
+    }
 
-        //Todo implement properly
+    @Test
+    public void testUpdate()
+    {
+
+        // Todo implement properly
         Model.getInstance();
         MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
         CanvasController canvasController = CanvasController.getInstance();
@@ -88,46 +93,49 @@ public class TestCanvasController {
     }
 
     @Test
-    public void testMousePressed() {
+    public void testMousePressed()
+    {
         Model.getInstance();
         MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
         MouseListener[] listener = canvas.getMouseListeners();
-       // MouseEvent event = new MouseEvent(canvas, )
+        // MouseEvent event = new MouseEvent(canvas, )
 
-        //tODO continue work here, create new mouse event. Maybe use robot class
-        //listener[0].mousePressed();
-
-
+        // tODO continue work here, create new mouse event. Maybe use robot class
+        // listener[0].mousePressed();
     }
 
     @Test
-    public void testMouseDragged() {
-        //Todo implement properly
+    public void testMouseDragged()
+    {
+        // Todo implement properly
     }
 
     @Test
-    public void testMouseWheelMoved() {
-        //Todo implement properly
+    public void testMouseWheelMoved()
+    {
+        // Todo implement properly
     }
 
     @Test
-    public void testNumberOfKeyBindings() {
+    public void testNumberOfKeyBindings()
+    {
         Model.getInstance();
         MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
         assertEquals(12, canvas.getRegisteredKeyStrokes().length);
     }
 
     @Test
-    public void testActionKeyBindings() {
+    public void testActionKeyBindings()
+    {
         Model.getInstance();
         MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
         ActionMap actionMap = canvas.getActionMap();
         InputMap inputMap = canvas.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         List<String> inputMapKeyValues = new ArrayList<>();
-        for(KeyStroke s : inputMap.keys()) {
-            inputMapKeyValues.add((String) inputMap.get(s));
+        for (KeyStroke s : inputMap.keys()) {
+            inputMapKeyValues.add((String)inputMap.get(s));
         }
-        for(String s : inputMapKeyValues) {
+        for (String s : inputMapKeyValues) {
             assertTrue(actionMap.get(s).isEnabled());
         }
     }

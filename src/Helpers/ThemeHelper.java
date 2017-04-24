@@ -1,11 +1,11 @@
 package Helpers;
 
+import Controller.PreferencesController;
 import Theme.*;
 
 import java.awt.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-
 
 /**
  * Created by  on .
@@ -15,28 +15,29 @@ import java.lang.reflect.Method;
  */
 public final class ThemeHelper {
 
-    private static Theme currentTheme = new DefaultTheme();
+    private static Theme currentTheme;
 
-    public static String getCurrentTheme() {
-        return currentTheme.getName();
-    }
+    public static String getCurrentTheme() { return currentTheme.getName(); }
 
-    public static Color color(String input) {
+    public static Color color(String input)
+    {
         try {
             Method method = currentTheme.getClass().getDeclaredMethod(input, null);
-            return (Color) method.invoke(currentTheme, null);
+            return (Color)method.invoke(currentTheme, null);
         } catch (Exception e) {
             throw new RuntimeException("Color not found" + input);
         }
     }
 
-    public static void setTheme(String input) {
+    public static void setTheme(String input)
+    {
         String modInput = input.trim().replaceAll("\\s", "") + "Theme";
         try {
             Constructor<?> constructor = Class.forName("Theme." + modInput).getConstructor();
-            currentTheme = (Theme) constructor.newInstance();
+            currentTheme = (Theme)constructor.newInstance();
         } catch (Exception e) {
-            throw new RuntimeException("Theme not found" + input + "\n" + "modified input: " + modInput);
+            throw new RuntimeException("Theme not found" + input + "\n"
+                + "modified input: " + modInput);
         }
     }
 }
