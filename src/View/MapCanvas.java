@@ -267,13 +267,6 @@ public class MapCanvas extends View {
             drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
             drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
 
-            drawRoadNames(g, ElementType.PEDESTRIAN_STREET);
-            drawRoadNames(g, ElementType.SERVICE_ROAD);
-            drawRoadNames(g, ElementType.LIVING_STREET);
-            drawRoadNames(g, ElementType.RESIDENTIAL_ROAD);
-            drawRoadNames(g, ElementType.UNCLASSIFIED_ROAD);
-            drawRoadNames(g, ElementType.TERTIARY_ROAD);
-            drawRoadNames(g, ElementType.SECONDARY_ROAD);
             drawRoadNames(g, ElementType.PRIMARY_ROAD);
             drawRoadNames(g, ElementType.TRUNK_ROAD);
             drawRoadNames(g, ElementType.MOTORWAY);
@@ -1125,12 +1118,10 @@ public class MapCanvas extends View {
             g.setFont(font.deriveFont(
                 AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
 
+            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
             float y = amenity.getY();
             y += ((getFontMetrics(font).charWidth('\uf055')) / 2) * scaleFactor;
-
-            drawString("\uf055"
-                    + "",
-                g, amenity.getX(), y, font, scaleFactor, false);
+            drawString("\uf055" + "", g, amenity.getX(), y, font, scaleFactor, false);
         }
     }
 }
