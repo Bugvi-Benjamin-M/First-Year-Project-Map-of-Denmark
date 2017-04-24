@@ -54,7 +54,7 @@ public class NightTheme implements Theme {
         return new Color(0x323236);
     }
 
-    public Color defaulttext() { return new Color(0x8A8FBF); }
+    public Color defaulttext() { return new Color(0xD1D1D1); }
 
     public Color toolTipBackground() { return new Color(0x555258); }
 
