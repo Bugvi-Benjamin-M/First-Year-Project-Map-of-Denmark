@@ -9,6 +9,7 @@ import Helpers.Shapes.MultiPolygonApprox;
 import Helpers.Shapes.PolygonApprox;
 import KDtree.NodeGenerator;
 import KDtree.Pointer;
+import Model.Addresses.Value;
 import Model.Elements.*;
 import Model.Model;
 import org.xml.sax.Attributes;
@@ -63,6 +64,7 @@ public final class OSMHandler implements ContentHandler {
     private String cityName;
 
     private boolean isAddress;
+    private int indexCounter = 1;
 
 
     private OSMHandler() {
@@ -541,9 +543,10 @@ public final class OSMHandler implements ContentHandler {
                         break;
                 }
                 if(isAddress) {
-                    String key1 = zipCode + " " + cityName + " " + roadName + " " + roadNumber;
-                    Point2D.Float value = new Point2D.Float(longitude * longitudeFactor, -latitude);
-                    model.getTst().put(key1, value);
+                    String key = roadName + " " + roadNumber;
+                    boolean newEntry = model.putCityToIndex(cityName + " " + zipCode, indexCounter);
+                    if(newEntry) indexCounter++;
+                    model.getTst().put(key, new Value(model.getCityToIndex(cityName + " " + zipCode),longitude * longitudeFactor, -latitude));
                 }
 
                 break;
@@ -703,7 +706,7 @@ public final class OSMHandler implements ContentHandler {
             if (!isRelation) {
                 DynamicPolygonApprox polygonApprox;
                 polygonApprox = new DynamicPolygonApprox(way);
-                Biome biome = new Biome(polygonApprox, name);
+                Biome biome = new Biome(polygonApprox);
                 for (int i = 0; i < way.size(); i += 5) {
                     Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), biome);
                     model.getElements().get(type).putPointer(p);
@@ -711,7 +714,7 @@ public final class OSMHandler implements ContentHandler {
             } else {
                 DynamicMultiPolygonApprox multiPolygonApprox;
                 multiPolygonApprox = new DynamicMultiPolygonApprox(relation);
-                Biome biome = new Biome(multiPolygonApprox, name);
+                Biome biome = new Biome(multiPolygonApprox);
                 for (int i = 0; i < relation.size() - 1; i++) {
                     if (relation.get(i) != null) {
                         for (int j = 0; j < relation.get(i).size(); j += 5) {

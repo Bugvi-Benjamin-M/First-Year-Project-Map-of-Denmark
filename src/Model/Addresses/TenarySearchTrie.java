@@ -21,17 +21,16 @@ public class TenarySearchTrie implements Serializable {
         private Node left;
         private Node right;
         private Node mid;
-        private float x;
-        private float y;
+        private ArrayList<Value> values;
         // private Point2D.Float val;
 
     }
 
 
-    public Point2D.Float get(String key) {
+    public ArrayList<Value> get(String key) {
         Node x = get(root, key, 0);
         if(x == null) return null;
-        return new Point2D.Float(x.x, x.y);
+        return x.values;
     }
 
     private Node get(Node x, String key, int d) {
@@ -43,20 +42,6 @@ public class TenarySearchTrie implements Serializable {
         else return x;
     }
 
-    public ArrayList<String> keysWithPrefix(String pre){
-        ArrayList<String> list = new ArrayList<>();
-        collect(get(root, pre, 0), pre, list);
-        return list;
-    }
-
-    private void collect(Node x, String pre, ArrayList<String> list){
-        if(x == null) return;
-        if(list.size() >= 10) return;
-        if(x.x != 0) list.add(pre + x.c);
-        collect(x.mid, pre + x.c, list);
-        collect(x.right, pre, list);
-        collect(x.left, pre, list);
-    }
 
     public ArrayList<String> keysThatMatch(String pat)
     {
@@ -64,11 +49,21 @@ public class TenarySearchTrie implements Serializable {
         collect(root, "", pat, "",false, list);
         return list;
     }
+
+    private void collect(Node x, String pre, ArrayList<String> list){
+        if(x == null) return;
+        if(list.size() >= 10) return;
+        if(x.values != null) list.add(pre + x.c);
+        collect(x.mid, pre + x.c, list);
+        collect(x.right, pre, list);
+        collect(x.left, pre, list);
+    }
+
     public void collect(Node x, String pre, String pat, String address, boolean reachedEndOfPrefix, ArrayList<String> list) {
         if(list.size() >= 10) return;
         int d = pre.length();
         if (x == null) return;
-        if (d == pat.length() && x.x != 0) list.add(pre);
+        if (d == pat.length() && x.values != null) list.add(pre);
         if (d == pat.length()){
             collect(x.left, address, list);
             collect(x.right, address, list);
@@ -86,24 +81,24 @@ public class TenarySearchTrie implements Serializable {
 
     }
 
-    public void put(String key, Point2D.Float val) {
-        root = put(root, key, val, 0);
+    public void put(String key, Value v) {
+        root = put(root, key, v, 0);
     }
 
-    private Node put(Node x, String key, Point2D.Float val, int d) {
+    private Node put(Node n, String key, Value v, int d) {
         char c = key.charAt(d);
-        if(x == null) {
-            x = new Node();
-            x.c = c;
+        if(n == null) {
+            n = new Node();
+            n.c = c;
         }
-        if(c < x.c) x.left = put(x.left, key, val, d);
-        else if(c > x.c) x.right = put(x.right, key, val, d);
-        else if(d < key.length()-1) x.mid = put(x.mid, key, val, d+1);
+        if(c < n.c) n.left = put(n.left, key, v, d);
+        else if(c > n.c) n.right = put(n.right, key, v, d);
+        else if(d < key.length()-1) n.mid = put(n.mid, key, v, d+1);
         else {
-            x.x = val.x;
-            x.y = val.y;
+            if(n.values == null) n.values = new ArrayList<>();
+            n.values.add(v);
         }
-        return x;
+        return n;
     }
 
 }

@@ -4,6 +4,7 @@ import Controller.Controller;
 import Enums.ToolType;
 import Helpers.OSDetector;
 import Helpers.ThemeHelper;
+import Model.Addresses.Value;
 import Model.Model;
 import View.SearchTool;
 import org.json.simple.JSONArray;
@@ -118,8 +119,18 @@ public final class SearchToolController extends Controller {
         else if(allowSearch) {
             //TODO Does not work as intended
             this.saveHistory(searchTool.getText());
-            Point2D p = Model.getInstance().getTst().get(searchTool.getText());
-            System.out.println(Model.getInstance().getTst().get(searchTool.getText()));
+            ArrayList<Value> list = Model.getInstance().getTst().get(searchTool.getText());
+            if(list.size() > 1){
+
+                for(int i = 0; i < list.size(); i++){
+
+                }
+                JComboBox jcb = new JComboBox(list.toArray());
+                jcb.setEditable(true);
+                JOptionPane.showMessageDialog(null, jcb, "Select a City: ", JOptionPane.QUESTION_MESSAGE);
+            }else {
+                System.out.println(searchTool.getText() + " " + Model.getInstance().getIndexToCity(list.get(0).getCitynameindex()));
+            }
 
             ToolbarController.getInstance().transferFocusToCanvas();
             allowSearch = true;
