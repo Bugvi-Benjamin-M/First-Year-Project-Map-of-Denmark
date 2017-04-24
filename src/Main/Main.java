@@ -27,8 +27,8 @@ public class Main {
     {
 
         long startTime = System.nanoTime();
-        splashScreenInit();
 
+        splashScreenInit();
         Model model = Model.getInstance();
         FileHandler.loadDefaultResource();
         splashScreenDestruct();

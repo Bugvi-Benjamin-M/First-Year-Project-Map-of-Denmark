@@ -1,13 +1,16 @@
 package Controller;
 
 import Controller.ToolbarControllers.ToolbarController;
+import Enums.FileType;
 import Enums.ToolType;
 import Enums.ToolbarType;
+import Helpers.DefaultSettings;
 import Helpers.ThemeHelper;
 import View.*;
 import View.Window;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -29,6 +32,7 @@ public final class SettingsWindowController extends WindowController {
     private Toggle keyboardKeysToggle;
     private Toggle antiAliasingToggle;
     private Toggle canvasRealTimeInformationToggle;
+    private FileLoadSetting fileLoadSetting;
     private Settings settings;
 
     private SettingsWindowController() { super(); }
@@ -52,11 +56,13 @@ public final class SettingsWindowController extends WindowController {
     public void showWindow()
     {
         MainWindowController.getInstance().getWindow().getFrame().setEnabled(false);
-        MainWindowController.getInstance().getWindow().getFrame().setFocusable(
-            false);
+        MainWindowController.getInstance().getWindow().getFrame().setFocusable(false);
+        fileLoadSetting.getChooseButton().setToolTipText("Choose a File to Load on Startup");
+        fileLoadSetting.getDefaultButton().setToolTipText("Revert back to Default File to Load on Startup");
         window.relativeTo(null);
         window.show();
         window.getFrame().setAlwaysOnTop(true);
+
     }
 
     /**
@@ -92,6 +98,7 @@ public final class SettingsWindowController extends WindowController {
         southButtons = new SettingsButtons();
         antiAliasingToggle = new AntiAliasingToggle();
         canvasRealTimeInformationToggle = new CanvasRealTimeInformationToggle();
+        fileLoadSetting = new FileLoadSetting();
         setToCurrentSettings();
     }
 
@@ -106,6 +113,7 @@ public final class SettingsWindowController extends WindowController {
             PreferencesController.getInstance().getKeyBindingsSetting());
         themeSettings.setSelectedTheme(
             PreferencesController.getInstance().getThemeSetting());
+        fileLoadSetting.setTextField(PreferencesController.getInstance().getStartupFile());
     }
 
     /**
@@ -113,6 +121,7 @@ public final class SettingsWindowController extends WindowController {
    */
     private void buildSettings()
     {
+        settings.createSpace(new Dimension(0, 20));
         settings.addSetting(themeSettings);
         settings.createSpace(new Dimension(0, 20));
         settings.addSetting(keyboardKeysToggle);
@@ -120,7 +129,9 @@ public final class SettingsWindowController extends WindowController {
         settings.addSetting(antiAliasingToggle);
         settings.createSpace(new Dimension(0, 20));
         settings.addSetting(canvasRealTimeInformationToggle);
-        settings.createSpace(new Dimension(0, 440));
+        settings.createSpace(new Dimension(0, 20));
+        settings.addSetting(fileLoadSetting);
+        settings.createSpace(new Dimension(0, 400));
     }
 
     /**
@@ -140,6 +151,33 @@ public final class SettingsWindowController extends WindowController {
     {
         southButtons.addActionToApplyButton(a -> { applyButtonActivated(); });
         southButtons.addActionToDefaultButton(a -> { defaultButtonActivated(); });
+        fileLoadSetting.getChooseButton().addActionListener(a -> {
+            fileButtonActivated();
+        });
+        fileLoadSetting.getDefaultButton().addActionListener(a -> {
+            defaultFileButtonActivated();
+        });
+    }
+
+    private void defaultFileButtonActivated() {
+        PreferencesController.getInstance().setStartupFileSetting(DefaultSettings.DEFAULT_FILE);
+        fileLoadSetting.setTextField(PreferencesController.getInstance().getStartupFile());
+    }
+
+    private void fileButtonActivated() {
+        window.getFrame().setAlwaysOnTop(false);
+        FileNameExtensionFilter[] filters = new FileNameExtensionFilter[] {
+                new FileNameExtensionFilter("OSM Files", FileType.OSM.toString()),
+                new FileNameExtensionFilter("ZIP Files", FileType.ZIP.toString()),
+                new FileNameExtensionFilter("BIN Files", FileType.BIN.toString())
+        };
+        JFileChooser chooser = PopupWindow.fileLoader(false, filters);
+
+        if (chooser != null) {
+            PreferencesController.getInstance().setStartupFileSetting(chooser.getSelectedFile().getAbsolutePath());
+            fileLoadSetting.setTextField(chooser.getSelectedFile().getName());
+        }
+        window.getFrame().setAlwaysOnTop(true);
     }
 
     /**

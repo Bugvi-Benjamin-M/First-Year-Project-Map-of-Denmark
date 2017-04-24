@@ -66,6 +66,10 @@ public final class PreferencesController {
         return preferences.get("Theme", DefaultSettings.THEME);
     }
 
+    public String getStartupFile() {
+        return preferences.get("StartupFile", DefaultSettings.DEFAULT_FILE);
+    }
+
     public void setAntiAliasingSetting(boolean setting)
     {
         preferences.putBoolean("AntiAliasing", setting);
@@ -86,12 +90,16 @@ public final class PreferencesController {
         preferences.put("Theme", setting);
     }
 
+    public void setStartupFileSetting(String setting) {
+        preferences.put("StartupFile", setting);
+    }
+
     public void setToDefaultSettings()
     {
         preferences.putBoolean("AntiAliasing", DefaultSettings.ANTI_ALIASING);
-        preferences.putBoolean("CanvasRealTimeInformation",
-            DefaultSettings.CANVAS_REALTIME_INFORMATION);
+        preferences.putBoolean("CanvasRealTimeInformation", DefaultSettings.CANVAS_REALTIME_INFORMATION);
         preferences.putBoolean("KeyBindings", DefaultSettings.TOGGLE_KEY_BINDINGS);
         preferences.put("Theme", DefaultSettings.THEME);
+        preferences.put("StartupFile", DefaultSettings.DEFAULT_FILE);
     }
 }

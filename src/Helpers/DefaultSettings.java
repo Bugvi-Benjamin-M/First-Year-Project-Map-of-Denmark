@@ -13,5 +13,5 @@ public class DefaultSettings {
 
     public static final String THEME = "Default";
 
-    public static final String defaultFileLoad = "";
+    public static final String DEFAULT_FILE = "Danmark.bin";
 }
