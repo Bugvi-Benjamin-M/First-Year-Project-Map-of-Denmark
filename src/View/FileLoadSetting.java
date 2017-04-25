@@ -35,14 +35,16 @@ public class FileLoadSetting extends View {
         add(fileField);
         add(chooseButton);
         add(defaultButton);
+        chooseButton.setToolTipText("Choose a File to Load on Startup");
+        defaultButton.setToolTipText("Set Startup File to Default");
     }
 
     public JButton getChooseButton() {
         return chooseButton;
     }
 
-    public void setTextField(String path) {
-        fileField.setText(path);
+    public void setTextField(String text) {
+        fileField.setText(text);
     }
 
     public JButton getDefaultButton() {

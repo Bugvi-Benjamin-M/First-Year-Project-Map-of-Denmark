@@ -2,10 +2,12 @@ package Main;
 
 import Controller.*;
 import Controller.ToolbarControllers.ToolbarController;
+import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Model;
+import View.PopupWindow;
 
 import javax.swing.*;
 
@@ -30,10 +32,19 @@ public class Main {
 
         splashScreenInit();
         Model model = Model.getInstance();
-        FileHandler.loadDefaultResource();
-        splashScreenDestruct();
         createControllers();
         PreferencesController.getInstance().setupPreferences();
+        if(PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) FileHandler.loadDefaultResource();
+        else {
+            try {
+                FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
+            } catch (NullPointerException e) {
+                PopupWindow.infoBox(null, "Could Not Find Preferred Startup File: " + PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
+                "Loading " + DefaultSettings.DEFAULT_FILE_NAME, "Preferred Startup File Not Found!");
+                FileHandler.loadDefaultResource();
+            }
+        }
+        splashScreenDestruct();
         SwingUtilities.invokeLater(() -> {
             MainWindowController.getInstance().setupMainWindow();
             SettingsWindowController.getInstance().setupSettingsWindow();

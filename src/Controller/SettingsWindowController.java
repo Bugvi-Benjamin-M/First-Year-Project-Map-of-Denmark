@@ -5,6 +5,7 @@ import Enums.FileType;
 import Enums.ToolType;
 import Enums.ToolbarType;
 import Helpers.DefaultSettings;
+import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
 import View.*;
 import View.Window;
@@ -34,6 +35,8 @@ public final class SettingsWindowController extends WindowController {
     private Toggle canvasRealTimeInformationToggle;
     private FileLoadSetting fileLoadSetting;
     private Settings settings;
+    private String chosenFilePath;
+    private String chosenFileName;
 
     private SettingsWindowController() { super(); }
 
@@ -57,8 +60,6 @@ public final class SettingsWindowController extends WindowController {
     {
         MainWindowController.getInstance().getWindow().getFrame().setEnabled(false);
         MainWindowController.getInstance().getWindow().getFrame().setFocusable(false);
-        fileLoadSetting.getChooseButton().setToolTipText("Choose a File to Load on Startup");
-        fileLoadSetting.getDefaultButton().setToolTipText("Revert back to Default File to Load on Startup");
         window.relativeTo(null);
         window.show();
         window.getFrame().setAlwaysOnTop(true);
@@ -113,7 +114,7 @@ public final class SettingsWindowController extends WindowController {
             PreferencesController.getInstance().getKeyBindingsSetting());
         themeSettings.setSelectedTheme(
             PreferencesController.getInstance().getThemeSetting());
-        fileLoadSetting.setTextField(PreferencesController.getInstance().getStartupFile());
+        fileLoadSetting.setTextField(PreferencesController.getInstance().getStartupFileNameSetting());
     }
 
     /**
@@ -160,8 +161,9 @@ public final class SettingsWindowController extends WindowController {
     }
 
     private void defaultFileButtonActivated() {
-        PreferencesController.getInstance().setStartupFileSetting(DefaultSettings.DEFAULT_FILE);
-        fileLoadSetting.setTextField(PreferencesController.getInstance().getStartupFile());
+        chosenFilePath = GlobalValue.DEFAULT_BIN_RESOURCE;
+        chosenFileName = DefaultSettings.DEFAULT_FILE_NAME;
+        fileLoadSetting.setTextField(DefaultSettings.DEFAULT_FILE_NAME);
     }
 
     private void fileButtonActivated() {
@@ -174,7 +176,8 @@ public final class SettingsWindowController extends WindowController {
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
 
         if (chooser != null) {
-            PreferencesController.getInstance().setStartupFileSetting(chooser.getSelectedFile().getAbsolutePath());
+            chosenFileName = chooser.getSelectedFile().getName();
+            chosenFilePath = chooser.getSelectedFile().getAbsolutePath();
             fileLoadSetting.setTextField(chooser.getSelectedFile().getName());
         }
         window.getFrame().setAlwaysOnTop(true);
@@ -191,6 +194,8 @@ public final class SettingsWindowController extends WindowController {
         MainWindowController.getInstance().themeHasChanged();
         MainWindowController.getInstance().setKeyToggle();
         CanvasController.getInstance().toggleAntiAliasing();
+        PreferencesController.getInstance().setStartupFileNameSetting(DefaultSettings.DEFAULT_FILE_NAME);
+        PreferencesController.getInstance().setStartupFilePathSetting(GlobalValue.DEFAULT_BIN_RESOURCE);
         setToCurrentSettings();
         hideWindow();
     }
@@ -214,6 +219,8 @@ public final class SettingsWindowController extends WindowController {
         MainWindowController.getInstance().themeHasChanged();
         MainWindowController.getInstance().setKeyToggle();
         CanvasController.getInstance().toggleAntiAliasing();
+        PreferencesController.getInstance().setStartupFilePathSetting(chosenFilePath);
+        PreferencesController.getInstance().setStartupFileNameSetting(chosenFileName);
         setToCurrentSettings();
         hideWindow();
     }

@@ -1,6 +1,7 @@
 package Controller;
 
 import Helpers.DefaultSettings;
+import Helpers.GlobalValue;
 
 import java.util.prefs.*;
 
@@ -66,8 +67,12 @@ public final class PreferencesController {
         return preferences.get("Theme", DefaultSettings.THEME);
     }
 
-    public String getStartupFile() {
-        return preferences.get("StartupFile", DefaultSettings.DEFAULT_FILE);
+    public String getStartupFileNameSetting() {
+        return preferences.get("StartupFileName", DefaultSettings.DEFAULT_FILE_NAME);
+    }
+
+    public String getStartupFilePathSetting() {
+        return preferences.get("StartupFilePath", GlobalValue.DEFAULT_BIN_RESOURCE);
     }
 
     public void setAntiAliasingSetting(boolean setting)
@@ -90,8 +95,12 @@ public final class PreferencesController {
         preferences.put("Theme", setting);
     }
 
-    public void setStartupFileSetting(String setting) {
-        preferences.put("StartupFile", setting);
+    public void setStartupFileNameSetting(String setting) {
+        preferences.put("StartupFileName", setting);
+    }
+
+    public void setStartupFilePathSetting(String setting) {
+        preferences.put("StartupFilePath", setting);
     }
 
     public void setToDefaultSettings()
@@ -100,6 +109,7 @@ public final class PreferencesController {
         preferences.putBoolean("CanvasRealTimeInformation", DefaultSettings.CANVAS_REALTIME_INFORMATION);
         preferences.putBoolean("KeyBindings", DefaultSettings.TOGGLE_KEY_BINDINGS);
         preferences.put("Theme", DefaultSettings.THEME);
-        preferences.put("StartupFile", DefaultSettings.DEFAULT_FILE);
+        preferences.put("StartupFileName", DefaultSettings.DEFAULT_FILE_NAME);
+        preferences.put("StartupFilePath", GlobalValue.DEFAULT_BIN_RESOURCE);
     }
 }

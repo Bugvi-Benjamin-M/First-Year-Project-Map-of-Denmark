@@ -12,7 +12,6 @@ import Model.Coastlines.CoastlineHandler;
 import Model.Model;
 import OSM.OSMHandler;
 import View.PopupWindow;
-import jdk.nashorn.internal.objects.Global;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;

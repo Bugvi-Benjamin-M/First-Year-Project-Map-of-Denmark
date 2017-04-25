@@ -302,7 +302,7 @@ public final class CanvasController extends Controller implements Observer {
     @Override
     public void update(Observable o, Object arg)
     {
-        mapCanvas.repaint();
+        if(mapCanvas != null) mapCanvas.repaint();
     }
 
     private void mousePressedEvent(MouseEvent event)
