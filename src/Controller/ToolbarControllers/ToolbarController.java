@@ -4,9 +4,11 @@ import Controller.*;
 import Enums.FileType;
 import Enums.ToolType;
 import Enums.ToolbarType;
+import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
+import Main.Main;
 import Model.Model;
 import View.PopupWindow;
 import View.ToolComponent;
@@ -409,18 +411,36 @@ public final class ToolbarController extends Controller {
 
     private void loadDefaultFile()
     {
-        Main.Main.splashScreenInit();
+        //Todo discuss zoom level
+        Main.splashScreenInit();
         SwingUtilities.invokeLater(() -> {
+            boolean loadedDanmarkBin;
             MainWindowController.getInstance().hideWindow();
-            FileHandler.loadDefaultResource();
-            CanvasController.getInstance().getMapCanvas().setElements(
-                Model.getInstance().getElements());
+            if(PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
+                FileHandler.loadDefaultResource();
+                loadedDanmarkBin = true;
+            } else {
+                try {
+                    FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
+                    loadedDanmarkBin = false;
+                } catch (Exception e) {
+                    PopupWindow.infoBox(null, "Could Not Find Preferred Default File: " +
+                    PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
+                            "Loading Danmark.bin.", "File Not Found");
+                    FileHandler.loadDefaultResource();
+                    loadedDanmarkBin = true;
+                }
+            }
+            CanvasController.getInstance().getMapCanvas().setElements(Model.getInstance().getElements());
             Model.getInstance().modelHasChanged();
+            //if(loadedDanmarkBin) CanvasController.adjustToBounds();
+            //else CanvasController.adjustToDynamicBounds();
+            //todo bounds can't adjust, messes up zoom level
             GlobalValue.setMaxZoom(GlobalValue.MAX_ZOOM_DECREASE);
             MainWindowController.getInstance().showWindow();
-            CanvasController.adjustToBounds();
-            Main.Main.splashScreenDestruct();
+            Main.splashScreenDestruct();
         });
+
     }
 
     private void loadNewFile()
