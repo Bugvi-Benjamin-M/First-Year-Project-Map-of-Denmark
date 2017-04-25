@@ -418,6 +418,7 @@ public final class ToolbarController extends Controller {
             Model.getInstance().modelHasChanged();
             GlobalValue.setMaxZoom(GlobalValue.MAX_ZOOM_DECREASE);
             MainWindowController.getInstance().showWindow();
+            CanvasController.adjustToBounds();
             Main.Main.splashScreenDestruct();
         });
     }
@@ -433,6 +434,7 @@ public final class ToolbarController extends Controller {
         if (chooser != null) {
             try {
                 FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
+                CanvasController.adjustToDynamicBounds();
             } catch (Exception e) {
                 e.printStackTrace();
             }

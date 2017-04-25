@@ -297,7 +297,7 @@ public final class CanvasController extends Controller implements Observer {
         GlobalValue.setMaxZoom(ZoomLevel.getZoomFactor() - 50);
     }
 
-    public static void resetBounds() { mapCanvas.resetTransform(); }
+    public static void resetBounds() { if(mapCanvas != null) mapCanvas.resetTransform(); }
 
     @Override
     public void update(Observable o, Object arg)

@@ -50,7 +50,6 @@ public final class MainWindowController extends WindowController {
         setupInfobar();
         setupLayeredPane();
         addInteractionHandlerToWindow();
-        CanvasController.adjustToBounds();
         setToolTipTheme();
         toggleKeyBindings();
         hideWindow();

@@ -1,6 +1,5 @@
 package Helpers;
 
-import Controller.CanvasController;
 import Enums.BoundType;
 import Enums.FileType;
 import Enums.OSMEnums.ElementType;
@@ -42,7 +41,6 @@ public class FileHandler {
                 } else {
                     OSMHandler.getInstance().parseDefault(false);
                     FileHandler.loadOSM(new InputSource(pathStart + fileName));
-                    CanvasController.adjustToDynamicBounds();
                 }
             } else if (fileExists(fileName) && fileName.endsWith(FileType.ZIP.getExtension())) {
                 ZipInputStream zip;
@@ -60,8 +58,6 @@ public class FileHandler {
                     e.printStackTrace();
                 }
                 loadOSM(new InputSource(zip));
-                if (!isLoadingFromStart)
-                    CanvasController.adjustToDynamicBounds();
             } else if (fileExists(fileName) || fileName.endsWith(FileType.BIN.getExtension())) {
                 loadBin(fileName, isLoadingFromStart);
             } else {
@@ -142,9 +138,6 @@ public class FileHandler {
             }
             Model.getInstance().setTst((TenarySearchTrie)in.readObject());
             time += System.nanoTime();
-            if (!isLoadingFromStart) {
-                CanvasController.adjustToDynamicBounds();
-            }
             System.out.printf("Object deserialization: %f s\n",
                 time / 1000000 / 1000d);
             Model.getInstance().modelHasChanged();

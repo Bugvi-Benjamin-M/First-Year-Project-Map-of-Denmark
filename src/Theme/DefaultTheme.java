@@ -79,7 +79,7 @@ public class DefaultTheme implements Theme {
     @Override
     public Color water()
     {
-        return new Color(0x91BEFF);
+        return new Color(0x6993D1);
     }
 
     @Override
