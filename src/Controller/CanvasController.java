@@ -262,7 +262,10 @@ public final class CanvasController extends Controller implements Observer {
 
         Point2D newCenterPoint = mapCanvas.toModelCoords(new Point2D.Double(canvasX, canvasY));
 
-        if (newCenterPoint.getX() < model.getMinLongitude(false) || newCenterPoint.getX() > model.getMaxLongitude(false) || newCenterPoint.getY() < model.getMaxLatitude(false) || newCenterPoint.getY() > model.getMinLatitude(false)) {
+        if (newCenterPoint.getX() < model.getMinLongitude(true)
+                || newCenterPoint.getX() > model.getMaxLongitude(true)
+                || newCenterPoint.getY() < model.getMaxLatitude(true)
+                || newCenterPoint.getY() > model.getMinLatitude(true)) {
             mapCanvas.pan(-dx, -dy);
         }
     }
