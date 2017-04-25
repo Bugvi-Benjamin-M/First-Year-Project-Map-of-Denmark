@@ -74,6 +74,7 @@ public class Toolbar extends View {
             tools.put(ToolType.SEARCHBUTTON,
                 new ToolFeature("\uf002", ToolType.SEARCHBUTTON));
             tools.put(ToolType.POI, new ToolFeature("\uf041", ToolType.POI));
+            tools.put(ToolType.ROUTES, new ToolFeature("\uf018", ToolType.ROUTES));
             return tools;
         }
     }

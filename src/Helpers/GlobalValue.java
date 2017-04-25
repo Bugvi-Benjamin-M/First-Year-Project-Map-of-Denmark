@@ -50,7 +50,7 @@ public class GlobalValue {
                          .getWindow()
                          .getFrame()
                          .getWidth()
-            / 1.5);
+            / 1.6);
     }
 
     public static int getSearchFieldStartX()

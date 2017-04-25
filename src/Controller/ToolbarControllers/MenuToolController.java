@@ -27,7 +27,7 @@ import static javax.swing.SpringLayout.WEST;
 public final class MenuToolController extends Controller {
 
     private final int POPUP_MARGIN_LEFT = 10;
-    private final int POPUP_MARGIN_HEIGHT = 282;
+    private final int POPUP_MARGIN_HEIGHT = 340;
     private final int POPUP_MARGIN_WIDTH = 60;
     private final int POPUP_MARGIN_TOP = 10;
     private final int POPUP_MARGIN_BETWEEN_TOOLS = 63;
@@ -83,11 +83,17 @@ public final class MenuToolController extends Controller {
         popupMenu.getLayout().putConstraint(NORTH, poi, POPUP_MARGIN_BETWEEN_TOOLS,
             NORTH, save);
         popupMenu.addTool(toolbar.getTool(ToolType.POI));
+        ToolComponent routes = toolbar.getTool(ToolType.ROUTES);
+        popupMenu.getLayout().putConstraint(WEST, routes, POPUP_MARGIN_LEFT, WEST,
+                popupMenu.getPopupMenu());
+        popupMenu.getLayout().putConstraint(NORTH, routes, POPUP_MARGIN_BETWEEN_TOOLS,
+                NORTH, poi);
+        popupMenu.addTool(routes);
         ToolComponent settings = toolbar.getTool(ToolType.SETTINGS);
         popupMenu.getLayout().putConstraint(WEST, settings, POPUP_MARGIN_LEFT, WEST,
             popupMenu.getPopupMenu());
         popupMenu.getLayout().putConstraint(
-            NORTH, settings, POPUP_MARGIN_LARGER_BETWEEN_TOOLS, NORTH, poi);
+            NORTH, settings, POPUP_MARGIN_LARGER_BETWEEN_TOOLS, NORTH, routes);
         popupMenu.addTool(toolbar.getTool(ToolType.SETTINGS));
         toolbar.getTool(ToolType.MENU).add(popupMenu.getPopupMenu());
         popupMenu.getPopupMenu().setPopupSize(POPUP_MARGIN_WIDTH,
@@ -126,6 +132,22 @@ public final class MenuToolController extends Controller {
                         ToolbarController.getInstance().toolEvent(ToolType.SETTINGS);
                 }
             });
+        addAction(KeyEvent.VK_P, OSDetector.getActivationKey(), new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(popupMenu.isVisible()) {
+                    ToolbarController.getInstance().toolEvent(ToolType.POI);
+                }
+            }
+        });
+        addAction(KeyEvent.VK_R, OSDetector.getActivationKey(), new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(popupMenu.isVisible()) {
+                    ToolbarController.getInstance().toolEvent(ToolType.ROUTES);
+                }
+            }
+        });
     }
 
     private void addAction(int key, int activationKey, AbstractAction action)

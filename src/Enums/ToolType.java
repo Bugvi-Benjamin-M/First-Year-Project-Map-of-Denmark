@@ -18,7 +18,9 @@ public enum ToolType {
     ,
     SEARCHBUTTON("Search")
     ,
-    POI("Places");
+    POI("Places")
+    ,
+    ROUTES("Routes");
 
     private String tag;
 

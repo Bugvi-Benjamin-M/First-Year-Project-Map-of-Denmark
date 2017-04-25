@@ -34,7 +34,7 @@ import static javax.swing.SpringLayout.*;
  */
 public final class ToolbarController extends Controller {
 
-    private static final int SMALL_LARGE_EVENT_WIDTH = 750;
+    private static final int SMALL_LARGE_EVENT_WIDTH = (int) ((Toolkit.getDefaultToolkit().getScreenSize().width) / 1.8);
 
     private Toolbar toolbar;
     private SpringLayout toolbarLayout;
@@ -47,6 +47,7 @@ public final class ToolbarController extends Controller {
     private final int MARGIN_SMALL_RIGHT = -20;
     private final int MARGIN_SMALLEST_LEFT = 10;
     private final int MARGIN_SMALLEST_RIGHT = -10;
+    private final int MARGIN_LARGE_RIGHT = -60;
     private final int MARGIN_TOP = 20;
 
     private ToolbarController()
@@ -88,14 +89,15 @@ public final class ToolbarController extends Controller {
         customisePOITool();
         customiseSearchButtonTool();
         customiseSettingsTool();
+        customiseRoutesTool();
         toggleKeyBindings();
     }
 
     public void setupLargeToolbar()
     {
         removeAllComponentsFromToolbar();
-        addPOIToolToLargeToolbar(
-            addSaveToolToLargeToolbar(addLoadToolToLargeToolbar()));
+        addRoutesToolToLargeToolbar(addPOIToolToLargeToolbar(
+            addSaveToolToLargeToolbar(addLoadToolToLargeToolbar())));
         addSettingsToolToLargeToolbar();
         addSearchButtonToolToLargeToolbar(addSearchToolToLargeToolbar());
         type = ToolbarType.LARGE;
@@ -149,6 +151,9 @@ public final class ToolbarController extends Controller {
             case POI:
                 toolbar.getTool(tool).setToolTipText("Manage Points of Interest");
                 break;
+            case ROUTES:
+                toolbar.getTool(tool).setToolTipText("Journey Planner");
+                break;
             }
         }
     }
@@ -190,7 +195,9 @@ public final class ToolbarController extends Controller {
     private void customisePOITool()
     {
         ToolFeature poiFeature = (ToolFeature)toolbar.getTool(ToolType.POI);
+        poiFeature.overrideStandardLabelFontSize(13);
         poiFeature.createSpaceBeforeIcon(9);
+        poiFeature.createSpaceBetweenLabelAndIcon(1);
     }
 
     private void customiseSearchButtonTool()
@@ -205,6 +212,20 @@ public final class ToolbarController extends Controller {
         ToolFeature settingsFeature = (ToolFeature)toolbar.getTool(ToolType.SETTINGS);
         settingsFeature.overrideStandardLabelFontSize(12);
         settingsFeature.createSpaceBetweenLabelAndIcon(6);
+    }
+
+    private void customiseRoutesTool() {
+        ToolFeature routesFeature = (ToolFeature) toolbar.getTool(ToolType.ROUTES);
+        routesFeature.overrideStandardLabelFontSize(13);
+        routesFeature.createSpaceBetweenLabelAndIcon(1);
+    }
+
+    private void addRoutesToolToLargeToolbar(ToolComponent tool) {
+        ToolComponent routes = toolbar.getTool(ToolType.ROUTES);
+        toolbarLayout.putConstraint(WEST, routes, MARGIN_MEDIUM_LEFT, EAST, tool);
+        putNorthConstraints(routes);
+        tool = routes;
+        toolbar.add(tool);
     }
 
     private ToolComponent addPOIToolToLargeToolbar(ToolComponent tool)
@@ -240,8 +261,9 @@ public final class ToolbarController extends Controller {
     {
         SearchToolController.getInstance().searchToolFixedSizeEvent();
         ToolComponent search = toolbar.getTool(ToolType.SEARCHBAR);
-        toolbarLayout.putConstraint(EAST, search, MARGIN_SMALLEST_RIGHT, WEST,
-            tool);
+        //toolbarLayout.putConstraint(EAST, search, MARGIN_SMALLEST_RIGHT, WEST,
+          //  tool);
+        toolbarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, search, 0 , SpringLayout.HORIZONTAL_CENTER, toolbar);
         toolbarLayout.putConstraint(SpringLayout.VERTICAL_CENTER, search, 0,
             SpringLayout.VERTICAL_CENTER, toolbar);
         toolbar.add(search);
@@ -316,13 +338,25 @@ public final class ToolbarController extends Controller {
         addInteractionHandlerToSettingsTool();
         addInteractionHandlerToMenuTool();
         addInterHandlerToSearchButtonTool();
+        addInteractionHandlerToPOITool();
+        addInteractionHandlerToRoutesTool();
         addInteractionHandlerToToolbar();
+    }
+
+    private void addInteractionHandlerToPOITool() {
+        new ToolInteractionHandler(ToolType.POI, KeyEvent.VK_P,
+                OSDetector.getActivationKey());
     }
 
     private void addInteractionHandlerToMenuTool()
     {
         new ToolInteractionHandler(ToolType.MENU, KeyEvent.VK_M,
             OSDetector.getActivationKey());
+    }
+
+    private void addInteractionHandlerToRoutesTool() {
+        new ToolInteractionHandler(ToolType.ROUTES, KeyEvent.VK_R,
+                OSDetector.getActivationKey());
     }
 
     private void addInteractionHandlerToToolbar()
@@ -372,12 +406,30 @@ public final class ToolbarController extends Controller {
         case SEARCHBUTTON:
             searchButtonEvent();
             break;
+        case POI:
+            poiToolActivatedEvent();
+            break;
+        case ROUTES:
+            routesToolActivatedEvent();
+            break;
         }
     }
 
     private void searchButtonEvent()
     {
         SearchToolController.getInstance().searchActivatedEvent();
+    }
+
+    private void poiToolActivatedEvent() {
+        toolbar.getTool(ToolType.POI).toggleActivate(true);
+        PopupWindow.infoBox(null, "POI tool activated", "Temporary popup");
+        toolbar.getTool(ToolType.POI).toggleActivate(false);
+    }
+
+    private void routesToolActivatedEvent() {
+        toolbar.getTool(ToolType.ROUTES).toggleActivate(true);
+        PopupWindow.infoBox(null, "Routes tool activated", "Temporary popup");
+        toolbar.getTool(ToolType.ROUTES).toggleActivate(false);
     }
 
     private void menuEvent()
