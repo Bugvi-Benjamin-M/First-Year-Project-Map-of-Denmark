@@ -38,7 +38,7 @@ public class Main {
         else {
             try {
                 FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
-            } catch (NullPointerException e) {
+            } catch (RuntimeException e) {
                 PopupWindow.infoBox(null, "Could Not Find Preferred Startup File: " + PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
                 "Loading " + DefaultSettings.DEFAULT_FILE_NAME, "Preferred Startup File Not Found!");
                 FileHandler.loadDefaultResource();
