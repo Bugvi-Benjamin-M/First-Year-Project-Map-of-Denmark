@@ -157,14 +157,19 @@ public class MapCanvas extends View {
     {
         switch (ZoomLevel.getZoomLevel()) {
         case LEVEL_0:
-            drawWater(g, ThemeHelper.color("water"), 0.000001);
-            drawPark(g, ThemeHelper.color("park"), 0.000001);
+            drawCommonLand(g, ThemeHelper.color("commonland"),0.000001);
+            drawBeach(g, ThemeHelper.color("beach"),0.000001);
             drawForest(g, ThemeHelper.color("forest"), 0.000001);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.000001);
             drawGrass(g, ThemeHelper.color("grass"), 0.000001);
             drawFarmland(g, ThemeHelper.color("farmland"), 0.000001);
             drawMeadow(g, ThemeHelper.color("meadow"), 0.000001);
             drawHeath(g, ThemeHelper.color("heath"), 0.000001);
+            drawPark(g, ThemeHelper.color("park"), 0.000001);
+            drawWater(g, ThemeHelper.color("water"), 0.000001);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.000001);
+            drawParking(g, ThemeHelper.color("parking"), 0.000001);
+
             drawFootways(g, ThemeHelper.color("footway"),
                 ThemeHelper.color("footwayArea"), 0.000004f);
             drawBridleways(g, ThemeHelper.color("bridleway"), 0.000004f);
@@ -232,18 +237,22 @@ public class MapCanvas extends View {
             drawAmenity(g);
             break;
         case LEVEL_1:
-            drawWater(g, ThemeHelper.color("water"), 0.00005);
-            drawPark(g, ThemeHelper.color("park"), 0.00005);
+            drawCommonLand(g, ThemeHelper.color("commonland"),0.00005);
+            drawBeach(g, ThemeHelper.color("beach"),0.00005);
             drawForest(g, ThemeHelper.color("forest"), 0.00005);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.00005);
             drawGrass(g, ThemeHelper.color("grass"), 0.00005);
             drawFarmland(g, ThemeHelper.color("farmland"), 0.00005);
             drawMeadow(g, ThemeHelper.color("meadow"), 0.00005);
             drawHeath(g, ThemeHelper.color("heath"), 0.00005);
+            drawPark(g, ThemeHelper.color("park"), 0.00005);
+            drawWater(g, ThemeHelper.color("water"), 0.00005);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.00005);
+            drawParking(g, ThemeHelper.color("parking"), 0.000001);
+
             drawRaceways(g, ThemeHelper.color("raceway"), 0.00007f);
             drawEscapes(g, ThemeHelper.color("escape"), 0.00002f);
             drawBusGuideways(g, ThemeHelper.color("busGuideway"), 0.00006f);
-
             drawPedestrianStreets(g, ThemeHelper.color("pedestrianStreet"), 0.00006f);
             drawServiceRoads(g, ThemeHelper.color("serviceRoad"), 0.00006f);
             drawLivingStreets(g, ThemeHelper.color("livingStreet"), 0.00007f);
@@ -277,14 +286,18 @@ public class MapCanvas extends View {
             drawAmenity(g);
             break;
         case LEVEL_2:
-            drawWater(g, ThemeHelper.color("water"), 0.00008);
-            drawPark(g, ThemeHelper.color("park"), 0.00008);
+            drawCommonLand(g, ThemeHelper.color("commonland"),0.00008);
+            drawBeach(g, ThemeHelper.color("beach"),0.00008);
             drawForest(g, ThemeHelper.color("forest"), 0.00008);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.00008);
             drawGrass(g, ThemeHelper.color("grass"), 0.00008);
             drawFarmland(g, ThemeHelper.color("farmland"), 0.00008);
             drawMeadow(g, ThemeHelper.color("meadow"), 0.00008);
             drawHeath(g, ThemeHelper.color("heath"), 0.00008);
+            drawPark(g, ThemeHelper.color("park"), 0.00008);
+            drawWater(g, ThemeHelper.color("water"), 0.00008);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.00008);
+
             drawResidentialRoads(g, ThemeHelper.color("residentialRoad"), 0.00007f);
             drawUnclassifiedRoads(g, ThemeHelper.color("unclassifiedRoad"), 0.00007f);
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
@@ -307,14 +320,18 @@ public class MapCanvas extends View {
             drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
             break;
         case LEVEL_3:
-            drawWater(g, ThemeHelper.color("water"), 0.001);
-            drawPark(g, ThemeHelper.color("park"), 0.001);
+            drawCommonLand(g, ThemeHelper.color("commonland"),0.001);
+            drawBeach(g, ThemeHelper.color("beach"),0.001);
             drawForest(g, ThemeHelper.color("forest"), 0.001);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.001);
             drawGrass(g, ThemeHelper.color("grass"), 0.001);
             drawFarmland(g, ThemeHelper.color("farmland"), 0.001);
             drawMeadow(g, ThemeHelper.color("meadow"), 0.001);
             drawHeath(g, ThemeHelper.color("heath"), 0.001);
+            drawPark(g, ThemeHelper.color("park"), 0.001);
+            drawWater(g, ThemeHelper.color("water"), 0.001);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.001);
+
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
@@ -335,14 +352,18 @@ public class MapCanvas extends View {
             drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
             break;
         case LEVEL_4:
-            drawWater(g, ThemeHelper.color("water"), 0.001);
-            drawPark(g, ThemeHelper.color("park"), 0.001);
+            drawCommonLand(g, ThemeHelper.color("commonland"),0.001);
+            drawBeach(g, ThemeHelper.color("beach"),0.001);
             drawForest(g, ThemeHelper.color("forest"), 0.001);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.001);
             drawGrass(g, ThemeHelper.color("grass"), 0.001);
             drawFarmland(g, ThemeHelper.color("farmland"), 0.001);
             drawMeadow(g, ThemeHelper.color("meadow"), 0.001);
             drawHeath(g, ThemeHelper.color("heath"), 0.001);
+            drawPark(g, ThemeHelper.color("park"), 0.001);
+            drawWater(g, ThemeHelper.color("water"), 0.001);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.001);
+
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
@@ -361,10 +382,13 @@ public class MapCanvas extends View {
             drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
             break;
         case LEVEL_5:
-            drawWater(g, ThemeHelper.color("water"), 0.005);
-            drawPark(g, ThemeHelper.color("park"), 0.005);
+            drawCommonLand(g, ThemeHelper.color("commonland"),0.005);
             drawForest(g, ThemeHelper.color("forest"), 0.005);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.005);
+            drawPark(g, ThemeHelper.color("park"), 0.005);
+            drawWater(g, ThemeHelper.color("water"), 0.005);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.005);
+
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
@@ -382,10 +406,13 @@ public class MapCanvas extends View {
             drawCityNames(g, ElementType.TOWN_NAME, 0.35f);
             break;
         case LEVEL_6:
-            drawWater(g, ThemeHelper.color("water"), 0.03);
-            drawPark(g, ThemeHelper.color("park"), 0.03);
+            drawCommonLand(g, ThemeHelper.color("commonland"),0.03);
             drawForest(g, ThemeHelper.color("forest"), 0.03);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.03);
+            drawPark(g, ThemeHelper.color("park"), 0.03);
+            drawWater(g, ThemeHelper.color("water"), 0.03);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.03);
+
             drawPrimaryRoads(g, ThemeHelper.color("primaryRoad"), 0.0001f);
             drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
             drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
@@ -397,8 +424,7 @@ public class MapCanvas extends View {
         }
     }
 
-    private void setCurrentSection(ElementType elementType)
-    {
+    private void setCurrentSection(ElementType elementType) {
         currentSection = elements.get(elementType)
                              .getManySections((float)currentRectangle.getMinX(),
                                  (float)currentRectangle.getMinY(),
@@ -406,8 +432,7 @@ public class MapCanvas extends View {
                                  (float)currentRectangle.getMaxY());
     }
 
-    private void drawBoundaries(Graphics2D g2D)
-    {
+    private void drawBoundaries(Graphics2D g2D) {
         g2D.setColor(ThemeHelper.color("boundary"));
         Path2D boundary = new Path2D.Float();
         Model model = Model.getInstance();
@@ -423,8 +448,7 @@ public class MapCanvas extends View {
    * Zooms in or out upon the elements on the MapCanvas depending on a given
    * factor.
    */
-    public void zoom(double factor)
-    {
+    public void zoom(double factor) {
         DebugWindow.getInstance().setZoomLabel();
         DebugWindow.getInstance().setZoomFactorLabel();
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
@@ -444,14 +468,12 @@ public class MapCanvas extends View {
    * @param dy The difference in y-coordinates between the new position to be
    *           centered and the current center point
    */
-    public void pan(double dx, double dy)
-    {
+    public void pan(double dx, double dy) {
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
         repaint();
     }
 
-    public Point2D toModelCoords(Point2D mousePosition)
-    {
+    public Point2D toModelCoords(Point2D mousePosition) {
         try {
             return transform.inverseTransform(mousePosition, null);
 
@@ -473,8 +495,7 @@ public class MapCanvas extends View {
     }
 
     // Draw Roads Methods
-    private void drawRail(Graphics2D g, Color color, float width)
-    {
+    private void drawRail(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.RAIL);
         for (Element element : currentSection) {
             g.setColor(color);
@@ -485,8 +506,7 @@ public class MapCanvas extends View {
     }
 
     // Draw Roads Methods
-    private void drawMotorways(Graphics2D g, Color color, float width)
-    {
+    private void drawMotorways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.MOTORWAY);
         g.setColor(color);
         g.setStroke(
@@ -495,8 +515,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawMotorwayLinks(Graphics2D g, Color color, float width)
-    {
+    private void drawMotorwayLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.MOTORWAY_LINK);
         g.setColor(color);
         g.setStroke(
@@ -505,8 +524,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawTrunkRoads(Graphics2D g, Color color, float width)
-    {
+    private void drawTrunkRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TRUNK_ROAD);
         g.setColor(color);
         g.setStroke(
@@ -515,8 +533,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawTrunkRoadLinks(Graphics2D g, Color color, float width)
-    {
+    private void drawTrunkRoadLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TRUNK_ROAD_LINK);
         g.setColor(color);
         g.setStroke(
@@ -525,8 +542,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawPrimaryRoads(Graphics2D g, Color color, float width)
-    {
+    private void drawPrimaryRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PRIMARY_ROAD);
         g.setColor(color);
         g.setStroke(
@@ -535,8 +551,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawPrimaryRoadLinks(Graphics2D g, Color color, float width)
-    {
+    private void drawPrimaryRoadLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PRIMARY_ROAD_LINK);
         g.setColor(color);
         g.setStroke(
@@ -545,8 +560,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawSecondaryRoads(Graphics2D g, Color color, float width)
-    {
+    private void drawSecondaryRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.SECONDARY_ROAD);
         g.setColor(color);
         g.setStroke(
@@ -555,8 +569,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawSecondaryRoadLinks(Graphics2D g, Color color, float width)
-    {
+    private void drawSecondaryRoadLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.SECONDARY_ROAD_LINK);
         g.setColor(color);
         g.setStroke(
@@ -565,8 +578,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawTertiaryRoads(Graphics2D g, Color color, float width)
-    {
+    private void drawTertiaryRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TERTIARY_ROAD);
         g.setColor(color);
         g.setStroke(
@@ -575,8 +587,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawTertiaryRoadLinks(Graphics2D g, Color color, float width)
-    {
+    private void drawTertiaryRoadLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TERTIARY_ROAD_LINK);
         g.setColor(color);
         g.setStroke(
@@ -585,8 +596,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawUnclassifiedRoads(Graphics2D g, Color color, float width)
-    {
+    private void drawUnclassifiedRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.UNCLASSIFIED_ROAD);
         g.setColor(color);
         g.setStroke(
@@ -595,8 +605,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawResidentialRoads(Graphics2D g, Color color, float width)
-    {
+    private void drawResidentialRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.RESIDENTIAL_ROAD);
         g.setColor(color);
         g.setStroke(
@@ -605,8 +614,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawLivingStreets(Graphics2D g, Color color, float width)
-    {
+    private void drawLivingStreets(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.LIVING_STREET);
         g.setColor(color);
         g.setStroke(
@@ -615,8 +623,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawServiceRoads(Graphics2D g, Color color, float width)
-    {
+    private void drawServiceRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.SERVICE_ROAD);
         g.setColor(color);
         g.setStroke(
@@ -625,8 +632,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawBusGuideways(Graphics2D g, Color color, float width)
-    {
+    private void drawBusGuideways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.BUS_GUIDEWAY);
         g.setColor(color);
         g.setStroke(new BasicStroke(width));
@@ -634,8 +640,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawEscapes(Graphics2D g, Color color, float width)
-    {
+    private void drawEscapes(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.ESCAPE);
         g.setColor(color);
         g.setStroke(new BasicStroke(width));
@@ -643,8 +648,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawRaceways(Graphics2D g, Color color, float width)
-    {
+    private void drawRaceways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.RACEWAY);
         g.setColor(color);
         g.setStroke(
@@ -653,8 +657,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawPedestrianStreets(Graphics2D g, Color color, float width)
-    {
+    private void drawPedestrianStreets(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PEDESTRIAN_STREET);
         g.setColor(color);
         g.setStroke(
@@ -666,8 +669,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawTracks(Graphics2D g, Color color, float width)
-    {
+    private void drawTracks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TRACK);
         g.setColor(color);
         g.setStroke(
@@ -676,8 +678,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawSteps(Graphics2D g, Color color, float width)
-    {
+    private void drawSteps(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.STEPS);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT,
@@ -687,9 +688,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawFootways(Graphics2D g, Color color, Color areaColor,
-        float width)
-    {
+    private void drawFootways(Graphics2D g, Color color, Color areaColor, float width) {
         setCurrentSection(ElementType.FOOTWAY);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT,
             BasicStroke.JOIN_MITER, 10.0f,
@@ -705,8 +704,7 @@ public class MapCanvas extends View {
             }
         }
     }
-    private void drawBridleways(Graphics2D g, Color color, float width)
-    {
+    private void drawBridleways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.BRIDLEWAY);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT,
@@ -716,8 +714,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawCycleways(Graphics2D g, Color color, float width)
-    {
+    private void drawCycleways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.CYCLEWAY);
         g.setColor(color);
         g.setStroke(new BasicStroke(width));
@@ -725,8 +722,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawPaths(Graphics2D g, Color color, float width)
-    {
+    private void drawPaths(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PATH);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT,
@@ -736,8 +732,7 @@ public class MapCanvas extends View {
             g.draw(element.getShape());
         }
     }
-    private void drawRoads(Graphics2D g, Color color, float width)
-    {
+    private void drawRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.ROAD);
         g.setColor(color);
         g.setStroke(new BasicStroke(width));
@@ -859,6 +854,56 @@ public class MapCanvas extends View {
         }
     }
 
+    private void drawBridge(Graphics2D g, Color color, Double minSizeToBeSignificant) {
+        setCurrentSection(ElementType.BRIDGE);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(0.00001f));
+        for (Element element : currentSection) {
+            Biome biome = (Biome)element;
+            float size = biome.getShape().getSize();
+            if (size > minSizeToBeSignificant) {
+                g.fill(biome.getShape());
+            }
+        }
+    }
+    private void drawBeach(Graphics2D g, Color color, Double minSizeToBeSignificant) {
+        setCurrentSection(ElementType.BEACH);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(0.00001f));
+        for (Element element : currentSection) {
+            Biome biome = (Biome)element;
+            float size = biome.getShape().getSize();
+            if (size > minSizeToBeSignificant) {
+                g.fill(biome.getShape());
+            }
+        }
+    }
+    private void drawCommonLand(Graphics2D g, Color color, Double minSizeToBeSignificant) {
+        setCurrentSection(ElementType.COMMON_LAND);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(0.00001f));
+        for (Element element : currentSection) {
+            Biome biome = (Biome)element;
+            float size = biome.getShape().getSize();
+            if (size > minSizeToBeSignificant) {
+                g.fill(biome.getShape());
+            }
+        }
+    }
+    private void drawParking(Graphics2D g, Color color, Double minSizeToBeSignificant) {
+        setCurrentSection(ElementType.PARKING);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(0.00001f));
+        for (Element element : currentSection) {
+            Biome biome = (Biome)element;
+            float size = biome.getShape().getSize();
+            if (size > minSizeToBeSignificant) {
+                g.fill(biome.getShape());
+            }
+        }
+    }
+
+
     private void drawBuilding(Graphics2D g, Color color)
     {
         setCurrentSection(ElementType.BUILDING);
@@ -965,7 +1010,7 @@ public class MapCanvas extends View {
             drawFromX = drawFromX - hos;
             drawFromY = drawFromY + mod;
 
-            // TODO cosider to move the if-statement further up, such that all the
+            // TODO consider to move the if-statement further up, such that all the
             // calculations dont have to be done if the name is too long.
             if (vectorLength(longestVectorX2 - longestVectorX1,
                     longestVectorY2 - longestVectorY1)
@@ -1090,6 +1135,7 @@ public class MapCanvas extends View {
     {
         drawHospital(g);
         drawPlaceOfWorship(g);
+        drawParkingAmenity(g);
     }
     private void drawHospital(Graphics2D g)
     {
@@ -1107,8 +1153,7 @@ public class MapCanvas extends View {
                 g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
         }
     }
-    private void drawPlaceOfWorship(Graphics2D g)
-    {
+    private void drawPlaceOfWorship(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 1.5f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
         setCurrentSection(ElementType.PLACE_OF_WORSHIP);
@@ -1116,14 +1161,26 @@ public class MapCanvas extends View {
             Amenity amenity = (Amenity)element;
             g.setColor(ThemeHelper.color("placeOfWorship"));
             Font font = new Font("Wingdings", Font.PLAIN, 36);
-            // Font font = new Font("Ariel", Font.PLAIN, 12);
-            g.setFont(font.deriveFont(
-                AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-
+            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
             g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
             float y = amenity.getY();
             y += ((getFontMetrics(font).charWidth('\uf055')) / 2) * scaleFactor;
             drawString("\uf055" + "", g, amenity.getX(), y, font, scaleFactor, false);
+        }
+    }
+    private void drawParkingAmenity(Graphics2D g) {
+        float scaleFactor;
+        scaleFactor = 1.5f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
+        setCurrentSection(ElementType.PARKING_AMENITY);
+        for (Element element : currentSection) {
+            Amenity amenity = (Amenity)element;
+            g.setColor(ThemeHelper.color("parkingAmenity"));
+            Font font = new Font("Arial", Font.BOLD, 36);
+            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+            float y = amenity.getY();
+            y += ((getFontMetrics(font).charWidth('P')) / 2) * scaleFactor;
+            drawString("P", g, amenity.getX(), y, font, scaleFactor, false);
         }
     }
 }

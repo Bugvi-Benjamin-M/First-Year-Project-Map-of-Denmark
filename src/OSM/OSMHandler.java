@@ -353,9 +353,11 @@ public final class OSMHandler implements ContentHandler {
             case "village_green":
                 elementType = ElementType.GRASS;
                 break;
+                /*
             case "construction":
                 elementType = ElementType.BUILDING;
                 break;
+                */
             case "basin":
                 elementType = ElementType.WATER;
                 break;
@@ -435,7 +437,7 @@ public final class OSMHandler implements ContentHandler {
                 place = ElementType.PLACE_OF_WORSHIP;
                 break;
             case "parking":
-                place = ElementType.PARKING;
+                place = ElementType.PARKING_AMENITY;
                 elementType = ElementType.PARKING;
                 break;
         }
@@ -666,12 +668,11 @@ public final class OSMHandler implements ContentHandler {
                     break;
                 }
                 switch (place) {
-                case HOSPITAL:
-                    addAmenity(place);
-                    break;
-                case PLACE_OF_WORSHIP:
-                    addAmenity(place);
-                    break;
+                    case HOSPITAL:
+                    case PLACE_OF_WORSHIP:
+                    case PARKING_AMENITY:
+                        addAmenity(place);
+                        break;
                 }
                 break;
             case "relation":
@@ -862,37 +863,39 @@ public final class OSMHandler implements ContentHandler {
         Pointer p;
         PolygonApprox polygonApprox;
         switch (type) {
-        case BAR:
-            amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
-            p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
-            bars.add(p);
-            break;
-        case NIGHT_CLUB:
-            amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
-            p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
-            nightClubs.add(p);
-            break;
-        case FAST_FOOD:
-            amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
-            p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
-            fastFoods.add(p);
-            break;
-        case HOSPITAL:
-            polygonApprox = new PolygonApprox(way);
-            amenity = new Amenity(polygonApprox.getCenterX(),
-                polygonApprox.getCenterY(), name);
-            p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(),
-                amenity);
-            model.getElements().get(ElementType.HOSPITAL).putPointer(p);
-            break;
-        case PLACE_OF_WORSHIP:
-            polygonApprox = new PolygonApprox(way);
-            amenity = new Amenity(polygonApprox.getCenterX(),
-                polygonApprox.getCenterY(), name);
-            p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(),
-                amenity);
-            model.getElements().get(ElementType.PLACE_OF_WORSHIP).putPointer(p);
-            break;
+            case BAR:
+                amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
+                bars.add(p);
+                break;
+            case NIGHT_CLUB:
+                amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
+                nightClubs.add(p);
+                break;
+            case FAST_FOOD:
+                amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
+                fastFoods.add(p);
+                break;
+            case HOSPITAL:
+                polygonApprox = new PolygonApprox(way);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                model.getElements().get(ElementType.HOSPITAL).putPointer(p);
+                break;
+            case PLACE_OF_WORSHIP:
+                polygonApprox = new PolygonApprox(way);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                model.getElements().get(ElementType.PLACE_OF_WORSHIP).putPointer(p);
+                break;
+            case PARKING_AMENITY:
+                polygonApprox = new PolygonApprox(way);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                model.getElements().get(ElementType.PARKING_AMENITY).putPointer(p);
+                break;
         }
     }
 

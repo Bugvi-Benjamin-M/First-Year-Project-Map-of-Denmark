@@ -76,4 +76,5 @@ public enum ElementType {
 
     HOSPITAL, // Default
     PLACE_OF_WORSHIP, // Default
+    PARKING_AMENITY, //Default
 }
