@@ -219,8 +219,10 @@ public final class SettingsWindowController extends WindowController {
         MainWindowController.getInstance().themeHasChanged();
         MainWindowController.getInstance().setKeyToggle();
         CanvasController.getInstance().toggleAntiAliasing();
-        PreferencesController.getInstance().setStartupFilePathSetting(chosenFilePath);
-        PreferencesController.getInstance().setStartupFileNameSetting(chosenFileName);
+        if(chosenFileName != null && chosenFilePath != null) {
+            PreferencesController.getInstance().setStartupFilePathSetting(chosenFilePath);
+            PreferencesController.getInstance().setStartupFileNameSetting(chosenFileName);
+        }
         setToCurrentSettings();
         hideWindow();
     }
