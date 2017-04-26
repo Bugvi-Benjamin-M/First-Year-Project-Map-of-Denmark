@@ -66,12 +66,13 @@ public final class Model extends Observable {
         return cityToIndex.get(cityName);
     }
 
-    public boolean putCityToIndex(String cityName, int i){
-        if(!cityToIndex.containsKey(cityName)){
+    public boolean cityEntryExists(String cityName){
+        return cityToIndex.containsKey(cityName);
+    }
+
+    public void putCityToIndex(String cityName, int i){
             cityToIndex.put(cityName, i);
             indexToCity.put(i, cityName);
-            return true;
-        }return false;
     }
 
     public HashMap<String, Integer> getCityToIndexMap(){

@@ -38,6 +38,7 @@ public class MapCanvas extends View {
     private Rectangle2D currentRectangle;
     private EnumMap<ElementType, KDTree> elements;
     private boolean antiAliasing;
+    private Point2D.Float locationMarker;
 
     /**
    * The base Constructor for the MapCanvas.
@@ -108,6 +109,8 @@ public class MapCanvas extends View {
         g2D.setStroke(new BasicStroke(0.00001f));
         g2D.draw(currentRectangle);
 
+        drawLocationMarker(g2D);
+
         drawBoundaries(g2D);
         Main.FPS_COUNTER.interrupt();
         DebugWindow.getInstance().setFPSLabel();
@@ -120,6 +123,32 @@ public class MapCanvas extends View {
     g.drawString("Hello", 6, -55);
     g2D.setTransform(old);
     */
+    }
+
+    private void drawLocationMarker(Graphics2D g){
+        if(locationMarker != null) {
+            Point2D start = toModelCoords(new Point2D.Float(0f, 0f));
+            Point2D blue = toModelCoords(new Point2D.Float(16f, 0f));
+            Point2D white = toModelCoords(new Point2D.Float(20f, 0f));
+            float boundsblue = (float)blue.getX() - (float) start.getX();
+            float boundswhite = (float)white.getX() - (float) start.getX();
+
+
+            g.setColor(Color.white);
+            g.fill(getEllipseFromCenter(locationMarker.getX(), locationMarker.getY(), boundswhite, boundswhite));
+            g.setColor(Color.blue);
+            g.fill(getEllipseFromCenter(locationMarker.getX(), locationMarker.getY(), boundsblue, boundsblue));
+        }
+    }
+
+    private Ellipse2D getEllipseFromCenter(double x, double y, double width, double height)
+    {
+        double newX = x - width / 2.0;
+        double newY = y - height / 2.0;
+
+        Ellipse2D ellipse = new Ellipse2D.Double(newX, newY, width, height);
+
+        return ellipse;
     }
 
     private void drawBackground(Graphics2D g)
@@ -1132,5 +1161,9 @@ public class MapCanvas extends View {
                     + "",
                 g, amenity.getX(), y, font, scaleFactor, false);
         }
+    }
+
+    public void setLocationMarker(Point2D.Float locationMarker) {
+        this.locationMarker = locationMarker;
     }
 }

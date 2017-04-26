@@ -61,12 +61,15 @@ public final class CanvasController extends Controller implements Observer {
         model.addObserver(this);
     }
 
-    public static CanvasController getInstance()
-    {
+    public static CanvasController getInstance() {
         if (instance == null) {
             instance = new CanvasController();
         }
         return instance;
+    }
+
+    public void markLocation(float x, float y){
+        mapCanvas.setLocationMarker(new Point2D.Float(x, y));
     }
 
     public void resizeEvent()

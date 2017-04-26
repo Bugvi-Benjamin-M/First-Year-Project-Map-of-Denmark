@@ -3,8 +3,6 @@ package OSM;
 import Enums.BoundType;
 import Enums.OSMEnums.ElementType;
 import Helpers.LongToPointMap;
-import Helpers.Shapes.DynamicMultiPolygonApprox;
-import Helpers.Shapes.DynamicPolygonApprox;
 import Helpers.Shapes.MultiPolygonApprox;
 import Helpers.Shapes.PolygonApprox;
 import KDtree.NodeGenerator;
@@ -534,6 +532,9 @@ public final class OSMHandler implements ContentHandler {
                     case QUARTER_NAME:
                     case NEIGHBOURHOOD_NAME:
                         addName(place);
+                        if(!name.equals("")) {
+                            model.getTst().put(name, new Value(0, longitude * longitudeFactor, -latitude), true);
+                        }
                         break;
                     case BAR:
                     case NIGHT_CLUB:
@@ -544,9 +545,14 @@ public final class OSMHandler implements ContentHandler {
                 }
                 if(isAddress) {
                     String key = roadName + " " + roadNumber;
-                    boolean newEntry = model.putCityToIndex(cityName + " " + zipCode, indexCounter);
-                    if(newEntry) indexCounter++;
-                    model.getTst().put(key, new Value(model.getCityToIndex(cityName + " " + zipCode),longitude * longitudeFactor, -latitude));
+                    if(model.cityEntryExists(cityName + " " + zipCode)){
+                        int indexOfCity = model.getCityToIndex(cityName + " " + zipCode);
+                        model.getTst().put(key, new Value(indexOfCity,longitude * longitudeFactor, -latitude), false);
+                    }else{
+                        model.putCityToIndex(cityName + " " + zipCode, indexCounter);
+                        model.getTst().put(key, new Value(indexCounter,longitude * longitudeFactor, -latitude), false);
+                        indexCounter ++;
+                    }
                 }
 
                 break;
@@ -704,16 +710,16 @@ public final class OSMHandler implements ContentHandler {
             specialRelationCase = false;
         }else {
             if (!isRelation) {
-                DynamicPolygonApprox polygonApprox;
-                polygonApprox = new DynamicPolygonApprox(way);
+                PolygonApprox polygonApprox;
+                polygonApprox = new PolygonApprox(way);
                 Biome biome = new Biome(polygonApprox);
                 for (int i = 0; i < way.size(); i += 5) {
                     Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), biome);
                     model.getElements().get(type).putPointer(p);
                 }
             } else {
-                DynamicMultiPolygonApprox multiPolygonApprox;
-                multiPolygonApprox = new DynamicMultiPolygonApprox(relation);
+                MultiPolygonApprox multiPolygonApprox;
+                multiPolygonApprox = new MultiPolygonApprox(relation);
                 Biome biome = new Biome(multiPolygonApprox);
                 for (int i = 0; i < relation.size() - 1; i++) {
                     if (relation.get(i) != null) {

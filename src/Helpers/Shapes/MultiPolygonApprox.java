@@ -44,7 +44,7 @@ public class MultiPolygonApprox extends PolygonApprox {
         double px = p.getX();
         double py = p.getY();
         for (int i = 2; i < coords.length; i += 2) {
-            if (i >> i < pointtypes.length && pointtypes[i >> i] != PathIterator.SEG_MOVETO)
+            if (i >> 1 < pointtypes.length && pointtypes[i >> 1] != PathIterator.SEG_MOVETO)
                 dist = Math.min(dist, Line2D.ptSegDist(coords[i - 2], coords[i - 1],
                                           coords[i], coords[i + 1], px, py));
         }
