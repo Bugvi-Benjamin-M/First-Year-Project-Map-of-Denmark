@@ -929,9 +929,7 @@ public class MapCanvas extends View {
         Font font = new Font("Times New Roman", Font.PLAIN, 12);
 
         // Transparency
-        Composite c = AlphaComposite.getInstance(
-            AlphaComposite.SRC_OVER,
-            .7f); // TODO want transparency for road names ?
+        Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f); // TODO want transparency for road names ?
         g.setComposite(c);
 
         // Color
@@ -940,8 +938,7 @@ public class MapCanvas extends View {
         for (Element element : currentSection) {
             Road road = (Road)element;
 
-            g.setFont(font.deriveFont(
-                AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
             PolygonApprox polygon = (PolygonApprox)road.getShape();
 
             // The polygon coords
@@ -1077,10 +1074,8 @@ public class MapCanvas extends View {
             g.setColor(ThemeHelper.color("cityName"));
             for (Element element : currentSection) {
                 PlaceName placeName = (PlaceName)element;
-                g.setFont(font.deriveFont(
-                    AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-                drawString(placeName.getName(), g, placeName.getX(), placeName.getY(),
-                    font, scaleFactor, true);
+                g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+                drawString(placeName.getName(), g, placeName.getX(), placeName.getY(), font, scaleFactor, true);
             }
         }
     }
@@ -1109,24 +1104,16 @@ public class MapCanvas extends View {
                     Amenity amenity = (Amenity)element;
                     g.setColor(ThemeHelper.color("barName"));
                     Font font = Helpers.FontAwesome.getFontAwesome();
-                    g.setFont(font.deriveFont(
-                        AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-                    drawString("\uf000"
-                            + "",
-                        g, amenity.getX(), amenity.getY(), font, scaleFactor,
-                        false);
+                    g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+                    drawString("\uf000" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
                 }
                 setCurrentSection(ElementType.NIGHT_CLUB);
                 for (Element element : currentSection) {
                     Amenity amenity = (Amenity)element;
                     g.setColor(ThemeHelper.color("nightClubName"));
                     Font font = Helpers.FontAwesome.getFontAwesome();
-                    g.setFont(font.deriveFont(
-                        AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-                    drawString("\uf001"
-                            + "",
-                        g, amenity.getX(), amenity.getY(), font, scaleFactor,
-                        false);
+                    g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+                    drawString("\uf001" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
                 }
             }
         }
@@ -1146,11 +1133,8 @@ public class MapCanvas extends View {
             Amenity amenity = (Amenity)element;
             g.setColor(ThemeHelper.color("hospital"));
             Font font = Helpers.FontAwesome.getFontAwesome();
-            g.setFont(font.deriveFont(
-                AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-            drawString("\uf0fe"
-                    + "",
-                g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
+            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+            drawString("\uf0fe" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
         }
     }
     private void drawPlaceOfWorship(Graphics2D g) {
@@ -1161,7 +1145,6 @@ public class MapCanvas extends View {
             Amenity amenity = (Amenity)element;
             g.setColor(ThemeHelper.color("placeOfWorship"));
             Font font = new Font("Wingdings", Font.PLAIN, 36);
-            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
             g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
             float y = amenity.getY();
             y += ((getFontMetrics(font).charWidth('\uf055')) / 2) * scaleFactor;
@@ -1175,11 +1158,15 @@ public class MapCanvas extends View {
         for (Element element : currentSection) {
             Amenity amenity = (Amenity)element;
             g.setColor(ThemeHelper.color("parkingAmenity"));
-            Font font = new Font("Arial", Font.BOLD, 36);
-            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+            Font font = new Font("Arial", Font.BOLD, 18);
             g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
             float y = amenity.getY();
             y += ((getFontMetrics(font).charWidth('P')) / 2) * scaleFactor;
+
+            // Transparency
+            Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f);
+            g.setComposite(c);
+
             drawString("P", g, amenity.getX(), y, font, scaleFactor, false);
         }
     }

@@ -53,7 +53,6 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> bars;
     private ArrayList<Pointer> nightClubs;
     private ArrayList<Pointer> fastFoods;
-    private ArrayList<Pointer> iceCreams;
     private boolean specialRelationCase = false;
     private boolean isArea = false;
 
@@ -80,7 +79,6 @@ public final class OSMHandler implements ContentHandler {
         bars = new ArrayList<>();
         nightClubs = new ArrayList<>();
         fastFoods = new ArrayList<>();
-        iceCreams = new ArrayList<>();
     }
 
     public void parseDefault(Boolean mode) { defaultMode = mode; }
@@ -180,7 +178,7 @@ public final class OSMHandler implements ContentHandler {
             if (relationID == 2365410) { // Dont draw Sydhavnen (Only works wit coastlines)
                 specialRelationCase = true;
             }
-
+            name = "";
             relation = new OSMRelation();
             elementType = ElementType.UNKNOWN;
             loadedRelations++;
@@ -743,6 +741,7 @@ public final class OSMHandler implements ContentHandler {
             }
         } else {
             MultiPolygonApprox multiPolygonApprox;
+            //relation = OSMRelation.sortWays(relation);
             multiPolygonApprox = new MultiPolygonApprox(relation);
             Building building = new Building(multiPolygonApprox);
             for (int i = 0; i < relation.size(); i++) {
