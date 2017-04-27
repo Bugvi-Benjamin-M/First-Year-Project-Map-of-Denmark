@@ -224,6 +224,7 @@ public class MapCanvas extends View {
 
             // Amenities
             drawNight(g);
+            drawRailwayStation(g);
             drawHospital(g);
             drawParkingAmenity(g);
             drawPlaceOfWorship(g);
@@ -276,6 +277,7 @@ public class MapCanvas extends View {
 
             // Amenities
             drawHospital(g);
+            drawRailwayStation(g);
             drawParkingAmenity(g);
             break;
         case LEVEL_2:
@@ -1118,14 +1120,26 @@ public class MapCanvas extends View {
 
     private void drawHospital(Graphics2D g) {
         float scaleFactor;
-        scaleFactor = 1.5f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
+        scaleFactor = 1.7f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
         setCurrentSection(ElementType.HOSPITAL);
         for (Element element : currentSection) {
             Amenity amenity = (Amenity)element;
             g.setColor(ThemeHelper.color("hospital"));
             Font font = Helpers.FontAwesome.getFontAwesome();
             g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-            drawString("\uf0fe" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
+            drawString("\uf0fe" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+        }
+    }
+    private void drawRailwayStation(Graphics2D g) {
+        float scaleFactor;
+        scaleFactor = 1.7f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
+        setCurrentSection(ElementType.RAILWAY_STATION);
+        for (Element element : currentSection) {
+            Amenity amenity = (Amenity)element;
+            g.setColor(ThemeHelper.color("railwayStation"));
+            Font font = Helpers.FontAwesome.getFontAwesome();
+            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+            drawString("\uf238" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
         }
     }
     private void drawPlaceOfWorship(Graphics2D g) {

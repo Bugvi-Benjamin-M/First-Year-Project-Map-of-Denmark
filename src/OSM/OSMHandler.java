@@ -16,6 +16,7 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import java.awt.geom.Point2D;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +53,7 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> bars;
     private ArrayList<Pointer> nightClubs;
     private ArrayList<Pointer> fastFoods;
+    private ArrayList<Pointer> railwayStations;
     private boolean specialRelationCase = false;
     private boolean isArea = false;
 
@@ -79,6 +81,7 @@ public final class OSMHandler implements ContentHandler {
         bars = new ArrayList<>();
         nightClubs = new ArrayList<>();
         fastFoods = new ArrayList<>();
+        railwayStations = new ArrayList<>();
     }
 
     public void parseDefault(Boolean mode){
@@ -248,6 +251,11 @@ public final class OSMHandler implements ContentHandler {
                     model.getElements().get(ElementType.FAST_FOOD).putPointer(p);
                 }
                 fastFoods.clear();
+
+                for (Pointer p : railwayStations){
+                    model.getElements().get(ElementType.RAILWAY_STATION).putPointer(p);
+                }
+                railwayStations.clear();
             }
 
             way = new OSMWay();
@@ -415,6 +423,9 @@ public final class OSMHandler implements ContentHandler {
             case "tram":
             case "monorail":
                 elementType = ElementType.RAIL;
+                break;
+            case "station":
+                place = ElementType.RAILWAY_STATION;
                 break;
         }
     }
@@ -599,6 +610,7 @@ public final class OSMHandler implements ContentHandler {
                     case BAR:
                     case NIGHT_CLUB:
                     case FAST_FOOD:
+                    case RAILWAY_STATION:
                         addAmenity(place);
                         break;
                 }
@@ -940,6 +952,11 @@ public final class OSMHandler implements ContentHandler {
                 amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
                 p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                 model.getElements().get(ElementType.SPORT_AMENITY).putPointer(p);
+                break;
+            case RAILWAY_STATION:
+                amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
+                railwayStations.add(p);
                 break;
         }
     }

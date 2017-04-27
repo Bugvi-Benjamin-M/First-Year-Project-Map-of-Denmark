@@ -83,4 +83,5 @@ public enum ElementType {
     PLACE_OF_WORSHIP, // Default
     PARKING_AMENITY, //Default
     SPORT_AMENITY, //Default
+    RAILWAY_STATION, //Default
 }

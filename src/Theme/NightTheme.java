@@ -56,6 +56,7 @@ public class NightTheme implements Theme {
     public Color placeOfWorship() { return new Color(0x000000); }
     public Color parkingAmenity() { return new Color(0x000000); }
     public Color sportAmenity() { return new Color(0x000000); }
+    public Color railwayStation() { return new Color(0x000000 ); }
 
     public Color water()
     {

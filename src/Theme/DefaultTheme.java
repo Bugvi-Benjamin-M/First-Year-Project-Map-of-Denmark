@@ -111,6 +111,7 @@ public class DefaultTheme implements Theme {
     public Color sportstrack(){
         return new Color(0x90E49E);
     }
+    public Color railwayStation() { return new Color(0x00CEE4 ); }
 
     // Roads:
     public Color motorway() { return new Color(0xE27B90); }

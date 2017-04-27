@@ -80,6 +80,7 @@ public interface Theme {
     public abstract Color placeOfWorship();
     public abstract Color parkingAmenity();
     public abstract Color sportAmenity();
+    public abstract Color railwayStation();
 
     public abstract String getName();
 }
