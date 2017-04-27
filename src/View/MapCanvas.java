@@ -186,6 +186,7 @@ public class MapCanvas extends View {
             drawFarmland(g, ThemeHelper.color("farmland"), 0.000001);
             drawMeadow(g, ThemeHelper.color("meadow"), 0.000001);
             drawHeath(g, ThemeHelper.color("heath"), 0.000001);
+            drawPlayground(g, ThemeHelper.color("playground"),0.000004f);
             drawSportsPitch(g, ThemeHelper.color("sportspitch"),0.000001);
             drawSportsTrack(g, ThemeHelper.color("sportstrack"),0.000001);
             drawWater(g, ThemeHelper.color("water"), 0.000001);
@@ -193,7 +194,6 @@ public class MapCanvas extends View {
             drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
             drawPier(g, ThemeHelper.color("bridge"), 0.000008f);
             drawParking(g, ThemeHelper.color("parking"), 0.000001);
-            drawPlayground(g, ThemeHelper.color("playground"),0.000004f);
 
             drawFootways(g, ThemeHelper.color("footway"), ThemeHelper.color("footwayArea"), 0.000004f);
             drawBridleways(g, ThemeHelper.color("bridleway"), 0.000004f);
@@ -240,6 +240,8 @@ public class MapCanvas extends View {
             // Amenities
             drawNight(g);
             drawAmenity(g);
+            drawPlaceOfWorship(g);
+            drawSportAmenity(g);
             break;
         case LEVEL_1:
             drawCommonLand(g, ThemeHelper.color("commonland"),0.00005);
@@ -1156,7 +1158,6 @@ public class MapCanvas extends View {
 
     private void drawAmenity(Graphics2D g) {
         drawHospital(g);
-        drawPlaceOfWorship(g);
         drawParkingAmenity(g);
     }
     private void drawHospital(Graphics2D g) {
@@ -1182,7 +1183,7 @@ public class MapCanvas extends View {
             g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
             float y = amenity.getY();
             y += ((getFontMetrics(font).charWidth('\uf055')) / 2) * scaleFactor;
-            drawString("\uf055" + "", g, amenity.getX(), y, font, scaleFactor, false);
+            drawString("\uf055" + "", g, amenity.getX(), y, font, scaleFactor, true);
         }
     }
     private void drawParkingAmenity(Graphics2D g) {
@@ -1201,7 +1202,29 @@ public class MapCanvas extends View {
             Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f);
             g.setComposite(c);
 
-            drawString("P", g, amenity.getX(), y, font, scaleFactor, false);
+            drawString("P", g, amenity.getX(), y, font, scaleFactor, true);
+        }
+    }
+
+    private void drawSportAmenity(Graphics2D g) {
+        float scaleFactor;
+        scaleFactor = 0.75f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
+        setCurrentSection(ElementType.SPORT_AMENITY);
+        for (Element element : currentSection) {
+            Amenity amenity = (Amenity)element;
+            g.setColor(ThemeHelper.color("sportAmenity"));
+
+            Font font = Helpers.FontAwesome.getFontAwesome();
+            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+
+            float y = amenity.getY();
+            y += ((getFontMetrics(font).charWidth('\uf1e3')) / 2) * scaleFactor;
+
+            // Transparency
+            Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f);
+            g.setComposite(c);
+
+            drawString("\uf1e3" + "", g, amenity.getX(), y, font, scaleFactor, true);
         }
     }
 

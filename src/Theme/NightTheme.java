@@ -52,10 +52,10 @@ public class NightTheme implements Theme {
     public Color barName() { return new Color(0xF9FF17); }
     public Color nightClubName() { return new Color(0xF9FF17); }
     public Color fastFoodName() { return new Color(0xF9FF17); }
-
     public Color hospital() { return new Color(0xD30408); }
     public Color placeOfWorship() { return new Color(0x000000); }
     public Color parkingAmenity() { return new Color(0x000000); }
+    public Color sportAmenity() { return new Color(0x000000); }
 
     public Color water()
     {

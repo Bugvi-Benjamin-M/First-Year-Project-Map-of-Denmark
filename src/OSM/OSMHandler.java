@@ -394,6 +394,7 @@ public final class OSMHandler implements ContentHandler {
                 break;
             case "pitch":
                 elementType = ElementType.SPORTSPITCH;
+                place = ElementType.SPORT_AMENITY;
                 break;
             case "playground":
                 elementType = ElementType.PLAYGROUND;
@@ -683,6 +684,7 @@ public final class OSMHandler implements ContentHandler {
                 switch (place) {
                     case HOSPITAL:
                     case PLACE_OF_WORSHIP:
+                    case SPORT_AMENITY:
                     case PARKING_AMENITY:
                         addAmenity(place);
                         break;
@@ -749,28 +751,25 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    private void addBuilding(ElementType type, boolean isRelation)
-    {
+    private void addBuilding(ElementType type, boolean isRelation) {
         PolygonApprox polygonApprox;
         polygonApprox = new PolygonApprox(way);
         if (!isRelation) {
             Building building = new Building(polygonApprox);
             for (int i = 0; i < way.size(); i += 5) {
-                Pointer p = new Pointer((float)way.get(i).getX(),
-                    (float)way.get(i).getY(), building);
+                Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), building);
                 model.getElements().get(type).putPointer(p);
             }
         } else {
             MultiPolygonApprox multiPolygonApprox;
-            //relation = OSMRelation.sortWays(relation);
+            relation = OSMRelation.sortWays(relation);
             multiPolygonApprox = new MultiPolygonApprox(relation);
             Building building = new Building(multiPolygonApprox);
             for (int i = 0; i < relation.size(); i++) {
                 if (relation.get(i) != null) {
                     for (int j = 0; j < relation.get(i).size(); j += 5) {
                         if (relation.get(i).size() > j) {
-                            Pointer p = new Pointer((float)relation.get(i).get(j).getX(),
-                                (float)relation.get(i).get(j).getY(), building);
+                            Pointer p = new Pointer((float)relation.get(i).get(j).getX(), (float)relation.get(i).get(j).getY(), building);
                             model.getElements().get(type).putPointer(p);
                         }
                     }
@@ -833,8 +832,7 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    private void addRoad(ElementType type, boolean isRelation, boolean area)
-    {
+    private void addRoad(ElementType type, boolean isRelation, boolean area) {
         if (!isRelation) {
             PolygonApprox polygonApprox = new PolygonApprox(way);
             Road road;
@@ -899,8 +897,7 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    private void addAmenity(ElementType type)
-    {
+    private void addAmenity(ElementType type) {
         Amenity amenity;
         Pointer p;
         PolygonApprox polygonApprox;
@@ -937,6 +934,12 @@ public final class OSMHandler implements ContentHandler {
                 amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
                 p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                 model.getElements().get(ElementType.PARKING_AMENITY).putPointer(p);
+                break;
+            case SPORT_AMENITY:
+                polygonApprox = new PolygonApprox(way);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                model.getElements().get(ElementType.SPORT_AMENITY).putPointer(p);
                 break;
         }
     }

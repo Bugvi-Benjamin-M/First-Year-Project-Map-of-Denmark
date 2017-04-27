@@ -79,6 +79,7 @@ public interface Theme {
     public abstract Color hospital();
     public abstract Color placeOfWorship();
     public abstract Color parkingAmenity();
+    public abstract Color sportAmenity();
 
     public abstract String getName();
 }

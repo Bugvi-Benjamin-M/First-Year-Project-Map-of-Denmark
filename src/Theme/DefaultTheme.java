@@ -55,6 +55,7 @@ public class DefaultTheme implements Theme {
     public Color hospital() { return new Color(0xD30408); }
     public Color placeOfWorship() { return new Color(0x000000); }
     public Color parkingAmenity() { return new Color(0x0A00FF); }
+    public Color sportAmenity() { return new Color(0xFF7D00); }
 
     public Color water()
     {
