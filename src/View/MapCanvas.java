@@ -111,15 +111,6 @@ public class MapCanvas extends View {
         drawBoundaries(g2D);
         Main.FPS_COUNTER.interrupt();
         DebugWindow.getInstance().setFPSLabel();
-
-        /*
-    //Test text på Langeland, rotate text, successfull, saved this bit of code
-    to look at at later times. AffineTransform old = g2D.getTransform();
-    g2D.rotate(Math.PI / 4, 6, -55);
-    g2D.setColor(Color.BLACK);
-    g.drawString("Hello", 6, -55);
-    g2D.setTransform(old);
-    */
     }
 
     private void drawBackground(Graphics2D g)
@@ -158,6 +149,7 @@ public class MapCanvas extends View {
         switch (ZoomLevel.getZoomLevel()) {
         case LEVEL_0:
             drawCommonLand(g, ThemeHelper.color("commonland"),0.000001);
+            drawPark(g, ThemeHelper.color("park"), 0.000001);
             drawBeach(g, ThemeHelper.color("beach"),0.000001);
             drawForest(g, ThemeHelper.color("forest"), 0.000001);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.000001);
@@ -165,13 +157,16 @@ public class MapCanvas extends View {
             drawFarmland(g, ThemeHelper.color("farmland"), 0.000001);
             drawMeadow(g, ThemeHelper.color("meadow"), 0.000001);
             drawHeath(g, ThemeHelper.color("heath"), 0.000001);
-            drawPark(g, ThemeHelper.color("park"), 0.000001);
+            drawSportsPitch(g, ThemeHelper.color("sportspitch"),0.000001);
+            drawSportsTrack(g, ThemeHelper.color("sportstrack"),0.000001);
             drawWater(g, ThemeHelper.color("water"), 0.000001);
-            drawBridge(g, ThemeHelper.color("bridge"), 0.000001);
+            drawWetland(g, ThemeHelper.color("wetland"), 0.000001);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
+            drawPier(g, ThemeHelper.color("bridge"), 0.000008f);
             drawParking(g, ThemeHelper.color("parking"), 0.000001);
+            drawPlayground(g, ThemeHelper.color("playground"),0.000004f);
 
-            drawFootways(g, ThemeHelper.color("footway"),
-                ThemeHelper.color("footwayArea"), 0.000004f);
+            drawFootways(g, ThemeHelper.color("footway"), ThemeHelper.color("footwayArea"), 0.000004f);
             drawBridleways(g, ThemeHelper.color("bridleway"), 0.000004f);
             drawCycleways(g, ThemeHelper.color("cycleway"), 0.000004f);
             drawPaths(g, ThemeHelper.color("path"), 0.000004f);
@@ -181,25 +176,6 @@ public class MapCanvas extends View {
             drawRaceways(g, ThemeHelper.color("raceway"), 0.00007f);
             drawEscapes(g, ThemeHelper.color("escape"), 0.00002f);
             drawBusGuideways(g, ThemeHelper.color("busGuideway"), 0.00006f);
-
-            // roadborders
-            /*
-            drawPedestrianStreets(g, ThemeHelper.color("roadBorder"), 0.000045f);
-            drawServiceRoads(g, ThemeHelper.color("roadBorder"), 0.000045f);
-            drawLivingStreets(g, ThemeHelper.color("roadBorder"), 0.000055f);
-            drawResidentialRoads(g, ThemeHelper.color("roadBorder"), 0.000055f);
-            drawUnclassifiedRoads(g, ThemeHelper.color("roadBorder"), 0.000055f);
-            drawTertiaryRoads(g, ThemeHelper.color("roadBorder"), 0.000065f);
-            drawTertiaryRoadLinks(g, ThemeHelper.color("roadBorder"), 0.000065f);
-            drawSecondaryRoads(g, ThemeHelper.color("roadBorder"), 0.000085f);
-            drawSecondaryRoadLinks(g, ThemeHelper.color("roadBorder"), 0.000085f);
-            drawPrimaryRoads(g, ThemeHelper.color("roadBorder"), 0.000085f);
-            drawPrimaryRoadLinks(g, ThemeHelper.color("roadBorder"), 0.000085f);
-            drawTrunkRoads(g, ThemeHelper.color("roadBorder"), 0.000125f);
-            drawTrunkRoadLinks(g, ThemeHelper.color("roadBorder"), 0.00015f);
-            drawMotorways(g, ThemeHelper.color("roadBorder"), 0.000155f);
-            drawMotorwayLinks(g, ThemeHelper.color("roadBorder"), 0.000125f);
-            */
 
             // roads
             drawPedestrianStreets(g, ThemeHelper.color("pedestrianStreet"), 0.00004f);
@@ -238,6 +214,7 @@ public class MapCanvas extends View {
             break;
         case LEVEL_1:
             drawCommonLand(g, ThemeHelper.color("commonland"),0.00005);
+            drawPark(g, ThemeHelper.color("park"), 0.00005);
             drawBeach(g, ThemeHelper.color("beach"),0.00005);
             drawForest(g, ThemeHelper.color("forest"), 0.00005);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.00005);
@@ -245,9 +222,9 @@ public class MapCanvas extends View {
             drawFarmland(g, ThemeHelper.color("farmland"), 0.00005);
             drawMeadow(g, ThemeHelper.color("meadow"), 0.00005);
             drawHeath(g, ThemeHelper.color("heath"), 0.00005);
-            drawPark(g, ThemeHelper.color("park"), 0.00005);
             drawWater(g, ThemeHelper.color("water"), 0.00005);
-            drawBridge(g, ThemeHelper.color("bridge"), 0.00005);
+            drawWetland(g, ThemeHelper.color("wetland"), 0.00005);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
             drawParking(g, ThemeHelper.color("parking"), 0.000001);
 
             drawRaceways(g, ThemeHelper.color("raceway"), 0.00007f);
@@ -271,8 +248,6 @@ public class MapCanvas extends View {
 
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
-            //drawBuilding(g, ThemeHelper.color("building"));
-
             drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
             drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
             drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
@@ -287,6 +262,7 @@ public class MapCanvas extends View {
             break;
         case LEVEL_2:
             drawCommonLand(g, ThemeHelper.color("commonland"),0.00008);
+            drawPark(g, ThemeHelper.color("park"), 0.00008);
             drawBeach(g, ThemeHelper.color("beach"),0.00008);
             drawForest(g, ThemeHelper.color("forest"), 0.00008);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.00008);
@@ -294,9 +270,9 @@ public class MapCanvas extends View {
             drawFarmland(g, ThemeHelper.color("farmland"), 0.00008);
             drawMeadow(g, ThemeHelper.color("meadow"), 0.00008);
             drawHeath(g, ThemeHelper.color("heath"), 0.00008);
-            drawPark(g, ThemeHelper.color("park"), 0.00008);
             drawWater(g, ThemeHelper.color("water"), 0.00008);
-            drawBridge(g, ThemeHelper.color("bridge"), 0.00008);
+            drawWetland(g, ThemeHelper.color("wetland"), 0.00008);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
 
             drawResidentialRoads(g, ThemeHelper.color("residentialRoad"), 0.00007f);
             drawUnclassifiedRoads(g, ThemeHelper.color("unclassifiedRoad"), 0.00007f);
@@ -321,6 +297,7 @@ public class MapCanvas extends View {
             break;
         case LEVEL_3:
             drawCommonLand(g, ThemeHelper.color("commonland"),0.001);
+            drawPark(g, ThemeHelper.color("park"), 0.001);
             drawBeach(g, ThemeHelper.color("beach"),0.001);
             drawForest(g, ThemeHelper.color("forest"), 0.001);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.001);
@@ -328,9 +305,8 @@ public class MapCanvas extends View {
             drawFarmland(g, ThemeHelper.color("farmland"), 0.001);
             drawMeadow(g, ThemeHelper.color("meadow"), 0.001);
             drawHeath(g, ThemeHelper.color("heath"), 0.001);
-            drawPark(g, ThemeHelper.color("park"), 0.001);
             drawWater(g, ThemeHelper.color("water"), 0.001);
-            drawBridge(g, ThemeHelper.color("bridge"), 0.001);
+            drawWetland(g, ThemeHelper.color("wetland"), 0.001);
 
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
@@ -353,6 +329,7 @@ public class MapCanvas extends View {
             break;
         case LEVEL_4:
             drawCommonLand(g, ThemeHelper.color("commonland"),0.001);
+            drawPark(g, ThemeHelper.color("park"), 0.001);
             drawBeach(g, ThemeHelper.color("beach"),0.001);
             drawForest(g, ThemeHelper.color("forest"), 0.001);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.001);
@@ -360,9 +337,8 @@ public class MapCanvas extends View {
             drawFarmland(g, ThemeHelper.color("farmland"), 0.001);
             drawMeadow(g, ThemeHelper.color("meadow"), 0.001);
             drawHeath(g, ThemeHelper.color("heath"), 0.001);
-            drawPark(g, ThemeHelper.color("park"), 0.001);
             drawWater(g, ThemeHelper.color("water"), 0.001);
-            drawBridge(g, ThemeHelper.color("bridge"), 0.001);
+            drawWetland(g, ThemeHelper.color("wetland"), 0.001);
 
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
@@ -385,9 +361,7 @@ public class MapCanvas extends View {
             drawCommonLand(g, ThemeHelper.color("commonland"),0.005);
             drawForest(g, ThemeHelper.color("forest"), 0.005);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.005);
-            drawPark(g, ThemeHelper.color("park"), 0.005);
             drawWater(g, ThemeHelper.color("water"), 0.005);
-            drawBridge(g, ThemeHelper.color("bridge"), 0.005);
 
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
@@ -409,9 +383,7 @@ public class MapCanvas extends View {
             drawCommonLand(g, ThemeHelper.color("commonland"),0.03);
             drawForest(g, ThemeHelper.color("forest"), 0.03);
             drawGrassland(g, ThemeHelper.color("grassland"), 0.03);
-            drawPark(g, ThemeHelper.color("park"), 0.03);
             drawWater(g, ThemeHelper.color("water"), 0.03);
-            drawBridge(g, ThemeHelper.color("bridge"), 0.03);
 
             drawPrimaryRoads(g, ThemeHelper.color("primaryRoad"), 0.0001f);
             drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
@@ -704,6 +676,27 @@ public class MapCanvas extends View {
             }
         }
     }
+    private void drawBridge(Graphics2D g, Color color, float width) {
+        setCurrentSection(ElementType.BRIDGE);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width));
+        for (Element element : currentSection) {
+            ManMade manMade = (ManMade)element;
+            if (manMade.isArea()) {
+                g.fill(element.getShape());
+            } else {
+                g.draw(element.getShape());
+            }
+        }
+    }
+    private void drawPier(Graphics2D g, Color color, float width) {
+        setCurrentSection(ElementType.PIER);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width));
+        for (Element element : currentSection) {
+            g.draw(element.getShape());
+        }
+    }
     private void drawBridleways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.BRIDLEWAY);
         g.setColor(color);
@@ -741,10 +734,52 @@ public class MapCanvas extends View {
         }
     }
 
-    private void drawPark(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
+    private void drawPark(Graphics2D g, Color color, Double minSizeToBeSignificant) {
         setCurrentSection(ElementType.PARK);
+        g.setColor(color);
+        for (Element element : currentSection) {
+            Biome biome = (Biome)element;
+            float size = biome.getShape().getSize();
+            if (size > minSizeToBeSignificant) {
+                g.fill(biome.getShape());
+            }
+        }
+    }
+
+    private void drawPlayground(Graphics2D g, Color color, float width) {
+        setCurrentSection(ElementType.PLAYGROUND);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width));
+        for (Element element : currentSection) {
+            g.fill(element.getShape());
+        }
+    }
+
+    private void drawWetland(Graphics2D g, Color color, Double minSizeToBeSignificant) {
+        setCurrentSection(ElementType.WETLAND);
+        g.setColor(color);
+        for (Element element : currentSection) {
+            Biome biome = (Biome)element;
+            float size = biome.getShape().getSize();
+            if (size > minSizeToBeSignificant) {
+                g.fill(biome.getShape());
+            }
+        }
+    }
+
+    private void drawSportsPitch(Graphics2D g, Color color, Double minSizeToBeSignificant) {
+        setCurrentSection(ElementType.SPORTSPITCH);
+        g.setColor(color);
+        for (Element element : currentSection) {
+            Biome biome = (Biome)element;
+            float size = biome.getShape().getSize();
+            if (size > minSizeToBeSignificant) {
+                g.fill(biome.getShape());
+            }
+        }
+    }
+    private void drawSportsTrack(Graphics2D g, Color color, Double minSizeToBeSignificant) {
+        setCurrentSection(ElementType.SPORTSTRACK);
         g.setColor(color);
         for (Element element : currentSection) {
             Biome biome = (Biome)element;
@@ -769,9 +804,7 @@ public class MapCanvas extends View {
         }
     }
 
-    private void drawGrassland(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
+    private void drawGrassland(Graphics2D g, Color color, Double minSizeToBeSignificant) {
         setCurrentSection(ElementType.GRASSLAND);
         g.setColor(color);
         for (Element element : currentSection) {
@@ -783,9 +816,7 @@ public class MapCanvas extends View {
         }
     }
 
-    private void drawGrass(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
+    private void drawGrass(Graphics2D g, Color color, Double minSizeToBeSignificant) {
         setCurrentSection(ElementType.GRASS);
         g.setColor(color);
         for (Element element : currentSection) {
@@ -797,9 +828,7 @@ public class MapCanvas extends View {
         }
     }
 
-    private void drawMeadow(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
+    private void drawMeadow(Graphics2D g, Color color, Double minSizeToBeSignificant) {
         setCurrentSection(ElementType.MEADOW);
         g.setColor(color);
         for (Element element : currentSection) {
@@ -854,18 +883,6 @@ public class MapCanvas extends View {
         }
     }
 
-    private void drawBridge(Graphics2D g, Color color, Double minSizeToBeSignificant) {
-        setCurrentSection(ElementType.BRIDGE);
-        g.setColor(color);
-        g.setStroke(new BasicStroke(0.00001f));
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
     private void drawBeach(Graphics2D g, Color color, Double minSizeToBeSignificant) {
         setCurrentSection(ElementType.BEACH);
         g.setColor(color);
@@ -918,9 +935,8 @@ public class MapCanvas extends View {
         g.setComposite(c);
     }
 
-    private void drawRoadNames(Graphics2D g, ElementType type)
-    {
-        setCurrentSection(type); // TODO Se drawCityNames for a more generic version
+    private void drawRoadNames(Graphics2D g, ElementType type) {
+        setCurrentSection(type);
 
         // Scalefactor
         float scaleFactor = 0.1f * 397.522f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
@@ -937,15 +953,13 @@ public class MapCanvas extends View {
 
         for (Element element : currentSection) {
             Road road = (Road)element;
-
             g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
             PolygonApprox polygon = (PolygonApprox)road.getShape();
 
             // The polygon coords
             float[] coords = polygon.getCoords();
 
-            if (coords.length < 4)
-                break;
+            if (coords.length < 4) break;
             float longestVectorX1 = coords[0];
             float longestVectorY1 = coords[1];
             float longestVectorX2 = coords[2];
@@ -964,9 +978,7 @@ public class MapCanvas extends View {
                 x2 = coords[i];
                 y2 = coords[i + 1];
 
-                if ((vectorLength(longestVectorX2 - longestVectorX1,
-                        longestVectorY2 - longestVectorY1))
-                    < (vectorLength(x2 - x1, y2 - y1))) {
+                if ((vectorLength(longestVectorX2 - longestVectorX1,longestVectorY2 - longestVectorY1)) < (vectorLength(x2 - x1, y2 - y1))) {
                     longestVectorX1 = x1;
                     longestVectorY1 = y1;
                     longestVectorX2 = x2;
@@ -997,25 +1009,18 @@ public class MapCanvas extends View {
             float drawFromX = centerX - hos;
             float drawFromY = centerY - mod;
 
-            hyp = (float)0.0001 / 4; // TODO I though it would be better to divide by
-            // 2 and not 4, but it turned out 4 is better.
-            // Also though it would matter more to adjust for
-            // various stroke sizes.
+            //Using teachings about triangles
+            hyp = (float)0.0001 / 4;
             hos = (float)Math.cos(90 - angle) * hyp;
             mod = (float)Math.sin(90 - angle) * hyp;
 
             drawFromX = drawFromX - hos;
             drawFromY = drawFromY + mod;
 
-            // TODO consider to move the if-statement further up, such that all the
-            // calculations dont have to be done if the name is too long.
-            if (vectorLength(longestVectorX2 - longestVectorX1,
-                    longestVectorY2 - longestVectorY1)
-                > stringLength) {
+            if (vectorLength(longestVectorX2 - longestVectorX1,longestVectorY2 - longestVectorY1) > stringLength) {
                 AffineTransform old = g.getTransform();
                 g.rotate(angle, drawFromX, drawFromY);
-                drawString(road.getName(), g, drawFromX, drawFromY, font, scaleFactor,
-                    false);
+                drawString(road.getName(), g, drawFromX, drawFromY, font, scaleFactor,false);
                 g.setTransform(old);
             }
         }
@@ -1024,16 +1029,14 @@ public class MapCanvas extends View {
     {
         return Math.sqrt(x * x + y * y);
     }
-    private double dotProduct(float x1, float y1, float x2, float y2)
-    {
+    private double dotProduct(float x1, float y1, float x2, float y2) {
         double newX1 = (double)x1;
         double newY1 = (double)y1;
         double newX2 = (double)x2;
         double newY2 = (double)y2;
         return newX1 * newX2 + newY1 * newY2;
     }
-    private double vectorAngle(float x1, float y1, float x2, float y2)
-    {
+    private double vectorAngle(float x1, float y1, float x2, float y2) {
         double cosAngle;
         double dotProduct = dotProduct((x2 - x1), (y2 - y1), 1, 0f);
         double vector1Length = vectorLength((x2 - x1), (y2 - y1));
@@ -1053,8 +1056,7 @@ public class MapCanvas extends View {
         return Math.acos(cosAngle);
     }
 
-    private void drawCityNames(Graphics2D g, ElementType type, float scaling)
-    {
+    private void drawCityNames(Graphics2D g, ElementType type, float scaling) {
         setCurrentSection(type);
         if (ZoomLevel.getZoomFactor() > -60) {
             float scaleFactor;
@@ -1079,12 +1081,9 @@ public class MapCanvas extends View {
             }
         }
     }
-    private void drawString(String s, Graphics2D g, float x, float y, Font font,
-        float scaleFactor, boolean isShiftedLeft)
-    {
+    private void drawString(String s, Graphics2D g, float x, float y, Font font, float scaleFactor, boolean isShiftedLeft) {
         if (s.length() > 0) {
-            if (isShiftedLeft)
-                x = x - ((getFontMetrics(font).charWidth(s.charAt(s.length() / 2)) * scaleFactor) * s.length() / 2);
+            if (isShiftedLeft) x = x - ((getFontMetrics(font).charWidth(s.charAt(s.length() / 2)) * scaleFactor) * s.length() / 2);
             for (int i = 0; i < s.length(); i++) {
                 char ch = s.charAt(i);
                 g.drawString(ch + "", x, y);
@@ -1093,8 +1092,7 @@ public class MapCanvas extends View {
         }
     }
 
-    private void drawNight(Graphics2D g)
-    {
+    private void drawNight(Graphics2D g) {
         switch (ThemeHelper.getCurrentTheme()) {
         case "Night":
             if (ZoomLevel.getZoomFactor() >= 650) {
@@ -1115,17 +1113,24 @@ public class MapCanvas extends View {
                     g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
                     drawString("\uf001" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
                 }
+                setCurrentSection(ElementType.FAST_FOOD);
+                for (Element element : currentSection) {
+                    Amenity amenity = (Amenity)element;
+                    g.setColor(ThemeHelper.color("fastFoodName"));
+                    Font font = Helpers.FontAwesome.getFontAwesome();
+                    g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+                    drawString("\uf0f5" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
+                }
             }
         }
     }
-    private void drawAmenity(Graphics2D g)
-    {
+
+    private void drawAmenity(Graphics2D g) {
         drawHospital(g);
         drawPlaceOfWorship(g);
         drawParkingAmenity(g);
     }
-    private void drawHospital(Graphics2D g)
-    {
+    private void drawHospital(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 1.5f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
         setCurrentSection(ElementType.HOSPITAL);
@@ -1164,7 +1169,7 @@ public class MapCanvas extends View {
             y += ((getFontMetrics(font).charWidth('P')) / 2) * scaleFactor;
 
             // Transparency
-            Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f);
+            Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f);
             g.setComposite(c);
 
             drawString("P", g, amenity.getX(), y, font, scaleFactor, false);

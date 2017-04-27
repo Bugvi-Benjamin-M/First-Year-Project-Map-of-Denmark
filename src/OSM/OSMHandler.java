@@ -175,10 +175,11 @@ public final class OSMHandler implements ContentHandler {
             break;
         case "relation":
             long relationID = Long.parseLong(atts.getValue("id"));
-            if (relationID == 2365410) { // Dont draw Sydhavnen (Only works wit coastlines)
+            if (relationID == 2365410) { // Dont draw Sydhavnen (Only works with coastlines)
                 specialRelationCase = true;
             }
             name = "";
+            isArea = false;
             relation = new OSMRelation();
             elementType = ElementType.UNKNOWN;
             loadedRelations++;
@@ -197,37 +198,37 @@ public final class OSMHandler implements ContentHandler {
                 for (Pointer p : cityNames) {
                     model.getElements().get(ElementType.CITY_NAME).putPointer(p);
                 }
-                // cityNames = null;
+                cityNames.clear();
 
                 for (Pointer p : townNames) {
                     model.getElements().get(ElementType.TOWN_NAME).putPointer(p);
                 }
-                // townNames = null;
+                townNames.clear();
 
                 for (Pointer p : villageNames) {
                     model.getElements().get(ElementType.VILLAGE_NAME).putPointer(p);
                 }
-                // villageNames = null;
+                villageNames.clear();
 
                 for (Pointer p : hamletNames) {
                     model.getElements().get(ElementType.HAMLET_NAME).putPointer(p);
                 }
-                // hamletNames = null;
+                hamletNames.clear();
 
                 for (Pointer p : suburbNames) {
                     model.getElements().get(ElementType.SUBURB_NAME).putPointer(p);
                 }
-                // suburbNames = null;
+                suburbNames.clear();
 
                 for (Pointer p : quarterNames) {
                     model.getElements().get(ElementType.QUARTER_NAME).putPointer(p);
                 }
-                // quarterNames = null;
+                quarterNames.clear();
 
                 for (Pointer p : neighbourhoodNames) {
                     model.getElements().get(ElementType.NEIGHBOURHOOD_NAME).putPointer(p);
                 }
-                // neighbourhoodNames = null;
+                neighbourhoodNames.clear();
 
                 for (Pointer p : bars) {
                     model.getElements().get(ElementType.BAR).putPointer(p);
@@ -242,7 +243,7 @@ public final class OSMHandler implements ContentHandler {
                 for (Pointer p : fastFoods) {
                     model.getElements().get(ElementType.FAST_FOOD).putPointer(p);
                 }
-                // fastFoods = null;
+                fastFoods.clear();
             }
 
             way = new OSMWay();
@@ -251,6 +252,7 @@ public final class OSMHandler implements ContentHandler {
             place = ElementType.UNKNOWN;
             idToWay.put(id, way);
             name = "";
+            isArea = false;
             loadedWays++;
             if ((loadedWays & 0xFF) == 0) {
                 System.out.println("Numways: " + loadedWays);
@@ -351,11 +353,6 @@ public final class OSMHandler implements ContentHandler {
             case "village_green":
                 elementType = ElementType.GRASS;
                 break;
-                /*
-            case "construction":
-                elementType = ElementType.BUILDING;
-                break;
-                */
             case "basin":
                 elementType = ElementType.WATER;
                 break;
@@ -365,8 +362,10 @@ public final class OSMHandler implements ContentHandler {
     private void determineManMade(String value){
         switch (value){
             case "bridge":
-            case "pier":
                 elementType = ElementType.BRIDGE;
+                break;
+            case "pier":
+                elementType = ElementType.PIER;
                 break;
         }
     }
@@ -656,9 +655,14 @@ public final class OSMHandler implements ContentHandler {
                 case SPORTSPITCH:
                 case SPORTSTRACK:
                 case PLAYGROUND:
-                case BRIDGE:
                 case PARKING:
                     addBiome(elementType, false);
+                    break;
+                case BRIDGE:
+                    addManMade(elementType, false, true);
+                    break;
+                case PIER:
+                    addManMade(elementType, false, false);
                     break;
                 case UNKNOWN:
                     // UnknownWay unknownWay = new UnknownWay(path);
@@ -723,6 +727,12 @@ public final class OSMHandler implements ContentHandler {
                     case PLAYGROUND:
                         addBiome(elementType, true);
                         break;
+                    case BRIDGE:
+                        addManMade(elementType, true, isArea);
+                        break;
+                    case PIER:
+                        addManMade(elementType, true, false);
+                        break;
                 }
                 break;
         }
@@ -758,32 +768,57 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    private void addName(ElementType type)
-    {
+    private void addName(ElementType type) {
         PlaceName placeName = new PlaceName(longitude * longitudeFactor, -latitude, name);
         Pointer p = new Pointer(longitude * longitudeFactor, -latitude, placeName);
         switch (type) {
-        case CITY_NAME:
-            cityNames.add(p);
-            break;
-        case TOWN_NAME:
-            townNames.add(p);
-            break;
-        case VILLAGE_NAME:
-            villageNames.add(p);
-            break;
-        case HAMLET_NAME:
-            hamletNames.add(p);
-            break;
-        case SUBURB_NAME:
-            suburbNames.add(p);
-            break;
-        case QUARTER_NAME:
-            quarterNames.add(p);
-            break;
-        case NEIGHBOURHOOD_NAME:
-            neighbourhoodNames.add(p);
-            break;
+            case CITY_NAME:
+                cityNames.add(p);
+                break;
+            case TOWN_NAME:
+                townNames.add(p);
+                break;
+            case VILLAGE_NAME:
+                villageNames.add(p);
+                break;
+            case HAMLET_NAME:
+                hamletNames.add(p);
+                break;
+            case SUBURB_NAME:
+                suburbNames.add(p);
+                break;
+            case QUARTER_NAME:
+                quarterNames.add(p);
+                break;
+            case NEIGHBOURHOOD_NAME:
+                neighbourhoodNames.add(p);
+                break;
+        }
+    }
+    private void addManMade(ElementType type, boolean isRelation, boolean area){
+        if (!isRelation) {
+            PolygonApprox polygonApprox = new PolygonApprox(way);
+            ManMade manMade;
+            manMade = new ManMade(polygonApprox, area);
+            for (int i = 0; i < way.size(); i += 5){
+                Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), manMade);
+                model.getElements().get(type).putPointer(p);
+            }
+        }
+        else{
+            MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
+            ManMade manMade;
+            manMade = new ManMade(multiPolygonApprox, area);
+            for (int i = 0; i < relation.size(); i++){
+                if (relation.get(i) != null){
+                    for (int j = 0; j < relation.get(i).size(); j += 5){
+                        if (relation.get(i).size() > j){
+                            Pointer p = new Pointer((float)relation.get(i).get(j).getX(), (float)relation.get(i).get(j).getY(), manMade);
+                            model.getElements().get(type).putPointer(p);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -792,13 +827,10 @@ public final class OSMHandler implements ContentHandler {
         if (!isRelation) {
             PolygonApprox polygonApprox = new PolygonApprox(way);
             Road road;
-            if (!area)
-                road = new Road(polygonApprox, name);
-            else
-                road = new Road(polygonApprox, name, area);
+            if (!area) road = new Road(polygonApprox, name);
+            else road = new Road(polygonApprox, name, area);
             for (int i = 0; i < way.size(); i += 5) {
-                Pointer p = new Pointer((float)way.get(i).getX(),
-                    (float)way.get(i).getY(), road);
+                Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
                 model.getElements().get(ElementType.HIGHWAY).putPointer(p);
             }
@@ -822,7 +854,6 @@ public final class OSMHandler implements ContentHandler {
                 }
             }
         }
-        // System.out.println(name + " Added :)");
     }
 
     private void addBiome(ElementType type, boolean isRelation) {

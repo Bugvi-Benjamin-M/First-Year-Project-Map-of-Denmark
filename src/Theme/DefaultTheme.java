@@ -95,22 +95,20 @@ public class DefaultTheme implements Theme {
     }
     public Color bridge(){ return new Color(0xD5D4E3); }
     public Color sportspitch(){
-        return new Color(0xC0E48F);
+        return new Color(0x90E49E);
     }
     public Color wetland(){
-        return new Color(0x25FFAA);
+        return new Color(0x2BD5CB);
     }
     public Color commonland(){
         return new Color(0xC0E48F);
     }
     public Color playground(){
-        return new Color(0xC0E48F);
+        return new Color(0xCFE48A);
     }
-    public Color parking(){
-        return new Color(0xD5D4E3);
-    }
+    public Color parking(){ return new Color(0xD5D4E3); }
     public Color sportstrack(){
-        return new Color(0xC0E48F);
+        return new Color(0x90E49E);
     }
 
     // Roads:

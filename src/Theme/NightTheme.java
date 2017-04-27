@@ -51,7 +51,7 @@ public class NightTheme implements Theme {
     public Color roadName() { return new Color(0x000000); }
     public Color barName() { return new Color(0xF9FF17); }
     public Color nightClubName() { return new Color(0xF9FF17); }
-    public Color fastFoodName() { return new Color(0x000000); }
+    public Color fastFoodName() { return new Color(0xF9FF17); }
 
     public Color hospital() { return new Color(0xD30408); }
     public Color placeOfWorship() { return new Color(0x000000); }
@@ -95,21 +95,21 @@ public class NightTheme implements Theme {
         return new Color(0x000000);
     }
     public Color sportspitch(){
-        return new Color(0x000000);
+        return new Color(0x044512);
     }
     public Color wetland(){
         return new Color(0x000000);
     }
     public Color commonland(){
-        return new Color(0x000000);
+        return new Color(0x044512);
     }
     public Color playground(){
-        return new Color(0x000000);
+        return new Color(0x044512);
     }
     public Color parking(){
         return new Color(0x000000);
     }
-    public Color sportstrack(){ return new Color(0x000000); }
+    public Color sportstrack(){ return new Color(0x044512); }
 
     // Roads
     public Color motorway() { return new Color(0xD47487); }

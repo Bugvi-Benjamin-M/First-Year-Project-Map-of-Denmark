@@ -67,7 +67,12 @@ public enum ElementType {
 
     RAIL,
     BRIDGE,
+    PIER,
+
     PARKING,
+
+
+    POI, //Point of interest
 
     // AMENITIES
     BAR, // night
