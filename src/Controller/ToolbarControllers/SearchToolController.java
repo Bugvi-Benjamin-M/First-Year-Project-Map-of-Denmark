@@ -119,10 +119,9 @@ public final class SearchToolController extends Controller {
             searchTool.getField().requestFocus();
         }
         else if(allowSearch) {
-            //TODO Does not work as intended
-            this.saveHistory(searchTool.getText());
             ArrayList<Value> list = Model.getInstance().getTst().get(searchTool.getText());
             if(list != null) {
+                this.saveHistory(searchTool.getText());
                 if (list.size() > 1) {
                     String[] cities = new String[list.size()];
                     for (int i = 0; i < list.size(); i++) {
@@ -166,6 +165,7 @@ public final class SearchToolController extends Controller {
         for(String s : listToShow) {
             searchTool.getField().addItem(s);
         }
+        searchTool.getField().hidePopup();
         searchTool.getField().showPopup();
     }
 
@@ -178,10 +178,16 @@ public final class SearchToolController extends Controller {
             searchTool.getField().addItem(iterator.next());
         }
         searchTool.getField().setSelectedIndex(-1);
+        searchTool.getField().hidePopup();
         searchTool.getField().showPopup();
     }
 
     private void saveHistory(String query){
+        if(searchHistory.contains(query)){
+            return;
+        }
+
+
         searchHistory.add(query);
 
         try {
@@ -277,7 +283,7 @@ public final class SearchToolController extends Controller {
         public void focusGained(FocusEvent e) {
             super.focusGained(e);
             if(editor.getItem().equals(defaultText)) {
-                //showHistory();
+                showHistory();
                 searchTool.setText("");
             } else {
                 showMatchingResults();
