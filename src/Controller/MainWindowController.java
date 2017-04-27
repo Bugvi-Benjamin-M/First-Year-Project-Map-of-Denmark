@@ -6,6 +6,7 @@ import Helpers.GlobalValue;
 import Helpers.OSDetector;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
+import Model.Model;
 import View.PopupWindow;
 import View.Window;
 
@@ -47,7 +48,7 @@ public final class MainWindowController extends WindowController {
         ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
         setupToolbar();
         setupCanvas();
-        setupInfobar();
+        setupInformationBar();
         setupLayeredPane();
         addInteractionHandlerToWindow();
         setToolTipTheme();
@@ -68,6 +69,9 @@ public final class MainWindowController extends WindowController {
         adjustBounds();
         ToolbarController.getInstance().getToolbar().setOpaque(true);
         CanvasController.getInstance().getMapCanvas().setOpaque(true);
+        InformationBarController.getInstance().getInformationBar().setOpaque(true);
+        layeredPane.add(InformationBarController.getInstance().getInformationBar(),
+                new Integer(1));
         layeredPane.add(CanvasController.getInstance().getMapCanvas(),
             new Integer(1));
         layeredPane.add(ToolbarController.getInstance().getToolbar(),
@@ -82,6 +86,8 @@ public final class MainWindowController extends WindowController {
             0, 0, window.getFrame().getWidth(), GlobalValue.getToolbarHeight());
         CanvasController.getInstance().getMapCanvas().setBounds(
             0, 0, window.getFrame().getWidth(), window.getFrame().getHeight());
+        InformationBarController.getInstance().getInformationBar().setBounds(
+            0, 0, 0, window.getFrame().getHeight());
     }
 
     private void setupToolbar()
@@ -96,10 +102,24 @@ public final class MainWindowController extends WindowController {
         CanvasController.getInstance().setupCanvas();
     }
 
-    private void setupInfobar()
+    private void setupInformationBar()
     {
-        InfobarController.getInstance().specifyWindow(window);
-        InfobarController.getInstance().setupInfobar();
+        InformationBarController.getInstance().specifyWindow(window);
+        InformationBarController.getInstance().setupInformationBar();
+    }
+
+    public void activatePointsOfInterestInformationBar() {
+        CanvasController.getInstance().getMapCanvas().setBounds(400, 0, window.getFrame().getWidth(), window.getFrame().getHeight());
+        InformationBarController.getInstance().getInformationBar().setBounds(0, 0, 400, window.getFrame().getHeight());
+        CanvasController.repaintCanvas();
+        InformationBarController.getInstance().getInformationBar().revalidate();
+
+    }
+
+    public void deactivatePointsOfInterestInformationBar() {
+        InformationBarController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
+        CanvasController.getInstance().getMapCanvas().setBounds(0,0, window.getFrame().getWidth(), window.getFrame().getHeight());
+        CanvasController.repaintCanvas();
     }
 
     public void transferFocusToMapCanvas()
@@ -111,6 +131,7 @@ public final class MainWindowController extends WindowController {
     {
         ToolbarController.getInstance().themeHasChanged();
         CanvasController.getInstance().themeHasChanged();
+        InformationBarController.getInstance().themeHasChanged();
         setToolTipTheme();
         transferFocusToMapCanvas();
     }
@@ -169,14 +190,21 @@ public final class MainWindowController extends WindowController {
         ToolbarController.getInstance().toggleKeyBindings();
         SettingsWindowController.getInstance().toggleKeyBindings();
         MainWindowController.getInstance().toggleKeyBindings();
-        InfobarController.getInstance().toggleKeyBindings();
     }
 
     public void resetInstance() { instance = null; }
 
     public void requestCanvasRepaint()
     {
-        CanvasController.getInstance().getMapCanvas().repaint();
+        CanvasController.repaintCanvas();
+    }
+
+    public void requestCanvasResetElements() {
+        CanvasController.getInstance().getMapCanvas().setElements(Model.getInstance().getElements());
+    }
+
+    public void transferFocusToInformationBar() {
+        InformationBarController.getInstance().getInformationBar().grabFocus();
     }
 
     private class MainWindowInteractionHandler

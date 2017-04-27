@@ -39,5 +39,12 @@ public abstract class ToolComponent extends JPanel {
         }
     }
 
-    protected boolean getActivatedStatus() { return activated; }
+    public void toggleHover(boolean hover) {
+        for(Component component : this.getComponents()) {
+            if(hover) component.setForeground(ThemeHelper.color("toolHover"));
+            else component.setForeground(ThemeHelper.color("icon"));
+        }
+    }
+
+    public boolean getActivatedStatus() { return activated; }
 }

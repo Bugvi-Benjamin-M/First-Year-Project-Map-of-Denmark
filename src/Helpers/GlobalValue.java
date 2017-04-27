@@ -80,4 +80,5 @@ public class GlobalValue {
     }
 
     public static boolean getMarkCoastlines() { return markCoastlines; }
+
 }

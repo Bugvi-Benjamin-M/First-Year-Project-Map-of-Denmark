@@ -25,6 +25,7 @@ public interface Theme {
     public abstract Color canvasPopupForeground();
 
     public abstract Color toolActivated();
+    public abstract Color toolHover();
 
     public abstract Color water();
     public abstract Color park();

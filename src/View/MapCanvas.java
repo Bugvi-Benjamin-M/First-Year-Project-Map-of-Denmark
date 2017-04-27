@@ -1,6 +1,5 @@
 package View;
 
-import Enums.BoundType;
 import Enums.OSMEnums.ElementType;
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
@@ -16,6 +15,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Class details:
@@ -39,6 +39,23 @@ public class MapCanvas extends View {
     private EnumMap<ElementType, KDTree> elements;
     private boolean antiAliasing;
 
+    private List<Path2D> coastlines;
+
+    private float cameraMaxLon;
+    private float cameraMinLon;
+    private float cameraMaxLat;
+    private float cameraMinLat;
+
+    private float maxLon;
+    private float minLon;
+    private float maxLat;
+    private float minLat;
+
+    private float dynMaxLon;
+    private float dynMinLon;
+    private float dynMaxLat;
+    private float dynMinLat;
+
     /**
    * The base Constructor for the MapCanvas.
    */
@@ -57,7 +74,6 @@ public class MapCanvas extends View {
     public void toggleAntiAliasing(boolean status)
     {
         antiAliasing = status;
-        repaint();
     }
 
     public void setCurrentRectangle()
@@ -72,12 +88,61 @@ public class MapCanvas extends View {
         double xBounds = factor.getX() - point.getX();
         double yBounds = factor.getY() - point.getY();
         currentRectangle = new Rectangle2D.Double(point.getX(), point.getY(), xBounds, yBounds);
-        Model model = Model.getInstance();
-        model.setCameraBound(BoundType.MIN_LONGITUDE, (float)point.getX());
-        model.setCameraBound(BoundType.MAX_LONGITUDE, (float)factor.getX());
-        model.setCameraBound(BoundType.MAX_LATITUDE, (float)point.getY());
-        model.setCameraBound(BoundType.MIN_LATITUDE, (float)factor.getY());
+        cameraMinLon = (float) point.getX();
+        cameraMaxLon = (float) factor.getX();
+        cameraMaxLat = (float) point.getY();
+        cameraMinLat = (float) factor.getY();
         DebugWindow.getInstance().setCameraBoundsLabel();
+    }
+
+    public void setCoastLines(List<Path2D> coastLines) {this.coastlines = coastLines;}
+
+    public float getCameraMaxLon() {
+        return cameraMaxLon;
+    }
+
+    public float getCameraMinLon() {
+        return cameraMinLon;
+    }
+
+    public float getCameraMaxLat() {
+        return cameraMaxLat;
+    }
+
+    public float getCameraMinLat() {
+        return cameraMinLat;
+    }
+
+    public void setMaxLon(float maxLon) {
+        this.maxLon = maxLon;
+    }
+
+    public void setMinLon(float minLon) {
+        this.minLon = minLon;
+    }
+
+    public void setMaxLat(float maxLat) {
+        this.maxLat = maxLat;
+    }
+
+    public void setMinLat(float minLat) {
+        this.minLat = minLat;
+    }
+
+    public void setDynMaxLon(float dynMaxLon) {
+        this.dynMaxLon = dynMaxLon;
+    }
+
+    public void setDynMinLon(float dynMinLon) {
+        this.dynMinLon = dynMinLon;
+    }
+
+    public void setDynMaxLat(float dynMaxLat) {
+        this.dynMaxLat = dynMaxLat;
+    }
+
+    public void setDynMinLat(float dynMinLat) {
+        this.dynMinLat = dynMinLat;
     }
 
     /**
@@ -104,9 +169,9 @@ public class MapCanvas extends View {
             drawElements(g2D);
         }
 
-        g2D.setColor(Color.black);
-        g2D.setStroke(new BasicStroke(0.00001f));
-        g2D.draw(currentRectangle);
+        //g2D.setColor(Color.black);
+        //g2D.setStroke(new BasicStroke(0.00001f));
+        //g2D.draw(currentRectangle);
 
         drawBoundaries(g2D);
         Main.FPS_COUNTER.interrupt();
@@ -124,20 +189,28 @@ public class MapCanvas extends View {
 
     private void drawBackground(Graphics2D g)
     {
+        //Todo get rid of coupling here.
         g.setColor(ThemeHelper.color("water"));
         Path2D boundary = new Path2D.Float();
-        Model model = Model.getInstance();
+        boundary.moveTo(minLon, minLat);
+        boundary.lineTo(maxLon, minLat);
+        boundary.lineTo(maxLon, maxLat);
+        boundary.lineTo(minLon, maxLat);
+        boundary.lineTo(minLon, minLat);
+        /*Model model = Model.getInstance();
         boundary.moveTo(model.getMinLongitude(false), model.getMinLatitude(false));
         boundary.lineTo(model.getMaxLongitude(false), model.getMinLatitude(false));
         boundary.lineTo(model.getMaxLongitude(false), model.getMaxLatitude(false));
         boundary.lineTo(model.getMinLongitude(false), model.getMaxLatitude(false));
         boundary.lineTo(model.getMinLongitude(false), model.getMinLatitude(false));
+        */
         g.fill(boundary);
     }
 
     private void drawCoastlines(Graphics2D g)
     {
-        java.util.List<Path2D> coastlines = Model.getInstance().getCoastlines();
+        //todo this is fucking annoying and we need to look at threads to see if we can get rid of it
+        List<Path2D> coastlines = Model.getInstance().getCoastlines();
         g.setColor(ThemeHelper.color("background"));
         for (Path2D path : coastlines) {
             g.fill(path);
@@ -150,10 +223,11 @@ public class MapCanvas extends View {
                 g.draw(path);
             }
         }
+
     }
 
     // TODO tænk over rækkefølgen elementerne bliver tegnet i (Jakob Nikolaj)
-    private void drawElements(Graphics2D g)
+    public void drawElements(Graphics2D g)
     {
         switch (ZoomLevel.getZoomLevel()) {
         case LEVEL_0:
@@ -410,12 +484,16 @@ public class MapCanvas extends View {
     {
         g2D.setColor(ThemeHelper.color("boundary"));
         Path2D boundary = new Path2D.Float();
-        Model model = Model.getInstance();
-        boundary.moveTo(model.getMinLongitude(true), model.getMinLatitude(true));
-        boundary.lineTo(model.getMaxLongitude(true), model.getMinLatitude(true));
-        boundary.lineTo(model.getMaxLongitude(true), model.getMaxLatitude(true));
-        boundary.lineTo(model.getMinLongitude(true), model.getMaxLatitude(true));
-        boundary.lineTo(model.getMinLongitude(true), model.getMinLatitude(true));
+        boundary.moveTo(dynMinLon, dynMinLat);
+        boundary.lineTo(dynMaxLon, dynMinLat);
+        boundary.lineTo(dynMaxLon, dynMaxLat);
+        boundary.lineTo(dynMinLon, dynMaxLat);
+        boundary.lineTo(dynMinLon, dynMinLat);
+        //boundary.moveTo(model.getMinLongitude(true), model.getMinLatitude(true));
+        //boundary.lineTo(model.getMaxLongitude(true), model.getMinLatitude(true));
+        //oundary.lineTo(model.getMaxLongitude(true), model.getMaxLatitude(true));
+        //boundary.lineTo(model.getMinLongitude(true), model.getMaxLatitude(true));
+        //boundary.lineTo(model.getMinLongitude(true), model.getMinLatitude(true));
         g2D.draw(boundary);
     }
 
@@ -428,7 +506,6 @@ public class MapCanvas extends View {
         DebugWindow.getInstance().setZoomLabel();
         DebugWindow.getInstance().setZoomFactorLabel();
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-        repaint();
     }
 
     /**
@@ -447,7 +524,7 @@ public class MapCanvas extends View {
     public void pan(double dx, double dy)
     {
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
-        repaint();
+
     }
 
     public Point2D toModelCoords(Point2D mousePosition)

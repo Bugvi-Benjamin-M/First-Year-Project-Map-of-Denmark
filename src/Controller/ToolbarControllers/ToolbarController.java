@@ -4,12 +4,8 @@ import Controller.*;
 import Enums.FileType;
 import Enums.ToolType;
 import Enums.ToolbarType;
-import Helpers.DefaultSettings;
-import Helpers.FileHandler;
-import Helpers.GlobalValue;
-import Helpers.OSDetector;
+import Helpers.*;
 import Main.Main;
-import Model.Model;
 import View.PopupWindow;
 import View.ToolComponent;
 import View.ToolFeature;
@@ -39,6 +35,7 @@ public final class ToolbarController extends Controller {
     private Toolbar toolbar;
     private SpringLayout toolbarLayout;
     private static ToolbarController instance;
+    private boolean poiToolActive;
 
     private ToolbarType type;
 
@@ -68,6 +65,7 @@ public final class ToolbarController extends Controller {
     public void setupToolbar(ToolbarType type)
     {
         toolbar = new Toolbar();
+        poiToolActive = false;
         toolbarLayout = toolbar.getLayout();
         toolbar.setPreferredSize(new Dimension(window.getFrame().getWidth(),
             GlobalValue.getToolbarHeight()));
@@ -421,9 +419,17 @@ public final class ToolbarController extends Controller {
     }
 
     private void poiToolActivatedEvent() {
-        toolbar.getTool(ToolType.POI).toggleActivate(true);
-        PopupWindow.infoBox(null, "POI tool activated", "Temporary popup");
-        toolbar.getTool(ToolType.POI).toggleActivate(false);
+        if(!poiToolActive) {
+            toolbar.getTool(ToolType.POI).toggleActivate(true);
+            MainWindowController.getInstance().activatePointsOfInterestInformationBar();
+            MainWindowController.getInstance().transferFocusToInformationBar();
+            poiToolActive = true;
+        } else {
+            toolbar.getTool(ToolType.POI).toggleActivate(false);
+            MainWindowController.getInstance().deactivatePointsOfInterestInformationBar();
+            poiToolActive = false;
+        }
+
     }
 
     private void routesToolActivatedEvent() {
@@ -463,30 +469,24 @@ public final class ToolbarController extends Controller {
 
     private void loadDefaultFile()
     {
-        //Todo discuss zoom level
+        //Todo discuss splashscreen. Is blank
         Main.splashScreenInit();
         SwingUtilities.invokeLater(() -> {
-            boolean loadedDanmarkBin;
             MainWindowController.getInstance().hideWindow();
             if(PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
                 FileHandler.loadDefaultResource();
-                loadedDanmarkBin = true;
             } else {
                 try {
                     FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
-                    loadedDanmarkBin = false;
                 } catch (Exception e) {
                     PopupWindow.infoBox(null, "Could Not Find Preferred Default File: " +
                     PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
                             "Loading Danmark.bin.", "File Not Found");
                     FileHandler.loadDefaultResource();
-                    loadedDanmarkBin = true;
                 }
             }
-            CanvasController.getInstance().getMapCanvas().setElements(Model.getInstance().getElements());
-            Model.getInstance().modelHasChanged();
-            //if(loadedDanmarkBin) CanvasController.adjustToBounds();
-            //else CanvasController.adjustToDynamicBounds();
+            MainWindowController.getInstance().requestCanvasResetElements();
+            MainWindowController.getInstance().requestCanvasRepaint();
             //todo bounds can't adjust, messes up zoom level
             GlobalValue.setMaxZoom(GlobalValue.MAX_ZOOM_DECREASE);
             MainWindowController.getInstance().showWindow();
@@ -565,6 +565,19 @@ public final class ToolbarController extends Controller {
         }
     }
 
+    private void mouseEnteredTool(ToolType type, MouseEvent e) {
+        toolbar.getTool(type).toggleHover(true);
+    }
+
+    private void mouseExitedTool(ToolType type, MouseEvent e) {
+        if(toolbar.getTool(type).getActivatedStatus()) {
+            toolbar.getTool(type).toggleHover(false);
+            toolbar.getTool(type).toggleActivate(true);
+        } else {
+            toolbar.getTool(type).toggleHover(false);
+        }
+    }
+
     public void transferFocusToCanvas()
     {
         MainWindowController.getInstance().transferFocusToMapCanvas();
@@ -612,6 +625,19 @@ public final class ToolbarController extends Controller {
                 tool.grabFocus();
                 toolEvent(type);
             }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            super.mouseEntered(e);
+            if(tool != null) mouseEnteredTool(type, e);
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            super.mouseExited(e);
+            if(tool != null) mouseExitedTool(type, e);
         }
 
         private void setKeyShortCuts()
