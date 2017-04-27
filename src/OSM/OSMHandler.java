@@ -824,6 +824,8 @@ public final class OSMHandler implements ContentHandler {
 
     private void addRoad(ElementType type, boolean isRelation, boolean area)
     {
+        // FIXME: ROADS NEEDS TO STORE THEIR PATH AS WELL AS WHETHER THEY ARE ONE WAY AND THEIR MAX SPEED
+        // FIXME: THE POINTS IN THEIR PATH NEEDS TO EITHER CONTAIN A ID (REF) OR SOME MAYOR REFACTORING IS REQUIRED
         if (!isRelation) {
             PolygonApprox polygonApprox = new PolygonApprox(way);
             Road road;

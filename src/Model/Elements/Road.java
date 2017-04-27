@@ -4,6 +4,8 @@ import Helpers.Shapes.MultiPolygonApprox;
 import Helpers.Shapes.PolygonApprox;
 
 import java.awt.*;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -38,4 +40,18 @@ public class Road extends Element {
     public PolygonApprox getShape() { return (PolygonApprox)super.getShape(); }
 
     public String getName() { return name; }
+
+    public boolean isOneWay() {return oneWay;}
+
+    public int getMaxSpeed() {return maxSpeed;}
+
+    public Point2D getFromNode() {
+        // FIXME: Needs to be able to retrieve a start point!
+        return null;
+    }
+
+    public Point2D getToNode() {
+        // FIXME: Needs to be able to retrieve an end point!
+        return null;
+    }
 }
