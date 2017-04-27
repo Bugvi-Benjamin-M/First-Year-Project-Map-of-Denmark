@@ -440,4 +440,26 @@ Impediments:
 Next Time:
 - Wednesday the 26th of April
 
+## Logbook 27/4 (Scribe Hedam)
+What we did since last time:
+- GUI changes
+- Disable AA on pan or zoom
+- Bugfixes
+- Added more cartographic elements
+- Preperation for Dijkstra/A* implementation next week
+
+
+What we will do until next time:
+- Graph preperation for GUI
+- Bugfixes on Trello
+- Dijkstra
+- Report writing
+
+
+Impediments:
+- Lecture at 12 pm
+
+Next Time:
+- Monday the 1st of May 10:00
+
 ## Next logbook...
