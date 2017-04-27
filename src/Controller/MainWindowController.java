@@ -44,7 +44,7 @@ public final class MainWindowController extends WindowController {
                      .layout(new BorderLayout())
                      .icon()
                      .hide();
-        window.setMinimumWindowSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 1.9), 700));
+        window.setMinimumWindowSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 1.9), Toolkit.getDefaultToolkit().getScreenSize().height));
         ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
         setupToolbar();
         setupCanvas();

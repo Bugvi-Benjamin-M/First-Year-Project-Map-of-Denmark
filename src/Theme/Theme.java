@@ -27,6 +27,12 @@ public interface Theme {
     public abstract Color toolActivated();
     public abstract Color toolHover();
 
+    public abstract Color scrollBarThumb();
+
+    public abstract Color pointHover();
+
+    public abstract Color poiButtonsForeground();
+
     public abstract Color water();
     public abstract Color park();
     public abstract Color forest();

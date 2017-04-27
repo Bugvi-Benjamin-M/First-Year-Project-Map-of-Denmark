@@ -38,7 +38,7 @@ public class PointsOfInterestBar extends View {
     public void applyTheme() {
         setBackground(ThemeHelper.color("toolbar"));
         for(JPanel panel : points) {
-           // panel.setBackground(ThemeHelper.color(something));
+           panel.setBackground(ThemeHelper.color("toolbar"));
         }
     }
 

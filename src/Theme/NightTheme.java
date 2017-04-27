@@ -67,6 +67,12 @@ public class NightTheme implements Theme {
     public Color toolActivated() { return new Color(0x875997); }
     public Color toolHover() {return new Color(0xD1B1E4);}
 
+    public Color scrollBarThumb() {return new Color(0x875997);}
+
+    public Color pointHover() {return new Color(0xAEA9AF);}
+
+    public Color poiButtonsForeground() {return new Color(0xFFFBFB);}
+
     public Color cityName() { return new Color(0xCCC9C7); }
     public Color roadName() { return new Color(0x000000); }
     public Color barName() { return new Color(0xF9FF17); }
