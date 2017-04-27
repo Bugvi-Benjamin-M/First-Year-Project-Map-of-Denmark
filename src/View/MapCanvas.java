@@ -32,7 +32,7 @@ import java.util.HashSet;
  */
 public class MapCanvas extends View {
 
-    private AffineTransform transform;
+    private AffineTransform transform  = new AffineTransform();
     private HashSet<Element> currentSection;
     private Point2D currentPoint;
     private Rectangle2D currentRectangle;
@@ -1187,4 +1187,37 @@ public class MapCanvas extends View {
     public void setLocationMarker(Point2D.Float locationMarker) {
         this.locationMarker = locationMarker;
     }
+
+    public void panToPoint(Point2D point){
+
+        Rectangle2D rectangle = getVisibleRect();
+        Point2D midpoint = toModelCoords(new Point2D.Double(rectangle.getCenterX(), rectangle.getCenterY()));
+        double xCenter = midpoint.getX();
+        double yCenter = midpoint.getY();
+        double pointX = point.getX();
+        double pointY = point.getY();
+        Point2D pointToMove;
+        Point2D pointToStart;
+        try {
+            pointToMove = transform.createInverse().inverseTransform(point, null);
+            pointToStart = transform.createInverse().inverseTransform(midpoint, null);
+            pan(pointToStart.getX() - pointToMove.getX(), pointToStart.getY() - pointToMove.getY());
+        } catch (NoninvertibleTransformException e) {
+            e.printStackTrace();
+        }
+        /*while((double)Math.round(xCenter * 1000d) / 1000d != (double)Math.round(pointX * 1000d) / 1000d && (double)Math.round(yCenter * 1000d) / 1000d != (double)Math.round(pointY * 1000d) / 1000d) {
+            rectangle = getVisibleRect();
+            midpoint = toModelCoords(new Point2D.Double(rectangle.getCenterX(), rectangle.getCenterY()));
+            xCenter = midpoint.getX();
+            yCenter = midpoint.getY();
+
+            System.out.println(xCenter);
+            System.out.println(pointX);
+
+            pan(xCenter - pointX, yCenter - pointY);
+            repaint();
+        }*/
+    }
+
+
 }

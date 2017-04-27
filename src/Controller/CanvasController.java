@@ -70,6 +70,7 @@ public final class CanvasController extends Controller implements Observer {
 
     public void markLocation(float x, float y){
         mapCanvas.setLocationMarker(new Point2D.Float(x, y));
+        mapCanvas.panToPoint(new Point2D.Float(x, y));
     }
 
     public void resizeEvent()
