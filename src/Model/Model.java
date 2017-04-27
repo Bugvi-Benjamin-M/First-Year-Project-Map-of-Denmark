@@ -5,6 +5,7 @@ import Helpers.Utilities.DebugWindow;
 import KDtree.*;
 import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
+import RouteSearch.Graph;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -23,6 +24,7 @@ public final class Model extends Observable {
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
 
     private CoastlineFactory coastlineFactory;
+    private Graph graph;
 
     private EnumMap<BoundType, Float> bounds;
     private EnumMap<BoundType, Float> dynamicBounds;
@@ -54,7 +56,19 @@ public final class Model extends Observable {
         return instance;
     }
 
+    public Graph getGraph() {
+        if (graph == null) throw new NullPointerException("The graph has not been initialized");
+        else return graph;
+    }
+
+    public void setGraph(Graph graph) {
+        if (graph == null) throw new IllegalArgumentException("Graph object must not be null");
+        else this.graph = graph;
+    }
+
     public EnumMap<ElementType, KDTree> getElements() { return elements; }
+
+    public KDTree getElements(ElementType type) {return elements.get(type);}
 
     public void setElements(EnumMap<ElementType, KDTree> elements)
     {

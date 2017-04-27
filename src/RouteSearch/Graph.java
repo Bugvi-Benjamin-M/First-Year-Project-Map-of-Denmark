@@ -1,6 +1,7 @@
 package RouteSearch;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Class details:
@@ -15,8 +16,11 @@ public class Graph {
     private final int nNodes;
     private int nEdges;
     private LinkedList<Edge>[] adjacencyLists;
+    private LongToIntMap refConverter;
 
-    public Graph(int nNodes) {
+    public Graph(int nNodes, LongToIntMap refConverter) {
+        if (refConverter == null) throw new IllegalArgumentException("LongToIntMap must not be null");
+        this.refConverter = refConverter;
         this.nNodes = nNodes;
         adjacencyLists = (LinkedList<Edge>[]) new LinkedList[nEdges];
         for (int n = 0; n < nNodes; n++) {
