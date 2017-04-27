@@ -121,7 +121,7 @@ public class Coastline extends OSMWay {
 
         // Add points
         for (int i = start; i < end;
-             i += ZoomLevel.getZoomLevel().getNodesAtLevel()) {
+             i += ZoomLevel.getNodesAtMaxLevel()) {
             Point2D point = this.get(i);
             path.lineTo(point.getX(), point.getY());
         }
