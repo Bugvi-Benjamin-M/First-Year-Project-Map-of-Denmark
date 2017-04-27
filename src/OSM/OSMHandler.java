@@ -52,7 +52,6 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> bars;
     private ArrayList<Pointer> nightClubs;
     private ArrayList<Pointer> fastFoods;
-    private ArrayList<Pointer> iceCreams;
     private boolean specialRelationCase = false;
     private boolean isArea = false;
 
@@ -80,7 +79,6 @@ public final class OSMHandler implements ContentHandler {
         bars = new ArrayList<>();
         nightClubs = new ArrayList<>();
         fastFoods = new ArrayList<>();
-        iceCreams = new ArrayList<>();
     }
 
     public void parseDefault(Boolean mode){
@@ -92,282 +90,325 @@ public final class OSMHandler implements ContentHandler {
     }
 
     /**
-     * Returns the OSMHandler, which is a singleton.
-     * @return OSMHandler.
-     */
-    public static OSMHandler getInstance(){
-        if(handler == null){
+   * Returns the OSMHandler, which is a singleton.
+   * @return OSMHandler.
+   */
+    public static OSMHandler getInstance()
+    {
+        if (handler == null) {
             handler = new OSMHandler();
         }
         return handler;
     }
 
-    public static void resetInstance()
+    public static void resetInstance() { handler = null; }
+
+    @Override
+    public void setDocumentLocator(Locator locator) {}
+
+    @Override
+    public void startDocument() throws SAXException {}
+
+    @Override
+    public void endDocument() throws SAXException {}
+
+    @Override
+    public void startPrefixMapping(String prefix, String uri)
+        throws SAXException {}
+
+    @Override
+    public void endPrefixMapping(String prefix) throws SAXException {}
+
+    @Override
+    public void startElement(String uri, String localName, String qName,
+        Attributes atts) throws SAXException
     {
-        handler = null;
-    }
+        switch (qName) {
+        case "bounds":
+            float minLatitude, maxLatitude, minLongitude, maxLongitude;
+            minLatitude = Float.parseFloat(atts.getValue("minlat"));
+            maxLatitude = Float.parseFloat(atts.getValue("maxlat"));
+            minLongitude = Float.parseFloat(atts.getValue("minlon"));
+            maxLongitude = Float.parseFloat(atts.getValue("maxlon"));
+            if (defaultMode == true) {
+                float avglat = minLatitude + (maxLatitude - minLatitude) / 2;
+                longitudeFactor = (float)Math.cos(avglat / 180 * Math.PI);
+            } else {
+                float avglat = model.getMinLatitude(false) + (model.getMaxLatitude(false) - model.getMinLatitude(false)) / 2;
+                longitudeFactor = (float)Math.cos(avglat / 180 * Math.PI);
+            }
+            minLongitude *= longitudeFactor;
+            maxLongitude *= longitudeFactor;
+            minLatitude = -minLatitude;
+            maxLatitude = -maxLatitude;
+            if (defaultMode == true) {
+                model.setBound(BoundType.MIN_LONGITUDE, minLongitude);
+                model.setBound(BoundType.MAX_LONGITUDE, maxLongitude);
+                model.setBound(BoundType.MIN_LATITUDE, minLatitude);
+                model.setBound(BoundType.MAX_LATITUDE, maxLatitude);
+            }
+            model.setDynamicBound(BoundType.MIN_LONGITUDE, minLongitude);
+            model.setDynamicBound(BoundType.MAX_LONGITUDE, maxLongitude);
+            model.setDynamicBound(BoundType.MIN_LATITUDE, minLatitude);
+            model.setDynamicBound(BoundType.MAX_LATITUDE, maxLatitude);
 
-    @Override
-    public void setDocumentLocator(Locator locator) {
+            break;
+        case "node":
+            long id = Long.parseLong(atts.getValue("id"));
+            latitude = Float.parseFloat(atts.getValue("lat"));
+            longitude = Float.parseFloat(atts.getValue("lon"));
+            idToNode.put(id, longitude * longitudeFactor, -latitude);
 
-    }
+            if (defaultMode == true) {
+                nodeGenerator.addPoint(
+                    new Point2D.Float(longitude * longitudeFactor, -latitude));
+            }
 
-    @Override
-    public void startDocument() throws SAXException {
+            name = "";
+            roadName = "";
+            roadNumber = "";
+            cityName = "";
+            zipCode = "";
+            isAddress = false;
+            place = ElementType.UNKNOWN;
 
-    }
-
-    @Override
-    public void endDocument() throws SAXException {
-
-    }
-
-    @Override
-    public void startPrefixMapping(String prefix, String uri) throws SAXException {
-
-    }
-
-    @Override
-    public void endPrefixMapping(String prefix) throws SAXException {
-
-    }
-
-    @Override
-    public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-        switch (qName){
-            case "bounds":
-                float minLatitude, maxLatitude, minLongitude, maxLongitude;
-                minLatitude = Float.parseFloat(atts.getValue("minlat"));
-                maxLatitude = Float.parseFloat(atts.getValue("maxlat"));
-                minLongitude = Float.parseFloat(atts.getValue("minlon"));
-                maxLongitude = Float.parseFloat(atts.getValue("maxlon"));
-                if(defaultMode == true) {
-                    float avglat = minLatitude + (maxLatitude - minLatitude) / 2;
-                    longitudeFactor = (float) Math.cos(avglat / 180 * Math.PI);
-                }else{
-                    float avglat = model.getMinLatitude(false) + (model.getMaxLatitude(false) - model.getMinLatitude(false))/2;
-                    longitudeFactor = (float) Math.cos(avglat / 180 * Math.PI);
+            loadednodes++;
+            if ((loadednodes & 0xFFFF) == 0) {
+                System.out.println("Numnodes: " + loadednodes);
+            }
+            break;
+        case "relation":
+            long relationID = Long.parseLong(atts.getValue("id"));
+            if (relationID == 2365410) { // Dont draw Sydhavnen (Only works with coastlines)
+                specialRelationCase = true;
+            }
+            name = "";
+            isArea = false;
+            relation = new OSMRelation();
+            elementType = ElementType.UNKNOWN;
+            loadedRelations++;
+            if ((loadedRelations & 0xFF) == 0) {
+                System.out.println("Numrelations: " + loadedRelations);
+            }
+            break;
+        case "way":
+            if (!initialized && defaultMode) {
+                nodeGenerator.initialise();
+                for (ElementType type : ElementType.values()) {
+                    nodeGenerator.setupTree(model.getElements().get(type));
                 }
-                minLongitude *= longitudeFactor;
-                maxLongitude *= longitudeFactor;
-                minLatitude = -minLatitude;
-                maxLatitude = -maxLatitude;
-                if(defaultMode == true) {
-                    model.setBound(BoundType.MIN_LONGITUDE, minLongitude);
-                    model.setBound(BoundType.MAX_LONGITUDE, maxLongitude);
-                    model.setBound(BoundType.MIN_LATITUDE, minLatitude);
-                    model.setBound(BoundType.MAX_LATITUDE, maxLatitude);
+                initialized = true;
+
+                for (Pointer p : cityNames) {
+                    model.getElements().get(ElementType.CITY_NAME).putPointer(p);
                 }
-                model.setDynamicBound(BoundType.MIN_LONGITUDE, minLongitude);
-                model.setDynamicBound(BoundType.MAX_LONGITUDE, maxLongitude);
-                model.setDynamicBound(BoundType.MIN_LATITUDE, minLatitude);
-                model.setDynamicBound(BoundType.MAX_LATITUDE, maxLatitude);
+                cityNames.clear();
 
-                break;
-            case "node":
-                long id = Long.parseLong(atts.getValue("id"));
-                latitude = Float.parseFloat(atts.getValue("lat"));
-                longitude = Float.parseFloat(atts.getValue("lon"));
-                idToNode.put(id, longitude * longitudeFactor, -latitude);
-
-                if(defaultMode == true) {
-                    nodeGenerator.addPoint(new Point2D.Float(longitude * longitudeFactor, -latitude));
+                for (Pointer p : townNames) {
+                    model.getElements().get(ElementType.TOWN_NAME).putPointer(p);
                 }
+                townNames.clear();
 
-                name = "";
-                roadName = "";
-                roadNumber = "";
-                cityName = "";
-                zipCode = "";
-                isAddress = false;
-                place = ElementType.UNKNOWN;
-
-                loadednodes++;
-                if ((loadednodes & 0xFFFF) == 0) {
-                    System.out.println("Numnodes: " + loadednodes);
+                for (Pointer p : villageNames) {
+                    model.getElements().get(ElementType.VILLAGE_NAME).putPointer(p);
                 }
-                break;
-            case "relation":
-                long relationID = Long.parseLong(atts.getValue("id"));
-                if(relationID == 2365410){ //Dont draw Sydhavnen (Only works wit coastlines)
-                    specialRelationCase = true;
+                villageNames.clear();
+
+                for (Pointer p : hamletNames) {
+                    model.getElements().get(ElementType.HAMLET_NAME).putPointer(p);
                 }
+                hamletNames.clear();
 
-                relation = new OSMRelation();
-                elementType = ElementType.UNKNOWN;
-                loadedRelations++;
-                if ((loadedRelations & 0xFF) == 0) {
-                    System.out.println("Numrelations: " + loadedRelations);
+                for (Pointer p : suburbNames) {
+                    model.getElements().get(ElementType.SUBURB_NAME).putPointer(p);
                 }
-                break;
-            case "way":
-                if(!initialized && defaultMode){
-                    nodeGenerator.initialise();
-                    for (ElementType type : ElementType.values()) {
-                        nodeGenerator.setupTree(model.getElements().get(type));
-                    }
-                    initialized = true;
+                suburbNames.clear();
 
-                    for(Pointer p : cityNames){
-                        model.getElements().get(ElementType.CITY_NAME).putPointer(p);
-                    }
-                    //cityNames = null;
-
-                    for(Pointer p : townNames){
-                        model.getElements().get(ElementType.TOWN_NAME).putPointer(p);
-                    }
-                    //townNames = null;
-
-                    for(Pointer p : villageNames){
-                        model.getElements().get(ElementType.VILLAGE_NAME).putPointer(p);
-                    }
-                    //villageNames = null;
-
-                    for(Pointer p : hamletNames){
-                        model.getElements().get(ElementType.HAMLET_NAME).putPointer(p);
-                    }
-                    //hamletNames = null;
-
-                    for(Pointer p : suburbNames){
-                        model.getElements().get(ElementType.SUBURB_NAME).putPointer(p);
-                    }
-                    //suburbNames = null;
-
-                    for(Pointer p : quarterNames){
-                        model.getElements().get(ElementType.QUARTER_NAME).putPointer(p);
-                    }
-                    //quarterNames = null;
-
-                    for(Pointer p : neighbourhoodNames){
-                        model.getElements().get(ElementType.NEIGHBOURHOOD_NAME).putPointer(p);
-                    }
-                    //neighbourhoodNames = null;
-
-                    for(Pointer p : bars){
-                        model.getElements().get(ElementType.BAR).putPointer(p);
-                    }
-                    bars.clear();
-
-                    for(Pointer p : nightClubs){
-                        model.getElements().get(ElementType.NIGHT_CLUB).putPointer(p);
-                    }
-                    nightClubs.clear();
-
-                    for(Pointer p : fastFoods){
-                        model.getElements().get(ElementType.FAST_FOOD).putPointer(p);
-                    }
-                    //fastFoods = null;
-
-                    for(Pointer p : iceCreams){
-                        model.getElements().get(ElementType.ICE_CREAM).putPointer(p);
-                    }
-                    //iceCreams = null;
+                for (Pointer p : quarterNames) {
+                    model.getElements().get(ElementType.QUARTER_NAME).putPointer(p);
                 }
+                quarterNames.clear();
 
-                way = new OSMWay();
-                id = Long.parseLong(atts.getValue("id"));
-                elementType = ElementType.UNKNOWN;
-                idToWay.put(id, way);
-                name = "";
-                loadedWays++;
-                if ((loadedWays & 0xFF) == 0) {
-                    System.out.println("Numways: " + loadedWays);
+                for (Pointer p : neighbourhoodNames) {
+                    model.getElements().get(ElementType.NEIGHBOURHOOD_NAME).putPointer(p);
                 }
-                break;
-            case "nd":
-                long ref = Long.parseLong(atts.getValue("ref"));
-                way.add(idToNode.get(ref));
-                break;
-            case "tag":
-                String k = atts.getValue("k");
-                String v = atts.getValue("v");
-                switch (k){
-                    case "highway":
-                        determineHighway(v);
-                        break;
-                    case "railway":
-                        determineRailway(v);
-                        break;
-                    case "name":
-                        name = v;
-                        break;
-                    case "natural":
-                        determineNatural(v);
-                        break;
-                    case "place":
-                        determinePlace(v);
-                        break;
-                    case "building":
-                        elementType = ElementType.BUILDING;
-                        break;
-                    case "leisure":
-                        determineLeisure(v);
-                        break;
-                    case "landuse":
-                        determineLanduse(v);
-                        break;
-                    case "amenity":
-                        determineAmenity(v);
-                        break;
-                    case "area":
-                        switch(v){
-                            case("yes"):
-                                isArea = true;
-                                break;
-                        }
-                        break;
-                    case "addr:city":
-                        cityName = v;
-                        isAddress = true;
-                        break;
-                    case "addr:housenumber":
-                        roadNumber = v;
-                        isAddress = true;
-                        break;
-                    case "addr:postcode":
-                        zipCode = v;
-                        isAddress = true;
-                        break;
-                    case "addr:street":
-                        roadName = v;
-                        isAddress = true;
-                        break;
+                neighbourhoodNames.clear();
+
+                for (Pointer p : bars) {
+                    model.getElements().get(ElementType.BAR).putPointer(p);
                 }
-                break;
-            case "member":
-                ref = Long.parseLong(atts.getValue("ref"));
-                relation.add(idToWay.get(ref));
-                break;
+                bars.clear();
+
+                for (Pointer p : nightClubs) {
+                    model.getElements().get(ElementType.NIGHT_CLUB).putPointer(p);
+                }
+                nightClubs.clear();
+
+                for (Pointer p : fastFoods) {
+                    model.getElements().get(ElementType.FAST_FOOD).putPointer(p);
+                }
+                fastFoods.clear();
+            }
+
+            way = new OSMWay();
+            id = Long.parseLong(atts.getValue("id"));
+            elementType = ElementType.UNKNOWN;
+            place = ElementType.UNKNOWN;
+            idToWay.put(id, way);
+            name = "";
+            isArea = false;
+            loadedWays++;
+            if ((loadedWays & 0xFF) == 0) {
+                System.out.println("Numways: " + loadedWays);
+            }
+            break;
+        case "nd":
+            long ref = Long.parseLong(atts.getValue("ref"));
+            way.add(idToNode.get(ref));
+            break;
+        case "tag":
+            String k = atts.getValue("k");
+            String v = atts.getValue("v");
+            switch (k) {
+                case "highway":
+                    determineHighway(v);
+                    break;
+                case "railway":
+                    determineRailway(v);
+                    break;
+                case "name":
+                    name = v;
+                    break;
+                case "natural":
+                    determineNatural(v);
+                    break;
+                case "barrier":
+                    determineBarrier(v);
+                    break;
+                case "place":
+                    determinePlace(v);
+                    break;
+                case "building":
+                    elementType = ElementType.BUILDING;
+                    break;
+                case "man_made":
+                    determineManMade(v);
+                    break;
+                case "leisure":
+                    determineLeisure(v);
+                    break;
+                case "landuse":
+                    determineLanduse(v);
+                    break;
+                case "amenity":
+                    determineAmenity(v);
+                    break;
+                case "area":
+                    switch (v) {
+                        case ("yes"):
+                            isArea = true;
+                            break;
+                    }
+                    break;
+                case "addr:city":
+                    cityName = v;
+                    isAddress = true;
+                    break;
+                case "addr:housenumber":
+                    roadNumber = v;
+                    isAddress = true;
+                    break;
+                case "addr:postcode":
+                    zipCode = v;
+                    isAddress = true;
+                    break;
+                case "addr:street":
+                    roadName = v;
+                    isAddress = true;
+                    break;
+            }
+            break;
+        case "member":
+            ref = Long.parseLong(atts.getValue("ref"));
+            relation.add(idToWay.get(ref));
+            break;
         }
     }
 
-    private void determineLanduse(String value){
-        switch(value){
+    private void determineLanduse(String value) {
+        switch (value) {
             case "forest":
                 elementType = ElementType.FOREST;
                 break;
             case "farmland":
+            case "farmyard":
                 elementType = ElementType.FARMLAND;
                 break;
             case "meadow":
                 elementType = ElementType.MEADOW;
                 break;
             case "grass":
+            case "recreation_ground":
+            case "vineyard":
+            case "allotments":
+            case "cemetery":
+            case "greenhouse_horticulture":
+            case "orchard":
+            case "village_green":
                 elementType = ElementType.GRASS;
                 break;
-        }
-    }
-
-    private void determineLeisure(String value){
-        switch(value){
-            case "park":
-                elementType = ElementType.PARK;
+            case "basin":
+                elementType = ElementType.WATER;
                 break;
         }
     }
 
-    private void determineRailway(String value){
-        switch(value){
+    private void determineManMade(String value){
+        switch (value){
+            case "bridge":
+                elementType = ElementType.BRIDGE;
+                break;
+            case "pier":
+                elementType = ElementType.PIER;
+                break;
+        }
+    }
+
+    private void determineBarrier (String value){
+        switch (value){
+            case "hedge":
+                elementType = ElementType.FOREST;
+                break;
+        }
+    }
+
+    private void determineLeisure(String value) {
+        switch (value) {
+            case "park":
+            case "dog_park":
+            case "garden":
+                elementType = ElementType.PARK;
+                break;
+            case "common":
+                elementType = ElementType.COMMON_LAND;
+                break;
+            case "pitch":
+                elementType = ElementType.SPORTSPITCH;
+                break;
+            case "playground":
+                elementType = ElementType.PLAYGROUND;
+                break;
+            case "swimming_pool":
+                elementType = ElementType.WATER;
+                break;
+            case "track":
+                elementType = ElementType.SPORTSTRACK;
+                break;
+        }
+    }
+
+    private void determineRailway(String value) {
+        switch (value) {
             case "light_rail":
             case "rail":
             case "tram":
@@ -377,8 +418,8 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    private void determineAmenity(String value){
-        switch(value){
+    private void determineAmenity(String value) {
+        switch (value) {
             case "bar":
             case "biergarten":
             case "pub":
@@ -390,14 +431,21 @@ public final class OSMHandler implements ContentHandler {
             case "fast_food":
                 place = ElementType.FAST_FOOD;
                 break;
-            case "ice_cream":
-                place = ElementType.ICE_CREAM;
+            case "hospital":
+                place = ElementType.HOSPITAL;
+                break;
+            case "place_of_worship":
+                place = ElementType.PLACE_OF_WORSHIP;
+                break;
+            case "parking":
+                place = ElementType.PARKING_AMENITY;
+                elementType = ElementType.PARKING;
                 break;
         }
     }
 
-    private void determinePlace(String value){
-        switch(value){
+    private void determinePlace(String value) {
+        switch (value) {
             case "city":
                 place = ElementType.CITY_NAME;
                 break;
@@ -422,11 +470,14 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    private void determineNatural(String value){
+    private void determineNatural(String value) {
         elementType = elementType.UNKNOWN;
-        switch(value){
+        switch (value) {
             case "water":
                 elementType = ElementType.WATER;
+                break;
+            case "wetland":
+                elementType = ElementType.WETLAND;
                 break;
             case "grassland":
                 elementType = ElementType.GRASSLAND;
@@ -434,13 +485,21 @@ public final class OSMHandler implements ContentHandler {
             case "heath":
                 elementType = ElementType.HEATH;
                 break;
-
+            case "wood":
+            case "scrub":
+            case "tree_row":
+                elementType = ElementType.FOREST;
+                break;
+            case "beach":
+            case "sand":
+                elementType = ElementType.BEACH;
+                break;
         }
     }
 
     private void determineHighway(String value) {
         elementType = ElementType.UNKNOWN;
-        switch (value){
+        switch (value) {
             case "motorway":
                 elementType = ElementType.MOTORWAY;
                 break;
@@ -539,7 +598,6 @@ public final class OSMHandler implements ContentHandler {
                     case BAR:
                     case NIGHT_CLUB:
                     case FAST_FOOD:
-                    case ICE_CREAM:
                         addAmenity(place);
                         break;
                 }
@@ -555,9 +613,83 @@ public final class OSMHandler implements ContentHandler {
                     }
                 }
 
+            break;
+        case "way":
+            switch (elementType) {
+                case MOTORWAY:
+                case MOTORWAY_LINK:
+                case TRUNK_ROAD:
+                case TRUNK_ROAD_LINK:
+                case PRIMARY_ROAD:
+                case PRIMARY_ROAD_LINK:
+                case SECONDARY_ROAD:
+                case SECONDARY_ROAD_LINK:
+                case TERTIARY_ROAD:
+                case TERTIARY_ROAD_LINK:
+                case UNCLASSIFIED_ROAD:
+                case RESIDENTIAL_ROAD:
+                case PEDESTRIAN_STREET:
+                case LIVING_STREET:
+                case SERVICE_ROAD:
+                case BUS_GUIDEWAY:
+                case ESCAPE:
+                case RACEWAY:
+                case TRACK:
+                case STEPS:
+                case FOOTWAY:
+                case BRIDLEWAY:
+                case CYCLEWAY:
+                case PATH:
+                case ROAD:
+                case RAIL:
+                    if (isArea == false) {
+                        addRoad(elementType, false, false);
+                    } else {
+                        addRoad(elementType, false, true);
+                        isArea = false;
+                    }
+                    break;
+                case BUILDING:
+                    addBuilding(elementType, false);
+                    break;
+                case WATER:
+                case WETLAND:
+                case PARK:
+                case FOREST:
+                case GRASSLAND:
+                case HEATH:
+                case GRASS:
+                case FARMLAND:
+                case MEADOW:
+                case COMMON_LAND:
+                case BEACH:
+                case SPORTSPITCH:
+                case SPORTSTRACK:
+                case PLAYGROUND:
+                case PARKING:
+                    addBiome(elementType, false);
+                    break;
+                case BRIDGE:
+                    addManMade(elementType, false, true);
+                    break;
+                case PIER:
+                    addManMade(elementType, false, false);
+                    break;
+                case UNKNOWN:
+                    // UnknownWay unknownWay = new UnknownWay(path);
+                    // model.addWayElement(elementType, unknownWay);
+                    break;
+                }
+                switch (place) {
+                    case HOSPITAL:
+                    case PLACE_OF_WORSHIP:
+                    case PARKING_AMENITY:
+                        addAmenity(place);
+                        break;
+                }
                 break;
-            case "way":
-                switch (elementType){
+            case "relation":
+                switch (elementType) {
                     case MOTORWAY:
                     case MOTORWAY_LINK:
                     case TRUNK_ROAD:
@@ -584,75 +716,73 @@ public final class OSMHandler implements ContentHandler {
                     case PATH:
                     case ROAD:
                     case RAIL:
-                        if(isArea == false){
-                            addRoad(elementType, false, false);
-                        }else{
-                            addRoad(elementType, false, true);
-                            isArea = false;
-                        }
+                        addRoad(elementType, true, true);
+                        isArea = false;
                         break;
                     case BUILDING:
-                        addBuilding(elementType, false);
+                        addBuilding(elementType, true);
                         break;
                     case WATER:
+                    case WETLAND:
                     case PARK:
                     case FOREST:
                     case GRASSLAND:
-                    case FARMLAND:
-                    case GRASS:
-                    case MEADOW:
                     case HEATH:
-                        addBiome(elementType, false);
-                        break;
-                    case UNKNOWN:
-                        //UnknownWay unknownWay = new UnknownWay(path);
-                        //model.addWayElement(elementType, unknownWay);
-                        break;
-                } break;
-            case "relation":
-                switch(elementType){
-                    case WATER:
-                    case PARK:
-                    case FOREST:
-                    case GRASSLAND:
-                    case FARMLAND:
                     case GRASS:
+                    case FARMLAND:
                     case MEADOW:
-                    case HEATH:
+                    case COMMON_LAND:
+                    case BEACH:
+                    case SPORTSPITCH:
+                    case SPORTSTRACK:
+                    case PLAYGROUND:
                         addBiome(elementType, true);
+                        break;
+                    case BRIDGE:
+                        addManMade(elementType, true, isArea);
+                        break;
+                    case PIER:
+                        addManMade(elementType, true, false);
                         break;
                 }
                 break;
         }
     }
 
-    private void addBuilding(ElementType type, boolean isRelation){
+    private void addBuilding(ElementType type, boolean isRelation)
+    {
         PolygonApprox polygonApprox;
         polygonApprox = new PolygonApprox(way);
-        if(!isRelation) {
+        if (!isRelation) {
             Building building = new Building(polygonApprox);
-            for (int i = 0; i < way.size(); i+=5) {
-                Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), building);
+            for (int i = 0; i < way.size(); i += 5) {
+                Pointer p = new Pointer((float)way.get(i).getX(),
+                    (float)way.get(i).getY(), building);
                 model.getElements().get(type).putPointer(p);
             }
-        }
-        else {
+        } else {
             MultiPolygonApprox multiPolygonApprox;
+            //relation = OSMRelation.sortWays(relation);
             multiPolygonApprox = new MultiPolygonApprox(relation);
             Building building = new Building(multiPolygonApprox);
-            for (int i = 0; i < relation.size(); i++){
-                for (int j = 0; i < relation.get(i).size(); j+=5){
-                    Pointer p = new Pointer((float) relation.get(i).get(0).getX(), (float) relation.get(i).get(0).getY(), building);
-                    model.getElements().get(type).putPointer(p);
+            for (int i = 0; i < relation.size(); i++) {
+                if (relation.get(i) != null) {
+                    for (int j = 0; j < relation.get(i).size(); j += 5) {
+                        if (relation.get(i).size() > j) {
+                            Pointer p = new Pointer((float)relation.get(i).get(j).getX(),
+                                (float)relation.get(i).get(j).getY(), building);
+                            model.getElements().get(type).putPointer(p);
+                        }
+                    }
                 }
             }
         }
     }
 
-    private void addName(ElementType type){
+    private void addName(ElementType type) {
         PlaceName placeName = new PlaceName(longitude * longitudeFactor, -latitude, name);
         Pointer p = new Pointer(longitude * longitudeFactor, -latitude, placeName);
-        switch (type){
+        switch (type) {
             case CITY_NAME:
                 cityNames.add(p);
                 break;
@@ -676,29 +806,62 @@ public final class OSMHandler implements ContentHandler {
                 break;
         }
     }
+    private void addManMade(ElementType type, boolean isRelation, boolean area){
+        if (!isRelation) {
+            PolygonApprox polygonApprox = new PolygonApprox(way);
+            ManMade manMade;
+            manMade = new ManMade(polygonApprox, area);
+            for (int i = 0; i < way.size(); i += 5){
+                Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), manMade);
+                model.getElements().get(type).putPointer(p);
+            }
+        }
+        else{
+            MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
+            ManMade manMade;
+            manMade = new ManMade(multiPolygonApprox, area);
+            for (int i = 0; i < relation.size(); i++){
+                if (relation.get(i) != null){
+                    for (int j = 0; j < relation.get(i).size(); j += 5){
+                        if (relation.get(i).size() > j){
+                            Pointer p = new Pointer((float)relation.get(i).get(j).getX(), (float)relation.get(i).get(j).getY(), manMade);
+                            model.getElements().get(type).putPointer(p);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-    private void addRoad(ElementType type, boolean isRelation, boolean area) {
-        if(!isRelation) {
+    private void addRoad(ElementType type, boolean isRelation, boolean area)
+    {
+        if (!isRelation) {
             PolygonApprox polygonApprox = new PolygonApprox(way);
             Road road;
-            if(!area) road = new Road(polygonApprox, name);
-            else road = new Road(polygonApprox, name, true);
-            for (int i = 0; i < way.size(); i+=5) {
-                Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), road);
+            if (!area) road = new Road(polygonApprox, name);
+            else road = new Road(polygonApprox, name, area);
+            for (int i = 0; i < way.size(); i += 5) {
+                Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
                 model.getElements().get(ElementType.HIGHWAY).putPointer(p);
             }
-        }
-        else {
+        } else {
             MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
             Road road;
-            if(!area) road = new Road(multiPolygonApprox, name);
-            else road = new Road(multiPolygonApprox, name, true);
-            for (int i = 0; i < relation.size(); i++){
-                for (int j = 0; i < relation.get(i).size(); j+=5){
-                    Pointer p = new Pointer((float) relation.get(i).get(0).getX(), (float) relation.get(i).get(0).getY(), road);
-                    model.getElements().get(type).putPointer(p);
-                    model.getElements().get(ElementType.HIGHWAY).putPointer(p);
+            if (!area)
+                road = new Road(multiPolygonApprox, name);
+            else
+                road = new Road(multiPolygonApprox, name, true);
+            for (int i = 0; i < relation.size(); i++) {
+                if (relation.get(i) != null) {
+                    for (int j = 0; j < relation.get(i).size(); j += 5) {
+                        if (relation.get(i).size() > j) {
+                            Pointer p = new Pointer((float)relation.get(i).get(j).getX(),
+                                (float)relation.get(i).get(j).getY(), road);
+                            model.getElements().get(type).putPointer(p);
+                            model.getElements().get(ElementType.HIGHWAY).putPointer(p);
+                        }
+                    }
                 }
             }
         }
@@ -714,7 +877,8 @@ public final class OSMHandler implements ContentHandler {
                 polygonApprox = new PolygonApprox(way);
                 Biome biome = new Biome(polygonApprox);
                 for (int i = 0; i < way.size(); i += 5) {
-                    Pointer p = new Pointer((float) way.get(i).getX(), (float) way.get(i).getY(), biome);
+                    Pointer p = new Pointer((float)way.get(i).getX(),
+                        (float)way.get(i).getY(), biome);
                     model.getElements().get(type).putPointer(p);
                 }
             } else {
@@ -724,19 +888,23 @@ public final class OSMHandler implements ContentHandler {
                 for (int i = 0; i < relation.size() - 1; i++) {
                     if (relation.get(i) != null) {
                         for (int j = 0; j < relation.get(i).size(); j += 5) {
-                            Pointer p = new Pointer((float) relation.get(i).get(j).getX(), (float) relation.get(i).get(j).getY(), biome);
+                            Pointer p = new Pointer((float)relation.get(i).get(j).getX(),
+                                (float)relation.get(i).get(j).getY(), biome);
                             model.getElements().get(type).putPointer(p);
                         }
-                    } else continue;
+                    } else
+                        continue;
                 }
             }
         }
     }
 
-    private void addAmenity(ElementType type){
+    private void addAmenity(ElementType type)
+    {
         Amenity amenity;
         Pointer p;
-        switch (type){
+        PolygonApprox polygonApprox;
+        switch (type) {
             case BAR:
                 amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
                 p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
@@ -752,10 +920,23 @@ public final class OSMHandler implements ContentHandler {
                 p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
                 fastFoods.add(p);
                 break;
-            case ICE_CREAM:
-                amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
-                p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
-                iceCreams.add(p);
+            case HOSPITAL:
+                polygonApprox = new PolygonApprox(way);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                model.getElements().get(ElementType.HOSPITAL).putPointer(p);
+                break;
+            case PLACE_OF_WORSHIP:
+                polygonApprox = new PolygonApprox(way);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                model.getElements().get(ElementType.PLACE_OF_WORSHIP).putPointer(p);
+                break;
+            case PARKING_AMENITY:
+                polygonApprox = new PolygonApprox(way);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                model.getElements().get(ElementType.PARKING_AMENITY).putPointer(p);
                 break;
         }
     }

@@ -12,129 +12,104 @@ public class NightTheme implements Theme {
 
     private String name = "Night";
 
-    @Override
     public Color rail()
     {
         return new Color(0x999999);
     }
-
-    @Override
     public Color background()
     {
         return new Color(0x242f3e);
     }
-
-    @Override
     public Color toolbar()
     {
         return new Color(0x3f3f3f);
     }
-
-    @Override
     public Color icon()
     {
         return new Color(0xFFFFFF);
     }
-
-    @Override
     public Color boundary()
     {
         return new Color(0xD31BC6);
     }
-
-    @Override
     public Color border()
     {
         return new Color(0x000000);
     }
-
-    @Override
     public Color searchfield()
     {
         return new Color(0x323236);
     }
-
-    public Color defaulttext() { return new Color(0x8A8FBF); }
-
+    public Color defaulttext() { return new Color(0xD1D1D1); }
     public Color toolTipBackground() { return new Color(0x555258); }
-
     public Color toolTipForeground() { return new Color(0xFEFDFF); }
-
     public Color canvasPopupBackground() { return new Color(0x7562A9); }
-
     public Color canvasPopupForeground() { return new Color(0xFFFFFF); }
-
     public Color toolActivated() { return new Color(0xB2ACB1); }
 
     public Color cityName() { return new Color(0xCCC9C7); }
     public Color roadName() { return new Color(0x000000); }
     public Color barName() { return new Color(0xF9FF17); }
     public Color nightClubName() { return new Color(0xF9FF17); }
-    public Color fastFoodName() { return new Color(0x000000); }
-    public Color iceCreamName() { return new Color(0x000000); }
+    public Color fastFoodName() { return new Color(0xF9FF17); }
 
     public Color hospital() { return new Color(0xD30408); }
     public Color placeOfWorship() { return new Color(0x000000); }
+    public Color parkingAmenity() { return new Color(0x000000); }
 
-    @Override
     public Color water()
     {
         return new Color(0x515c6d);
     }
-
-    @Override
-    public Color park()
-    {
-        return new Color(0x044512);
-    }
-
-    @Override
+    public Color park() { return new Color(0x044512); }
     public Color forest()
     {
         return new Color(0x033A11);
     }
-
-    @Override
     public Color grassland()
     {
         return new Color(0x043A0F);
     }
-
-    @Override
     public Color grass()
     {
         return new Color(0x02370E);
     }
-
-    @Override
     public Color heath()
     {
         return new Color(0x616F37);
     }
-
-    @Override
     public Color meadow()
     {
         return new Color(0x033A10);
     }
-
-    @Override
-    public Color farmland()
-    {
-        return new Color(0x616F37);
-    }
-
-    @Override
-    public Color sand()
+    public Color farmland() { return new Color(0x616F37); }
+    public Color beach()
     {
         return new Color(0x5F5C47);
     }
-
-    @Override
     public Color building()
     {
         return new Color(0x34445A);
     }
+    public Color bridge(){
+        return new Color(0x000000);
+    }
+    public Color sportspitch(){
+        return new Color(0x044512);
+    }
+    public Color wetland(){
+        return new Color(0x000000);
+    }
+    public Color commonland(){
+        return new Color(0x044512);
+    }
+    public Color playground(){
+        return new Color(0x044512);
+    }
+    public Color parking(){
+        return new Color(0x000000);
+    }
+    public Color sportstrack(){ return new Color(0x044512); }
 
     // Roads
     public Color motorway() { return new Color(0xD47487); }

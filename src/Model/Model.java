@@ -131,7 +131,8 @@ public final class Model extends Observable {
     public void clear()
     {
         for (ElementType type : ElementType.values()) {
-            elements.get(type).clear();
+            KDTree tree = elements.get(type);
+            if (tree != null) tree.clear();
         }
     }
 
