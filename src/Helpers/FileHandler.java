@@ -20,6 +20,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.*;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.zip.ZipInputStream;
 
 import static Helpers.GlobalValue.DEBUG_MODE_ACTIVE;
@@ -142,6 +143,8 @@ public class FileHandler {
                     in.readFloat());
             }
             Model.getInstance().setTst((TenarySearchTrie)in.readObject());
+            Model.getInstance().setCityToIndexMap((HashMap<String, Integer>) in.readObject());
+            Model.getInstance().setIndexToCityMap((HashMap<Integer, String>) in.readObject());
             time += System.nanoTime();
             if (!isLoadingFromStart) {
                 CanvasController.adjustToDynamicBounds();
@@ -166,6 +169,8 @@ public class FileHandler {
             out.writeFloat(Model.getInstance().getMinLatitude(dynamic));
             out.writeFloat(Model.getInstance().getMaxLatitude(dynamic));
             out.writeObject(Model.getInstance().getTst());
+            out.writeObject(Model.getInstance().getCityToIndexMap());
+            out.writeObject(Model.getInstance().getIndexToCityMap());
             System.out.println("DONE");
         } catch (IOException e) {
             e.printStackTrace();

@@ -99,7 +99,7 @@ public class PolygonApprox implements Shape, Serializable {
 
     public PathIterator getPathIterator(AffineTransform at)
     {
-        float pixelsq = (float)(PIXEL / Math.abs(at.getDeterminant()));
+        float pixelsq = (float)(PIXEL / Math.abs(at.getDeterminant()) * 10);
         return getPathIterator(at, pixelsq);
     }
 

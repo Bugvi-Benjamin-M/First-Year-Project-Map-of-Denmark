@@ -3,12 +3,11 @@ package OSM;
 import Enums.BoundType;
 import Enums.OSMEnums.ElementType;
 import Helpers.LongToPointMap;
-import Helpers.Shapes.DynamicMultiPolygonApprox;
-import Helpers.Shapes.DynamicPolygonApprox;
 import Helpers.Shapes.MultiPolygonApprox;
 import Helpers.Shapes.PolygonApprox;
 import KDtree.NodeGenerator;
 import KDtree.Pointer;
+import Model.Addresses.Value;
 import Model.Elements.*;
 import Model.Model;
 import org.xml.sax.Attributes;
@@ -62,15 +61,16 @@ public final class OSMHandler implements ContentHandler {
     private String cityName;
 
     private boolean isAddress;
+    private int indexCounter = 1;
 
-    private OSMHandler()
-    {
+
+    private OSMHandler() {
         idToNode = new LongToPointMap(22);
         idToWay = new HashMap<>();
         model = Model.getInstance();
         nodeGenerator = new NodeGenerator();
         cityNames = new ArrayList<>();
-        townNames = new ArrayList<>();
+        townNames  = new ArrayList<>();
         villageNames = new ArrayList<>();
         hamletNames = new ArrayList<>();
         suburbNames = new ArrayList<>();
@@ -81,9 +81,13 @@ public final class OSMHandler implements ContentHandler {
         fastFoods = new ArrayList<>();
     }
 
-    public void parseDefault(Boolean mode) { defaultMode = mode; }
+    public void parseDefault(Boolean mode){
+        defaultMode = mode;
+    }
 
-    public float getLongitudeFactor() { return longitudeFactor; }
+    public float getLongitudeFactor(){
+        return longitudeFactor;
+    }
 
     /**
    * Returns the OSMHandler, which is a singleton.
@@ -575,32 +579,39 @@ public final class OSMHandler implements ContentHandler {
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName)
-        throws SAXException
-    {
-        switch (qName) {
-        case "node":
-            switch (place) {
-            case CITY_NAME:
-            case TOWN_NAME:
-            case VILLAGE_NAME:
-            case HAMLET_NAME:
-            case SUBURB_NAME:
-            case QUARTER_NAME:
-            case NEIGHBOURHOOD_NAME:
-                addName(place);
-                break;
-            case BAR:
-            case NIGHT_CLUB:
-            case FAST_FOOD:
-                addAmenity(place);
-                break;
-            }
-            if (isAddress) {
-                String key1 = zipCode + cityName + roadName + roadNumber;
-                Point2D.Float value = new Point2D.Float(longitude * longitudeFactor, -latitude);
-                model.getTst().put(key1, value);
-            }
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+        switch (qName){
+            case "node":
+                switch (place){
+                    case CITY_NAME:
+                    case TOWN_NAME:
+                    case VILLAGE_NAME:
+                    case HAMLET_NAME:
+                    case SUBURB_NAME:
+                    case QUARTER_NAME:
+                    case NEIGHBOURHOOD_NAME:
+                        addName(place);
+                        if(!name.equals("")) {
+                            model.getTst().put(name, new Value(0, longitude * longitudeFactor, -latitude), true);
+                        }
+                        break;
+                    case BAR:
+                    case NIGHT_CLUB:
+                    case FAST_FOOD:
+                        addAmenity(place);
+                        break;
+                }
+                if(isAddress) {
+                    String key = roadName + " " + roadNumber;
+                    if(model.cityEntryExists(cityName + " " + zipCode)){
+                        int indexOfCity = model.getCityToIndex(cityName + " " + zipCode);
+                        model.getTst().put(key, new Value(indexOfCity,longitude * longitudeFactor, -latitude), false);
+                    }else{
+                        model.putCityToIndex(cityName + " " + zipCode, indexCounter);
+                        model.getTst().put(key, new Value(indexCounter,longitude * longitudeFactor, -latitude), false);
+                        indexCounter ++;
+                    }
+                }
 
             break;
         case "way":
@@ -854,15 +865,16 @@ public final class OSMHandler implements ContentHandler {
                 }
             }
         }
+        //System.out.println(name + " Added :)");
     }
 
     private void addBiome(ElementType type, boolean isRelation) {
-        if (specialRelationCase == true) {
+        if(specialRelationCase == true){
             specialRelationCase = false;
-        } else {
+        }else {
             if (!isRelation) {
-                DynamicPolygonApprox polygonApprox;
-                polygonApprox = new DynamicPolygonApprox(way);
+                PolygonApprox polygonApprox;
+                polygonApprox = new PolygonApprox(way);
                 Biome biome = new Biome(polygonApprox);
                 for (int i = 0; i < way.size(); i += 5) {
                     Pointer p = new Pointer((float)way.get(i).getX(),
@@ -870,8 +882,8 @@ public final class OSMHandler implements ContentHandler {
                     model.getElements().get(type).putPointer(p);
                 }
             } else {
-                DynamicMultiPolygonApprox multiPolygonApprox;
-                multiPolygonApprox = new DynamicMultiPolygonApprox(relation);
+                MultiPolygonApprox multiPolygonApprox;
+                multiPolygonApprox = new MultiPolygonApprox(relation);
                 Biome biome = new Biome(multiPolygonApprox);
                 for (int i = 0; i < relation.size() - 1; i++) {
                     if (relation.get(i) != null) {
@@ -930,18 +942,22 @@ public final class OSMHandler implements ContentHandler {
     }
 
     @Override
-    public void characters(char[] ch, int start, int length) throws SAXException
-    {
+    public void characters(char[] ch, int start, int length) throws SAXException {
+
     }
 
     @Override
-    public void ignorableWhitespace(char[] ch, int start, int length)
-        throws SAXException {}
+    public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+
+    }
 
     @Override
-    public void processingInstruction(String target, String data)
-        throws SAXException {}
+    public void processingInstruction(String target, String data) throws SAXException {
+
+    }
 
     @Override
-    public void skippedEntity(String name) throws SAXException {}
+    public void skippedEntity(String name) throws SAXException {
+
+    }
 }
