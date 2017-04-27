@@ -427,7 +427,6 @@ What we did since last time:
 - Autocomplete and address parser BETA/WIP done on feature
 - Zoom panning restriction
 - Path generalisation of relations
-- 
 
 
 What we will do until next time:
