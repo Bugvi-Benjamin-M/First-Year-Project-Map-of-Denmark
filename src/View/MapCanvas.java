@@ -40,23 +40,17 @@ public class MapCanvas extends View {
     private boolean antiAliasing;
     private Point2D.Float locationMarker;
 
-    /**
-   * The base Constructor for the MapCanvas.
-   */
-    public MapCanvas()
-    {
+    public MapCanvas() {
         transform = new AffineTransform();
         setBackgroundColor();
         grabFocus();
     }
 
-    public void setBackgroundColor()
-    {
+    public void setBackgroundColor() {
         setBackground(ThemeHelper.color("water"));
     }
 
-    public void toggleAntiAliasing(boolean status)
-    {
+    public void toggleAntiAliasing(boolean status) {
         antiAliasing = status;
         repaint();
     }
@@ -85,32 +79,23 @@ public class MapCanvas extends View {
    * Paints the MapCanvas with all the shapes that should be displayed.
    */
     @Override
-    protected void paintComponent(Graphics g)
-    {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D)g;
         g2D.setTransform(transform);
-        if (antiAliasing)
-            g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        else
-            g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_OFF);
+        if (antiAliasing) g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        else g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         drawBackground(g2D);
-
         setCurrentRectangle();
 
         drawCoastlines(g2D);
-        if (GlobalValue.getDidProgramLoadDefault()) {
-            drawElements(g2D);
-        }
+        if (GlobalValue.getDidProgramLoadDefault()) drawElements(g2D);
 
         g2D.setColor(Color.black);
         g2D.setStroke(new BasicStroke(0.00001f));
         g2D.draw(currentRectangle);
 
         drawLocationMarker(g2D);
-
         drawBoundaries(g2D);
         Main.FPS_COUNTER.interrupt();
         DebugWindow.getInstance().setFPSLabel();
@@ -239,7 +224,8 @@ public class MapCanvas extends View {
 
             // Amenities
             drawNight(g);
-            drawAmenity(g);
+            drawHospital(g);
+            drawParkingAmenity(g);
             drawPlaceOfWorship(g);
             drawSportAmenity(g);
             break;
@@ -289,7 +275,8 @@ public class MapCanvas extends View {
             drawRoadNames(g, ElementType.MOTORWAY);
 
             // Amenities
-            drawAmenity(g);
+            drawHospital(g);
+            drawParkingAmenity(g);
             break;
         case LEVEL_2:
             drawCommonLand(g, ThemeHelper.color("commonland"),0.00008);
@@ -479,7 +466,6 @@ public class MapCanvas extends View {
     public Point2D toModelCoords(Point2D mousePosition) {
         try {
             return transform.inverseTransform(mousePosition, null);
-
         } catch (NoninvertibleTransformException e) {
             throw new RuntimeException();
         }
@@ -487,13 +473,11 @@ public class MapCanvas extends View {
 
     public void setElements(EnumMap<ElementType, KDTree> map) { elements = map; }
 
-    public void setCurrentSection(HashSet<Element> currentSection)
-    {
+    public void setCurrentSection(HashSet<Element> currentSection) {
         this.currentSection = currentSection;
     }
 
-    public void setCurrentPoint(Point2D currentPoint)
-    {
+    public void setCurrentPoint(Point2D currentPoint) {
         this.currentPoint = currentPoint;
     }
 
@@ -502,8 +486,7 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.RAIL);
         for (Element element : currentSection) {
             g.setColor(color);
-            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
-                BasicStroke.JOIN_BEVEL));
+            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
             g.draw(element.getShape());
         }
     }
@@ -512,8 +495,7 @@ public class MapCanvas extends View {
     private void drawMotorways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.MOTORWAY);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -521,8 +503,7 @@ public class MapCanvas extends View {
     private void drawMotorwayLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.MOTORWAY_LINK);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -530,8 +511,7 @@ public class MapCanvas extends View {
     private void drawTrunkRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TRUNK_ROAD);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -539,8 +519,7 @@ public class MapCanvas extends View {
     private void drawTrunkRoadLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TRUNK_ROAD_LINK);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -548,8 +527,7 @@ public class MapCanvas extends View {
     private void drawPrimaryRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PRIMARY_ROAD);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -557,8 +535,7 @@ public class MapCanvas extends View {
     private void drawPrimaryRoadLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PRIMARY_ROAD_LINK);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -566,8 +543,7 @@ public class MapCanvas extends View {
     private void drawSecondaryRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.SECONDARY_ROAD);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -575,8 +551,7 @@ public class MapCanvas extends View {
     private void drawSecondaryRoadLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.SECONDARY_ROAD_LINK);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -584,8 +559,7 @@ public class MapCanvas extends View {
     private void drawTertiaryRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TERTIARY_ROAD);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -593,8 +567,7 @@ public class MapCanvas extends View {
     private void drawTertiaryRoadLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TERTIARY_ROAD_LINK);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -602,8 +575,7 @@ public class MapCanvas extends View {
     private void drawUnclassifiedRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.UNCLASSIFIED_ROAD);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -611,8 +583,7 @@ public class MapCanvas extends View {
     private void drawResidentialRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.RESIDENTIAL_ROAD);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -620,8 +591,7 @@ public class MapCanvas extends View {
     private void drawLivingStreets(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.LIVING_STREET);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -629,8 +599,7 @@ public class MapCanvas extends View {
     private void drawServiceRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.SERVICE_ROAD);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -654,8 +623,7 @@ public class MapCanvas extends View {
     private void drawRaceways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.RACEWAY);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -663,20 +631,17 @@ public class MapCanvas extends View {
     private void drawPedestrianStreets(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PEDESTRIAN_STREET);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             Road road = (Road)element;
-            if (road.isArea())
-                g.fill(element.getShape());
-            g.draw(element.getShape());
+            if (road.isArea()) g.fill(element.getShape());
+            else g.draw(element.getShape());
         }
     }
     private void drawTracks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TRACK);
         g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -684,9 +649,7 @@ public class MapCanvas extends View {
     private void drawSteps(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.STEPS);
         g.setColor(color);
-        g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER, 10.0f,
-            new float[] { 0.00001f }, 0.0f));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 0.00001f }, 0.0f));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -713,11 +676,8 @@ public class MapCanvas extends View {
         g.setStroke(new BasicStroke(width));
         for (Element element : currentSection) {
             ManMade manMade = (ManMade)element;
-            if (manMade.isArea()) {
-                g.fill(element.getShape());
-            } else {
-                g.draw(element.getShape());
-            }
+            if (manMade.isArea()) g.fill(element.getShape());
+            else g.draw(element.getShape());
         }
     }
     private void drawPier(Graphics2D g, Color color, float width) {
@@ -731,9 +691,7 @@ public class MapCanvas extends View {
     private void drawBridleways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.BRIDLEWAY);
         g.setColor(color);
-        g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER, 10.0f,
-            new float[] { 0.00001f }, 0.0f));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 0.00001f }, 0.0f));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -749,9 +707,7 @@ public class MapCanvas extends View {
     private void drawPaths(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PATH);
         g.setColor(color);
-        g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER, 10.0f,
-            new float[] { 0.00001f }, 0.0f));
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 0.00001f }, 0.0f));
         for (Element element : currentSection) {
             g.draw(element.getShape());
         }
@@ -989,7 +945,6 @@ public class MapCanvas extends View {
 
             // The polygon coords
             float[] coords = polygon.getCoords();
-
             if (coords.length < 4) break;
             float longestVectorX1 = coords[0];
             float longestVectorY1 = coords[1];
@@ -1009,6 +964,7 @@ public class MapCanvas extends View {
                 x2 = coords[i];
                 y2 = coords[i + 1];
 
+                //If longest vector update
                 if ((vectorLength(longestVectorX2 - longestVectorX1,longestVectorY2 - longestVectorY1)) < (vectorLength(x2 - x1, y2 - y1))) {
                     longestVectorX1 = x1;
                     longestVectorY1 = y1;
@@ -1048,6 +1004,11 @@ public class MapCanvas extends View {
             drawFromX = drawFromX - hos;
             drawFromY = drawFromY + mod;
 
+            /*
+             Safe Affine transform, rotate, shift etc. draw the name
+             and set Affine Transform back to the state before
+             drawing the name.
+             */
             if (vectorLength(longestVectorX2 - longestVectorX1,longestVectorY2 - longestVectorY1) > stringLength) {
                 AffineTransform old = g.getTransform();
                 g.rotate(angle, drawFromX, drawFromY);
@@ -1056,8 +1017,7 @@ public class MapCanvas extends View {
             }
         }
     }
-    private double vectorLength(float x, float y)
-    {
+    private double vectorLength(float x, float y) {
         return Math.sqrt(x * x + y * y);
     }
     private double dotProduct(float x1, float y1, float x2, float y2) {
@@ -1074,16 +1034,11 @@ public class MapCanvas extends View {
         double vector2Length = vectorLength(1, 0f);
         cosAngle = dotProduct / (vector1Length * vector2Length);
 
-        if ((y2 - y1) < 0 && (x2 - x1) > 0)
-            return -Math.acos(cosAngle);
-        if ((y2 - y1) < 0 && (x2 - x1) < 0)
-            return Math.acos(-cosAngle);
-        if ((y2 - y1) > 0 && (x2 - x1) > 0)
-            return Math.acos(cosAngle);
-        if ((y2 - y1) > 0 && (x2 - x1) < 0)
-            return -Math.acos(-cosAngle);
-        if ((x2 - x1) < 0)
-            return Math.acos(-cosAngle);
+        if ((y2 - y1) < 0 && (x2 - x1) > 0) return -Math.acos(cosAngle);
+        if ((y2 - y1) < 0 && (x2 - x1) < 0) return Math.acos(-cosAngle);
+        if ((y2 - y1) > 0 && (x2 - x1) > 0) return Math.acos(cosAngle);
+        if ((y2 - y1) > 0 && (x2 - x1) < 0) return -Math.acos(-cosAngle);
+        if ((x2 - x1) < 0) return Math.acos(-cosAngle);
         return Math.acos(cosAngle);
     }
 
@@ -1091,11 +1046,11 @@ public class MapCanvas extends View {
         setCurrentSection(type);
         if (ZoomLevel.getZoomFactor() > -60) {
             float scaleFactor;
-            if (ZoomLevel.getZoomFactor() >= 100) {
-                scaleFactor = scaling * 397.522f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
-            } else {
-                scaleFactor = 0.0054586004f;
-            }
+
+            //Set the scalefactor such that the citynames have the desired size of the various zoom levels.
+            if (ZoomLevel.getZoomFactor() >= 100) scaleFactor = scaling * 397.522f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
+            else scaleFactor = 0.0054586004f;
+
             // Font
             Font font = new Font("Arial", Font.BOLD, 12);
 
@@ -1112,6 +1067,11 @@ public class MapCanvas extends View {
             }
         }
     }
+
+    /*
+    Draw each character in the String, taken as a parameter, and then shift to the next letter.
+    The shift will be the size of the latter just written.
+     */
     private void drawString(String s, Graphics2D g, float x, float y, Font font, float scaleFactor, boolean isShiftedLeft) {
         if (s.length() > 0) {
             if (isShiftedLeft) x = x - ((getFontMetrics(font).charWidth(s.charAt(s.length() / 2)) * scaleFactor) * s.length() / 2);
@@ -1156,10 +1116,6 @@ public class MapCanvas extends View {
         }
     }
 
-    private void drawAmenity(Graphics2D g) {
-        drawHospital(g);
-        drawParkingAmenity(g);
-    }
     private void drawHospital(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 1.5f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
