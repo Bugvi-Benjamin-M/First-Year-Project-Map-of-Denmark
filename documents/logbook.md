@@ -454,6 +454,7 @@ What we will do until next time:
 - Bugfixes on Trello
 - Dijkstra
 - Report writing
+- POI
 
 
 Impediments:
