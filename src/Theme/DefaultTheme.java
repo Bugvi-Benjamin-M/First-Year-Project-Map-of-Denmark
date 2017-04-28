@@ -112,6 +112,7 @@ public class DefaultTheme implements Theme {
         return new Color(0x90E49E);
     }
     public Color railwayStation() { return new Color(0x00CEE4 ); }
+    public Color poi() { return new Color(0xE40006); }
 
     // Roads:
     public Color motorway() { return new Color(0xE27B90); }

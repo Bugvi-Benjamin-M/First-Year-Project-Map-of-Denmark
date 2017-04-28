@@ -14,6 +14,7 @@ import Model.Model;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashSet;
 
@@ -39,6 +40,7 @@ public class MapCanvas extends View {
     private EnumMap<ElementType, KDTree> elements;
     private boolean antiAliasing;
     private Point2D.Float locationMarker;
+    private ArrayList<POI> poiList;
 
     public MapCanvas() {
         transform = new AffineTransform();
@@ -55,15 +57,11 @@ public class MapCanvas extends View {
         repaint();
     }
 
-    public void setCurrentRectangle()
-    {
+    public void setCurrentRectangle() {
         Rectangle2D rectangle = getVisibleRect();
-        rectangle.setRect(rectangle.getX(),
-            rectangle.getY() + GlobalValue.getToolbarHeight(),
-            rectangle.getWidth(), rectangle.getHeight());
+        rectangle.setRect(rectangle.getX(),rectangle.getY() + GlobalValue.getToolbarHeight(), rectangle.getWidth(), rectangle.getHeight());
         Point2D point = toModelCoords(new Point2D.Double(0, GlobalValue.getToolbarHeight()));
-        Point2D factor = toModelCoords(
-            new Point2D.Double(rectangle.getWidth(), rectangle.getHeight()));
+        Point2D factor = toModelCoords(new Point2D.Double(rectangle.getWidth(), rectangle.getHeight()));
         double xBounds = factor.getX() - point.getX();
         double yBounds = factor.getY() - point.getY();
         currentRectangle = new Rectangle2D.Double(point.getX(), point.getY(), xBounds, yBounds);
@@ -96,6 +94,7 @@ public class MapCanvas extends View {
         g2D.draw(currentRectangle);
 
         drawLocationMarker(g2D);
+        drawPOI(g2D);
         drawBoundaries(g2D);
         Main.FPS_COUNTER.interrupt();
         DebugWindow.getInstance().setFPSLabel();
@@ -1240,13 +1239,8 @@ public class MapCanvas extends View {
     }
 
     public void panToPoint(Point2D point){
-
         Rectangle2D rectangle = getVisibleRect();
         Point2D midpoint = toModelCoords(new Point2D.Double(rectangle.getCenterX(), rectangle.getCenterY()));
-        double xCenter = midpoint.getX();
-        double yCenter = midpoint.getY();
-        double pointX = point.getX();
-        double pointY = point.getY();
         Point2D pointToMove;
         Point2D pointToStart;
         try {
@@ -1256,19 +1250,23 @@ public class MapCanvas extends View {
         } catch (NoninvertibleTransformException e) {
             e.printStackTrace();
         }
-        /*while((double)Math.round(xCenter * 1000d) / 1000d != (double)Math.round(pointX * 1000d) / 1000d && (double)Math.round(yCenter * 1000d) / 1000d != (double)Math.round(pointY * 1000d) / 1000d) {
-            rectangle = getVisibleRect();
-            midpoint = toModelCoords(new Point2D.Double(rectangle.getCenterX(), rectangle.getCenterY()));
-            xCenter = midpoint.getX();
-            yCenter = midpoint.getY();
-
-            System.out.println(xCenter);
-            System.out.println(pointX);
-
-            pan(xCenter - pointX, yCenter - pointY);
-            repaint();
-        }*/
     }
 
+    public void setPOIs(ArrayList<POI> poiList){
+        this.poiList = poiList;
+    }
 
+    private void drawPOI(Graphics2D g) {
+        float scaleFactor;
+        scaleFactor = 1.7f * (float) (Math.pow(ZoomLevel.getZoomFactor(), -2f));
+
+        //Color and font
+        g.setColor(ThemeHelper.color("hospital"));
+        Font font = Helpers.FontAwesome.getFontAwesome();
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+
+        for (POI poi : poiList) {
+            drawString("\uf276" + "", g, (float) poi.getX(), (float) poi.getY(), font, scaleFactor, true);
+        }
+    }
 }
