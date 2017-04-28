@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 
+import static java.lang.Character.toLowerCase;
+
 /**
  * Created by  on .
  *
@@ -85,8 +87,9 @@ public class TenarySearchTrie implements Serializable {
             char next = pat.charAt(d);
             collect(x.left, pre, pat, address, reachedEndOfPrefix, map);
             collect(x.right, pre, pat, address, reachedEndOfPrefix, map);
-            if (x.c == next) {
-                collect(x.mid, pre + next, pat,address + next, true, map);
+            Character c = x.c;
+            if (toLowerCase(c) == next) {
+                collect(x.mid, pre + x.c, pat,address + x.c, true, map);
             }else{
                 if(!reachedEndOfPrefix) collect(x.mid, pre, pat, address + x.c, false, map);
             }

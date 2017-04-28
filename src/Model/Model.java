@@ -5,6 +5,7 @@ import Helpers.Utilities.DebugWindow;
 import KDtree.*;
 import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
+import Model.Elements.POI;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -29,6 +30,7 @@ public final class Model extends Observable {
     private EnumMap<BoundType, Float> camera_bounds;
     private HashMap<String, Integer> cityToIndex;
     private HashMap<Integer, String> indexToCity;
+    private ArrayList<POI> pointsOfInterest;
 
     private Model()
     {
@@ -48,6 +50,7 @@ public final class Model extends Observable {
             elements.put(type, new KDTree());
         }
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
+        pointsOfInterest = new ArrayList<>();
     }
 
     public static Model getInstance()
@@ -205,4 +208,24 @@ public final class Model extends Observable {
     public void resetInstance() { instance = null; }
 
     public CoastlineFactory getCoastlineFactory() { return coastlineFactory; }
+
+    public ArrayList<POI> getPointsOfInterest() {
+        return pointsOfInterest;
+    }
+
+    public void setPointsOfInterest(ArrayList<POI> pointsOfInterest) {
+        this.pointsOfInterest = pointsOfInterest;
+    }
+
+    public void addPOI(float x, float y, String description){
+        pointsOfInterest.add(new POI(x, y, description));
+    }
+
+    public void removePOI(int index){
+        pointsOfInterest.remove(index);
+    }
+
+    public void removeAllPOI(){
+        pointsOfInterest.clear();
+    }
 }

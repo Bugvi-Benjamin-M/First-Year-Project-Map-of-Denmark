@@ -152,7 +152,7 @@ public final class SearchToolController extends Controller {
         //Todo implement proper search
         if(searchTool.getField().isPopupVisible() && searchTool.getField().getItemCount() == 0) searchTool.getField().hidePopup();
         searchTool.getField().removeAllItems();
-        HashMap<Boolean , ArrayList<String>> map = Model.getInstance().getTst().keysThatMatch(currentQuery);
+        HashMap<Boolean , ArrayList<String>> map = Model.getInstance().getTst().keysThatMatch(currentQuery.toLowerCase());
         ArrayList<String> listToShow = new ArrayList<>();
         for(String s : map.get(true)){
             listToShow.add(s);

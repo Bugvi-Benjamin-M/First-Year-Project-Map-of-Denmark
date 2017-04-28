@@ -83,10 +83,13 @@ public class PopupWindow {
     }
 
     public static int confirmBox(JFrame relativeTo, String message, String title,
-        Object[] options, Object initialValue)
-    {
+        Object[] options, Object initialValue) {
         return JOptionPane.showOptionDialog(
-            relativeTo, message, title, JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE, null, options, initialValue);
+                relativeTo, message, title, JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, options, initialValue);
+    }
+
+    public static String textInputBox(JFrame relativeTo, String title, String message){
+        return JOptionPane.showInputDialog(null, message, title, JOptionPane.QUESTION_MESSAGE);
     }
 }

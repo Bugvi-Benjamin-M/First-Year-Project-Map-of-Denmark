@@ -9,6 +9,7 @@ import KDtree.KDTree;
 import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
 import Model.Coastlines.CoastlineHandler;
+import Model.Elements.POI;
 import Model.Model;
 import OSM.OSMHandler;
 import View.PopupWindow;
@@ -19,6 +20,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.zip.ZipInputStream;
@@ -145,6 +147,7 @@ public class FileHandler {
             Model.getInstance().setTst((TenarySearchTrie)in.readObject());
             Model.getInstance().setCityToIndexMap((HashMap<String, Integer>) in.readObject());
             Model.getInstance().setIndexToCityMap((HashMap<Integer, String>) in.readObject());
+            Model.getInstance().setPointsOfInterest((ArrayList<POI>) in.readObject());
             time += System.nanoTime();
             if (!isLoadingFromStart) {
                 CanvasController.adjustToDynamicBounds();
@@ -171,6 +174,7 @@ public class FileHandler {
             out.writeObject(Model.getInstance().getTst());
             out.writeObject(Model.getInstance().getCityToIndexMap());
             out.writeObject(Model.getInstance().getIndexToCityMap());
+            out.writeObject(Model.getInstance().getPointsOfInterest());
             System.out.println("DONE");
         } catch (IOException e) {
             e.printStackTrace();

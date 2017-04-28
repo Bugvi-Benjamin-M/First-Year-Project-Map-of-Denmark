@@ -10,6 +10,7 @@ import Model.Elements.Road;
 import Model.Model;
 import View.CanvasPopup;
 import View.MapCanvas;
+import View.PopupWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -227,6 +228,18 @@ public final class CanvasController extends Controller implements Observer {
                     Model.getInstance().modelHasChanged();
                 }
             });
+        handler.addKeyBinding(KeyEvent.VK_L, Helpers.OSDetector.getActivationKey(),
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                       Point2D p = mapCanvas.toModelCoords(MouseInfo.getPointerInfo().getLocation());
+                       String description = PopupWindow.textInputBox(null, "Enter description: ", "Point of interest");
+                       if(description != null){
+                           Model.getInstance().addPOI((float) p.getX(), (float) p.getY(), description);
+                       }
+                    }
+                });
     }
 
     private void panEvent(PanType type)
