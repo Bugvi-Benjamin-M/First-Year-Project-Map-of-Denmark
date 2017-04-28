@@ -55,6 +55,11 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> fastFoods;
     private boolean specialRelationCase = false;
     private boolean isArea = false;
+    private boolean isOneWay = false;
+    private boolean isWalkingAllowed = false;
+    private boolean isCycleAllowed = false;
+    private boolean isVehicleAllowed = false;
+    private int maxSpeed;
 
     private String roadName;
     private String roadNumber;
@@ -180,7 +185,12 @@ public final class OSMHandler implements ContentHandler {
             }
             name = "";
             isArea = false;
-            relation = new OSMRelation();
+            isVehicleAllowed = false;
+            isWalkingAllowed = false;
+            isCycleAllowed = false;
+            maxSpeed = 0;
+            relation = new OSMRelation(relationID);
+
             elementType = ElementType.UNKNOWN;
             loadedRelations++;
             if ((loadedRelations & 0xFF) == 0) {
@@ -253,6 +263,10 @@ public final class OSMHandler implements ContentHandler {
             idToWay.put(id, way);
             name = "";
             isArea = false;
+            isVehicleAllowed = false;
+            isWalkingAllowed = false;
+            isCycleAllowed = false;
+            maxSpeed = 0;
             loadedWays++;
             if ((loadedWays & 0xFF) == 0) {
                 System.out.println("Numways: " + loadedWays);
@@ -321,6 +335,29 @@ public final class OSMHandler implements ContentHandler {
                 case "addr:street":
                     roadName = v;
                     isAddress = true;
+                    break;
+                case "bicycle":
+                    isCycleAllowed = !v.equals("no");
+                    break;
+                case "foot":
+                    isWalkingAllowed = !v.equals("no");
+                    break;
+                case "vehicle":
+                    isVehicleAllowed = !v.equals("no");
+                    break;
+                case "cycleway":
+                    isCycleAllowed = !v.equals("no");
+                    break;
+                case "maxspeed":
+                    try {
+                        int i = Integer.parseInt(v);
+                        maxSpeed = i;
+                    } catch (NumberFormatException e) {
+                        // e.printStackTrace();
+                    }
+                    break;
+                case "oneway":
+                    isOneWay = v.equals("yes");
                     break;
             }
             break;
@@ -498,78 +535,141 @@ public final class OSMHandler implements ContentHandler {
         switch (value) {
             case "motorway":
                 elementType = ElementType.MOTORWAY;
+                isVehicleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 130;
                 break;
             case "motorway_link":
                 elementType = ElementType.MOTORWAY_LINK;
+                isVehicleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 130;
                 break;
             case "trunk":
                 elementType = ElementType.TRUNK_ROAD;
+                isVehicleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 90;
                 break;
             case "trunk_link":
                 elementType = ElementType.TRUNK_ROAD_LINK;
+                isVehicleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 90;
                 break;
             case "primary":
                 elementType = ElementType.PRIMARY_ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "primary_link":
                 elementType = ElementType.PRIMARY_ROAD_LINK;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "secondary":
                 elementType = ElementType.SECONDARY_ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "seconday_link":
                 elementType = ElementType.SECONDARY_ROAD_LINK;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "tertiary":
                 elementType = ElementType.TERTIARY_ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "tertiary_link":
                 elementType = ElementType.TERTIARY_ROAD_LINK;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "unclassified":
                 elementType = ElementType.UNCLASSIFIED_ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "residential":
                 elementType = ElementType.RESIDENTIAL_ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "living_street":
                 elementType = ElementType.LIVING_STREET;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "service":
                 elementType = ElementType.SERVICE_ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "bus_guideway":
                 elementType = ElementType.BUS_GUIDEWAY;
                 break;
             case "escape":
                 elementType = ElementType.ESCAPE;
+                isVehicleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "raceway":
                 elementType = ElementType.RACEWAY;
                 break;
             case "pedestrian":
                 elementType = ElementType.PEDESTRIAN_STREET;
+                isWalkingAllowed = true;
                 break;
             case "track":
                 elementType = ElementType.TRACK;
+                isVehicleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "steps":
                 elementType = ElementType.STEPS;
+                isWalkingAllowed = true;
                 break;
             case "footway":
                 elementType = ElementType.FOOTWAY;
+                isWalkingAllowed = true;
                 break;
             case "bridleway":
                 elementType = ElementType.BRIDLEWAY;
+                isWalkingAllowed = true;
                 break;
             case "cycleway":
                 elementType = ElementType.CYCLEWAY;
+                isCycleAllowed = true;
                 break;
             case "path":
                 elementType = ElementType.PATH;
+                isCycleAllowed = true;
+                isWalkingAllowed = true;
                 break;
             case "road":
                 elementType = ElementType.ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 50;
                 break;
         }
     }
@@ -631,7 +731,7 @@ public final class OSMHandler implements ContentHandler {
                 case PATH:
                 case ROAD:
                 case RAIL:
-                    if (isArea == false) {
+                    if (!isArea) {
                         addRoad(elementType, false, false);
                     } else {
                         addRoad(elementType, false, true);
@@ -826,11 +926,20 @@ public final class OSMHandler implements ContentHandler {
     {
         // FIXME: ROADS NEEDS TO STORE THEIR PATH AS WELL AS WHETHER THEY ARE ONE WAY AND THEIR MAX SPEED
         // FIXME: THE POINTS IN THEIR PATH NEEDS TO EITHER CONTAIN A ID (REF) OR SOME MAYOR REFACTORING IS REQUIRED
+        Road road;
         if (!isRelation) {
             PolygonApprox polygonApprox = new PolygonApprox(way);
-            Road road;
-            if (!area) road = new Road(polygonApprox, name);
-            else road = new Road(polygonApprox, name, area);
+            if (!area) {
+                road = new Road(polygonApprox, name);
+            } else {
+                road = new Road(polygonApprox, name, area);
+            }
+            road.setTravelByBikeAllowed(isCycleAllowed);
+            road.setTravelByCarAllowed(isVehicleAllowed);
+            road.setTravelByFootAllowed(isWalkingAllowed);
+            road.setMaxSpeed(maxSpeed);
+            road.setOneWay(isOneWay);
+            road.setWay(way);
             for (int i = 0; i < way.size(); i += 5) {
                 Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
@@ -838,11 +947,17 @@ public final class OSMHandler implements ContentHandler {
             }
         } else {
             MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
-            Road road;
-            if (!area)
+            if (!area) {
                 road = new Road(multiPolygonApprox, name);
-            else
+            } else {
                 road = new Road(multiPolygonApprox, name, true);
+            }
+            road.setTravelByBikeAllowed(isCycleAllowed);
+            road.setTravelByCarAllowed(isVehicleAllowed);
+            road.setTravelByFootAllowed(isWalkingAllowed);
+            road.setMaxSpeed(maxSpeed);
+            road.setOneWay(isOneWay);
+            road.setRelation(relation);
             for (int i = 0; i < relation.size(); i++) {
                 if (relation.get(i) != null) {
                     for (int j = 0; j < relation.get(i).size(); j += 5) {

@@ -1,7 +1,11 @@
 package Model.Elements;
 
+import Enums.OSMEnums.ElementType;
+import Helpers.HelperFunctions;
 import Helpers.Shapes.MultiPolygonApprox;
 import Helpers.Shapes.PolygonApprox;
+import OSM.OSMRelation;
+import OSM.OSMWay;
 
 import java.awt.*;
 import java.awt.geom.PathIterator;
@@ -9,30 +13,53 @@ import java.awt.geom.Point2D;
 
 /**
  * Created by Jakob on 06-03-2017.
+ *
+ * nBytes: approx. 32 bytes
  */
 public class Road extends Element {
-    private String name;
-    private boolean oneWay;
-    private int maxSpeed;
+    private String name = "";
+    private boolean oneWay = false;
+    private int maxSpeed = 0;
     private boolean area = false;
+    private boolean travelByBikeAllowed = false;
+    private boolean travelByFootAllowed = false;
+    private boolean travelByCarAllowed = false;
+    private OSMRelation relation;
 
-    public Road(PolygonApprox polygon, String name, boolean oneWay,
-        int maxSpeed)
+    public Road(PolygonApprox polygon, String name)
     {
         super(polygon);
         this.name = name;
-        this.oneWay = oneWay;
-        this.maxSpeed = maxSpeed;
     }
-    public Road(PolygonApprox polygon) { this(polygon, "", false, 50); }
-    public Road(PolygonApprox polygon, String name)
-    {
-        this(polygon, name, false, 50);
-    }
+
     public Road(PolygonApprox polygon, String name, boolean area)
     {
-        this(polygon, name, false, 10);
+        this(polygon, name);
         this.area = area;
+    }
+
+    public void setTravelByBikeAllowed(boolean travelByBikeAllowed) {
+        this.travelByBikeAllowed = travelByBikeAllowed;
+    }
+
+    public void setTravelByFootAllowed(boolean travelByFootAllowed) {
+        this.travelByFootAllowed = travelByFootAllowed;
+    }
+
+    public void setTravelByCarAllowed(boolean travelByCarAllowed) {
+        this.travelByCarAllowed = travelByCarAllowed;
+    }
+
+    public boolean isTravelByBikeAllowed() {
+        return travelByBikeAllowed;
+    }
+
+    public boolean isTravelByFootAllowed() {
+        return travelByFootAllowed;
+    }
+
+    public boolean isTravelByCarAllowed() {
+        return travelByCarAllowed;
     }
 
     public boolean isArea() { return area; }
@@ -45,13 +72,23 @@ public class Road extends Element {
 
     public int getMaxSpeed() {return maxSpeed;}
 
-    public Point2D getFromNode() {
-        // FIXME: Needs to be able to retrieve a start point!
-        return null;
+    public OSMRelation getRelation() {
+        return relation;
     }
 
-    public Point2D getToNode() {
-        // FIXME: Needs to be able to retrieve an end point!
-        return null;
+    public void setRelation(OSMRelation relation) {
+        this.relation = relation;
+    }
+
+    public void setWay(OSMWay way) {
+        this.relation.add(way);
+    }
+
+    public void setMaxSpeed(int maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
+
+    public void setOneWay(boolean oneWay) {
+        this.oneWay = oneWay;
     }
 }
