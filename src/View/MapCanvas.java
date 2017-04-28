@@ -44,6 +44,7 @@ public class MapCanvas extends View {
 
     public MapCanvas() {
         transform = new AffineTransform();
+        poiList = new ArrayList<>();
         setBackgroundColor();
         grabFocus();
     }

@@ -234,9 +234,14 @@ public final class CanvasController extends Controller implements Observer {
                     public void actionPerformed(ActionEvent e)
                     {
                        Point2D p = mapCanvas.toModelCoords(MouseInfo.getPointerInfo().getLocation());
-                       String description = PopupWindow.textInputBox(null, "Enter description: ", "Point of interest");
+                       String description = PopupWindow.textInputBox(null, "Point of interest", "Enter description: ");
                        if(description != null){
-                           Model.getInstance().addPOI((float) p.getX(), (float) p.getY(), description);
+                           if(description.length() < 52) {
+                               model.addPOI((float) p.getX(), (float) p.getY(), description);
+                               mapCanvas.setPOIs(model.getPointsOfInterest());
+                           }else{
+                               PopupWindow.warningBox(null, "The message is not allowed to be longer than 56 signs.");
+                           }
                        }
                     }
                 });
