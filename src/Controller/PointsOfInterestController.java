@@ -25,6 +25,10 @@ public final class PointsOfInterestController extends Controller {
 
     private final int PROFILE_HEIGHT = 90;
     private final int POINTS_OF_INTERESTBAR_WIDTH = 300;
+    private final int SCROLLPANE_HEIGHT_BOOST = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 1.95122f);
+    private final int TOP_BUTTONS_HEIGHT = 50;
+    private final int DISTANCE_BETWEEN_TOOLBAR_AND_TOP_BUTTONS = GlobalValue.getToolbarHeight() + 10;
+    private final int DISTANCE_BETWEEN_TOP_BUTTONS_AND_SCROLLPANE = 60;
 
     private static PointsOfInterestController instance;
     private InformationBar informationBar;
@@ -63,11 +67,11 @@ public final class PointsOfInterestController extends Controller {
         setupScrollbar();
         addPointsToPointsOfInterestBar();
         poiButtons = new PointsOfInterestTopButtons();
-        poiButtons.setPreferredSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, 50));
+        poiButtons.setPreferredSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, TOP_BUTTONS_HEIGHT));
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, poiButtons, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
-        informationBarLayout.putConstraint(NORTH, poiButtons, GlobalValue.getToolbarHeight() + 10, NORTH, informationBar);
+        informationBarLayout.putConstraint(NORTH, poiButtons, DISTANCE_BETWEEN_TOOLBAR_AND_TOP_BUTTONS, NORTH, informationBar);
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, scroll, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
-        informationBarLayout.putConstraint(NORTH, scroll, 60, NORTH, poiButtons);
+        informationBarLayout.putConstraint(NORTH, scroll, DISTANCE_BETWEEN_TOP_BUTTONS_AND_SCROLLPANE, NORTH, poiButtons);
         informationBar.add(poiButtons);
         informationBar.add(scroll);
         addInteractionHandlersPointsOfInterestButtons();
@@ -82,6 +86,7 @@ public final class PointsOfInterestController extends Controller {
                 poiButtons.getNewPointButton().setForeground(ThemeHelper.color("toolActivated"));
                 MainWindowController.getInstance().transferFocusToMapCanvas();
                 MainWindowController.getInstance().changeCanvasMouseCursorToPoint();
+                GlobalValue.setIsAddNewPointActive(true);
             }
 
             @Override
@@ -122,10 +127,9 @@ public final class PointsOfInterestController extends Controller {
     private void setupScrollbar() {
         scroll = new JScrollPane(pointsOfInterestBar);
         scroll.setOpaque(true);
-        //Todo find a proper constant instead of 400, needs to be relative to the window size somehow
-        scroll.setPreferredSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+410)));
-        scroll.setMinimumSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+410)));
-        scroll.setMaximumSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+410)));
+        scroll.setPreferredSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+SCROLLPANE_HEIGHT_BOOST)));
+        scroll.setMinimumSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+SCROLLPANE_HEIGHT_BOOST)));
+        scroll.setMaximumSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+SCROLLPANE_HEIGHT_BOOST)));
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
@@ -224,6 +228,11 @@ public final class PointsOfInterestController extends Controller {
         public void mouseExited(MouseEvent e) {
             button.setForeground(ThemeHelper.color("icon"));
             button.setBackground(ThemeHelper.color("toolbar"));
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            //
         }
 
 
