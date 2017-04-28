@@ -71,11 +71,11 @@ public final class MainWindowController extends WindowController {
         CanvasController.getInstance().getMapCanvas().setOpaque(true);
         PointsOfInterestController.getInstance().getInformationBar().setOpaque(true);
         layeredPane.add(PointsOfInterestController.getInstance().getInformationBar(),
-                new Integer(1));
+                new Integer(2));
         layeredPane.add(CanvasController.getInstance().getMapCanvas(),
             new Integer(1));
         layeredPane.add(ToolbarController.getInstance().getToolbar(),
-            new Integer(2));
+            new Integer(3));
     }
 
     private void adjustBounds()
@@ -109,16 +109,12 @@ public final class MainWindowController extends WindowController {
     }
 
     public void activatePointsOfInterestInformationBar() {
-        CanvasController.getInstance().getMapCanvas().setBounds(400, 0, window.getFrame().getWidth(), window.getFrame().getHeight());
-        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, 400, window.getFrame().getHeight());
-        CanvasController.repaintCanvas();
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, GlobalValue.getInformationBarWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().getInformationBar().revalidate();
-
     }
 
     public void deactivatePointsOfInterestInformationBar() {
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
-        CanvasController.getInstance().getMapCanvas().setBounds(0,0, window.getFrame().getWidth(), window.getFrame().getHeight());
         CanvasController.repaintCanvas();
     }
 
@@ -209,6 +205,10 @@ public final class MainWindowController extends WindowController {
 
     public void changeCanvasMouseCursorToPoint() {
         CanvasController.getInstance().getMapCanvas().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+    }
+
+    public void requestCanvasAdjustment(int distance) {
+        CanvasController.getInstance().adjustCanvasToScreen(distance);
     }
 
     private class MainWindowInteractionHandler

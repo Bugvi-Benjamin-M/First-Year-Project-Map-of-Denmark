@@ -524,7 +524,6 @@ public class MapCanvas extends View {
     public void pan(double dx, double dy)
     {
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
-
     }
 
     public Point2D toModelCoords(Point2D mousePosition)

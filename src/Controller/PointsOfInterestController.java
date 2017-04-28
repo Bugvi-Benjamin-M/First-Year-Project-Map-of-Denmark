@@ -24,6 +24,7 @@ import static javax.swing.SpringLayout.NORTH;
 public final class PointsOfInterestController extends Controller {
 
     private final int PROFILE_HEIGHT = 90;
+    private final int POINTS_OF_INTERESTBAR_WIDTH = 300;
 
     private static PointsOfInterestController instance;
     private InformationBar informationBar;
@@ -50,20 +51,19 @@ public final class PointsOfInterestController extends Controller {
         panelPlaces = new ArrayList<>();
         informationBar = new InformationBar();
         informationBarLayout = (SpringLayout) informationBar.getLayout();
-        informationBar.setPreferredSize(new Dimension(400, window.getFrame().getHeight()));
+        informationBar.setPreferredSize(new Dimension(GlobalValue.getInformationBarWidth(), window.getFrame().getHeight()));
         setupPointsOfInterestBar();
-
     }
 
     public void setupPointsOfInterestBar() {
         pointsOfInterestBar = new PointsOfInterestBar();
         pointsOfInterestBar.setOpaque(true);
-        pointsOfInterestBar.setMinimumSize(new Dimension(300, PROFILE_HEIGHT));
+        pointsOfInterestBar.setMinimumSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, PROFILE_HEIGHT));
 
         setupScrollbar();
         addPointsToPointsOfInterestBar();
         poiButtons = new PointsOfInterestTopButtons();
-        poiButtons.setPreferredSize(new Dimension(300, 50));
+        poiButtons.setPreferredSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, 50));
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, poiButtons, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
         informationBarLayout.putConstraint(NORTH, poiButtons, GlobalValue.getToolbarHeight() + 10, NORTH, informationBar);
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, scroll, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
@@ -123,9 +123,9 @@ public final class PointsOfInterestController extends Controller {
         scroll = new JScrollPane(pointsOfInterestBar);
         scroll.setOpaque(true);
         //Todo find a proper constant instead of 400, needs to be relative to the window size somehow
-        scroll.setPreferredSize(new Dimension(300, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+410)));
-        scroll.setMinimumSize(new Dimension(300, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+410)));
-        scroll.setMaximumSize(new Dimension(300, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+410)));
+        scroll.setPreferredSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+410)));
+        scroll.setMinimumSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+410)));
+        scroll.setMaximumSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+410)));
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));

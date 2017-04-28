@@ -41,6 +41,8 @@ public final class CanvasController extends Controller implements Observer {
     private Timer toolTipTimer;
     private Timer antiAliasingZoomTimer;
 
+
+
     private enum PanType { LEFT,
         RIGHT,
         UP,
@@ -119,6 +121,11 @@ public final class CanvasController extends Controller implements Observer {
     {
         focusHandler = new CanvasFocusHandler();
         mapCanvas.addFocusListener(focusHandler);
+    }
+
+    public void adjustCanvasToScreen(int adjust) {
+        mapCanvas.pan(adjust,0);
+        repaintCanvas();
     }
 
     private void specifyKeyBindings()

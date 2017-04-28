@@ -21,6 +21,8 @@ public class GlobalValue {
     private static boolean markCoastlines = false;
     private static boolean didProgramLoadDefault = false;
 
+    private static boolean isAddNewPointActive;
+
     public static void setDidProgramLoadDefault(boolean truth_value)
     {
         didProgramLoadDefault = truth_value;
@@ -81,4 +83,15 @@ public class GlobalValue {
 
     public static boolean getMarkCoastlines() { return markCoastlines; }
 
+    public static int getInformationBarWidth() {
+        return 400;
+    }
+
+    public static void setIsAddNewPointActive(boolean status) {
+        isAddNewPointActive = status;
+    }
+
+    public static boolean isAddNewPointActive() {
+        return isAddNewPointActive;
+    }
 }

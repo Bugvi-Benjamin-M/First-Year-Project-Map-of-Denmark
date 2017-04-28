@@ -1,5 +1,6 @@
 package View;
 
+import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
@@ -16,7 +17,7 @@ public class InformationBar extends View {
     private Dimension dimension;
 
     public InformationBar() {
-        setPreferredSize(dimension = new Dimension(400, 1000));
+        setPreferredSize(dimension = new Dimension(GlobalValue.getInformationBarWidth(), 1000));
         setLayout(new SpringLayout());
         applyTheme();
     }

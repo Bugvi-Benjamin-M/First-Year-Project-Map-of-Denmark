@@ -421,12 +421,15 @@ public final class ToolbarController extends Controller {
     private void poiToolActivatedEvent() {
         if(!poiToolActive) {
             toolbar.getTool(ToolType.POI).toggleActivate(true);
+            MainWindowController.getInstance().requestCanvasAdjustment(GlobalValue.getInformationBarWidth());
             MainWindowController.getInstance().activatePointsOfInterestInformationBar();
             MainWindowController.getInstance().transferFocusToInformationBar();
             poiToolActive = true;
         } else {
             toolbar.getTool(ToolType.POI).toggleActivate(false);
+            MainWindowController.getInstance().requestCanvasAdjustment(-GlobalValue.getInformationBarWidth());
             MainWindowController.getInstance().deactivatePointsOfInterestInformationBar();
+            MainWindowController.getInstance().transferFocusToMapCanvas();
             poiToolActive = false;
         }
 

@@ -1,6 +1,6 @@
 package Helpers;
 
-import Model.Model;
+import Controller.CanvasController;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -135,5 +135,11 @@ public class HelperFunctions {
         nextPoint = points.get(0);
         dividend += (previousPoint.getX() * nextPoint.getY() - previousPoint.getY() * nextPoint.getX());
         return Math.abs(dividend / 2);
+    }
+
+    public static float convertDistanceFromScreenCoordsToModelCoords(int distance) {
+        Point2D start = CanvasController.getInstance().getMapCanvas().toModelCoords(new Point2D.Float(0,0));
+        Point2D end = CanvasController.getInstance().getMapCanvas().toModelCoords(new Point2D.Float(distance,0));
+        return (float) (end.getX() - start.getX());
     }
 }
