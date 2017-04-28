@@ -1259,7 +1259,13 @@ public class MapCanvas extends View {
 
     private void drawPOI(Graphics2D g) {
         float scaleFactor;
-        scaleFactor = 1.7f * (float) (Math.pow(ZoomLevel.getZoomFactor(), -2f));
+        //scaleFactor = (float) (Math.pow(ZoomLevel.getZoomFactor(), -1.8f));
+        scaleFactor = 0.00003f;
+
+        //if (ZoomLevel.getZoomFactor() >= 15) scaleFactor = (float)(Math.pow(ZoomLevel.getZoomFactor(), -1.8f));
+        //else scaleFactor = 0.003f;
+
+        //scaleFactor = 0.003f * (20f) / (float) ZoomLevel.getZoomFactor(); 50 - 250
 
         //Color and font
         g.setColor(ThemeHelper.color("hospital"));
