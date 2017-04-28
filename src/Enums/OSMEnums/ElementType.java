@@ -84,4 +84,5 @@ public enum ElementType {
     PARKING_AMENITY, //Default
     SPORT_AMENITY, //Default
     RAILWAY_STATION, //Default
+    RAILWAY_STATION_AREA, //Default
 }

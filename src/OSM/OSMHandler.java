@@ -54,8 +54,8 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> nightClubs;
     private ArrayList<Pointer> fastFoods;
     private ArrayList<Pointer> railwayStations;
-    private boolean specialRelationCase = false;
-    private boolean isArea = false;
+    private boolean specialRelationCase;
+    private boolean isArea;
 
     private String roadName;
     private String roadNumber;
@@ -664,6 +664,7 @@ public final class OSMHandler implements ContentHandler {
                     break;
                 case BUILDING:
                     addBuilding(elementType, false);
+                    if(place == ElementType.RAILWAY_STATION)addAmenity(ElementType.RAILWAY_STATION_AREA);
                     break;
                 case WATER:
                 case WETLAND:
@@ -698,6 +699,7 @@ public final class OSMHandler implements ContentHandler {
                     case PLACE_OF_WORSHIP:
                     case SPORT_AMENITY:
                     case PARKING_AMENITY:
+                    case RAILWAY_STATION_AREA:
                         addAmenity(place);
                         break;
                 }
@@ -875,7 +877,6 @@ public final class OSMHandler implements ContentHandler {
                 }
             }
         }
-        //System.out.println(name + " Added :)");
     }
 
     private void addBiome(ElementType type, boolean isRelation) {
@@ -957,6 +958,13 @@ public final class OSMHandler implements ContentHandler {
                 amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
                 p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
                 railwayStations.add(p);
+                break;
+            case RAILWAY_STATION_AREA:
+                polygonApprox = new PolygonApprox(way);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                model.getElements().get(ElementType.RAILWAY_STATION_AREA).putPointer(p);
+                System.out.println("Station added");
                 break;
         }
     }
