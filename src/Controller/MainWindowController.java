@@ -69,8 +69,8 @@ public final class MainWindowController extends WindowController {
         adjustBounds();
         ToolbarController.getInstance().getToolbar().setOpaque(true);
         CanvasController.getInstance().getMapCanvas().setOpaque(true);
-        InformationBarController.getInstance().getInformationBar().setOpaque(true);
-        layeredPane.add(InformationBarController.getInstance().getInformationBar(),
+        PointsOfInterestController.getInstance().getInformationBar().setOpaque(true);
+        layeredPane.add(PointsOfInterestController.getInstance().getInformationBar(),
                 new Integer(1));
         layeredPane.add(CanvasController.getInstance().getMapCanvas(),
             new Integer(1));
@@ -86,7 +86,7 @@ public final class MainWindowController extends WindowController {
             0, 0, window.getFrame().getWidth(), GlobalValue.getToolbarHeight());
         CanvasController.getInstance().getMapCanvas().setBounds(
             0, 0, window.getFrame().getWidth(), window.getFrame().getHeight());
-        InformationBarController.getInstance().getInformationBar().setBounds(
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(
             0, 0, 0, window.getFrame().getHeight());
     }
 
@@ -104,20 +104,20 @@ public final class MainWindowController extends WindowController {
 
     private void setupInformationBar()
     {
-        InformationBarController.getInstance().specifyWindow(window);
-        InformationBarController.getInstance().setupInformationBar();
+        PointsOfInterestController.getInstance().specifyWindow(window);
+        PointsOfInterestController.getInstance().setupInformationBar();
     }
 
     public void activatePointsOfInterestInformationBar() {
         CanvasController.getInstance().getMapCanvas().setBounds(400, 0, window.getFrame().getWidth(), window.getFrame().getHeight());
-        InformationBarController.getInstance().getInformationBar().setBounds(0, 0, 400, window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, 400, window.getFrame().getHeight());
         CanvasController.repaintCanvas();
-        InformationBarController.getInstance().getInformationBar().revalidate();
+        PointsOfInterestController.getInstance().getInformationBar().revalidate();
 
     }
 
     public void deactivatePointsOfInterestInformationBar() {
-        InformationBarController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
         CanvasController.getInstance().getMapCanvas().setBounds(0,0, window.getFrame().getWidth(), window.getFrame().getHeight());
         CanvasController.repaintCanvas();
     }
@@ -131,7 +131,7 @@ public final class MainWindowController extends WindowController {
     {
         ToolbarController.getInstance().themeHasChanged();
         CanvasController.getInstance().themeHasChanged();
-        InformationBarController.getInstance().themeHasChanged();
+        PointsOfInterestController.getInstance().themeHasChanged();
         setToolTipTheme();
         transferFocusToMapCanvas();
     }
@@ -204,7 +204,11 @@ public final class MainWindowController extends WindowController {
     }
 
     public void transferFocusToInformationBar() {
-        InformationBarController.getInstance().getInformationBar().grabFocus();
+        PointsOfInterestController.getInstance().getInformationBar().grabFocus();
+    }
+
+    public void changeCanvasMouseCursorToPoint() {
+        CanvasController.getInstance().getMapCanvas().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
     }
 
     private class MainWindowInteractionHandler

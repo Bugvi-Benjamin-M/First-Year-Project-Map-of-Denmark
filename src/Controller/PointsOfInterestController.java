@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,11 +21,11 @@ import static javax.swing.SpringLayout.NORTH;
  * @version 06-03-2017.
  * @project BFST
  */
-public final class InformationBarController extends Controller {
+public final class PointsOfInterestController extends Controller {
 
     private final int PROFILE_HEIGHT = 90;
 
-    private static InformationBarController instance;
+    private static PointsOfInterestController instance;
     private InformationBar informationBar;
     private SpringLayout informationBarLayout;
     private PointsOfInterestBar pointsOfInterestBar;
@@ -32,19 +33,21 @@ public final class InformationBarController extends Controller {
     private PointsOfInterestTopButtons poiButtons;
 
     private List<String> places;
+    private List<JPanel> panelPlaces;
 
-    private InformationBarController() { super();}
+    private PointsOfInterestController() { super();}
 
-    public static InformationBarController getInstance()
+    public static PointsOfInterestController getInstance()
     {
         if (instance == null) {
-            instance = new InformationBarController();
+            instance = new PointsOfInterestController();
         }
         return instance;
     }
 
     public void setupInformationBar() {
         places = new LinkedList<>();
+        panelPlaces = new ArrayList<>();
         informationBar = new InformationBar();
         informationBarLayout = (SpringLayout) informationBar.getLayout();
         informationBar.setPreferredSize(new Dimension(400, window.getFrame().getHeight()));
@@ -71,8 +74,49 @@ public final class InformationBarController extends Controller {
     }
 
     private void addInteractionHandlersPointsOfInterestButtons() {
-        poiButtons.getNewPointButton().addMouseListener(new PointsOfInterestButtonInteractionHandler(poiButtons.getNewPointButton()));
-        poiButtons.getDeleteAllButton().addMouseListener(new PointsOfInterestButtonInteractionHandler(poiButtons.getDeleteAllButton()));
+        poiButtons.getNewPointButton().addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                poiButtons.getNewPointButton().setForeground(ThemeHelper.color("toolActivated"));
+                MainWindowController.getInstance().transferFocusToMapCanvas();
+                MainWindowController.getInstance().changeCanvasMouseCursorToPoint();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                poiButtons.getNewPointButton().setForeground(ThemeHelper.color("toolHover"));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                poiButtons.getNewPointButton().setForeground(ThemeHelper.color("icon"));
+            }
+
+        });
+        poiButtons.getDeleteAllButton().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                poiButtons.getDeleteAllButton().setForeground(ThemeHelper.color("toolActivated"));
+                PopupWindow.confirmBox(null, "Do you Wish to Delete All Points of Interest?", "Confirm Deletion", JOptionPane.YES_OPTION);
+                //Clear all points
+                poiButtons.getDeleteAllButton().setForeground(ThemeHelper.color("icon"));
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                poiButtons.getDeleteAllButton().setForeground(ThemeHelper.color("toolHover"));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                poiButtons.getDeleteAllButton().setForeground(ThemeHelper.color("icon"));
+            }
+        });
     }
 
     private void setupScrollbar() {
@@ -93,7 +137,6 @@ public final class InformationBarController extends Controller {
         poiButtons.applyTheme();
         informationBar.applyTheme();
         pointsOfInterestBar.applyTheme();
-
     }
 
     public InformationBar getInformationBar() {
@@ -120,7 +163,11 @@ public final class InformationBarController extends Controller {
 
 
         for(String s : places) {
-            pointsOfInterestBar.addPlaceToList(setupPointPanel(s));
+            PointProfile profile = new PointProfile(s);
+            profile.addMouseListener(new PointsInteractionHandler(profile));
+            profile.getDeleteButton().addMouseListener(new PointDeleteButtonInteractionHandler(profile.getDeleteButton()));
+            panelPlaces.add(profile);
+            pointsOfInterestBar.addPlaceToList(profile);
             pointsOfInterestBar.createVerticalSpace(10);
             pointsOfInterestBar.addHorizontalGlue();
         }
@@ -128,57 +175,57 @@ public final class InformationBarController extends Controller {
     }
 
 
-    private JPanel setupPointPanel(String s) {
-        JPanel panel = new JPanel();
-        SpringLayout layout = new SpringLayout();
-        panel.setLayout(layout);
-        panel.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("border")));
-        panel.setPreferredSize(new Dimension(290,PROFILE_HEIGHT));
-        panel.setMaximumSize(new Dimension(290, PROFILE_HEIGHT));
-        panel.setMinimumSize(new Dimension(290, PROFILE_HEIGHT));
-        panel.setBackground(ThemeHelper.color("toolbar"));
-        panel.addMouseListener(new PointsInteractionHandler(panel));
-        return panel;
-    }
-
-
     private class PointsInteractionHandler extends MouseAdapter {
 
-        private JPanel point;
+        private PointProfile point;
 
-        public PointsInteractionHandler(JPanel panel) {
+        public PointsInteractionHandler(PointProfile panel) {
             point = panel;
         }
 
         @Override
         public void mouseEntered(MouseEvent e) {
             point.setBackground(ThemeHelper.color("pointHover"));
+            point.getDeleteButton().setBackground(ThemeHelper.color("pointHover"));
+
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
             point.setBackground(ThemeHelper.color("toolbar"));
+            point.getDeleteButton().setBackground(ThemeHelper.color("toolbar"));
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            //
         }
 
     }
 
-    private class PointsOfInterestButtonInteractionHandler extends MouseAdapter {
+    private class PointDeleteButtonInteractionHandler extends MouseAdapter {
 
+        private PointProfile point;
         private JLabel button;
 
-        public PointsOfInterestButtonInteractionHandler(JLabel button) {
+        public PointDeleteButtonInteractionHandler(JLabel button) {
+            point = (PointProfile) button.getParent();
             this.button = button;
         }
 
         @Override
         public void mouseEntered(MouseEvent e) {
+            point.setBackground(ThemeHelper.color("pointHover"));
             button.setForeground(ThemeHelper.color("toolHover"));
+            button.setBackground(ThemeHelper.color("pointHover"));
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
             button.setForeground(ThemeHelper.color("icon"));
+            button.setBackground(ThemeHelper.color("toolbar"));
         }
+
 
     }
 

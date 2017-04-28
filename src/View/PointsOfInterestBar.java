@@ -4,7 +4,7 @@ import Helpers.ThemeHelper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,14 +15,14 @@ import java.util.List;
  */
 public class PointsOfInterestBar extends View {
 
-    private List<JPanel> points;
+    private List<PointProfile> points;
     public PointsOfInterestBar() {
-        points = new LinkedList<>();
+        points = new ArrayList<>();
         applyTheme();
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
     }
 
-    public void addPlaceToList(JPanel place) {
+    public void addPlaceToList(PointProfile place) {
         points.add(place);
         add(place);
     }
@@ -37,9 +37,13 @@ public class PointsOfInterestBar extends View {
 
     public void applyTheme() {
         setBackground(ThemeHelper.color("toolbar"));
-        for(JPanel panel : points) {
-           panel.setBackground(ThemeHelper.color("toolbar"));
+        for(PointProfile panel : points) {
+           panel.applyTheme();
         }
+    }
+
+    public void updateListOfPoints(List<PointProfile> list) {
+        points = list;
     }
 
 

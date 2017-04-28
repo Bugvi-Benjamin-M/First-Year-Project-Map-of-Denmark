@@ -21,7 +21,6 @@ public class Main {
 
     private static final boolean DEBUG_MODE_ACTIVE = false; // CHANGE ME TO PREVENT LOADING DEFAULT
     private static final boolean SAVE_AFTER_LOAD = true; // CHANGE ME TO PREVENT SAVING BIN
-    private static boolean isArgumentGiven;
     private static boolean loadDefaultFile;
 
     public static long LOAD_TIME;
@@ -31,43 +30,16 @@ public class Main {
     {
 
         long startTime = System.nanoTime();
-        switch (args.length) {
-            case 1:
-                isArgumentGiven = true;
-                loadDefaultFile = false;
-                break;
-            case 0:
-                isArgumentGiven = false;
-                loadDefaultFile = true;
-                break;
-            default:
-                PopupWindow.infoBox(null, "The Number of Arguments Exceeded One.\n" +
-                        "Loading Default File.", "Wrong Argument Type");
-                args = null;
-                isArgumentGiven = false;
-                loadDefaultFile = true;
-                break;
-        }
-
-
-
         splashScreenInit();
         Model model = Model.getInstance();
         createControllers();
         PreferencesController.getInstance().setupPreferences();
         FileHandler.loadDefaultResource();
-        if(isArgumentGiven) {
+        loadDefaultFile = true;
+        if(!PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
             try {
-                loadDefaultFile = false;
-                FileHandler.loadResource(args[0], false);
-            } catch (NullPointerException e) {
-                loadDefaultFile = true;
-                PopupWindow.infoBox(null, "Failed to Load Given Argument. Initialising Standard Startup.", "Failed to Load Argument");
-            }
-        } else if(!PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
-            try {
-                loadDefaultFile = false;
                 FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
+                loadDefaultFile = false;
             } catch (Exception e) {
                 e.printStackTrace();
                 PopupWindow.infoBox(null, "Could Not Find Preferred Startup File: " + PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
@@ -100,7 +72,7 @@ public class Main {
         MainWindowController.getInstance();
         ToolbarController.getInstance();
         CanvasController.getInstance();
-        InformationBarController.getInstance();
+        PointsOfInterestController.getInstance();
         SettingsWindowController.getInstance();
     }
 

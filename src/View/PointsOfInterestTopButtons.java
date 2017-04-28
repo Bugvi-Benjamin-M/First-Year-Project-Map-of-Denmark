@@ -36,8 +36,8 @@ public class PointsOfInterestTopButtons extends View {
         deleteAllButton.setPreferredSize(new Dimension(BUTTON_WIDTH,BUTTON_HEIGHT));
         newPointButton.setToolTipText(NEW_BUTTON_TOOLTIP);
         deleteAllButton.setToolTipText(DELETEALL_BUTTON_TOOLTIP);
-        newPointButton.setBorder(BorderFactory.createRaisedSoftBevelBorder());
-        deleteAllButton.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+        newPointButton.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
+        deleteAllButton.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
         add(newPointButton);
         add(Box.createHorizontalStrut(SPACE_BETWEEN_BUTTONS));
         add(deleteAllButton);
@@ -47,6 +47,8 @@ public class PointsOfInterestTopButtons extends View {
 
     public void applyTheme() {
         this.setBackground(ThemeHelper.color("toolbar"));
+        newPointButton.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
+        deleteAllButton.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
         newPointButton.setBackground(ThemeHelper.color("toolbar"));
         deleteAllButton.setBackground(ThemeHelper.color("toolbar"));
         newPointButton.setForeground(ThemeHelper.color("poiButtonsForeground"));
