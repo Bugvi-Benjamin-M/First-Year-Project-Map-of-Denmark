@@ -166,7 +166,7 @@ public class FileHandler {
     {
         // File f = new File(fileName);
         // if(f.exists()) f.delete();
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)))) {
             out.writeObject(Model.getInstance().getElements());
             out.writeFloat(Model.getInstance().getMinLongitude(dynamic));
             out.writeFloat(Model.getInstance().getMaxLongitude(dynamic));
