@@ -66,7 +66,7 @@ public interface Theme {
     public abstract Color cycleway();
     public abstract Color path();
     public abstract Color road();
-    public abstract Color roadBorder();
+    public abstract Color airport();
 
     public abstract Color rail();
 
@@ -81,6 +81,7 @@ public interface Theme {
     public abstract Color parkingAmenity();
     public abstract Color sportAmenity();
     public abstract Color railwayStation();
+    public abstract Color airportAmenity();
     public abstract Color poi();
 
     public abstract String getName();

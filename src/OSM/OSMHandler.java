@@ -304,6 +304,12 @@ public final class OSMHandler implements ContentHandler {
                 case "man_made":
                     determineManMade(v);
                     break;
+                case "aeroway":
+                    determineAirport(v);
+                    break;
+                case "waterway":
+                    determineWaterWay(v);
+                    break;
                 case "leisure":
                     determineLeisure(v);
                     break;
@@ -387,7 +393,7 @@ public final class OSMHandler implements ContentHandler {
     private void determineBarrier (String value){
         switch (value){
             case "hedge":
-                elementType = ElementType.FOREST;
+                elementType = ElementType.HEDGE;
                 break;
         }
     }
@@ -395,6 +401,7 @@ public final class OSMHandler implements ContentHandler {
     private void determineLeisure(String value) {
         switch (value) {
             case "park":
+            case "nature_reserve":
             case "dog_park":
             case "garden":
                 elementType = ElementType.PARK;
@@ -501,12 +508,44 @@ public final class OSMHandler implements ContentHandler {
                 break;
             case "wood":
             case "scrub":
-            case "tree_row":
                 elementType = ElementType.FOREST;
+                break;
+            case "tree_row":
+                elementType = ElementType.HEDGE;
                 break;
             case "beach":
             case "sand":
                 elementType = ElementType.BEACH;
+                break;
+        }
+    }
+
+    private void determineWaterWay(String value){
+        elementType = ElementType.UNKNOWN;
+        switch (value){
+            case "river":
+            case "riverbank":
+            case "stream":
+                elementType = ElementType.RIVER;
+                break;
+            case "drain":
+            case "canal":
+                elementType = ElementType.DRAIN;
+                break;
+        }
+    }
+
+    private void determineAirport(String value){
+        elementType = ElementType.UNKNOWN;
+        switch (value){
+            case "runway":
+                elementType = ElementType.AIRPORT_RUNWAY;
+                break;
+            case "taxiway":
+                elementType = ElementType.AIRPORT_TAXIWAY;
+                break;
+            case "aerodrome":
+                place = ElementType.AIRPORT_AMENITY;
                 break;
         }
     }
@@ -683,6 +722,11 @@ public final class OSMHandler implements ContentHandler {
                 case SPORTSTRACK:
                 case PLAYGROUND:
                 case PARKING:
+                case HEDGE:
+                case RIVER:
+                case DRAIN:
+                case AIRPORT_RUNWAY:
+                case AIRPORT_TAXIWAY:
                     addBiome(elementType, false);
                     break;
                 case BRIDGE:
@@ -702,6 +746,7 @@ public final class OSMHandler implements ContentHandler {
                     case SPORT_AMENITY:
                     case PARKING_AMENITY:
                     case RAILWAY_STATION_AREA:
+                    case AIRPORT_AMENITY:
                         addAmenity(place);
                         break;
                 }
@@ -754,6 +799,11 @@ public final class OSMHandler implements ContentHandler {
                     case SPORTSPITCH:
                     case SPORTSTRACK:
                     case PLAYGROUND:
+                    case HEDGE:
+                    case RIVER:
+                    case DRAIN:
+                    case AIRPORT_RUNWAY:
+                    case AIRPORT_TAXIWAY:
                         addBiome(elementType, true);
                         break;
                     case BRIDGE:
@@ -966,7 +1016,12 @@ public final class OSMHandler implements ContentHandler {
                 amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
                 p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                 model.getElements().get(ElementType.RAILWAY_STATION_AREA).putPointer(p);
-                System.out.println("Station added");
+                break;
+            case AIRPORT_AMENITY:
+                polygonApprox = new PolygonApprox(way);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                model.getElements().get(ElementType.AIRPORT_AMENITY).putPointer(p);
                 break;
         }
     }

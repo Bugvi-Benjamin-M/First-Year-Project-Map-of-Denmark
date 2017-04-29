@@ -111,7 +111,8 @@ public class DefaultTheme implements Theme {
     public Color sportstrack(){
         return new Color(0x90E49E);
     }
-    public Color railwayStation() { return new Color(0x00CEE4 ); }
+    public Color railwayStation() { return new Color(0x00CEE4); }
+    public Color airportAmenity() { return new Color(0x000000); }
     public Color poi() { return new Color(0xE40006); }
 
     // Roads:
@@ -136,7 +137,7 @@ public class DefaultTheme implements Theme {
     public Color cycleway() { return new Color(0x000000); }
     public Color path() { return new Color(0x000000); }
     public Color road() { return new Color(0x9F99F1); }
-    public Color roadBorder() { return new Color(0x605C66); }
+    public Color airport() { return new Color(0x8D8993); }
 
     @Override
     public String getName()

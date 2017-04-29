@@ -8,6 +8,7 @@ import Helpers.Utilities.FPSCounter;
 import Model.Model;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -21,7 +22,6 @@ public class Main {
 
     public static void main(String[] args)
     {
-
         long startTime = System.nanoTime();
         splashScreenInit();
 

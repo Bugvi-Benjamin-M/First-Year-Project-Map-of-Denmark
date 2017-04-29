@@ -57,6 +57,7 @@ public class NightTheme implements Theme {
     public Color parkingAmenity() { return new Color(0x000000); }
     public Color sportAmenity() { return new Color(0x000000); }
     public Color railwayStation() { return new Color(0x000000 ); }
+    public Color airportAmenity() { return new Color(0x787878); }
     public Color poi() { return new Color(0x3EFF00); }
 
     public Color water()
@@ -135,7 +136,8 @@ public class NightTheme implements Theme {
     public Color cycleway() { return new Color(0x787878); }
     public Color path() { return new Color(0x787878); }
     public Color road() { return new Color(0x787878); }
-    public Color roadBorder() { return new Color(0000000); }
+    public Color airport() { return new Color(0x8D8993); }
+
 
     @Override
     public String getName()

@@ -42,6 +42,16 @@ public class MapCanvas extends View {
     private Point2D.Float locationMarker;
     private ArrayList<POI> poiList;
 
+    //default level of detals on zoom levels
+    private static final double DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.000001;
+    private static final double DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.00005;
+    private static final double DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.00008;
+    private static final double DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.001;
+    private static final double DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.001;
+    private static final double DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.005;
+    private static final double DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.03;
+
+
     public MapCanvas() {
         transform = new AffineTransform();
         poiList = new ArrayList<>();
@@ -157,28 +167,29 @@ public class MapCanvas extends View {
         }
     }
 
-    // TODO tænk over rækkefølgen elementerne bliver tegnet i (Jakob Nikolaj)
-    private void drawElements(Graphics2D g)
-    {
+    private void drawElements(Graphics2D g) {
         switch (ZoomLevel.getZoomLevel()) {
         case LEVEL_0:
-            drawCommonLand(g, ThemeHelper.color("commonland"),0.000001);
-            drawPark(g, ThemeHelper.color("park"), 0.000001);
-            drawBeach(g, ThemeHelper.color("beach"),0.000001);
-            drawForest(g, ThemeHelper.color("forest"), 0.000001);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.000001);
-            drawGrass(g, ThemeHelper.color("grass"), 0.000001);
-            drawFarmland(g, ThemeHelper.color("farmland"), 0.000001);
-            drawMeadow(g, ThemeHelper.color("meadow"), 0.000001);
-            drawHeath(g, ThemeHelper.color("heath"), 0.000001);
-            drawPlayground(g, ThemeHelper.color("playground"),0.000004f);
-            drawSportsPitch(g, ThemeHelper.color("sportspitch"),0.000001);
-            drawSportsTrack(g, ThemeHelper.color("sportstrack"),0.000001);
-            drawWater(g, ThemeHelper.color("water"), 0.000001);
-            drawWetland(g, ThemeHelper.color("wetland"), 0.000001);
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PARK, g, ThemeHelper.color("park"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.BEACH, g, ThemeHelper.color("beach"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASS, g, ThemeHelper.color("grass"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FARMLAND, g, ThemeHelper.color("farmland"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.MEADOW, g, ThemeHelper.color("meadow"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.HEATH, g, ThemeHelper.color("heath"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PLAYGROUND, g, ThemeHelper.color("playground"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.SPORTSPITCH, g, ThemeHelper.color("sportspitch"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.SPORTSTRACK, g, ThemeHelper.color("sportstrack"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeWay(ElementType.HEDGE, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.00004f);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WETLAND, g, ThemeHelper.color("wetland"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeWay(ElementType.RIVER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.00008f);
+            drawBiomeWay(ElementType.DRAIN, g, ThemeHelper.color("water"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.00004f);
             drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
             drawPier(g, ThemeHelper.color("bridge"), 0.000008f);
-            drawParking(g, ThemeHelper.color("parking"), 0.000001);
+            drawBiomeArea(ElementType.PARKING, g, ThemeHelper.color("parking"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
 
             drawFootways(g, ThemeHelper.color("footway"), ThemeHelper.color("footwayArea"), 0.000004f);
             drawBridleways(g, ThemeHelper.color("bridleway"), 0.000004f);
@@ -208,6 +219,8 @@ public class MapCanvas extends View {
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00016f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00012f);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00032f);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00008f);
 
             drawBuilding(g, ThemeHelper.color("building"));
 
@@ -226,24 +239,31 @@ public class MapCanvas extends View {
             drawNight(g);
             drawRailwayStation(g);
             drawHospital(g);
+            drawAirportAmenity(g);
             drawParkingAmenity(g);
             drawPlaceOfWorship(g);
             drawSportAmenity(g);
             break;
         case LEVEL_1:
-            drawCommonLand(g, ThemeHelper.color("commonland"),0.00005);
-            drawPark(g, ThemeHelper.color("park"), 0.00005);
-            drawBeach(g, ThemeHelper.color("beach"),0.00005);
-            drawForest(g, ThemeHelper.color("forest"), 0.00005);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.00005);
-            drawGrass(g, ThemeHelper.color("grass"), 0.00005);
-            drawFarmland(g, ThemeHelper.color("farmland"), 0.00005);
-            drawMeadow(g, ThemeHelper.color("meadow"), 0.00005);
-            drawHeath(g, ThemeHelper.color("heath"), 0.00005);
-            drawWater(g, ThemeHelper.color("water"), 0.00005);
-            drawWetland(g, ThemeHelper.color("wetland"), 0.00005);
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PARK, g, ThemeHelper.color("park"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.BEACH, g, ThemeHelper.color("beach"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASS, g, ThemeHelper.color("grass"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FARMLAND, g, ThemeHelper.color("farmland"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.MEADOW, g, ThemeHelper.color("meadow"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.HEATH, g, ThemeHelper.color("heath"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PLAYGROUND, g, ThemeHelper.color("playground"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.SPORTSPITCH, g, ThemeHelper.color("sportspitch"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.SPORTSTRACK, g, ThemeHelper.color("sportstrack"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WETLAND, g, ThemeHelper.color("wetland"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeWay(ElementType.RIVER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.0001f);
+            drawBiomeWay(ElementType.DRAIN, g, ThemeHelper.color("water"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.00006f);
             drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
-            drawParking(g, ThemeHelper.color("parking"), 0.000001);
+            drawPier(g, ThemeHelper.color("bridge"), 0.000008f);
+            drawBiomeArea(ElementType.PARKING, g, ThemeHelper.color("parking"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
 
             drawRaceways(g, ThemeHelper.color("raceway"), 0.00007f);
             drawEscapes(g, ThemeHelper.color("escape"), 0.00002f);
@@ -263,7 +283,8 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00036f);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00012f);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
             drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
@@ -277,21 +298,23 @@ public class MapCanvas extends View {
 
             // Amenities
             drawHospital(g);
+            drawAirportAmenity(g);
             drawRailwayStation(g);
             drawParkingAmenity(g);
             break;
         case LEVEL_2:
-            drawCommonLand(g, ThemeHelper.color("commonland"),0.00008);
-            drawPark(g, ThemeHelper.color("park"), 0.00008);
-            drawBeach(g, ThemeHelper.color("beach"),0.00008);
-            drawForest(g, ThemeHelper.color("forest"), 0.00008);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.00008);
-            drawGrass(g, ThemeHelper.color("grass"), 0.00008);
-            drawFarmland(g, ThemeHelper.color("farmland"), 0.00008);
-            drawMeadow(g, ThemeHelper.color("meadow"), 0.00008);
-            drawHeath(g, ThemeHelper.color("heath"), 0.00008);
-            drawWater(g, ThemeHelper.color("water"), 0.00008);
-            drawWetland(g, ThemeHelper.color("wetland"), 0.00008);
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PARK, g, ThemeHelper.color("park"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.BEACH, g, ThemeHelper.color("beach"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASS, g, ThemeHelper.color("grass"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FARMLAND, g, ThemeHelper.color("farmland"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.MEADOW, g, ThemeHelper.color("meadow"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.HEATH, g, ThemeHelper.color("heath"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WETLAND, g, ThemeHelper.color("wetland"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeWay(ElementType.RIVER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.0001f);
             drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
 
             drawResidentialRoads(g, ThemeHelper.color("residentialRoad"), 0.00007f);
@@ -306,7 +329,8 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00036f);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00012f);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
             drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
@@ -316,17 +340,19 @@ public class MapCanvas extends View {
             drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
             break;
         case LEVEL_3:
-            drawCommonLand(g, ThemeHelper.color("commonland"),0.001);
-            drawPark(g, ThemeHelper.color("park"), 0.001);
-            drawBeach(g, ThemeHelper.color("beach"),0.001);
-            drawForest(g, ThemeHelper.color("forest"), 0.001);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.001);
-            drawGrass(g, ThemeHelper.color("grass"), 0.001);
-            drawFarmland(g, ThemeHelper.color("farmland"), 0.001);
-            drawMeadow(g, ThemeHelper.color("meadow"), 0.001);
-            drawHeath(g, ThemeHelper.color("heath"), 0.001);
-            drawWater(g, ThemeHelper.color("water"), 0.001);
-            drawWetland(g, ThemeHelper.color("wetland"), 0.001);
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PARK, g, ThemeHelper.color("park"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.BEACH, g, ThemeHelper.color("beach"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASS, g, ThemeHelper.color("grass"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FARMLAND, g, ThemeHelper.color("farmland"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.MEADOW, g, ThemeHelper.color("meadow"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.HEATH, g, ThemeHelper.color("heath"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WETLAND, g, ThemeHelper.color("wetland"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeWay(ElementType.RIVER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.0001f);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
 
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
@@ -338,7 +364,8 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00036f);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00012f);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
             drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
@@ -348,17 +375,17 @@ public class MapCanvas extends View {
             drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
             break;
         case LEVEL_4:
-            drawCommonLand(g, ThemeHelper.color("commonland"),0.001);
-            drawPark(g, ThemeHelper.color("park"), 0.001);
-            drawBeach(g, ThemeHelper.color("beach"),0.001);
-            drawForest(g, ThemeHelper.color("forest"), 0.001);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.001);
-            drawGrass(g, ThemeHelper.color("grass"), 0.001);
-            drawFarmland(g, ThemeHelper.color("farmland"), 0.001);
-            drawMeadow(g, ThemeHelper.color("meadow"), 0.001);
-            drawHeath(g, ThemeHelper.color("heath"), 0.001);
-            drawWater(g, ThemeHelper.color("water"), 0.001);
-            drawWetland(g, ThemeHelper.color("wetland"), 0.001);
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PARK, g, ThemeHelper.color("park"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.BEACH, g, ThemeHelper.color("beach"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASS, g, ThemeHelper.color("grass"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FARMLAND, g, ThemeHelper.color("farmland"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.MEADOW, g, ThemeHelper.color("meadow"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.HEATH, g, ThemeHelper.color("heath"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WETLAND, g, ThemeHelper.color("wetland"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
 
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
@@ -370,6 +397,8 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00036f);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00012f);
 
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
@@ -378,10 +407,10 @@ public class MapCanvas extends View {
             drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
             break;
         case LEVEL_5:
-            drawCommonLand(g, ThemeHelper.color("commonland"),0.005);
-            drawForest(g, ThemeHelper.color("forest"), 0.005);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.005);
-            drawWater(g, ThemeHelper.color("water"), 0.005);
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
 
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
@@ -393,17 +422,17 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00036f);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
             drawCityNames(g, ElementType.CITY_NAME, 0.8f);
             drawCityNames(g, ElementType.TOWN_NAME, 0.35f);
             break;
         case LEVEL_6:
-            drawCommonLand(g, ThemeHelper.color("commonland"),0.03);
-            drawForest(g, ThemeHelper.color("forest"), 0.03);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.03);
-            drawWater(g, ThemeHelper.color("water"), 0.03);
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
 
             drawPrimaryRoads(g, ThemeHelper.color("primaryRoad"), 0.0001f);
             drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
@@ -721,192 +750,27 @@ public class MapCanvas extends View {
         }
     }
 
-    private void drawPark(Graphics2D g, Color color, Double minSizeToBeSignificant) {
-        setCurrentSection(ElementType.PARK);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawPlayground(Graphics2D g, Color color, float width) {
-        setCurrentSection(ElementType.PLAYGROUND);
-        g.setColor(color);
-        g.setStroke(new BasicStroke(width));
-        for (Element element : currentSection) {
-            g.fill(element.getShape());
-        }
-    }
-
-    private void drawWetland(Graphics2D g, Color color, Double minSizeToBeSignificant) {
-        setCurrentSection(ElementType.WETLAND);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawSportsPitch(Graphics2D g, Color color, Double minSizeToBeSignificant) {
-        setCurrentSection(ElementType.SPORTSPITCH);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-    private void drawSportsTrack(Graphics2D g, Color color, Double minSizeToBeSignificant) {
-        setCurrentSection(ElementType.SPORTSTRACK);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawForest(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
-        setCurrentSection(ElementType.FOREST);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawGrassland(Graphics2D g, Color color, Double minSizeToBeSignificant) {
-        setCurrentSection(ElementType.GRASSLAND);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawGrass(Graphics2D g, Color color, Double minSizeToBeSignificant) {
-        setCurrentSection(ElementType.GRASS);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawMeadow(Graphics2D g, Color color, Double minSizeToBeSignificant) {
-        setCurrentSection(ElementType.MEADOW);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawFarmland(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
-        setCurrentSection(ElementType.FARMLAND);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawHeath(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
-        setCurrentSection(ElementType.HEATH);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawWater(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
-        setCurrentSection(ElementType.WATER);
+    private void drawBiomeArea(ElementType elementType, Graphics2D g, Color color, Double minSizeToBeSignificant){
+        setCurrentSection(elementType);
         g.setColor(color);
         g.setStroke(new BasicStroke(0.00001f));
-        for (Element element : currentSection) {
+        for (Element element : currentSection){
             Biome biome = (Biome)element;
             float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
+            if (size > minSizeToBeSignificant) g.fill(biome.getShape());
         }
     }
 
-    private void drawBeach(Graphics2D g, Color color, Double minSizeToBeSignificant) {
-        setCurrentSection(ElementType.BEACH);
+    private void drawBiomeWay(ElementType elementType, Graphics2D g, Color color, double minSizeToBeSignificant, float strokeSize){
+        setCurrentSection(elementType);
         g.setColor(color);
-        g.setStroke(new BasicStroke(0.00001f));
-        for (Element element : currentSection) {
+        g.setStroke(new BasicStroke(strokeSize));
+        for (Element element : currentSection){
             Biome biome = (Biome)element;
             float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
+            if (size > minSizeToBeSignificant) g.draw(biome.getShape());
         }
     }
-    private void drawCommonLand(Graphics2D g, Color color, Double minSizeToBeSignificant) {
-        setCurrentSection(ElementType.COMMON_LAND);
-        g.setColor(color);
-        g.setStroke(new BasicStroke(0.00001f));
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-    private void drawParking(Graphics2D g, Color color, Double minSizeToBeSignificant) {
-        setCurrentSection(ElementType.PARKING);
-        g.setColor(color);
-        g.setStroke(new BasicStroke(0.00001f));
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
 
     private void drawBuilding(Graphics2D g, Color color)
     {
@@ -1077,7 +941,7 @@ public class MapCanvas extends View {
 
     /*
     Draw each character in the String, taken as a parameter, and then shift to the next letter.
-    The shift will be the size of the latter just written.
+    The shift will be the size of the letter just written.
      */
     private void drawString(String s, Graphics2D g, float x, float y, Font font, float scaleFactor, boolean isShiftedLeft) {
         if (s.length() > 0) {
@@ -1137,7 +1001,7 @@ public class MapCanvas extends View {
         float deltay = ((getFontMetrics(font).getHeight()* scaleFactor)/2);
 
         //Font for drawing name
-        font = new Font("Arial", Font.BOLD, 18);
+        font = new Font("Arial", Font.ITALIC, 18);
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
         for (Element element : currentSection){
             Amenity amenity = (Amenity)element;
@@ -1166,6 +1030,29 @@ public class MapCanvas extends View {
         for (Element element : currentSection) {
             Amenity amenity = (Amenity)element;
             drawString("\uf238" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+        }
+        float deltay = ((getFontMetrics(font).getHeight()* scaleFactor)/2);
+
+        //Font for drawing name
+        font = new Font("Arial", Font.BOLD, 14);
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+        setCurrentSection(ElementType.RAILWAY_STATION);
+        for (Element element : currentSection){
+            Amenity amenity = (Amenity)element;
+
+            String name = amenity.getName();
+            float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
+
+            drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+        }
+        setCurrentSection(ElementType.RAILWAY_STATION_AREA);
+        for (Element element : currentSection){
+            Amenity amenity = (Amenity)element;
+
+            String name = amenity.getName();
+            float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
+
+            drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
         }
     }
     private void drawPlaceOfWorship(Graphics2D g) {
@@ -1235,6 +1122,36 @@ public class MapCanvas extends View {
         g.setComposite(c);
     }
 
+    private void drawAirportAmenity(Graphics2D g) {
+        float scaleFactor;
+        scaleFactor = 3f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
+        setCurrentSection(ElementType.AIRPORT_AMENITY);
+
+        //Color and font
+        g.setColor(ThemeHelper.color("airportAmenity"));
+        Font font = Helpers.FontAwesome.getFontAwesome();
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+
+        for (Element element : currentSection) {
+            Amenity amenity = (Amenity)element;
+            drawString("\uf072" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+        }
+
+        float deltay = ((getFontMetrics(font).getHeight()* scaleFactor)/2);
+
+        //Font for drawing name
+        font = new Font("Arial", Font.ITALIC, 20);
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+        for (Element element : currentSection){
+            Amenity amenity = (Amenity)element;
+
+            String name = amenity.getName();
+            float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
+
+            drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+        }
+    }
+
     public void setLocationMarker(Point2D.Float locationMarker) {
         this.locationMarker = locationMarker;
     }
@@ -1258,18 +1175,16 @@ public class MapCanvas extends View {
     }
 
     private void drawPOI(Graphics2D g) {
-        float scaleFactor = 0.003f;
-        //scaleFactor = (float) (Math.pow(ZoomLevel.getZoomFactor(), -1.8f));
-        //scaleFactor = 0.00003f;
 
-        //if (ZoomLevel.getZoomFactor() >= 15) scaleFactor = (float)(Math.pow(ZoomLevel.getZoomFactor(), -1.8f));
-        //else scaleFactor = 0.003f;
-
-        if(ZoomLevel.getZoomFactor() < 250){
-            scaleFactor = 0.003f * (20f) / (float) ZoomLevel.getZoomFactor(); //50 - 250
-        }else if(ZoomLevel.getZoomFactor() < 500){
-            scaleFactor = 0.006f * (15f) / (float) ZoomLevel.getZoomFactor();
-        }
+        //Calculation ofvthe scalefactor used to derive the font
+        float scaleFactor;
+        scaleFactor = 960000f*(float) (Math.pow(ZoomLevel.getZoomFactor(), -4.0f));
+        if(ZoomLevel.getZoomFactor() < 400) //0.000000015625
+            scaleFactor = 2400f*(float) (Math.pow(ZoomLevel.getZoomFactor(), -3.0f));
+        if(ZoomLevel.getZoomFactor() < 200) //0.0003
+            scaleFactor = 0.003f * (20f) / (float) ZoomLevel.getZoomFactor();
+        if(ZoomLevel.getZoomFactor() < 50)
+            scaleFactor = 0.0012f;
 
         //Color and font
         g.setColor(ThemeHelper.color("hospital"));
@@ -1277,7 +1192,8 @@ public class MapCanvas extends View {
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
 
         for (POI poi : poiList) {
-            drawString("\uf276" + "", g, (float) poi.getX(), (float) poi.getY(), font, scaleFactor, true);
+            float y = (float)poi.getY();
+            drawString("\uf276" + "", g, (float) poi.getX(), y, font, scaleFactor, false);
         }
     }
 }
