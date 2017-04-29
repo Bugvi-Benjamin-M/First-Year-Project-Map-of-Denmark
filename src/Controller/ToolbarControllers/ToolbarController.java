@@ -442,6 +442,7 @@ public final class ToolbarController extends Controller {
         if (chooser != null) {
             try {
                 FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
+                CanvasController.getInstance().updateCanvasElements();
             } catch (Exception e) {
                 e.printStackTrace();
             }

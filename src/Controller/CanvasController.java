@@ -92,18 +92,21 @@ public final class CanvasController extends Controller implements Observer {
         }
     }
 
-    public void setupCanvas()
-    {
+    public void setupCanvas() {
         mapCanvas = new MapCanvas();
         mapCanvas.setPreferredSize(new Dimension(
-            window.getFrame().getWidth(),
-            window.getFrame().getHeight() - GlobalValue.getToolbarHeight()));
+                window.getFrame().getWidth(),
+                window.getFrame().getHeight() - GlobalValue.getToolbarHeight()));
         mapCanvas.setElements(model.getElements());
         mapCanvas.toggleAntiAliasing(
-            PreferencesController.getInstance().getAntiAliasingSetting());
+                PreferencesController.getInstance().getAntiAliasingSetting());
         addInteractionHandlerToCanvas();
         addFocusHandlerToCanvas();
         toggleKeyBindings();
+    }
+
+    public void updateCanvasElements(){
+        mapCanvas.setElements(model.getElements());
     }
 
     private void addInteractionHandlerToCanvas()
