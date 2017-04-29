@@ -9,11 +9,13 @@ public class Value implements Serializable {
     private int citynameindex;
     private float x;
     private float y;
+    private  boolean isSignificant;
 
-    public Value(int citynameindex, float x, float y){
+    public Value(int citynameindex, float x, float y, boolean isSignificant){
         this.citynameindex = citynameindex;
         this.x = x;
         this.y = y;
+        this.isSignificant = isSignificant;
     }
 
     public int getCitynameindex() {
@@ -26,5 +28,9 @@ public class Value implements Serializable {
 
     public float getY() {
         return y;
+    }
+
+    public boolean isSignificant() {
+        return isSignificant;
     }
 }

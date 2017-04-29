@@ -45,7 +45,6 @@ public final class Model extends Observable {
         }
 
         elements = new EnumMap<>(ElementType.class);
-        tst = new TenarySearchTrie();
         for (ElementType type : ElementType.values()) {
             elements.put(type, new KDTree());
         }

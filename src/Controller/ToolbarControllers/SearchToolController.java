@@ -7,6 +7,7 @@ import Helpers.ThemeHelper;
 import Model.Addresses.Value;
 import Model.Model;
 import Parser.Address;
+import View.PopupWindow;
 import View.SearchTool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -125,9 +126,9 @@ public final class SearchToolController extends Controller {
                 if (list.size() > 1) {
                     String[] cities = new String[list.size()];
                     for (int i = 0; i < list.size(); i++) {
-                        if(list.get(i).getCitynameindex() != 0) {
+                        if (list.get(i).getCitynameindex() != 0) {
                             cities[i] = Model.getInstance().getIndexToCity(list.get(i).getCitynameindex());
-                        }else{
+                        } else {
                             cities[i] = currentQuery + " " + i;
                         }
                     }
@@ -141,6 +142,8 @@ public final class SearchToolController extends Controller {
                     System.out.println(searchTool.getText() + " " + list.get(0).getX() + " " + list.get(0).getY());
                     CanvasController.getInstance().markLocation(list.get(0).getX(), list.get(0).getY());
                 }
+            }else{
+                PopupWindow.warningBox(null, "Invalid Address");
             }
 
             ToolbarController.getInstance().transferFocusToCanvas();

@@ -7,6 +7,7 @@ import Helpers.Shapes.MultiPolygonApprox;
 import Helpers.Shapes.PolygonApprox;
 import KDtree.NodeGenerator;
 import KDtree.Pointer;
+import Model.Addresses.TenarySearchTrie;
 import Model.Addresses.Value;
 import Model.Elements.*;
 import Model.Model;
@@ -70,6 +71,7 @@ public final class OSMHandler implements ContentHandler {
         idToNode = new LongToPointMap(22);
         idToWay = new HashMap<>();
         model = Model.getInstance();
+        model.setTst(new TenarySearchTrie());
         nodeGenerator = new NodeGenerator();
         cityNames = new ArrayList<>();
         townNames  = new ArrayList<>();
@@ -604,7 +606,7 @@ public final class OSMHandler implements ContentHandler {
                     case NEIGHBOURHOOD_NAME:
                         addName(place);
                         if(!name.equals("")) {
-                            model.getTst().put(name, new Value(0, longitude * longitudeFactor, -latitude), true);
+                            model.getTst().put(name, new Value(0, longitude * longitudeFactor, -latitude, true));
                         }
                         break;
                     case BAR:
@@ -618,10 +620,10 @@ public final class OSMHandler implements ContentHandler {
                     String key = roadName + " " + roadNumber;
                     if(model.cityEntryExists(cityName + " " + zipCode)){
                         int indexOfCity = model.getCityToIndex(cityName + " " + zipCode);
-                        model.getTst().put(key, new Value(indexOfCity,longitude * longitudeFactor, -latitude), false);
+                        model.getTst().put(key, new Value(indexOfCity,longitude * longitudeFactor, -latitude, false));
                     }else{
                         model.putCityToIndex(cityName + " " + zipCode, indexCounter);
-                        model.getTst().put(key, new Value(indexCounter,longitude * longitudeFactor, -latitude), false);
+                        model.getTst().put(key, new Value(indexCounter,longitude * longitudeFactor, -latitude, false));
                         indexCounter ++;
                     }
                 }
