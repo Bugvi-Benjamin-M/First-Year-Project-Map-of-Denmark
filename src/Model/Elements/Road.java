@@ -24,7 +24,7 @@ public class Road extends Element {
     private boolean travelByBikeAllowed = false;
     private boolean travelByFootAllowed = false;
     private boolean travelByCarAllowed = false;
-    private OSMRelation relation;
+    private OSMRelation relation = new OSMRelation(-1);
 
     public Road(PolygonApprox polygon, String name)
     {

@@ -118,6 +118,10 @@ public class HelperFunctions {
         return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
     }
 
+    /**
+     * Returns the size of a polygon based entirely on a ordered collection of points that connect
+     * @param points The list of Point2D representing the shape of the polygon
+     */
     public static double sizeOfPolygon(List<Point2D> points)
     {
         double dividend = 0;
@@ -135,5 +139,36 @@ public class HelperFunctions {
         nextPoint = points.get(0);
         dividend += (previousPoint.getX() * nextPoint.getY() - previousPoint.getY() * nextPoint.getX());
         return Math.abs(dividend / 2);
+    }
+
+    /**
+     * Calculates the distance between two points to meters
+     * @param v A point on a sphere
+     * @param w Another point on a sphere
+     */
+    public static double distanceInMeters(Point2D v, Point2D w) {
+        double R = 6371e3;
+        double latitude1 = Math.toRadians(v.getY());
+        double latitude2 = Math.toRadians(w.getY());
+        double dy = Math.toRadians((v.getY()-w.getY()));
+        double dx = Math.toRadians(v.getX()-w.getX());
+        double a = Math.sin(dy) * Math.sin(dy/2) +
+                Math.cos(latitude1) * Math.cos(latitude2) *
+                        Math.sin(dx/2) * Math.sin(dx/2);
+        double c = 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+        return R * c;
+    }
+
+    /**
+     * Calcalates the total distance between each consecutive set of points in a collection
+     * @param way An ordered collection of points
+     */
+    public static double distanceInMeters(List<Point2D> way) {
+        if (way.size() < 2) throw new IllegalArgumentException("needs at least two points to calculate the distance");
+        double length = 0.0;
+        for (int i = 1; i < way.size(); i++) {
+            length += distanceInMeters(way.get(i-1),way.get(i));
+        }
+        return length;
     }
 }

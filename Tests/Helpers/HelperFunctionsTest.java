@@ -78,4 +78,22 @@ public class HelperFunctionsTest {
         distance = HelperFunctions.distanceBetweenTwoPoints(A, E);
         assertEquals(6.71, distance, 0.1);
     }
+
+    @Test
+    public void distanceInMeters() throws Exception {
+        Point2D point1 = new Point2D.Double(12.59257,55.65868);
+        Point2D point2 = new Point2D.Double(12.58867,55.65914);
+        double distance = HelperFunctions.distanceInMeters(point1,point2);
+        System.out.println("distance: "+distance);
+        assertEquals(255,distance,5);
+        List<Point2D> points = new ArrayList<>();
+        points.add(new Point2D.Double(12.6771518,55.6310739));
+        points.add(new Point2D.Double(12.6782027,55.6306729));
+        points.add(new Point2D.Double(12.6793972,55.630198));
+        points.add(new Point2D.Double(12.6812215,55.6294461));
+        points.add(new Point2D.Double(12.7293449,55.6097865));
+        distance = HelperFunctions.distanceInMeters(points);
+        System.out.println("distance: "+distance);
+        assertEquals(4680,distance,5);
+    }
 }
