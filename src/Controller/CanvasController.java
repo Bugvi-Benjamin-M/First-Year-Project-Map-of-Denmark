@@ -236,7 +236,16 @@ public final class CanvasController extends Controller implements Observer {
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                       Point2D p = mapCanvas.toModelCoords(MouseInfo.getPointerInfo().getLocation());
+                        /*
+                         *  The cursor position is not the upper left corner of the boundry box
+                         *  of the cursor, but the lower left corner.
+                         *  This take that into consideration.
+                         */
+                        Point2D mousePosition = MouseInfo.getPointerInfo().getLocation();
+                        double x = mousePosition.getX();
+                        double y = mousePosition.getY()-24; //A cursor height of 24?
+                        mousePosition = new Point2D.Double(x, y);
+                        Point2D p = mapCanvas.toModelCoords(mousePosition);
                        String description = PopupWindow.textInputBox(null, "Point of interest", "Enter description: ");
                        if(description != null){
                            if(description.length() < 52) {

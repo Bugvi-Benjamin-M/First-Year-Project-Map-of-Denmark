@@ -219,8 +219,8 @@ public class MapCanvas extends View {
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00016f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00012f);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
-            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00032f);
-            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00008f);
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00018f);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00006f);
 
             drawBuilding(g, ThemeHelper.color("building"));
 
@@ -283,8 +283,8 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00036f);
-            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00012f);
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00020f);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00007f);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
             drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
@@ -329,8 +329,8 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00036f);
-            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00012f);
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00024f);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00008f);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
             drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
@@ -364,8 +364,8 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00036f);
-            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00012f);
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00028f);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00009f);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
             drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
@@ -397,8 +397,8 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00036f);
-            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00012f);
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00030f);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00010f);
 
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
@@ -764,7 +764,7 @@ public class MapCanvas extends View {
     private void drawBiomeWay(ElementType elementType, Graphics2D g, Color color, double minSizeToBeSignificant, float strokeSize){
         setCurrentSection(elementType);
         g.setColor(color);
-        g.setStroke(new BasicStroke(strokeSize));
+        g.setStroke(new BasicStroke(strokeSize, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL));
         for (Element element : currentSection){
             Biome biome = (Biome)element;
             float size = biome.getShape().getSize();
@@ -1176,7 +1176,7 @@ public class MapCanvas extends View {
 
     private void drawPOI(Graphics2D g) {
 
-        //Calculation ofvthe scalefactor used to derive the font
+        //Calculation of the scalefactor used to derive the font
         float scaleFactor;
         scaleFactor = 960000f*(float) (Math.pow(ZoomLevel.getZoomFactor(), -4.0f));
         if(ZoomLevel.getZoomFactor() < 400) //0.000000015625
@@ -1187,13 +1187,12 @@ public class MapCanvas extends View {
             scaleFactor = 0.0012f;
 
         //Color and font
-        g.setColor(ThemeHelper.color("hospital"));
+        g.setColor(ThemeHelper.color("poi"));
         Font font = Helpers.FontAwesome.getFontAwesome();
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
 
         for (POI poi : poiList) {
-            float y = (float)poi.getY();
-            drawString("\uf276" + "", g, (float) poi.getX(), y, font, scaleFactor, false);
+            drawString("\uf276" + "", g, (float) poi.getX(), (float)poi.getY(), font, scaleFactor, true);
         }
     }
 }

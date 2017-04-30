@@ -93,4 +93,5 @@ public enum ElementType {
     RAILWAY_STATION, //Default
     RAILWAY_STATION_AREA, //Default
     AIRPORT_AMENITY, //Default
+    UNIVERSITY, //Default
 }

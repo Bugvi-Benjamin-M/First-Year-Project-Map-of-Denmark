@@ -828,7 +828,7 @@ public final class OSMHandler implements ContentHandler {
             }
         } else {
             MultiPolygonApprox multiPolygonApprox;
-            relation = OSMRelation.sortWays(relation);
+            //relation = OSMRelation.sortWays(relation);
             multiPolygonApprox = new MultiPolygonApprox(relation);
             Building building = new Building(multiPolygonApprox);
             for (int i = 0; i < relation.size(); i++) {
