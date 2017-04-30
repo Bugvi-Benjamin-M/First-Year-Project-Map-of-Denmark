@@ -9,7 +9,6 @@ import Helpers.Utilities.DebugWindow;
 import KDtree.KDTree;
 import Main.Main;
 import Model.Elements.*;
-import Model.Model;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -209,8 +208,7 @@ public class MapCanvas extends View {
 
     private void drawCoastlines(Graphics2D g)
     {
-        //todo this is fucking annoying and we need to look at threads to see if we can get rid of it
-        List<Path2D> coastlines = Model.getInstance().getCoastlines();
+        //List<Path2D> coastlines = Model.getInstance().getCoastlines();
         g.setColor(ThemeHelper.color("background"));
         for (Path2D path : coastlines) {
             g.fill(path);

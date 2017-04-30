@@ -21,7 +21,7 @@ public class GlobalValue {
     private static boolean markCoastlines = false;
     private static boolean didProgramLoadDefault = false;
 
-    private static boolean isAddNewPointActive;
+    private static boolean isAddNewPointActive = false;
 
     public static void setDidProgramLoadDefault(boolean truth_value)
     {

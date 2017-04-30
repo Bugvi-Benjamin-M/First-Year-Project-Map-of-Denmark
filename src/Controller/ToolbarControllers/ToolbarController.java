@@ -5,7 +5,6 @@ import Enums.FileType;
 import Enums.ToolType;
 import Enums.ToolbarType;
 import Helpers.*;
-import Main.Main;
 import View.PopupWindow;
 import View.ToolComponent;
 import View.ToolFeature;
@@ -36,6 +35,7 @@ public final class ToolbarController extends Controller {
     private SpringLayout toolbarLayout;
     private static ToolbarController instance;
     private boolean poiToolActive;
+    private JWindow loadWindow;
 
     private ToolbarType type;
 
@@ -421,13 +421,11 @@ public final class ToolbarController extends Controller {
     private void poiToolActivatedEvent() {
         if(!poiToolActive) {
             toolbar.getTool(ToolType.POI).toggleActivate(true);
-            MainWindowController.getInstance().requestCanvasAdjustment(GlobalValue.getInformationBarWidth());
             MainWindowController.getInstance().activatePointsOfInterestInformationBar();
             MainWindowController.getInstance().transferFocusToInformationBar();
             poiToolActive = true;
         } else {
             toolbar.getTool(ToolType.POI).toggleActivate(false);
-            MainWindowController.getInstance().requestCanvasAdjustment(-GlobalValue.getInformationBarWidth());
             MainWindowController.getInstance().deactivatePointsOfInterestInformationBar();
             MainWindowController.getInstance().transferFocusToMapCanvas();
             poiToolActive = false;
@@ -470,10 +468,42 @@ public final class ToolbarController extends Controller {
             toolbar.getTool(ToolType.LOAD).toggleActivate(false);
     }
 
-    private void loadDefaultFile()
-    {
+    private void loadDefaultFile() {
+        SwingWorker worker = new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                initiateLoadingScreen("Loading Default File!");
+
+                if (PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
+                    FileHandler.loadDefaultResource();
+                } else {
+                    try {
+                        FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
+                    } catch (Exception e) {
+                        PopupWindow.infoBox(null, "Could Not Find Preferred Default File: " +
+                                PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
+                                "Loading Danmark.bin.", "File Not Found");
+                        FileHandler.loadDefaultResource();
+                    }
+                }
+                return "Done";
+            }
+
+            @Override
+            protected void done() {
+                MainWindowController.getInstance().requestCanvasResetElements();
+                MainWindowController.getInstance().requestCanvasAdjustToDynamicBounds();
+                GlobalValue.setMaxZoom(GlobalValue.MAX_ZOOM_DECREASE);
+                MainWindowController.getInstance().requestCanvasRepaint();
+                loadWindow.setVisible(false);
+                loadWindow = null;
+            }
+        };
+
+        worker.execute();
+
         //Todo discuss splashscreen. Is blank
-        Main.splashScreenInit();
+        /*Main.splashScreenInit();
         SwingUtilities.invokeLater(() -> {
             MainWindowController.getInstance().hideWindow();
             if(PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
@@ -494,7 +524,7 @@ public final class ToolbarController extends Controller {
             GlobalValue.setMaxZoom(GlobalValue.MAX_ZOOM_DECREASE);
             MainWindowController.getInstance().showWindow();
             Main.splashScreenDestruct();
-        });
+        });*/
 
     }
 
@@ -533,6 +563,35 @@ public final class ToolbarController extends Controller {
         }
         if (type == ToolbarType.LARGE)
             toolbar.getTool(ToolType.SAVE).toggleActivate(false);
+    }
+
+    private void initiateLoadingScreen(String description) {
+        JProgressBar progressBar = new JProgressBar();
+        progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
+        progressBar.setBackground(ThemeHelper.color("toolbar"));
+        progressBar.setOpaque(true);
+        JLabel icon = new JLabel();
+        icon.setIcon(new ImageIcon(ToolbarController.class.getResource("/Copenhagen.jpg")));
+        icon.setVisible(true);
+        icon.setPreferredSize(new Dimension(200,200));
+        icon.setBackground(ThemeHelper.color("toolbar"));
+        icon.setOpaque(true);
+        JLabel text = new JLabel(description);
+        text.setFont(new Font(text.getFont().getName(), text.getFont().getStyle(), 12));
+        text.setVisible(true);
+        text.setBackground(ThemeHelper.color("toolbar"));
+        text.setForeground(ThemeHelper.color("icon"));
+        text.setOpaque(true);
+        loadWindow = new JWindow();
+        loadWindow.setLayout(new BorderLayout());
+        loadWindow.setLocation(10, toolbar.getLocationOnScreen().y + toolbar.getHeight() + 10);
+        loadWindow.add(BorderLayout.NORTH, icon);
+        loadWindow.add(BorderLayout.CENTER, text);
+        loadWindow.add(BorderLayout.SOUTH, progressBar);
+        loadWindow.pack();
+        loadWindow.setVisible(true);
+        loadWindow.setAlwaysOnTop(true);
     }
 
     private void settingsEvent()
@@ -633,7 +692,11 @@ public final class ToolbarController extends Controller {
         @Override
         public void mouseEntered(MouseEvent e) {
             super.mouseEntered(e);
-            if(tool != null) mouseEnteredTool(type, e);
+            if(tool != null) {
+                mouseEnteredTool(type, e);
+                tool.grabFocus();
+            }
+
 
         }
 
@@ -690,6 +753,12 @@ public final class ToolbarController extends Controller {
         public void mouseDragged(MouseEvent e)
         {
             super.mouseDragged(e);
+            toolbar.grabFocus();
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            super.mouseEntered(e);
             toolbar.grabFocus();
         }
     }

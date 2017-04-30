@@ -30,10 +30,11 @@ public class Main {
     {
 
         long startTime = System.nanoTime();
-        splashScreenInit();
-        Model model = Model.getInstance();
         createControllers();
         PreferencesController.getInstance().setupPreferences();
+        splashScreenInit();
+        Model model = Model.getInstance();
+        CanvasController.getInstance().setupAsObserver();
         FileHandler.loadDefaultResource();
         loadDefaultFile = true;
         if(!PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
@@ -57,9 +58,6 @@ public class Main {
             MainWindowController.getInstance().showWindow();
             if(loadDefaultFile) CanvasController.adjustToBounds();
             else CanvasController.adjustToDynamicBounds();
-
-            MainWindowController.getInstance().transferFocusToMapCanvas();
-
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();

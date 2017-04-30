@@ -25,10 +25,11 @@ public final class PointsOfInterestController extends Controller {
 
     private final int PROFILE_HEIGHT = 90;
     private final int POINTS_OF_INTERESTBAR_WIDTH = 300;
-    private final int SCROLLPANE_HEIGHT_BOOST = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 1.95122f);
     private final int TOP_BUTTONS_HEIGHT = 50;
+    private final int SCROLLBAR_HEIGHT = (int) (0.956316*Toolkit.getDefaultToolkit().getScreenSize().getHeight() + (-292.289));
     private final int DISTANCE_BETWEEN_TOOLBAR_AND_TOP_BUTTONS = GlobalValue.getToolbarHeight() + 10;
     private final int DISTANCE_BETWEEN_TOP_BUTTONS_AND_SCROLLPANE = 60;
+    private final int SCROLLBAR_SPEED = 14;
 
     private static PointsOfInterestController instance;
     private InformationBar informationBar;
@@ -38,7 +39,7 @@ public final class PointsOfInterestController extends Controller {
     private PointsOfInterestTopButtons poiButtons;
 
     private List<String> places;
-    private List<JPanel> panelPlaces;
+    private List<PointProfile> panelPlaces;
 
     private PointsOfInterestController() { super();}
 
@@ -56,7 +57,6 @@ public final class PointsOfInterestController extends Controller {
         informationBar = new InformationBar();
         informationBarLayout = (SpringLayout) informationBar.getLayout();
         informationBar.setPreferredSize(new Dimension(GlobalValue.getInformationBarWidth(), window.getFrame().getHeight()));
-        setupPointsOfInterestBar();
     }
 
     public void setupPointsOfInterestBar() {
@@ -74,6 +74,8 @@ public final class PointsOfInterestController extends Controller {
         informationBarLayout.putConstraint(NORTH, scroll, DISTANCE_BETWEEN_TOP_BUTTONS_AND_SCROLLPANE, NORTH, poiButtons);
         informationBar.add(poiButtons);
         informationBar.add(scroll);
+        InformationBarInteractionHandler handler = new InformationBarInteractionHandler();
+        informationBar.addMouseListener(handler);
         addInteractionHandlersPointsOfInterestButtons();
     }
 
@@ -83,20 +85,25 @@ public final class PointsOfInterestController extends Controller {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                poiButtons.getNewPointButton().setForeground(ThemeHelper.color("toolActivated"));
-                MainWindowController.getInstance().transferFocusToMapCanvas();
-                MainWindowController.getInstance().changeCanvasMouseCursorToPoint();
-                GlobalValue.setIsAddNewPointActive(true);
+                if(!GlobalValue.isAddNewPointActive()) {
+                    poiButtons.getNewPointButton().setForeground(ThemeHelper.color("toolActivated"));
+                    MainWindowController.getInstance().changeCanvasMouseCursorToPoint();
+                    GlobalValue.setIsAddNewPointActive(true);
+                } else {
+                    poiButtons.getNewPointButton().setForeground(ThemeHelper.color("icon"));
+                    MainWindowController.getInstance().changeCanvasMouseCursorToNormal();
+                    GlobalValue.setIsAddNewPointActive(false);
+                }
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                poiButtons.getNewPointButton().setForeground(ThemeHelper.color("toolHover"));
+                if(!GlobalValue.isAddNewPointActive()) poiButtons.getNewPointButton().setForeground(ThemeHelper.color("toolHover"));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                poiButtons.getNewPointButton().setForeground(ThemeHelper.color("icon"));
+                if(!GlobalValue.isAddNewPointActive()) poiButtons.getNewPointButton().setForeground(ThemeHelper.color("icon"));
             }
 
         });
@@ -127,14 +134,17 @@ public final class PointsOfInterestController extends Controller {
     private void setupScrollbar() {
         scroll = new JScrollPane(pointsOfInterestBar);
         scroll.setOpaque(true);
-        scroll.setPreferredSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+SCROLLPANE_HEIGHT_BOOST)));
-        scroll.setMinimumSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+SCROLLPANE_HEIGHT_BOOST)));
-        scroll.setMaximumSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()- (GlobalValue.getToolbarHeight()+SCROLLPANE_HEIGHT_BOOST)));
+        scroll.setPreferredSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, SCROLLBAR_HEIGHT));
+        scroll.setMinimumSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, SCROLLBAR_HEIGHT));
+        scroll.setMaximumSize(new Dimension(POINTS_OF_INTERESTBAR_WIDTH, SCROLLBAR_HEIGHT));
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
         scroll.getVerticalScrollBar().setUI(new CustomScrollbarUI());
+        scroll.getVerticalScrollBar().setUnitIncrement(SCROLLBAR_SPEED);
     }
+
+
 
     public void themeHasChanged() {
         scroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
@@ -171,11 +181,16 @@ public final class PointsOfInterestController extends Controller {
             profile.addMouseListener(new PointsInteractionHandler(profile));
             profile.getDeleteButton().addMouseListener(new PointDeleteButtonInteractionHandler(profile.getDeleteButton()));
             panelPlaces.add(profile);
-            pointsOfInterestBar.addPlaceToList(profile);
-            pointsOfInterestBar.createVerticalSpace(10);
-            pointsOfInterestBar.addHorizontalGlue();
+            //pointsOfInterestBar.addPlaceToList(profile);
+            //pointsOfInterestBar.createVerticalSpace(10);
+            //pointsOfInterestBar.addHorizontalGlue();
         }
+        pointsOfInterestBar.setPointProfiles(panelPlaces);
         pointsOfInterestBar.revalidate();
+    }
+
+    public void repaintPointsOfInterestBar() {
+        pointsOfInterestBar.applyTheme();
     }
 
 
@@ -235,6 +250,23 @@ public final class PointsOfInterestController extends Controller {
             //
         }
 
+
+    }
+
+    private class InformationBarInteractionHandler extends MouseAdapter {
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            pointsOfInterestBar.applyTheme();
+            informationBar.grabFocus();
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            informationBar.applyTheme();
+            pointsOfInterestBar.applyTheme();
+
+        }
 
     }
 

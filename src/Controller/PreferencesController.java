@@ -2,6 +2,7 @@ package Controller;
 
 import Helpers.DefaultSettings;
 import Helpers.GlobalValue;
+import Helpers.ThemeHelper;
 
 import java.util.prefs.*;
 
@@ -42,6 +43,7 @@ public final class PreferencesController {
     public void setupPreferences()
     {
         preferences = Preferences.userNodeForPackage(this.getClass());
+        ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
     }
 
     public boolean getAntiAliasingSetting()

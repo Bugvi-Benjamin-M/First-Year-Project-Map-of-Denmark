@@ -32,14 +32,15 @@ public final class CanvasController extends Controller implements Observer {
     private static final double PAN_FACTOR = 38.5;
     private static final int POPUP_XOFFSET = 20;
     private static final int POPUP_YOFFSET = 10;
-
     private CanvasPopup popup;
 
     private final int POPUP_DELAY = 1100;
     private static final int ANTIALIASING_ZOOM_DELAY = 200;
+    private static final int COASTLINES_UPDATE_DELAY = 200;
     private final float MINIMUM_ACCEPTED_DISTANCE = 0.09f;
     private Timer toolTipTimer;
     private Timer antiAliasingZoomTimer;
+    private static Timer coastLinesUpdateTimer;
 
 
 
@@ -61,8 +62,7 @@ public final class CanvasController extends Controller implements Observer {
     private CanvasController()
     {
         super();
-        model = Model.getInstance();
-        model.addObserver(this);
+
     }
 
     public static CanvasController getInstance()
@@ -91,6 +91,11 @@ public final class CanvasController extends Controller implements Observer {
 
     }
 
+    public void setupAsObserver() {
+        model = Model.getInstance();
+        model.addObserver(this);
+    }
+
     public void setupCanvas()
     {
         mapCanvas = new MapCanvas();
@@ -98,10 +103,12 @@ public final class CanvasController extends Controller implements Observer {
             window.getFrame().getWidth(),
             window.getFrame().getHeight() - GlobalValue.getToolbarHeight()));
         mapCanvas.setElements(model.getElements());
+        //Remember to remove set coastLines if this does not work
         mapCanvas.setCoastLines(model.getCoastlines());
         alignCanvasAndModel();
         mapCanvas.toggleAntiAliasing(
             PreferencesController.getInstance().getAntiAliasingSetting());
+        //repaintCanvas();
         repaintCanvas();
         addInteractionHandlerToCanvas();
         addFocusHandlerToCanvas();
@@ -121,11 +128,6 @@ public final class CanvasController extends Controller implements Observer {
     {
         focusHandler = new CanvasFocusHandler();
         mapCanvas.addFocusListener(focusHandler);
-    }
-
-    public void adjustCanvasToScreen(int adjust) {
-        mapCanvas.pan(adjust,0);
-        repaintCanvas();
     }
 
     private void specifyKeyBindings()
@@ -277,6 +279,7 @@ public final class CanvasController extends Controller implements Observer {
         if (newCenterPoint.getX() < model.getMinLongitude(false) || newCenterPoint.getX() > model.getMaxLongitude(false) || newCenterPoint.getY() < model.getMaxLatitude(false) || newCenterPoint.getY() > model.getMinLatitude(false)) {
             mapCanvas.pan(-dx, -dy);
         }
+        //repaintCanvas();
         repaintCanvas();
     }
 
@@ -285,6 +288,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.pan(-model.getMinLongitude(false), -model.getMaxLatitude(false));
         double factor = mapCanvas.getWidth() / (model.getMaxLongitude(false) - model.getMinLongitude(false));
         mapCanvas.zoom(factor);
+        //repaintCanvas();
         repaintCanvas();
     }
 
@@ -306,20 +310,34 @@ public final class CanvasController extends Controller implements Observer {
             mapCanvas.zoom(Math.pow(ZOOM_FACTOR, -1));
             changeZoomLevel(+10);
         }
+        //repaintCanvas();
         repaintCanvas();
         GlobalValue.setMaxZoom(ZoomLevel.getZoomFactor() - 50);
     }
 
     public static void repaintCanvas() {
-        if(mapCanvas != null) {
-            /*Runnable run = () -> {
+        if (mapCanvas != null) {
+            quickRepaint();
+            if(coastLinesUpdateTimer == null) {
+                coastLinesUpdateTimer = new Timer(COASTLINES_UPDATE_DELAY, a -> {
+                    if(a.getSource() == coastLinesUpdateTimer) {
+                        coastLinesUpdateTimer.stop();
+                        coastLinesUpdateTimer = null;
+                        mapCanvas.setCoastLines(model.getCoastlines());
+                        quickRepaint();
+                    }
+                });
+                coastLinesUpdateTimer.start();
+            } else coastLinesUpdateTimer.restart();
 
-                mapCanvas.setCoastLines(model.getCoastlines());
-            };*/
+        }
+
+    }
+
+    private static void quickRepaint() {
+        if(mapCanvas != null) {
             mapCanvas.repaint();
             alignCanvasAndModel();
-
-
             }
 
         }
@@ -345,65 +363,72 @@ public final class CanvasController extends Controller implements Observer {
     public void update(Observable o, Object arg)
     {
         repaintCanvas();
+        //repaintCanvas();
     }
 
     private void mousePressedEvent(MouseEvent event)
     {
-        mapCanvas.grabFocus();
-        lastMousePosition = event.getPoint();
-        if(PreferencesController.getInstance().getAntiAliasingSetting()) {
-            mapCanvas.toggleAntiAliasing(false);
-            repaintCanvas();
+        if(mapCanvas.hasFocus()) {
+            lastMousePosition = event.getPoint();
+            if (PreferencesController.getInstance().getAntiAliasingSetting()) {
+                mapCanvas.toggleAntiAliasing(false);
+                //repaintCanvas();
+                repaintCanvas();
+            }
         }
     }
 
     private void mouseClickedEvent(MouseEvent event)
     {
-        mapCanvas.grabFocus();
-        Point2D mousePosition = event.getPoint();
-        Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
-        mapCanvas.setCurrentPoint(mouseInModel);
+        if(mapCanvas.hasFocus()) {
+            Point2D mousePosition = event.getPoint();
+            Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
+            mapCanvas.setCurrentPoint(mouseInModel);
+        }
     }
 
     private void mouseDraggedEvent(MouseEvent event)
     {
-        disablePopup();
-        mapCanvas.grabFocus();
-        Point2D currentMousePosition = event.getPoint();
-        double dx = currentMousePosition.getX() - lastMousePosition.getX();
-        double dy = currentMousePosition.getY() - lastMousePosition.getY();
-        panEvent(dx, dy);
-        lastMousePosition = currentMousePosition;
+        if(mapCanvas.hasFocus()) {
+            disablePopup();
+            Point2D currentMousePosition = event.getPoint();
+            double dx = currentMousePosition.getX() - lastMousePosition.getX();
+            double dy = currentMousePosition.getY() - lastMousePosition.getY();
+            panEvent(dx, dy);
+            lastMousePosition = currentMousePosition;
+        }
     }
 
-    private void mouseWheelMovedEvent(MouseWheelEvent event)
-    {
-        disablePopup();
-        mapCanvas.grabFocus();
-        if(PreferencesController.getInstance().getAntiAliasingSetting()) {
-            mapCanvas.toggleAntiAliasing(false);
-            repaintCanvas();
-        }
-        double wheel_rotation = event.getPreciseWheelRotation();
-        double factor = Math.pow(ZOOM_FACTOR, wheel_rotation);
-        Point2D currentMousePosition = event.getPoint();
-        double dx = currentMousePosition.getX();
-        double dy = currentMousePosition.getY();
+    private void mouseWheelMovedEvent(MouseWheelEvent event) {
+        if (mapCanvas.hasFocus()) {
+            disablePopup();
+            if (PreferencesController.getInstance().getAntiAliasingSetting()) {
+                mapCanvas.toggleAntiAliasing(false);
+                //repaintCanvas();
+                repaintCanvas();
+            }
+            double wheel_rotation = event.getPreciseWheelRotation();
+            double factor = Math.pow(ZOOM_FACTOR, wheel_rotation);
+            Point2D currentMousePosition = event.getPoint();
+            double dx = currentMousePosition.getX();
+            double dy = currentMousePosition.getY();
 
-        double increase = -wheel_rotation * 10;
-        zoomEvent(dx, dy, increase, factor);
-        if(PreferencesController.getInstance().getAntiAliasingSetting()) {
-            if(antiAliasingZoomTimer == null) {
-                antiAliasingZoomTimer = new Timer(ANTIALIASING_ZOOM_DELAY, a -> {
-                    if(a.getSource() == antiAliasingZoomTimer) {
-                        antiAliasingZoomTimer.stop();
-                        antiAliasingZoomTimer = null;
-                        mapCanvas.toggleAntiAliasing(true);
-                        repaintCanvas();
-                    }
-                });
-                antiAliasingZoomTimer.start();
-            } else antiAliasingZoomTimer.restart();
+            double increase = -wheel_rotation * 10;
+            zoomEvent(dx, dy, increase, factor);
+            if (PreferencesController.getInstance().getAntiAliasingSetting()) {
+                if (antiAliasingZoomTimer == null) {
+                    antiAliasingZoomTimer = new Timer(ANTIALIASING_ZOOM_DELAY, a -> {
+                        if (a.getSource() == antiAliasingZoomTimer) {
+                            antiAliasingZoomTimer.stop();
+                            antiAliasingZoomTimer = null;
+                            mapCanvas.toggleAntiAliasing(true);
+                            //repaintCanvas();
+                            repaintCanvas();
+                        }
+                    });
+                    antiAliasingZoomTimer.start();
+                } else antiAliasingZoomTimer.restart();
+            }
         }
     }
 
@@ -442,9 +467,12 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void mouseReleasedEvent(MouseEvent e) {
-        if(PreferencesController.getInstance().getAntiAliasingSetting()) {
-            mapCanvas.toggleAntiAliasing(true);
-            repaintCanvas();
+        if(mapCanvas.hasFocus()) {
+            if (PreferencesController.getInstance().getAntiAliasingSetting()) {
+                mapCanvas.toggleAntiAliasing(true);
+                //repaintCanvas();
+                repaintCanvas();
+            }
         }
     }
 
@@ -467,7 +495,14 @@ public final class CanvasController extends Controller implements Observer {
         popup.addToPopup(label);
     }
 
-    private void mouseExitedEvent(MouseEvent e) { disablePopup(); }
+    private void mouseExitedEvent(MouseEvent e) {
+        disablePopup();
+    }
+
+    private void mouseEnteredEvent(MouseEvent e) {
+        MainWindowController.getInstance().requestPointsOfInterestBarRepaint();
+        mapCanvas.grabFocus();
+    }
 
     private void keyboardZoomEvent(double keyboardZoomFactor)
     {
@@ -489,6 +524,7 @@ public final class CanvasController extends Controller implements Observer {
             //repaintCanvas();
             changeZoomLevel(increase);
             mapCanvas.pan(dx, dy);
+            //repaintCanvas();
             repaintCanvas();
         }
     }
@@ -531,6 +567,7 @@ public final class CanvasController extends Controller implements Observer {
         popup = new CanvasPopup();
         mapCanvas.setBackgroundColor();
         mapCanvas.revalidate();
+        //repaintCanvas();
         repaintCanvas();
     }
 
@@ -546,6 +583,14 @@ public final class CanvasController extends Controller implements Observer {
     {
         mapCanvas.toggleAntiAliasing(
             PreferencesController.getInstance().getAntiAliasingSetting());
+    }
+
+    public void changeCanvasMouseCursorToPoint() {
+        if(mapCanvas != null) mapCanvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+    }
+
+    public void changeCanvasMouseCursorToNormal() {
+        if(mapCanvas != null) mapCanvas.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
     public MapCanvas getMapCanvas() { return mapCanvas; }
@@ -594,6 +639,7 @@ public final class CanvasController extends Controller implements Observer {
         @Override
         public void mouseWheelMoved(MouseWheelEvent e)
         {
+
             mouseWheelMovedEvent(e);
         }
 
@@ -608,6 +654,9 @@ public final class CanvasController extends Controller implements Observer {
         {
             mouseExitedEvent(e);
         }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {mouseEnteredEvent(e);}
     }
 
     private class CanvasFocusHandler extends FocusAdapter {
@@ -616,6 +665,8 @@ public final class CanvasController extends Controller implements Observer {
         public void focusLost(FocusEvent e)
         {
             disablePopup();
+            mapCanvas.toggleAntiAliasing(PreferencesController.getInstance().getAntiAliasingSetting());
+            repaintCanvas();
         }
     }
 }

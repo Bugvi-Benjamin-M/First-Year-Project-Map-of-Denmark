@@ -45,10 +45,9 @@ public final class MainWindowController extends WindowController {
                      .icon()
                      .hide();
         window.setMinimumWindowSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 1.9), Toolkit.getDefaultToolkit().getScreenSize().height));
-        ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
         setupToolbar();
         setupCanvas();
-        setupInformationBar();
+        setupPointsOfInterestBar();
         setupLayeredPane();
         addInteractionHandlerToWindow();
         setToolTipTheme();
@@ -102,10 +101,11 @@ public final class MainWindowController extends WindowController {
         CanvasController.getInstance().setupCanvas();
     }
 
-    private void setupInformationBar()
+    private void setupPointsOfInterestBar()
     {
         PointsOfInterestController.getInstance().specifyWindow(window);
         PointsOfInterestController.getInstance().setupInformationBar();
+        PointsOfInterestController.getInstance().setupPointsOfInterestBar();
     }
 
     public void activatePointsOfInterestInformationBar() {
@@ -115,6 +115,7 @@ public final class MainWindowController extends WindowController {
 
     public void deactivatePointsOfInterestInformationBar() {
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
+        //CanvasController.repaintCanvas();
         CanvasController.repaintCanvas();
     }
 
@@ -192,6 +193,7 @@ public final class MainWindowController extends WindowController {
 
     public void requestCanvasRepaint()
     {
+        //CanvasController.repaintCanvas();
         CanvasController.repaintCanvas();
     }
 
@@ -204,11 +206,23 @@ public final class MainWindowController extends WindowController {
     }
 
     public void changeCanvasMouseCursorToPoint() {
-        CanvasController.getInstance().getMapCanvas().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+        CanvasController.getInstance().changeCanvasMouseCursorToPoint();
     }
 
-    public void requestCanvasAdjustment(int distance) {
-        CanvasController.getInstance().adjustCanvasToScreen(distance);
+    public void requestPointsOfInterestBarRepaint() {
+        PointsOfInterestController.getInstance().repaintPointsOfInterestBar();
+    }
+
+    public void changeCanvasMouseCursorToNormal() {
+        CanvasController.getInstance().changeCanvasMouseCursorToNormal();
+    }
+
+    public void requestCanvasAdjustToBounds() {
+        CanvasController.adjustToBounds();
+    }
+
+    public void requestCanvasAdjustToDynamicBounds() {
+        CanvasController.adjustToDynamicBounds();
     }
 
     private class MainWindowInteractionHandler

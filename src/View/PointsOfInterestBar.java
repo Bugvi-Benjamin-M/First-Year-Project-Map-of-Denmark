@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class PointsOfInterestBar extends View {
 
+    private final int SPACE_BETWEEN_PROFILES = 10;
+
     private List<PointProfile> points;
     public PointsOfInterestBar() {
         points = new ArrayList<>();
@@ -25,6 +27,8 @@ public class PointsOfInterestBar extends View {
     public void addPlaceToList(PointProfile place) {
         points.add(place);
         add(place);
+        createVerticalSpace(SPACE_BETWEEN_PROFILES);
+        addHorizontalGlue();
     }
 
     public void createVerticalSpace(int size) {
@@ -42,9 +46,12 @@ public class PointsOfInterestBar extends View {
         }
     }
 
-    public void updateListOfPoints(List<PointProfile> list) {
-        points = list;
+    public void setPointProfiles(List<PointProfile> pointProfiles) {
+        points = pointProfiles;
+        for (PointProfile point : points) {
+            add(point);
+            createVerticalSpace(SPACE_BETWEEN_PROFILES);
+            addHorizontalGlue();
+        }
     }
-
-
 }
