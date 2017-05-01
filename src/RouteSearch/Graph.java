@@ -20,9 +20,9 @@ public class Graph {
     public Graph(int nNodes) {
         if (nNodes <= 0) throw new IllegalArgumentException("Number of nodes has to be greater than zero");
         this.nNodes = nNodes;
-        adjacencyLists = (LinkedList<Edge>[]) new LinkedList[nEdges];
+        adjacencyLists = new LinkedList[nNodes];
         for (int n = 0; n < nNodes; n++) {
-            adjacencyLists[n] = new LinkedList<Edge>();
+            adjacencyLists[n] = new LinkedList<>();
         }
     }
 
@@ -46,8 +46,8 @@ public class Graph {
         validateNode(v);
         validateNode(w);
         adjacencyLists[v].add(edge);
-        adjacencyLists[w].add(edge);
         nEdges++;
+        System.out.println("Added edge: "+edge.toString());
     }
 
     public Iterable<Edge> adjacent(int node) {

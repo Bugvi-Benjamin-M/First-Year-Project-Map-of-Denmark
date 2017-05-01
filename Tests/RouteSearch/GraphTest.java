@@ -26,6 +26,8 @@ public class GraphTest {
     @Test
     public void testAddingEdges() {
         graph.addEdge(new Edge(0,1,20,0.5f, TravelType.WALK));
+        graph.addEdge(new Edge(8,9,20,0.6f, TravelType.VEHICLE));
+        graph.addEdge(new Edge(1,8,50,0.9f, TravelType.BICYCLE));
         System.out.println(graph.toString());
     }
 

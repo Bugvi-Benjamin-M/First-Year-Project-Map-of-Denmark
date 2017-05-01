@@ -80,6 +80,6 @@ public class Edge implements Comparable<Edge>{
      */
     @Override
     public String toString() {
-        return String.format("%d-%d %.5f (%d) - travel: %e",from,to,length,speed,travel);
+        return String.format("%d-%d %.5f (%d) - travel: %s",from,to,length,speed,travel.name());
     }
 }

@@ -52,30 +52,31 @@ public class GraphFactory {
                         addRoadToAdjacent(point,road);
                         points.put(counter,(float) lastPoint.getX(),
                                 (float) lastPoint.getY());
+
                         float length = (float) HelperFunctions.distanceInMeters(point,lastPoint);
                         if (road.isTravelByBikeAllowed()) {
                             roadSegments.add(new Edge(counter-1,counter,
                                     road.getMaxSpeed(),length,TravelType.BICYCLE));
-                        }
-                        if (road.isTravelByBikeAllowed() && !road.isOneWay()) {
-                            roadSegments.add(new Edge(counter,counter-1,
-                                    road.getMaxSpeed(),length,TravelType.BICYCLE));
+                            if (!road.isOneWay()) {
+                                roadSegments.add(new Edge(counter,counter-1,
+                                        road.getMaxSpeed(),length,TravelType.BICYCLE));
+                            }
                         }
                         if (road.isTravelByFootAllowed()) {
                             roadSegments.add(new Edge(counter-1,counter,
                                     road.getMaxSpeed(),length,TravelType.WALK));
-                        }
-                        if (road.isTravelByFootAllowed() && !road.isOneWay()) {
-                            roadSegments.add(new Edge(counter,counter-1,
-                                    road.getMaxSpeed(),length,TravelType.WALK));
+                            if (!road.isOneWay()) {
+                                roadSegments.add(new Edge(counter,counter-1,
+                                        road.getMaxSpeed(),length,TravelType.WALK));
+                            }
                         }
                         if (road.isTravelByCarAllowed()) {
                             roadSegments.add(new Edge(counter-1,counter,
                                     road.getMaxSpeed(),length,TravelType.VEHICLE));
-                        }
-                        if (road.isTravelByCarAllowed() && !road.isOneWay()) {
-                            roadSegments.add(new Edge(counter,counter-1,
-                                    road.getMaxSpeed(),length,TravelType.VEHICLE));
+                            if (!road.isOneWay()) {
+                                roadSegments.add(new Edge(counter,counter-1,
+                                        road.getMaxSpeed(),length,TravelType.VEHICLE));
+                            }
                         }
                         lastPoint = point;
                         counter++;
@@ -83,7 +84,7 @@ public class GraphFactory {
                 }
             } // else ignore
         }
-        graph = new Graph(adjacent.size());
+        graph = new Graph(roadSegments.size());
         for (Edge edge : roadSegments) {
             graph.addEdge(edge);
         }
