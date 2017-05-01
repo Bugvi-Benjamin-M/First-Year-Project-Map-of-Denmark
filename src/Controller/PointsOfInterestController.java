@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static javax.swing.SpringLayout.NORTH;
-import static javax.swing.SpringLayout.WEST;
 
 /**
  * Class details:
@@ -31,14 +30,14 @@ public final class PointsOfInterestController extends Controller {
     private final int DISTANCE_BETWEEN_TOOLBAR_AND_BUTTONS = GlobalValue.getToolbarHeight() + 10;
     private final int DISTANCE_BETWEEN_BUTTONS_AND_SCROLLPANE = 60;
     private final int SCROLLBAR_SPEED = 14;
-    private final int SMALL_POINTS_OF_INTERESTBAR_HEIGHT = 300;
-    private final int DISTANCE_FROM_LEFT_EDGE_TO_BUTTOND = 50;
+    private final int SMALL_POINTS_OF_INTERESTBAR_HEIGHT = 200;
+    private final int DISTANCE_FROM_LEFT_EDGE_TO_BUTTONS = 50;
 
     private static PointsOfInterestController instance;
     private InformationBar informationBar;
     private SpringLayout informationBarLayout;
     private PointsOfInterestBar pointsOfInterestBar;
-    private JScrollPane scroll;
+    private JScrollPane largeScroll;
     private PointsOfInterestButtons poiButtons;
 
     private List<String> places;
@@ -68,11 +67,10 @@ public final class PointsOfInterestController extends Controller {
         pointsOfInterestBar.setOpaque(true);
         poiButtons = new PointsOfInterestButtons();
         addInteractionHandlersPointsOfInterestButtons();
-        scroll = new JScrollPane(pointsOfInterestBar);
-        scroll.setOpaque(true);
     }
 
     public void setupLargePointsOfInterestBar() {
+        informationBar.setPreferredSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()));
         pointsOfInterestBar.specifyLayout(BoxLayout.PAGE_AXIS);
         pointsOfInterestBar.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, PROFILE_HEIGHT));
         setupLargeScrollbar();
@@ -81,29 +79,31 @@ public final class PointsOfInterestController extends Controller {
         poiButtons.setPreferredSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, BUTTONS_HEIGHT));
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, poiButtons, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
         informationBarLayout.putConstraint(NORTH, poiButtons, DISTANCE_BETWEEN_TOOLBAR_AND_BUTTONS, NORTH, informationBar);
-        informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, scroll, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
-        informationBarLayout.putConstraint(NORTH, scroll, DISTANCE_BETWEEN_BUTTONS_AND_SCROLLPANE, NORTH, poiButtons);
+        informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, largeScroll, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
+        informationBarLayout.putConstraint(NORTH, largeScroll, DISTANCE_BETWEEN_BUTTONS_AND_SCROLLPANE, NORTH, poiButtons);
         informationBar.add(poiButtons);
-        informationBar.add(scroll);
+        informationBar.add(largeScroll);
         //InformationBarInteractionHandler handler = new InformationBarInteractionHandler();
         //informationBar.addMouseListener(handler);
         //addInteractionHandlersPointsOfInterestButtons();
     }
 
     public void setupSmallPointsOfInterestBar() {
+        informationBar.setPreferredSize(new Dimension(window.getFrame().getWidth(), SMALL_POINTS_OF_INTERESTBAR_HEIGHT));
         pointsOfInterestBar.specifyLayout(BoxLayout.LINE_AXIS);
         pointsOfInterestBar.setMinimumSize(new Dimension(window.getFrame().getWidth(), SMALL_POINTS_OF_INTERESTBAR_HEIGHT));
         setupSmallScrollbar();
         addPointsToPointsOfInterestBar();
         poiButtons.setPreferredSize(new Dimension(200, BUTTONS_HEIGHT));
         informationBarLayout.putConstraint(SpringLayout.VERTICAL_CENTER, poiButtons, 0, SpringLayout.VERTICAL_CENTER, informationBar);
-        informationBarLayout.putConstraint(WEST, poiButtons, DISTANCE_FROM_LEFT_EDGE_TO_BUTTOND, WEST, informationBar);
-
-
+        //informationBarLayout.putConstraint(WEST, poiButtons, DISTANCE_FROM_LEFT_EDGE_TO_BUTTONS, WEST, informationBar);
+        informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, poiButtons, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
         informationBar.add(poiButtons);
     }
 
     public void clearPointsOfInterestBar() {
+        informationBarLayout.removeLayoutComponent(poiButtons);
+        informationBarLayout.removeLayoutComponent(pointsOfInterestBar);
         informationBar.removeAll();
         pointsOfInterestBar.removeAll();
     }
@@ -161,16 +161,16 @@ public final class PointsOfInterestController extends Controller {
     }
 
     private void setupLargeScrollbar() {
-        //scroll = new JScrollPane(pointsOfInterestBar);
-        //scroll.setOpaque(true);
-        scroll.setPreferredSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, LARGE_SCROLLBAR_HEIGHT));
-        scroll.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, LARGE_SCROLLBAR_HEIGHT));
-        scroll.setMaximumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, LARGE_SCROLLBAR_HEIGHT));
-        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
-        scroll.getVerticalScrollBar().setUI(new CustomScrollbarUI());
-        scroll.getVerticalScrollBar().setUnitIncrement(SCROLLBAR_SPEED);
+        largeScroll = new JScrollPane(pointsOfInterestBar);
+        largeScroll.setOpaque(true);
+        largeScroll.setPreferredSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, LARGE_SCROLLBAR_HEIGHT));
+        largeScroll.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, LARGE_SCROLLBAR_HEIGHT));
+        largeScroll.setMaximumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, LARGE_SCROLLBAR_HEIGHT));
+        largeScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        largeScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        largeScroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
+        largeScroll.getVerticalScrollBar().setUI(new CustomScrollbarUI());
+        largeScroll.getVerticalScrollBar().setUnitIncrement(SCROLLBAR_SPEED);
     }
 
     private void setupSmallScrollbar() {
@@ -180,7 +180,7 @@ public final class PointsOfInterestController extends Controller {
 
 
     public void themeHasChanged() {
-        scroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
+        largeScroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
         poiButtons.applyTheme();
         informationBar.applyTheme();
         pointsOfInterestBar.applyTheme();
