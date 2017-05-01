@@ -47,6 +47,7 @@ public class GraphFactory {
                     Point2D lastPoint = osmWay.getFromNode();
                     points.put(counter++,(float) lastPoint.getX(),
                             (float) lastPoint.getY());
+
                     for (int i = 1; i < osmWay.size(); i++) {
                         Point2D point = osmWay.get(i);
                         addRoadToAdjacent(point,road);
@@ -102,5 +103,13 @@ public class GraphFactory {
 
     public Graph getGraph() {
         return graph;
+    }
+
+    public LongToPointMap getPointMap() {
+        return points;
+    }
+
+    public Map<Point2D, LinkedList<Road>> getAdjacent() {
+        return adjacent;
     }
 }
