@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 /**
  * Created by Jakob on 30-03-2017.
  */
-public class KDTree implements Serializable, Iterable {
+public class KDTree implements Serializable {
     private Node root;
     private HashSet<Element> elementsToReturn;
     private HashSet<Element> sectionToReturn;
@@ -158,20 +158,5 @@ public class KDTree implements Serializable, Iterable {
         } else {
             currentNode.addPointer(pointer);
         }
-    }
-
-    @Override
-    public Iterator iterator() {
-        return null;
-    }
-
-    @Override
-    public void forEach(Consumer action) {
-
-    }
-
-    @Override
-    public Spliterator spliterator() {
-        return null;
     }
 }

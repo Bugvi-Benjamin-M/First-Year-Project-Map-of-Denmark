@@ -2,16 +2,15 @@ package RouteSearch;
 
 import Enums.TravelType;
 import Helpers.HelperFunctions;
+import Helpers.LongToPointMap;
 import KDtree.KDTree;
 import Model.Elements.Element;
 import Model.Elements.Road;
+import Model.Model;
 import OSM.OSMWay;
 
 import java.awt.geom.Point2D;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class details:
@@ -21,48 +20,66 @@ import java.util.Map;
  */
 public class GraphFactory {
 
-    private KDTree roads;
     private List<Edge> roadSegments;
     private Map<Point2D,LinkedList<Road>> adjacent;
     private Graph graph;
     private long counter = 0;
-    private LongToIntMap refMap;
+    private LongToPointMap points;
 
     public GraphFactory(KDTree roads) {
         if (roads == null) throw new NullPointerException("KDTree has not been initialized");
-        this.roads = roads;
+        Model model = Model.getInstance();
+        HashSet<Element> roadSet = roads.getManySections(model.getMinLongitude(false),model.getMinLatitude(false),
+                model.getMaxLongitude(false),model.getMaxLatitude(false));
         roadSegments = new LinkedList<>();
         adjacent = new HashMap<>();
-        refMap = new LongToIntMap(1000);
-        makeGraph();
+        points = new LongToPointMap(100000);
+        makeGraph(roadSet);
     }
 
-    private void makeGraph() {
+    private void makeGraph(HashSet<Element> roads) {
         for (Object way: roads) {
             if (way instanceof Road) {
                 Road road = (Road) way;
 
-                // TODO: IMPLEMENT PROPERLY
+                // Adds all points to the adjacency list
                 for (OSMWay osmWay: road.getRelation()) {
                     Point2D lastPoint = osmWay.getFromNode();
+                    points.put(counter++,(float) lastPoint.getX(),
+                            (float) lastPoint.getY());
                     for (int i = 1; i < osmWay.size(); i++) {
                         Point2D point = osmWay.get(i);
                         addRoadToAdjacent(point,road);
-                        refMap.insert(counter++);
+                        points.put(counter,(float) lastPoint.getX(),
+                                (float) lastPoint.getY());
+                        float length = (float) HelperFunctions.distanceInMeters(point,lastPoint);
+                        if (road.isTravelByBikeAllowed()) {
+                            roadSegments.add(new Edge(counter-1,counter,
+                                    road.getMaxSpeed(),length,TravelType.BICYCLE));
+                        }
+                        if (road.isTravelByBikeAllowed() && !road.isOneWay()) {
+                            roadSegments.add(new Edge(counter,counter-1,
+                                    road.getMaxSpeed(),length,TravelType.BICYCLE));
+                        }
+                        if (road.isTravelByFootAllowed()) {
+                            roadSegments.add(new Edge(counter-1,counter,
+                                    road.getMaxSpeed(),length,TravelType.WALK));
+                        }
+                        if (road.isTravelByFootAllowed() && !road.isOneWay()) {
+                            roadSegments.add(new Edge(counter,counter-1,
+                                    road.getMaxSpeed(),length,TravelType.WALK));
+                        }
+                        if (road.isTravelByCarAllowed()) {
+                            roadSegments.add(new Edge(counter-1,counter,
+                                    road.getMaxSpeed(),length,TravelType.VEHICLE));
+                        }
+                        if (road.isTravelByCarAllowed() && !road.isOneWay()) {
+                            roadSegments.add(new Edge(counter,counter-1,
+                                    road.getMaxSpeed(),length,TravelType.VEHICLE));
+                        }
+                        lastPoint = point;
+                        counter++;
                     }
-                }
-
-
-                // FIXME: READ END POINTS OF THE ROAD PLZ!!!
-                Edge edge = new Edge(1,2,road.getMaxSpeed(),1.0f, TravelType.VEHICLE);
-                // FIXME: CALCULATE THE LENGTH PROPERLY!!!
-                roadSegments.add(edge);
-                addRoadToAdjacent(new Point2D.Float(1,2),road);
-
-                if (!road.isOneWay()) {  // multi directional road
-                    edge = new Edge(2,1,road.getMaxSpeed(),1.0f,TravelType.VEHICLE);
-                    roadSegments.add(edge);
-                    addRoadToAdjacent(new Point2D.Float(2,1),road);
                 }
             } // else ignore
         }

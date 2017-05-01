@@ -18,6 +18,7 @@ public class Graph {
     private LinkedList<Edge>[] adjacencyLists;
 
     public Graph(int nNodes) {
+        if (nNodes <= 0) throw new IllegalArgumentException("Number of nodes has to be greater than zero");
         this.nNodes = nNodes;
         adjacencyLists = (LinkedList<Edge>[]) new LinkedList[nEdges];
         for (int n = 0; n < nNodes; n++) {
@@ -33,15 +34,15 @@ public class Graph {
         return nEdges;
     }
 
-    private void validateNode(int node) {
+    private void validateNode(long node) {
         if (node < 0 || node >= nNodes) {
             throw new IllegalArgumentException("node "+node+" is not between 0 and "+(nNodes-1));
         }
     }
 
     public void addEdge(Edge edge) {
-        int v = edge.either();
-        int w = edge.other(v);
+        int v = (int) edge.either();
+        int w = (int) edge.other(v);
         validateNode(v);
         validateNode(w);
         adjacencyLists[v].add(edge);

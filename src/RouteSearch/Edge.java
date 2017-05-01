@@ -5,17 +5,17 @@ import Enums.TravelType;
 /**
  * Class details:
  *
- * Each Edge object should only fill approx. 32 bytes:
- *  12 bytes overhead + 4 byte for int + 4 byte for int + 4 byte for int +
- *  4 byte for float + 4 bytes for Enum reference = 32 bytes
+ * Each Edge object should only fill approx. 40 bytes:
+ *  12 bytes overhead + 8 byte for long + 8 byte for long + 4 byte for int +
+ *  4 byte for float + 4 bytes for Enum reference = 40 bytes
  *
  * @author Andreas Blanke, blan@itu.dk
  * @version 27-04-2017
  */
 public class Edge implements Comparable<Edge>{
 
-    private final int from;
-    private final int to;
+    private final long from;
+    private final long to;
     private final int speed;
     private final float length;
     private final TravelType travel;
@@ -28,7 +28,7 @@ public class Edge implements Comparable<Edge>{
      * @param length
      * @param type
      */
-    public Edge(int from, int to, int speed, float length, TravelType type) {
+    public Edge(long from, long to, int speed, float length, TravelType type) {
         if (from < 0) throw new IllegalArgumentException("node index must be nonnegative");
         if (to < 0) throw new IllegalArgumentException("node index must be nonnegative");
         if (Double.isNaN(length)) throw new IllegalArgumentException("length is NaN");
@@ -51,7 +51,7 @@ public class Edge implements Comparable<Edge>{
     /**
      * Returns either one of the two nodes (quite often the start node)
      */
-    public int either() {
+    public long either() {
         return from;
     }
 
@@ -59,7 +59,7 @@ public class Edge implements Comparable<Edge>{
      * Returns the reference to the other node than the one given
      * @param node One of the two nodes in this Edge
      */
-    public int other(int node) {
+    public long other(long node) {
         if      (node == from)  return to;
         else if (node == to)    return from;
         else throw new IllegalArgumentException("Not an endpoint");

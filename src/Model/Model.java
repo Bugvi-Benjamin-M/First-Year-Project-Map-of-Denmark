@@ -6,6 +6,7 @@ import KDtree.*;
 import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
 import RouteSearch.Graph;
+import RouteSearch.GraphFactory;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;

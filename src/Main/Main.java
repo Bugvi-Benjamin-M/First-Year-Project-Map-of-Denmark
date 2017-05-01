@@ -2,10 +2,12 @@ package Main;
 
 import Controller.*;
 import Controller.ToolbarControllers.ToolbarController;
+import Enums.OSMEnums.ElementType;
 import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Model;
+import RouteSearch.GraphFactory;
 
 import javax.swing.*;
 
@@ -33,9 +35,12 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             MainWindowController.getInstance().setupMainWindow();
             SettingsWindowController.getInstance().setupSettingsWindow();
+            model.setGraph(new GraphFactory(
+                    model.getElements(ElementType.ROAD)).getGraph());
             model.modelHasChanged();
             MainWindowController.getInstance().showWindow();
             MainWindowController.getInstance().transferFocusToMapCanvas();
+            System.out.println(model.getGraph().toString());
 
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
