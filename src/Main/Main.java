@@ -3,12 +3,14 @@ package Main;
 import Controller.*;
 import Controller.ToolbarControllers.ToolbarController;
 import Enums.OSMEnums.ElementType;
+import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Model;
 import RouteSearch.GraphFactory;
 import KDtree.KDTree;
+import View.PopupWindow;
 
 import javax.swing.*;
 
@@ -21,31 +23,46 @@ public class Main {
 
     public static long LOAD_TIME;
     private static SplashScreen screen;
+    private static boolean loadDefaultFile;
 
     public static void main(String[] args)
     {
-
         long startTime = System.nanoTime();
+        createControllers();
+        PreferencesController.getInstance().setupPreferences();
+        MainWindowController.getInstance().setProgressBarTheme();
         splashScreenInit();
 
         Model model = Model.getInstance();
+        CanvasController.getInstance().setupAsObserver();
         FileHandler.loadDefaultResource();
+        if (!PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
+            try {
+                FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
+                loadDefaultFile = false;
+            } catch (Exception e) {
+                e.printStackTrace();
+                PopupWindow.infoBox(null,"Could Not Find Preferred Startup File: "+PreferencesController.getInstance().getStartupFileNameSetting()+".\n" +
+                "Loading "+DefaultSettings.DEFAULT_FILE_NAME,"Preferred Startup File Not Found!");
+                loadDefaultFile = true;
+            }
+        }
         new Thread(() -> {
             KDTree roads = Model.getInstance().getElements(ElementType.HIGHWAY);
             Model.getInstance().setGraph((new GraphFactory(roads)).getGraph());
             System.out.println(model.getGraph().toString());
         }).start();
-        splashScreenDestruct();
-        createControllers();
 
-        PreferencesController.getInstance().setupPreferences();
+        splashScreenDestruct();
         SwingUtilities.invokeLater(() -> {
             MainWindowController.getInstance().setupMainWindow();
             SettingsWindowController.getInstance().setupSettingsWindow();
             model.modelHasChanged();
             MainWindowController.getInstance().showWindow();
-            MainWindowController.getInstance().transferFocusToMapCanvas();
-
+            if (loadDefaultFile) CanvasController.adjustToBounds();
+            else CanvasController.adjustToDynamicBounds();
+            //MainWindowController.getInstance().transferFocusToMapCanvas();
+            CanvasController.repaintCanvas();
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();
