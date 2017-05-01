@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static javax.swing.SpringLayout.NORTH;
+import static javax.swing.SpringLayout.VERTICAL_CENTER;
 import static javax.swing.SpringLayout.WEST;
 
 /**
@@ -33,6 +34,7 @@ public final class PointsOfInterestController extends Controller {
     private final int SCROLLBAR_SPEED = 14;
     private final int SMALL_POINTS_OF_INTERESTBAR_HEIGHT = 200;
     private final int DISTANCE_FROM_LEFT_EDGE_TO_BUTTONS = 50;
+    private final int DISTANCE_FROM_SMALLPOIBARTOP_TO_BUTTONS = 30;
 
     private static PointsOfInterestController instance;
     private InformationBar informationBar;
@@ -98,7 +100,8 @@ public final class PointsOfInterestController extends Controller {
         addPointsToPointsOfInterestBar();
         poiButtons.setPreferredSize(new Dimension(150, BUTTONS_HEIGHT));
         informationBarLayout.putConstraint(WEST, poiButtons, DISTANCE_FROM_LEFT_EDGE_TO_BUTTONS, WEST, informationBar);
-        informationBarLayout.putConstraint(NORTH, poiButtons, 75, NORTH, informationBar);
+        //informationBarLayout.putConstraint(NORTH, poiButtons, DISTANCE_FROM_SMALLPOIBARTOP_TO_BUTTONS, NORTH, informationBar);
+        informationBarLayout.putConstraint(VERTICAL_CENTER, poiButtons, 0, VERTICAL_CENTER, informationBar);
         //informationBarLayout.putConstraint(SOUTH, poiButtons, -75, SOUTH, informationBar);
         informationBar.add(poiButtons);
     }

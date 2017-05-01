@@ -10,7 +10,6 @@ import Model.Model;
 import View.PopupWindow;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -59,6 +58,7 @@ public class Main {
             MainWindowController.getInstance().showWindow();
             if(loadDefaultFile) CanvasController.adjustToBounds();
             else CanvasController.adjustToDynamicBounds();
+            CanvasController.repaintCanvas();
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();

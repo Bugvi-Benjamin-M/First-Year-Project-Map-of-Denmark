@@ -280,9 +280,11 @@ public final class MainWindowController extends WindowController {
             adjustBounds();
             if(type == PoiType.LARGE) {
                 ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
+                ToolbarController.getInstance().setIsPoiToolActive(false);
                 deactivateLargePointsOfInterestInformationBar();
             } else if(type == PoiType.SMALL) {
                 ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
+                ToolbarController.getInstance().setIsPoiToolActive(false);
                 deactivateSmallPointsOfInterestInformationBar();
             }
 

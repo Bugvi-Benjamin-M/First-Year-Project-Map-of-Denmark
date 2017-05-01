@@ -63,7 +63,6 @@ public final class CanvasController extends Controller implements Observer {
     private CanvasController()
     {
         super();
-
     }
 
     public static CanvasController getInstance() {
