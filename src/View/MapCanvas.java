@@ -202,19 +202,10 @@ public class MapCanvas extends View {
         boundary.lineTo(maxLon, maxLat);
         boundary.lineTo(minLon, maxLat);
         boundary.lineTo(minLon, minLat);
-        /*Model model = Model.getInstance();
-        boundary.moveTo(model.getMinLongitude(false), model.getMinLatitude(false));
-        boundary.lineTo(model.getMaxLongitude(false), model.getMinLatitude(false));
-        boundary.lineTo(model.getMaxLongitude(false), model.getMaxLatitude(false));
-        boundary.lineTo(model.getMinLongitude(false), model.getMaxLatitude(false));
-        boundary.lineTo(model.getMinLongitude(false), model.getMinLatitude(false));
-        */
         g.fill(boundary);
     }
 
-    private void drawCoastlines(Graphics2D g)
-    {
-        //List<Path2D> coastlines = Model.getInstance().getCoastlines();
+    private void drawCoastlines(Graphics2D g) {
         g.setColor(ThemeHelper.color("background"));
         for (Path2D path : coastlines) {
             g.fill(path);
