@@ -29,8 +29,8 @@ public class Edge implements Comparable<Edge>{
      * @param type
      */
     public Edge(long from, long to, int speed, float length, TravelType type) {
-        if (from < 0) throw new IllegalArgumentException("node index must be nonnegative");
-        if (to < 0) throw new IllegalArgumentException("node index must be nonnegative");
+        if (from < 0) throw new IllegalArgumentException("node index "+from+" must be nonnegative");
+        if (to < 0) throw new IllegalArgumentException("node index "+to+" must be nonnegative");
         if (Double.isNaN(length)) throw new IllegalArgumentException("length is NaN");
         else if (length < 0) throw new IllegalArgumentException("length must be nonnegative");
         this.from = from;

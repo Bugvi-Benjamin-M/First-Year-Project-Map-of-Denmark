@@ -2,10 +2,14 @@ package RouteSearch;
 
 import KDtree.KDTree;
 import KDtree.Pointer;
+import Model.Elements.Element;
 import Model.Elements.Road;
+import OSM.OSMWay;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.awt.geom.Point2D;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,14 +28,26 @@ public class GraphFactoryTest {
 
     @Before
     public void setUp() throws Exception {
-        // TODO: Finish test
-        KDTree tree = new KDTree();
-        List<Road> roads = new LinkedList<>();
+        HashSet<Element> roads = new HashSet<>();
         Road road = new Road(null,"Vej 1");
         road.setMaxSpeed(60);
-        // road.setRelation();
-        // roads.add();
-        factory = new GraphFactory(null);
+        road.setOneWay(false);
+        road.setTravelByBikeAllowed(true);
+        road.setTravelByCarAllowed(true);
+        road.setTravelByFootAllowed(true);
+        OSMWay way = new OSMWay();
+        Point2D point = new Point2D.Float(0.5f,0.2f);
+        System.out.println(point.hashCode());
+        way.add(point);
+        point = new Point2D.Float(0.2f,0.5f);
+        System.out.println(point.hashCode());
+        way.add(point);
+        point = new Point2D.Float(0.1f,0.6f);
+        System.out.println(point.hashCode());
+        way.add(point);
+        road.setWay(way);
+        roads.add(road);
+        factory = new GraphFactory(roads);
     }
 
     @Test

@@ -32,8 +32,16 @@ public class GraphFactory {
                 Integer.MAX_VALUE,Integer.MAX_VALUE);
         roadSegments = new LinkedList<>();
         adjacent = new HashMap<>();
-        points = new LongToPointMap(Integer.MAX_VALUE);
+        points = new LongToPointMap(100000);
         makeGraph(roadSet);
+    }
+
+    public GraphFactory(HashSet<Element> roads) {
+        if (roads == null) throw new NullPointerException("HashSet has not been initialized");
+        roadSegments = new LinkedList<>();
+        adjacent = new HashMap<>();
+        points = new LongToPointMap(100000);
+        makeGraph(roads);
     }
 
     private void makeGraph(HashSet<Element> roads) {
@@ -97,6 +105,10 @@ public class GraphFactory {
             adj.add(road);
             adjacent.put(point,adj);
         }
+    }
+
+    private long hashCodeOfPoint(Point2D point) {
+        return 0;
     }
 
     public Graph getGraph() {
