@@ -58,6 +58,7 @@ public class Main {
             MainWindowController.getInstance().showWindow();
             if(loadDefaultFile) CanvasController.adjustToBounds();
             else CanvasController.adjustToDynamicBounds();
+            CanvasController.getInstance().updateCanvasPOI();
             CanvasController.repaintCanvas();
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");

@@ -566,6 +566,7 @@ public final class ToolbarController extends Controller {
                 FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
                 CanvasController.adjustToDynamicBounds();
                 CanvasController.getInstance().updateCanvasElements();
+                CanvasController.getInstance().updateCanvasPOI();
             } catch (Exception e) {
                 e.printStackTrace();
             }

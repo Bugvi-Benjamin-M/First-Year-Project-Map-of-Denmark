@@ -115,12 +115,14 @@ public final class CanvasController extends Controller implements Observer {
         addInteractionHandlerToCanvas();
         addFocusHandlerToCanvas();
         toggleKeyBindings();
-
-
     }
 
     public void updateCanvasElements(){
         mapCanvas.setElements(model.getElements());
+    }
+
+    public void updateCanvasPOI(){
+        mapCanvas.setPOIs(model.getPointsOfInterest());
     }
 
     private void addInteractionHandlerToCanvas()
@@ -250,29 +252,37 @@ public final class CanvasController extends Controller implements Observer {
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        /*
-                         *  The cursor position is not the upper left corner of the boundry box
-                         *  of the cursor, but the lower left corner.
-                         *  This take that into consideration.
-                         */
                         Point2D mousePosition = MouseInfo.getPointerInfo().getLocation();
-                        double x = mousePosition.getX();
-                        double y = mousePosition.getY()-24; //A cursor height of 24?
-                        mousePosition = new Point2D.Double(x, y);
-                        Point2D p = mapCanvas.toModelCoords(mousePosition);
-                       String description = PopupWindow.textInputBox(null, "Point of interest", "Enter description: ");
-                       if(description != null){
-                           if(description.length() <= 56) {
-                               POI poi = new POI((float) p.getX(), (float) p.getY(), description);
-                               model.addPOI(poi);
-                               mapCanvas.setPOIs(model.getPointsOfInterest());
-                               PointsOfInterestController.getInstance().addPOI(poi);
-                           }else{
-                               PopupWindow.warningBox(null, "The message is not allowed to be longer than 56 signs.");
-                           }
-                       }
+                        poiCreationEvent(mousePosition);
                     }
                 });
+    }
+
+    private void poiCreationEvent(Point2D point){
+
+
+        /*
+         *  The cursor position is not the upper left corner of the boundry box
+         *  of the cursor, but the lower left corner.
+         *  This take that into consideration.
+         */
+        double x = point.getX();
+        double y = point.getY()-24; //A cursor height of 24?
+        point = new Point2D.Double(x, y);
+        Point2D p = mapCanvas.toModelCoords(point);
+        String description = PopupWindow.textInputBox(null, "Point of interest", "Enter description: ");
+        if(description != null){
+            if(description.length() <= 56) {
+                POI poi = new POI((float) p.getX(), (float) p.getY(), description);
+                model.addPOI(poi);
+                mapCanvas.setPOIs(model.getPointsOfInterest());
+                PointsOfInterestController.getInstance().addPOI(poi);
+                repaintCanvas();
+                PointsOfInterestController.getInstance().updatePointsOfInterestBar();
+            }else{
+                PopupWindow.warningBox(null, "The message is not allowed to be longer than 56 signs.");
+            }
+        }
     }
 
     private void panEvent(PanType type)
@@ -419,6 +429,14 @@ public final class CanvasController extends Controller implements Observer {
             Point2D mousePosition = event.getPoint();
             Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
             mapCanvas.setCurrentPoint(mouseInModel);
+        }
+        if(GlobalValue.isAddNewPointActive()){
+            if(SwingUtilities.isLeftMouseButton(event))
+            poiCreationEvent(event.getPoint());
+            else if(SwingUtilities.isRightMouseButton(event)){
+                GlobalValue.setIsAddNewPointActive(false);
+                PointsOfInterestController.getInstance().poiModeOff();
+            }
         }
     }
 

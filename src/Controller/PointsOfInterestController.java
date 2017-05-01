@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public final class PointsOfInterestController extends Controller {
     }
 
     public void setupInformationBar() {
-        pointsOfInterest = new ArrayList<>();
+        pointsOfInterest = Model.getInstance().getPointsOfInterest();
         POIpanels = new ArrayList<>();
         informationBar = new InformationBar();
         informationBarLayout = (SpringLayout) informationBar.getLayout();
@@ -110,6 +111,18 @@ public final class PointsOfInterestController extends Controller {
         pointsOfInterestBar.removeAll();
     }
 
+    public void poiModeOn(){
+        poiButtons.getNewPointButton().setForeground(ThemeHelper.color("toolActivated"));
+        MainWindowController.getInstance().changeCanvasMouseCursorToPoint();
+        GlobalValue.setIsAddNewPointActive(true);
+    }
+
+    public void poiModeOff(){
+        poiButtons.getNewPointButton().setForeground(ThemeHelper.color("icon"));
+        MainWindowController.getInstance().changeCanvasMouseCursorToNormal();
+        GlobalValue.setIsAddNewPointActive(false);
+    }
+
     private void addInteractionHandlersPointsOfInterestButtons() {
         poiButtons.getNewPointButton().addMouseListener(new MouseAdapter() {
 
@@ -117,13 +130,9 @@ public final class PointsOfInterestController extends Controller {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if(!GlobalValue.isAddNewPointActive()) {
-                    poiButtons.getNewPointButton().setForeground(ThemeHelper.color("toolActivated"));
-                    MainWindowController.getInstance().changeCanvasMouseCursorToPoint();
-                    GlobalValue.setIsAddNewPointActive(true);
+                    poiModeOn();
                 } else {
-                    poiButtons.getNewPointButton().setForeground(ThemeHelper.color("icon"));
-                    MainWindowController.getInstance().changeCanvasMouseCursorToNormal();
-                    GlobalValue.setIsAddNewPointActive(false);
+                    poiModeOff();
                 }
             }
 
@@ -216,7 +225,7 @@ public final class PointsOfInterestController extends Controller {
         pointsOfInterest.add("is");
         pointsOfInterest.add("anything");
         pointsOfInterest.add("happening");*/
-
+        POIpanels.clear();
 
         for(POI poi : pointsOfInterest) {
             addPOI(poi);
@@ -224,7 +233,6 @@ public final class PointsOfInterestController extends Controller {
             //pointsOfInterestBar.createVerticalSpace(10);
             //pointsOfInterestBar.addHorizontalGlue();
         }
-        pointsOfInterestBar.setPointProfiles(POIpanels);
         pointsOfInterestBar.revalidate();
     }
 
@@ -233,10 +241,16 @@ public final class PointsOfInterestController extends Controller {
         pointProfile.addMouseListener(new PointsInteractionHandler(pointProfile));
         pointProfile.getDeleteButton().addMouseListener(new PointDeleteButtonInteractionHandler(pointProfile.getDeleteButton()));
         POIpanels.add(pointProfile);
+        pointsOfInterestBar.add(pointProfile);
     }
 
     public void repaintPointsOfInterestBar() {
         if(pointsOfInterestBar != null) pointsOfInterestBar.applyTheme();
+    }
+
+    public void updatePointsOfInterestBar(){
+        pointsOfInterestBar.revalidate();
+        pointsOfInterestBar.repaint();
     }
 
     private class PointsInteractionHandler extends MouseAdapter {
@@ -262,7 +276,8 @@ public final class PointsOfInterestController extends Controller {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            //
+            CanvasController.getInstance().getMapCanvas().panToPoint(new Point2D.Float(point.getPOIX(), point.getPOIY()));
+            CanvasController.getInstance().repaintCanvas();
         }
 
     }

@@ -1,5 +1,6 @@
 package Helpers;
 
+import Controller.CanvasController;
 import Enums.BoundType;
 import Enums.FileType;
 import Enums.OSMEnums.ElementType;
