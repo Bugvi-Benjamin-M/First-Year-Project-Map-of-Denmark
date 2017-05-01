@@ -11,8 +11,6 @@ import View.Toolbar;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 
 import static javax.swing.SpringLayout.NORTH;
@@ -27,7 +25,7 @@ import static javax.swing.SpringLayout.WEST;
 public final class MenuToolController extends Controller {
 
     private final int POPUP_MARGIN_LEFT = 10;
-    private final int POPUP_MARGIN_HEIGHT = 282;
+    private final int POPUP_MARGIN_HEIGHT = 340;
     private final int POPUP_MARGIN_WIDTH = 60;
     private final int POPUP_MARGIN_TOP = 10;
     private final int POPUP_MARGIN_BETWEEN_TOOLS = 63;
@@ -53,14 +51,24 @@ public final class MenuToolController extends Controller {
     {
         toolbar = ToolbarController.getInstance().getToolbar();
         popupMenu = new MenuTool();
-        addFocusListener();
         addActionsToToolsMenu();
     }
 
     protected void hidePopupMenu()
     {
-        if (popupMenu != null && popupMenu.isVisible())
+        if (popupMenu != null && popupMenu.isVisible()) {
             popupMenu.hidePopupMenu();
+            if (ToolbarController.getInstance().getType() == ToolbarType.SMALL)
+                ToolbarController.getInstance()
+                        .getToolbar()
+                        .getTool(ToolType.MENU)
+                        .toggleActivate(false);
+        }
+    }
+
+    protected boolean isPopupVisible() {
+        if(popupMenu != null) return popupMenu.isVisible();
+        else return false;
     }
 
     protected void setupLayoutForMenuTool()
@@ -83,11 +91,17 @@ public final class MenuToolController extends Controller {
         popupMenu.getLayout().putConstraint(NORTH, poi, POPUP_MARGIN_BETWEEN_TOOLS,
             NORTH, save);
         popupMenu.addTool(toolbar.getTool(ToolType.POI));
+        ToolComponent routes = toolbar.getTool(ToolType.ROUTES);
+        popupMenu.getLayout().putConstraint(WEST, routes, POPUP_MARGIN_LEFT, WEST,
+                popupMenu.getPopupMenu());
+        popupMenu.getLayout().putConstraint(NORTH, routes, POPUP_MARGIN_BETWEEN_TOOLS,
+                NORTH, poi);
+        popupMenu.addTool(routes);
         ToolComponent settings = toolbar.getTool(ToolType.SETTINGS);
         popupMenu.getLayout().putConstraint(WEST, settings, POPUP_MARGIN_LEFT, WEST,
             popupMenu.getPopupMenu());
         popupMenu.getLayout().putConstraint(
-            NORTH, settings, POPUP_MARGIN_LARGER_BETWEEN_TOOLS, NORTH, poi);
+            NORTH, settings, POPUP_MARGIN_LARGER_BETWEEN_TOOLS, NORTH, routes);
         popupMenu.addTool(toolbar.getTool(ToolType.SETTINGS));
         toolbar.getTool(ToolType.MENU).add(popupMenu.getPopupMenu());
         popupMenu.getPopupMenu().setPopupSize(POPUP_MARGIN_WIDTH,
@@ -104,17 +118,20 @@ public final class MenuToolController extends Controller {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    if (popupMenu.isVisible())
+                    if (popupMenu.isVisible()) {
                         ToolbarController.getInstance().toolEvent(ToolType.LOAD);
+                        hidePopupMenu();
+                    }
                 }
             });
         addAction(KeyEvent.VK_S, OSDetector.getActivationKey(),
             new AbstractAction() {
                 @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    if (popupMenu.isVisible())
+                public void actionPerformed(ActionEvent e) {
+                    if (popupMenu.isVisible()) {
                         ToolbarController.getInstance().toolEvent(ToolType.SAVE);
+                        hidePopupMenu();
+                    }
                 }
             });
         addAction(
@@ -122,10 +139,30 @@ public final class MenuToolController extends Controller {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    if (popupMenu.isVisible())
+                    if (popupMenu.isVisible()) {
                         ToolbarController.getInstance().toolEvent(ToolType.SETTINGS);
+                        hidePopupMenu();
+                    }
                 }
             });
+        addAction(KeyEvent.VK_P, OSDetector.getActivationKey(), new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(popupMenu.isVisible()) {
+                    ToolbarController.getInstance().toolEvent(ToolType.POI);
+                    hidePopupMenu();
+                }
+            }
+        });
+        addAction(KeyEvent.VK_R, OSDetector.getActivationKey(), new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(popupMenu.isVisible()) {
+                    ToolbarController.getInstance().toolEvent(ToolType.ROUTES);
+                    hidePopupMenu();
+                }
+            }
+        });
     }
 
     private void addAction(int key, int activationKey, AbstractAction action)
@@ -153,11 +190,6 @@ public final class MenuToolController extends Controller {
         popupMenu.setLocation(calculatePosition());
     }
 
-    private void addFocusListener()
-    {
-        toolbar.getTool(ToolType.MENU).addFocusListener(new MenuToolFocusHandler());
-    }
-
     protected void windowResizedEvent()
     {
         if (popupMenu.isVisible())
@@ -176,18 +208,4 @@ public final class MenuToolController extends Controller {
             (toolbar.getLocationOnScreen().y + toolbar.getHeight()) - POPUPMENU_YAXIS_OFFSET);
     }
 
-    private class MenuToolFocusHandler extends FocusAdapter {
-
-        @Override
-        public void focusLost(FocusEvent e)
-        {
-            super.focusLost(e);
-            popupMenu.hidePopupMenu();
-            if (ToolbarController.getInstance().getType() == ToolbarType.SMALL)
-                ToolbarController.getInstance()
-                    .getToolbar()
-                    .getTool(ToolType.MENU)
-                    .toggleActivate(false);
-        }
-    }
 }

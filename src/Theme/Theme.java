@@ -25,6 +25,16 @@ public interface Theme {
     public abstract Color canvasPopupForeground();
 
     public abstract Color toolActivated();
+    public abstract Color toolHover();
+
+    public abstract Color scrollBarThumb();
+
+    public abstract Color pointHover();
+
+    public abstract Color poiButtonsForeground();
+
+    public abstract Color progressBarBackground();
+    public abstract Color progressBarForeground();
 
     public abstract Color water();
     public abstract Color park();
@@ -66,7 +76,7 @@ public interface Theme {
     public abstract Color cycleway();
     public abstract Color path();
     public abstract Color road();
-    public abstract Color roadBorder();
+    public abstract Color airport();
 
     public abstract Color rail();
 
@@ -79,6 +89,10 @@ public interface Theme {
     public abstract Color hospital();
     public abstract Color placeOfWorship();
     public abstract Color parkingAmenity();
+    public abstract Color sportAmenity();
+    public abstract Color railwayStation();
+    public abstract Color airportAmenity();
+    public abstract Color poi();
 
     public abstract String getName();
 }

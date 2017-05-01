@@ -45,7 +45,23 @@ public class DefaultTheme implements Theme {
     public Color toolTipForeground() { return new Color(0x050505); }
     public Color canvasPopupBackground() { return new Color(0xDED0A9); }
     public Color canvasPopupForeground() { return new Color(0x000000); }
-    public Color toolActivated() { return new Color(0xA3A3A3); }
+
+    public Color toolActivated() { return new Color(0x4471C2); }
+    public Color toolHover() {return new Color(0x83B1F1);}
+
+    public Color scrollBarThumb() {return new Color(0x789AE0);}
+
+    public Color pointHover() {return new Color(0xAEA9AF);}
+
+    public Color poiButtonsForeground() {return new Color(0x000000);}
+
+    public Color progressBarBackground() {
+        return new Color(0x8E8A8C);
+    }
+
+    public Color progressBarForeground() {
+        return new Color(0x4471C2);
+    }
 
     public Color cityName() { return new Color(0x000000); }
     public Color roadName() { return new Color(0x000000); }
@@ -55,10 +71,11 @@ public class DefaultTheme implements Theme {
     public Color hospital() { return new Color(0xD30408); }
     public Color placeOfWorship() { return new Color(0x000000); }
     public Color parkingAmenity() { return new Color(0x0A00FF); }
+    public Color sportAmenity() { return new Color(0xFF7D00); }
 
     public Color water()
     {
-        return new Color(0x91BEFF);
+        return new Color(0x6993D1);
     }
     public Color park()
     {
@@ -110,6 +127,9 @@ public class DefaultTheme implements Theme {
     public Color sportstrack(){
         return new Color(0x90E49E);
     }
+    public Color railwayStation() { return new Color(0x00CEE4); }
+    public Color airportAmenity() { return new Color(0x000000); }
+    public Color poi() { return new Color(0xE40006); }
 
     // Roads:
     public Color motorway() { return new Color(0xE27B90); }
@@ -133,7 +153,7 @@ public class DefaultTheme implements Theme {
     public Color cycleway() { return new Color(0x000000); }
     public Color path() { return new Color(0x000000); }
     public Color road() { return new Color(0x9F99F1); }
-    public Color roadBorder() { return new Color(0x605C66); }
+    public Color airport() { return new Color(0x8D8993); }
 
     @Override
     public String getName()

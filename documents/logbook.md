@@ -439,7 +439,7 @@ Impediments:
 
 Next Time:
 - Wednesday the 26th of April
-
+W
 ## Logbook 27/4 (Scribe Hedam)
 What we did since last time:
 - GUI changes
@@ -462,5 +462,30 @@ Impediments:
 
 Next Time:
 - Monday the 1st of May 10:00
+
+##Logbook 1/5 (Scribe Nikolaj)
+
+What we did since last time:
+- Study dijkstras algorithm. 
+- Work with building the graph for dijkstras algorithm.
+- Optimizing Tenary search trie.
+- Testing the Tenary search trie.
+- Optimizing save and load.
+- Work with GUI.
+- Optimized relations.
+- Testing mapcanvas.
+- Implemented point of interest.
+
+What we will do until next time:
+- Add the remaining cartographic elements.
+- Finish poi implementation.
+- Continue working with dijkstras algorithm.
+- Blackbox testing.
+
+Impediments:
+- none
+
+Next scrum meeting:
+- 3/5 9:30 am.
 
 ## Next logbook...

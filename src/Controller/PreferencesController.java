@@ -1,6 +1,8 @@
 package Controller;
 
 import Helpers.DefaultSettings;
+import Helpers.GlobalValue;
+import Helpers.ThemeHelper;
 
 import java.util.prefs.*;
 
@@ -27,7 +29,7 @@ public final class PreferencesController {
     private PreferencesController()
     {
         super();
-        // Ignore warnings that occur due to JDK bug.
+        // Ignore warnings that occur due to JDK bug
     }
 
     public static PreferencesController getInstance()
@@ -41,6 +43,7 @@ public final class PreferencesController {
     public void setupPreferences()
     {
         preferences = Preferences.userNodeForPackage(this.getClass());
+        ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
     }
 
     public boolean getAntiAliasingSetting()
@@ -66,6 +69,14 @@ public final class PreferencesController {
         return preferences.get("Theme", DefaultSettings.THEME);
     }
 
+    public String getStartupFileNameSetting() {
+        return preferences.get("StartupFileName", DefaultSettings.DEFAULT_FILE_NAME);
+    }
+
+    public String getStartupFilePathSetting() {
+        return preferences.get("StartupFilePath", GlobalValue.DEFAULT_BIN_RESOURCE);
+    }
+
     public void setAntiAliasingSetting(boolean setting)
     {
         preferences.putBoolean("AntiAliasing", setting);
@@ -86,12 +97,21 @@ public final class PreferencesController {
         preferences.put("Theme", setting);
     }
 
+    public void setStartupFileNameSetting(String setting) {
+        preferences.put("StartupFileName", setting);
+    }
+
+    public void setStartupFilePathSetting(String setting) {
+        preferences.put("StartupFilePath", setting);
+    }
+
     public void setToDefaultSettings()
     {
         preferences.putBoolean("AntiAliasing", DefaultSettings.ANTI_ALIASING);
-        preferences.putBoolean("CanvasRealTimeInformation",
-            DefaultSettings.CANVAS_REALTIME_INFORMATION);
+        preferences.putBoolean("CanvasRealTimeInformation", DefaultSettings.CANVAS_REALTIME_INFORMATION);
         preferences.putBoolean("KeyBindings", DefaultSettings.TOGGLE_KEY_BINDINGS);
         preferences.put("Theme", DefaultSettings.THEME);
+        preferences.put("StartupFileName", DefaultSettings.DEFAULT_FILE_NAME);
+        preferences.put("StartupFilePath", GlobalValue.DEFAULT_BIN_RESOURCE);
     }
 }

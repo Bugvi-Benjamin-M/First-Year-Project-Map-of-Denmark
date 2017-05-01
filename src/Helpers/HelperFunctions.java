@@ -1,6 +1,6 @@
 package Helpers;
 
-import Model.Model;
+import Controller.CanvasController;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -167,8 +167,14 @@ public class HelperFunctions {
         if (way.size() < 2) throw new IllegalArgumentException("needs at least two points to calculate the distance");
         double length = 0.0;
         for (int i = 1; i < way.size(); i++) {
-            length += distanceInMeters(way.get(i-1),way.get(i));
+            length += distanceInMeters(way.get(i - 1), way.get(i));
         }
         return length;
+    }
+
+    public static float convertDistanceFromScreenCoordsToModelCoords(int distance) {
+        Point2D start = CanvasController.getInstance().getMapCanvas().toModelCoords(new Point2D.Float(0,0));
+        Point2D end = CanvasController.getInstance().getMapCanvas().toModelCoords(new Point2D.Float(distance,0));
+        return (float) (end.getX() - start.getX());
     }
 }

@@ -14,7 +14,7 @@ public enum ElementType {
     WATER, // Søer og lign.
     WETLAND, //Sump, marsk etc.
 
-    // BIOMES
+    // BIOMES AREAS
     PARK,
     FOREST,
     GRASSLAND,
@@ -27,6 +27,13 @@ public enum ElementType {
     SPORTSPITCH,
     SPORTSTRACK,
     PLAYGROUND,
+    HEDGE,
+    RIVER,
+    //ARTIFICIAL BIOME (SHARES THE SAME FEATURES AS BIOME, BUT IS NOT NATURAL).
+    AIRPORT_TAXIWAY,
+    AIRPORT_RUNWAY,
+    DRAIN,
+
 
     // PLACES - NAMES
     CITY_NAME, // navne på byer over 100k
@@ -82,4 +89,9 @@ public enum ElementType {
     HOSPITAL, // Default
     PLACE_OF_WORSHIP, // Default
     PARKING_AMENITY, //Default
+    SPORT_AMENITY, //Default
+    RAILWAY_STATION, //Default
+    RAILWAY_STATION_AREA, //Default
+    AIRPORT_AMENITY, //Default
+    UNIVERSITY, //Default
 }

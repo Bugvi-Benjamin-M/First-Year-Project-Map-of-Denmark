@@ -1,5 +1,7 @@
 package View;
 
+import Helpers.ThemeHelper;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -31,8 +33,18 @@ public abstract class ToolComponent extends JPanel {
     public void toggleActivate(boolean state)
     {
         activated = state;
-        paintComponent(getGraphics());
+        for(Component component : this.getComponents()) {
+            if(getActivatedStatus()) component.setForeground(ThemeHelper.color("toolActivated"));
+            else component.setForeground(ThemeHelper.color("icon"));
+        }
     }
 
-    protected boolean getActivatedStatus() { return activated; }
+    public void toggleHover(boolean hover) {
+        for(Component component : this.getComponents()) {
+            if(hover) component.setForeground(ThemeHelper.color("toolHover"));
+            else component.setForeground(ThemeHelper.color("icon"));
+        }
+    }
+
+    public boolean getActivatedStatus() { return activated; }
 }

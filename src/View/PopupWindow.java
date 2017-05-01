@@ -1,8 +1,11 @@
 package View;
 
+import Helpers.ThemeHelper;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.util.Objects;
+import javax.swing.plaf.basic.BasicProgressBarUI;
+import java.awt.*;
 
 /**
  * Class details:
@@ -83,10 +86,45 @@ public class PopupWindow {
     }
 
     public static int confirmBox(JFrame relativeTo, String message, String title,
-        Object[] options, Object initialValue)
-    {
+        Object[] options, Object initialValue) {
         return JOptionPane.showOptionDialog(
-            relativeTo, message, title, JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE, null, options, initialValue);
+                relativeTo, message, title, JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, options, initialValue);
+    }
+
+    public static String textInputBox(JFrame relativeTo, String title, String message){
+        return JOptionPane.showInputDialog(null, message, title, JOptionPane.QUESTION_MESSAGE);
+    }
+
+    public static JWindow LoadingScreen(String description, int x, int y) {
+        JWindow loadWindow = new JWindow();
+        JProgressBar progressBar = new JProgressBar();
+        progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
+        progressBar.setBackground(ThemeHelper.color("toolbar"));
+        progressBar.setOpaque(true);
+        progressBar.setUI(new BasicProgressBarUI());
+        JLabel icon = new JLabel();
+        icon.setIcon(new ImageIcon(PopupWindow.class.getResource("/Copenhagen.jpg")));
+        icon.setVisible(true);
+        icon.setPreferredSize(new Dimension(200,200));
+        icon.setBackground(ThemeHelper.color("toolbar"));
+        icon.setOpaque(true);
+        JLabel text = new JLabel(description);
+        text.setFont(new Font(text.getFont().getName(), text.getFont().getStyle(), 12));
+        text.setVisible(true);
+        text.setBackground(ThemeHelper.color("toolbar"));
+        text.setForeground(ThemeHelper.color("icon"));
+        text.setOpaque(true);
+        loadWindow = new JWindow();
+        loadWindow.setLayout(new BorderLayout());
+        loadWindow.setLocation(x,y);
+        loadWindow.add(BorderLayout.NORTH, icon);
+        loadWindow.add(BorderLayout.CENTER, text);
+        loadWindow.add(BorderLayout.SOUTH, progressBar);
+        loadWindow.pack();
+        loadWindow.setVisible(true);
+        loadWindow.setAlwaysOnTop(true);
+        return loadWindow;
     }
 }

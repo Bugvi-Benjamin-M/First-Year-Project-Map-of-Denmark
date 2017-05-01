@@ -1,22 +1,19 @@
 package Controller;
 
 import Controller.ToolbarControllers.ToolbarController;
+import Enums.ToolType;
 import Enums.ToolbarType;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
+import Model.Model;
 import View.PopupWindow;
 import View.Window;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
 /**
  * Created by Búgvi Magnussen on 14-03-2017.
@@ -26,6 +23,14 @@ public final class MainWindowController extends WindowController {
     private static final String MAIN_TITLE = "OSM Map Viewer v0.4";
     private static MainWindowController instance;
     private JLayeredPane layeredPane;
+
+    private enum PoiType {
+        LARGE,
+        SMALL,
+        NONE;
+    }
+
+    private PoiType type;
 
     private MainWindowController() { super(); }
 
@@ -48,17 +53,16 @@ public final class MainWindowController extends WindowController {
                      .layout(new BorderLayout())
                      .icon()
                      .hide();
-        window.setMinimumWindowSize(new Dimension(650, 650));
-        ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
+        window.setMinimumWindowSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 1.9),(int) ((Toolkit.getDefaultToolkit().getScreenSize().getHeight()) /1.3)));
         setupToolbar();
         setupCanvas();
-        setupInfobar();
+        setupPointsOfInterestBar();
         setupLayeredPane();
         addInteractionHandlerToWindow();
-        CanvasController.adjustToBounds();
         setToolTipTheme();
         toggleKeyBindings();
         hideWindow();
+        type = PoiType.NONE;
     }
 
     private void setToolTipTheme()
@@ -74,10 +78,13 @@ public final class MainWindowController extends WindowController {
         adjustBounds();
         ToolbarController.getInstance().getToolbar().setOpaque(true);
         CanvasController.getInstance().getMapCanvas().setOpaque(true);
+        PointsOfInterestController.getInstance().getInformationBar().setOpaque(true);
+        layeredPane.add(PointsOfInterestController.getInstance().getInformationBar(),
+                new Integer(2));
         layeredPane.add(CanvasController.getInstance().getMapCanvas(),
             new Integer(1));
         layeredPane.add(ToolbarController.getInstance().getToolbar(),
-            new Integer(2));
+            new Integer(3));
     }
 
     private void adjustBounds()
@@ -88,6 +95,8 @@ public final class MainWindowController extends WindowController {
             0, 0, window.getFrame().getWidth(), GlobalValue.getToolbarHeight());
         CanvasController.getInstance().getMapCanvas().setBounds(
             0, 0, window.getFrame().getWidth(), window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(
+            0, 0, 0, window.getFrame().getHeight());
     }
 
     private void setupToolbar()
@@ -102,10 +111,39 @@ public final class MainWindowController extends WindowController {
         CanvasController.getInstance().setupCanvas();
     }
 
-    private void setupInfobar()
+    private void setupPointsOfInterestBar()
     {
-        InfobarController.getInstance().specifyWindow(window);
-        InfobarController.getInstance().setupInfobar();
+        PointsOfInterestController.getInstance().specifyWindow(window);
+        PointsOfInterestController.getInstance().setupInformationBar();
+        PointsOfInterestController.getInstance().setupBasePointsOfInterestBar();
+    }
+
+    public void activateLargePointsOfInterestInformationBar() {
+        type = PoiType.LARGE;
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, GlobalValue.getInformationBarWidth(), window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
+        PointsOfInterestController.getInstance().getInformationBar().revalidate();
+    }
+
+    public void activateSmallPointsOfInterestInformationBar() {
+        type = PoiType.SMALL;
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight()-150, window.getFrame().getWidth(), window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
+        PointsOfInterestController.getInstance().getInformationBar().revalidate();
+    }
+
+    public void deactivateSmallPointsOfInterestInformationBar() {
+        type = PoiType.NONE;
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().clearPointsOfInterestBar();
+        CanvasController.repaintCanvas();
+    }
+
+    public void deactivateLargePointsOfInterestInformationBar() {
+        type = PoiType.NONE;
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().clearPointsOfInterestBar();
+        CanvasController.repaintCanvas();
     }
 
     public void transferFocusToMapCanvas()
@@ -117,7 +155,9 @@ public final class MainWindowController extends WindowController {
     {
         ToolbarController.getInstance().themeHasChanged();
         CanvasController.getInstance().themeHasChanged();
+        PointsOfInterestController.getInstance().themeHasChanged();
         setToolTipTheme();
+        setProgressBarTheme();
         transferFocusToMapCanvas();
     }
 
@@ -175,14 +215,59 @@ public final class MainWindowController extends WindowController {
         ToolbarController.getInstance().toggleKeyBindings();
         SettingsWindowController.getInstance().toggleKeyBindings();
         MainWindowController.getInstance().toggleKeyBindings();
-        InfobarController.getInstance().toggleKeyBindings();
     }
 
     public void resetInstance() { instance = null; }
 
     public void requestCanvasRepaint()
     {
-        CanvasController.getInstance().getMapCanvas().repaint();
+        CanvasController.repaintCanvas();
+    }
+
+    public void requestCanvasResetElements() {
+        CanvasController.getInstance().getMapCanvas().setElements(Model.getInstance().getElements());
+    }
+
+    public void transferFocusToInformationBar() {
+        PointsOfInterestController.getInstance().getInformationBar().grabFocus();
+    }
+
+    public void changeCanvasMouseCursorToPoint() {
+        CanvasController.getInstance().changeCanvasMouseCursorToPoint();
+    }
+
+    public void requestPointsOfInterestBarRepaint() {
+        PointsOfInterestController.getInstance().repaintPointsOfInterestBar();
+    }
+
+    public void changeCanvasMouseCursorToNormal() {
+        CanvasController.getInstance().changeCanvasMouseCursorToNormal();
+    }
+
+    public void requestCanvasAdjustToBounds() {
+        CanvasController.adjustToBounds();
+    }
+
+    public void requestCanvasAdjustToDynamicBounds() {
+        CanvasController.adjustToDynamicBounds();
+    }
+
+    public void requestToolbarRepaint() {
+        ToolbarController.getInstance().repaintToolbar();
+    }
+
+    public void setProgressBarTheme() {
+        UIManager.put("ProgressBar.border", BorderFactory.createLineBorder(ThemeHelper.color("border")));
+        UIManager.put("ProgressBar.background", ThemeHelper.color("progressBarBackground"));
+        UIManager.put("ProgressBar.foreground", ThemeHelper.color("progressBarForeground"));
+    }
+
+    public boolean isMenuToolPopupVisible() {
+        return ToolbarController.getInstance().isMenuToolPopupVisible();
+    }
+
+    public void requestMenuToolHidePopup() {
+        ToolbarController.getInstance().requestHideMenuToolPopup();
     }
 
     private class MainWindowInteractionHandler
@@ -193,6 +278,14 @@ public final class MainWindowController extends WindowController {
         {
             super.componentResized(e);
             adjustBounds();
+            if(type == PoiType.LARGE) {
+                ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
+                deactivateLargePointsOfInterestInformationBar();
+            } else if(type == PoiType.SMALL) {
+                ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
+                deactivateSmallPointsOfInterestInformationBar();
+            }
+
             ToolbarController.getInstance().resizeEvent();
             CanvasController.getInstance().resizeEvent();
             CanvasController.getInstance().disablePopup();

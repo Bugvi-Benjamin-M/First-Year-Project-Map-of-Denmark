@@ -21,6 +21,8 @@ public class GlobalValue {
     private static boolean markCoastlines = false;
     private static boolean didProgramLoadDefault = false;
 
+    private static boolean isAddNewPointActive = false;
+
     public static void setDidProgramLoadDefault(boolean truth_value)
     {
         didProgramLoadDefault = truth_value;
@@ -50,7 +52,7 @@ public class GlobalValue {
                          .getWindow()
                          .getFrame()
                          .getWidth()
-            / 1.5);
+            / 1.6);
     }
 
     public static int getSearchFieldStartX()
@@ -80,4 +82,16 @@ public class GlobalValue {
     }
 
     public static boolean getMarkCoastlines() { return markCoastlines; }
+
+    public static int getInformationBarWidth() {
+        return 400;
+    }
+
+    public static void setIsAddNewPointActive(boolean status) {
+        isAddNewPointActive = status;
+    }
+
+    public static boolean isAddNewPointActive() {
+        return isAddNewPointActive;
+    }
 }
