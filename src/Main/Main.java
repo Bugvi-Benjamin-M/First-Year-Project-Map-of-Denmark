@@ -28,10 +28,10 @@ public class Main {
 
     public static void main(String[] args)
     {
-
         long startTime = System.nanoTime();
         createControllers();
         PreferencesController.getInstance().setupPreferences();
+        MainWindowController.getInstance().setProgressBarTheme();
         splashScreenInit();
         Model model = Model.getInstance();
         CanvasController.getInstance().setupAsObserver();

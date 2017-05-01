@@ -44,7 +44,7 @@ public final class MainWindowController extends WindowController {
                      .layout(new BorderLayout())
                      .icon()
                      .hide();
-        window.setMinimumWindowSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 1.9), Toolkit.getDefaultToolkit().getScreenSize().height));
+        window.setMinimumWindowSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 1.9),(int) ((Toolkit.getDefaultToolkit().getScreenSize().getHeight()) /1.3)));
         setupToolbar();
         setupCanvas();
         setupPointsOfInterestBar();
@@ -105,17 +105,29 @@ public final class MainWindowController extends WindowController {
     {
         PointsOfInterestController.getInstance().specifyWindow(window);
         PointsOfInterestController.getInstance().setupInformationBar();
-        PointsOfInterestController.getInstance().setupPointsOfInterestBar();
+        PointsOfInterestController.getInstance().setupBasePointsOfInterestBar();
     }
 
-    public void activatePointsOfInterestInformationBar() {
+    public void activateLargePointsOfInterestInformationBar() {
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, GlobalValue.getInformationBarWidth(), window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
         PointsOfInterestController.getInstance().getInformationBar().revalidate();
     }
 
-    public void deactivatePointsOfInterestInformationBar() {
+    public void activateSmallPointsOfInterestInformationBar() {
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight()-300, window.getFrame().getWidth(), window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
+        PointsOfInterestController.getInstance().getInformationBar().revalidate();
+    }
+
+    public void deactivateSmallPointsOfInterestInformationBar() {
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
+        CanvasController.repaintCanvas();
+    }
+
+    public void deactivateLargePointsOfInterestInformationBar() {
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
-        //CanvasController.repaintCanvas();
+        PointsOfInterestController.getInstance().clearPointsOfInterestBar();
         CanvasController.repaintCanvas();
     }
 
@@ -130,6 +142,7 @@ public final class MainWindowController extends WindowController {
         CanvasController.getInstance().themeHasChanged();
         PointsOfInterestController.getInstance().themeHasChanged();
         setToolTipTheme();
+        setProgressBarTheme();
         transferFocusToMapCanvas();
     }
 
@@ -193,7 +206,6 @@ public final class MainWindowController extends WindowController {
 
     public void requestCanvasRepaint()
     {
-        //CanvasController.repaintCanvas();
         CanvasController.repaintCanvas();
     }
 
@@ -223,6 +235,24 @@ public final class MainWindowController extends WindowController {
 
     public void requestCanvasAdjustToDynamicBounds() {
         CanvasController.adjustToDynamicBounds();
+    }
+
+    public void requestToolbarRepaint() {
+        ToolbarController.getInstance().repaintToolbar();
+    }
+
+    public void setProgressBarTheme() {
+        UIManager.put("ProgressBar.border", BorderFactory.createLineBorder(ThemeHelper.color("border")));
+        UIManager.put("ProgressBar.background", ThemeHelper.color("progressBarBackground"));
+        UIManager.put("ProgressBar.foreground", ThemeHelper.color("progressBarForeground"));
+    }
+
+    public boolean isMenuToolPopupVisible() {
+        return ToolbarController.getInstance().isMenuToolPopupVisible();
+    }
+
+    public void requestMenuToolHidePopup() {
+        ToolbarController.getInstance().requestHideMenuToolPopup();
     }
 
     private class MainWindowInteractionHandler

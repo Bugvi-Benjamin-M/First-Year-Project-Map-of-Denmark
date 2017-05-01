@@ -11,8 +11,6 @@ import View.Toolbar;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 
 import static javax.swing.SpringLayout.NORTH;
@@ -53,14 +51,24 @@ public final class MenuToolController extends Controller {
     {
         toolbar = ToolbarController.getInstance().getToolbar();
         popupMenu = new MenuTool();
-        addFocusListener();
         addActionsToToolsMenu();
     }
 
     protected void hidePopupMenu()
     {
-        if (popupMenu != null && popupMenu.isVisible())
+        if (popupMenu != null && popupMenu.isVisible()) {
             popupMenu.hidePopupMenu();
+            if (ToolbarController.getInstance().getType() == ToolbarType.SMALL)
+                ToolbarController.getInstance()
+                        .getToolbar()
+                        .getTool(ToolType.MENU)
+                        .toggleActivate(false);
+        }
+    }
+
+    protected boolean isPopupVisible() {
+        if(popupMenu != null) return popupMenu.isVisible();
+        else return false;
     }
 
     protected void setupLayoutForMenuTool()
@@ -110,17 +118,20 @@ public final class MenuToolController extends Controller {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    if (popupMenu.isVisible())
+                    if (popupMenu.isVisible()) {
                         ToolbarController.getInstance().toolEvent(ToolType.LOAD);
+                        hidePopupMenu();
+                    }
                 }
             });
         addAction(KeyEvent.VK_S, OSDetector.getActivationKey(),
             new AbstractAction() {
                 @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    if (popupMenu.isVisible())
+                public void actionPerformed(ActionEvent e) {
+                    if (popupMenu.isVisible()) {
                         ToolbarController.getInstance().toolEvent(ToolType.SAVE);
+                        hidePopupMenu();
+                    }
                 }
             });
         addAction(
@@ -128,8 +139,10 @@ public final class MenuToolController extends Controller {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    if (popupMenu.isVisible())
+                    if (popupMenu.isVisible()) {
                         ToolbarController.getInstance().toolEvent(ToolType.SETTINGS);
+                        hidePopupMenu();
+                    }
                 }
             });
         addAction(KeyEvent.VK_P, OSDetector.getActivationKey(), new AbstractAction() {
@@ -137,6 +150,7 @@ public final class MenuToolController extends Controller {
             public void actionPerformed(ActionEvent e) {
                 if(popupMenu.isVisible()) {
                     ToolbarController.getInstance().toolEvent(ToolType.POI);
+                    hidePopupMenu();
                 }
             }
         });
@@ -145,6 +159,7 @@ public final class MenuToolController extends Controller {
             public void actionPerformed(ActionEvent e) {
                 if(popupMenu.isVisible()) {
                     ToolbarController.getInstance().toolEvent(ToolType.ROUTES);
+                    hidePopupMenu();
                 }
             }
         });
@@ -175,11 +190,6 @@ public final class MenuToolController extends Controller {
         popupMenu.setLocation(calculatePosition());
     }
 
-    private void addFocusListener()
-    {
-        toolbar.getTool(ToolType.MENU).addFocusListener(new MenuToolFocusHandler());
-    }
-
     protected void windowResizedEvent()
     {
         if (popupMenu.isVisible())
@@ -198,18 +208,4 @@ public final class MenuToolController extends Controller {
             (toolbar.getLocationOnScreen().y + toolbar.getHeight()) - POPUPMENU_YAXIS_OFFSET);
     }
 
-    private class MenuToolFocusHandler extends FocusAdapter {
-
-        @Override
-        public void focusLost(FocusEvent e)
-        {
-            super.focusLost(e);
-            popupMenu.hidePopupMenu();
-            if (ToolbarController.getInstance().getType() == ToolbarType.SMALL)
-                ToolbarController.getInstance()
-                    .getToolbar()
-                    .getTool(ToolType.MENU)
-                    .toggleActivate(false);
-        }
-    }
 }

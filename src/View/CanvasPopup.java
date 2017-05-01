@@ -34,9 +34,9 @@ public class CanvasPopup extends View {
 
     public JPopupMenu getPopupMenu() { return popupMenu; }
 
-    public void showPopupMenu() { popupMenu.setVisible(true); }
+    public void showPopupMenu() { if(popupMenu != null) popupMenu.setVisible(true); }
 
-    public void hidePopupMenu() { popupMenu.setVisible(false); }
+    public void hidePopupMenu() { if(popupMenu != null) popupMenu.setVisible(false); }
 
     public void setLocation(int x, int y) { popupMenu.setLocation(x, y); }
 

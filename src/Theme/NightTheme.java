@@ -73,6 +73,16 @@ public class NightTheme implements Theme {
 
     public Color poiButtonsForeground() {return new Color(0xFFFBFB);}
 
+    @Override
+    public Color progressBarBackground() {
+        return new Color(0x0C0A0B);
+    }
+
+    @Override
+    public Color progressBarForeground() {
+        return new Color(0x875997);
+    }
+
     public Color cityName() { return new Color(0xCCC9C7); }
     public Color roadName() { return new Color(0x000000); }
     public Color barName() { return new Color(0xF9FF17); }

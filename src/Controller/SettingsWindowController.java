@@ -3,7 +3,6 @@ package Controller;
 import Controller.ToolbarControllers.ToolbarController;
 import Enums.FileType;
 import Enums.ToolType;
-import Enums.ToolbarType;
 import Helpers.DefaultSettings;
 import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
@@ -281,12 +280,7 @@ public final class SettingsWindowController extends WindowController {
             true);
         window.getFrame().setAlwaysOnTop(true);
         window.hide();
-        if (ToolbarController.getInstance().getType() == ToolbarType.LARGE)
-            ToolbarController.getInstance()
-                .getToolbar()
-                .getTool(ToolType.SETTINGS)
-                .toggleActivate(false);
-        MainWindowController.getInstance().transferFocusToMapCanvas();
+        ToolbarController.getInstance().getToolbar().getTool(ToolType.SETTINGS).toggleActivate(false);
     }
 
     /**

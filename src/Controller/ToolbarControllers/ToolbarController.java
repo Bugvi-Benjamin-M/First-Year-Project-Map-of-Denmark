@@ -4,11 +4,11 @@ import Controller.*;
 import Enums.FileType;
 import Enums.ToolType;
 import Enums.ToolbarType;
-import Helpers.*;
-import View.PopupWindow;
-import View.ToolComponent;
-import View.ToolFeature;
-import View.Toolbar;
+import Helpers.DefaultSettings;
+import Helpers.FileHandler;
+import Helpers.GlobalValue;
+import Helpers.OSDetector;
+import View.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -35,7 +35,6 @@ public final class ToolbarController extends Controller {
     private SpringLayout toolbarLayout;
     private static ToolbarController instance;
     private boolean poiToolActive;
-    private JWindow loadWindow;
 
     private ToolbarType type;
 
@@ -93,6 +92,7 @@ public final class ToolbarController extends Controller {
 
     public void setupLargeToolbar()
     {
+        SetToLargeToolbarToolTipSetting();
         removeAllComponentsFromToolbar();
         addRoutesToolToLargeToolbar(addPOIToolToLargeToolbar(
             addSaveToolToLargeToolbar(addLoadToolToLargeToolbar())));
@@ -101,13 +101,31 @@ public final class ToolbarController extends Controller {
         type = ToolbarType.LARGE;
     }
 
+
     public void setupSmallToolbar()
     {
+        setToSmallToolbarToolTipSetting();
         removeAllComponentsFromToolbar();
         addMenuToolToSmallToolbar();
         addSearchToolToSmallToolbar(addSearchButtonToolToSmallToolbar());
         MenuToolController.getInstance().setupLayoutForMenuTool();
         type = ToolbarType.SMALL;
+    }
+
+    private void setToSmallToolbarToolTipSetting() {
+        ToolTipManager.sharedInstance().unregisterComponent(toolbar.getTool(ToolType.LOAD));
+        ToolTipManager.sharedInstance().unregisterComponent(toolbar.getTool(ToolType.SAVE));
+        ToolTipManager.sharedInstance().unregisterComponent(toolbar.getTool(ToolType.POI));
+        ToolTipManager.sharedInstance().unregisterComponent(toolbar.getTool(ToolType.ROUTES));
+        ToolTipManager.sharedInstance().unregisterComponent(toolbar.getTool(ToolType.SETTINGS));
+    }
+
+    private void SetToLargeToolbarToolTipSetting() {
+        ToolTipManager.sharedInstance().registerComponent(toolbar.getTool(ToolType.LOAD));
+        ToolTipManager.sharedInstance().registerComponent(toolbar.getTool(ToolType.SAVE));
+        ToolTipManager.sharedInstance().registerComponent(toolbar.getTool(ToolType.POI));
+        ToolTipManager.sharedInstance().registerComponent(toolbar.getTool(ToolType.ROUTES));
+        ToolTipManager.sharedInstance().registerComponent(toolbar.getTool(ToolType.SETTINGS));
     }
 
     private void removeActivationFromTools()
@@ -421,12 +439,14 @@ public final class ToolbarController extends Controller {
     private void poiToolActivatedEvent() {
         if(!poiToolActive) {
             toolbar.getTool(ToolType.POI).toggleActivate(true);
-            MainWindowController.getInstance().activatePointsOfInterestInformationBar();
+            if(type == ToolbarType.LARGE) MainWindowController.getInstance().activateLargePointsOfInterestInformationBar();
+            else if(type == ToolbarType.SMALL) MainWindowController.getInstance().activateSmallPointsOfInterestInformationBar();
             MainWindowController.getInstance().transferFocusToInformationBar();
             poiToolActive = true;
         } else {
             toolbar.getTool(ToolType.POI).toggleActivate(false);
-            MainWindowController.getInstance().deactivatePointsOfInterestInformationBar();
+            if(type == ToolbarType.LARGE) MainWindowController.getInstance().deactivateLargePointsOfInterestInformationBar();
+            else if(type == ToolbarType.SMALL) MainWindowController.getInstance().deactivateSmallPointsOfInterestInformationBar();
             MainWindowController.getInstance().transferFocusToMapCanvas();
             poiToolActive = false;
         }
@@ -470,9 +490,10 @@ public final class ToolbarController extends Controller {
 
     private void loadDefaultFile() {
         SwingWorker worker = new SwingWorker() {
+            JWindow loadWindow;
             @Override
             protected Object doInBackground() throws Exception {
-                initiateLoadingScreen("Loading Default File!");
+                loadWindow = PopupWindow.LoadingScreen("Loading Default File!", 10, toolbar.getLocationOnScreen().y + toolbar.getHeight() + 10);
 
                 if (PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
                     FileHandler.loadDefaultResource();
@@ -565,34 +586,6 @@ public final class ToolbarController extends Controller {
             toolbar.getTool(ToolType.SAVE).toggleActivate(false);
     }
 
-    private void initiateLoadingScreen(String description) {
-        JProgressBar progressBar = new JProgressBar();
-        progressBar.setIndeterminate(true);
-        progressBar.setVisible(true);
-        progressBar.setBackground(ThemeHelper.color("toolbar"));
-        progressBar.setOpaque(true);
-        JLabel icon = new JLabel();
-        icon.setIcon(new ImageIcon(ToolbarController.class.getResource("/Copenhagen.jpg")));
-        icon.setVisible(true);
-        icon.setPreferredSize(new Dimension(200,200));
-        icon.setBackground(ThemeHelper.color("toolbar"));
-        icon.setOpaque(true);
-        JLabel text = new JLabel(description);
-        text.setFont(new Font(text.getFont().getName(), text.getFont().getStyle(), 12));
-        text.setVisible(true);
-        text.setBackground(ThemeHelper.color("toolbar"));
-        text.setForeground(ThemeHelper.color("icon"));
-        text.setOpaque(true);
-        loadWindow = new JWindow();
-        loadWindow.setLayout(new BorderLayout());
-        loadWindow.setLocation(10, toolbar.getLocationOnScreen().y + toolbar.getHeight() + 10);
-        loadWindow.add(BorderLayout.NORTH, icon);
-        loadWindow.add(BorderLayout.CENTER, text);
-        loadWindow.add(BorderLayout.SOUTH, progressBar);
-        loadWindow.pack();
-        loadWindow.setVisible(true);
-        loadWindow.setAlwaysOnTop(true);
-    }
 
     private void settingsEvent()
     {
@@ -650,20 +643,33 @@ public final class ToolbarController extends Controller {
         MainWindowController.getInstance().requestCanvasRepaint();
     }
 
+    public void repaintToolbar() {
+        toolbar.revalidate();
+        toolbar.repaint();
+    }
+
+    public boolean isMenuToolPopupVisible() {
+        return MenuToolController.getInstance().isPopupVisible();
+    }
+
+    public void requestHideMenuToolPopup() {
+        MenuToolController.getInstance().hidePopupMenu();
+    }
+
     private class ToolInteractionHandler extends MouseAdapter {
 
-        private ToolType type;
+        private ToolType toolType;
         private ToolFeature tool;
         private int keyEvent;
         private int activationKey;
 
-        public ToolInteractionHandler(ToolType type, int keyEvent,
+        public ToolInteractionHandler(ToolType toolType, int keyEvent,
             int activationKey)
         {
-            this.type = type;
+            this.toolType = toolType;
             this.keyEvent = keyEvent;
             this.activationKey = activationKey;
-            tool = (ToolFeature)toolbar.getTool(type);
+            tool = (ToolFeature)toolbar.getTool(toolType);
             addMouseListener();
             setKeyShortCuts();
         }
@@ -685,15 +691,22 @@ public final class ToolbarController extends Controller {
                 toolbar.grabFocus();
             else {
                 tool.grabFocus();
-                toolEvent(type);
+                if(type == ToolbarType.SMALL) {
+                    if (toolType != ToolType.MENU) {
+                        if (isMenuToolPopupVisible()) requestHideMenuToolPopup();
+                        if (toolType != ToolType.POI) tool.setTheme();
+                    }
+                }
+                toolEvent(toolType);
             }
+
         }
 
         @Override
         public void mouseEntered(MouseEvent e) {
             super.mouseEntered(e);
             if(tool != null) {
-                mouseEnteredTool(type, e);
+                mouseEnteredTool(toolType, e);
                 tool.grabFocus();
             }
 
@@ -703,20 +716,20 @@ public final class ToolbarController extends Controller {
         @Override
         public void mouseExited(MouseEvent e) {
             super.mouseExited(e);
-            if(tool != null) mouseExitedTool(type, e);
+            if(tool != null) mouseExitedTool(toolType, e);
         }
 
         private void setKeyShortCuts()
         {
             tool.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
                 .put(KeyStroke.getKeyStroke(keyEvent, activationKey),
-                    type.toString().toLowerCase());
-            tool.getActionMap().put(type.toString().toLowerCase(),
+                    toolType.toString().toLowerCase());
+            tool.getActionMap().put(toolType.toString().toLowerCase(),
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        toolEvent(type);
+                        toolEvent(toolType);
                     }
                 });
         }
@@ -732,6 +745,7 @@ public final class ToolbarController extends Controller {
         public void mouseClicked(MouseEvent e)
         {
             super.mouseClicked(e);
+            if(isMenuToolPopupVisible()) requestHideMenuToolPopup();
             toolbar.grabFocus();
         }
 

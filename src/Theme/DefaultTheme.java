@@ -67,11 +67,19 @@ public class DefaultTheme implements Theme {
     public Color toolActivated() { return new Color(0x4471C2); }
     public Color toolHover() {return new Color(0x83B1F1);}
 
-    public Color scrollBarThumb() {return new Color(0x726E72);}
+    public Color scrollBarThumb() {return new Color(0x789AE0);}
 
     public Color pointHover() {return new Color(0xAEA9AF);}
 
     public Color poiButtonsForeground() {return new Color(0x000000);}
+
+    public Color progressBarBackground() {
+        return new Color(0x8E8A8C);
+    }
+
+    public Color progressBarForeground() {
+        return new Color(0x4471C2);
+    }
 
     public Color cityName() { return new Color(0x000000); }
     public Color roadName() { return new Color(0x000000); }

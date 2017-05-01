@@ -33,6 +33,9 @@ public interface Theme {
 
     public abstract Color poiButtonsForeground();
 
+    public abstract Color progressBarBackground();
+    public abstract Color progressBarForeground();
+
     public abstract Color water();
     public abstract Color park();
     public abstract Color forest();

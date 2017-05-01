@@ -12,7 +12,7 @@ import java.awt.*;
  * @author bugvimagnussen
  * @version 27/04/2017
  */
-public class PointsOfInterestTopButtons extends View {
+public class PointsOfInterestButtons extends View {
 
     private final float BUTTON_FONT_SIZE = 40f;
     private final int BUTTON_WIDTH = 40;
@@ -25,7 +25,7 @@ public class PointsOfInterestTopButtons extends View {
     private JLabel deleteAllButton;
 
 
-    public PointsOfInterestTopButtons() {
+    public PointsOfInterestButtons() {
         newPointButton = new JLabel("\uf124");
         deleteAllButton = new JLabel("\uf1f8");
         newPointButton.setOpaque(true);
