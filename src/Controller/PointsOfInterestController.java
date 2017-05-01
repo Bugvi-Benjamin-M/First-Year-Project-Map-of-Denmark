@@ -2,6 +2,8 @@ package Controller;
 
 import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
+import Model.Elements.POI;
+import Model.Model;
 import View.*;
 
 import javax.swing.*;
@@ -9,12 +11,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import static javax.swing.SpringLayout.NORTH;
-import static javax.swing.SpringLayout.VERTICAL_CENTER;
-import static javax.swing.SpringLayout.WEST;
+import static javax.swing.SpringLayout.*;
 
 /**
  * Class details:
@@ -28,7 +27,7 @@ public final class PointsOfInterestController extends Controller {
     private final int PROFILE_HEIGHT = 90;
     private final int LARGE_POINTS_OF_INTERESTBAR_WIDTH = 300;
     private final int BUTTONS_HEIGHT = 50;
-    private final int LARGE_SCROLLBAR_HEIGHT = (int) (0.956316*Toolkit.getDefaultToolkit().getScreenSize().getHeight() + (-292.289));
+    private final int LARGE_SCROLLBAR_HEIGHT = (int) (0.976316*Toolkit.getDefaultToolkit().getScreenSize().getHeight() + (-292.289));
     private final int DISTANCE_BETWEEN_TOOLBAR_AND_BUTTONS = GlobalValue.getToolbarHeight() + 10;
     private final int DISTANCE_BETWEEN_BUTTONS_AND_SCROLLPANE = 60;
     private final int SCROLLBAR_SPEED = 14;
@@ -43,8 +42,8 @@ public final class PointsOfInterestController extends Controller {
     private JScrollPane largeScroll;
     private PointsOfInterestButtons poiButtons;
 
-    private List<String> places;
-    private List<PointProfile> panelPlaces;
+    private List<POI> pointsOfInterest;
+    private List<PointProfile> POIpanels;
 
     private PointsOfInterestController() { super();}
 
@@ -57,8 +56,8 @@ public final class PointsOfInterestController extends Controller {
     }
 
     public void setupInformationBar() {
-        places = new LinkedList<>();
-        panelPlaces = new ArrayList<>();
+        pointsOfInterest = new ArrayList<>();
+        POIpanels = new ArrayList<>();
         informationBar = new InformationBar();
         informationBarLayout = (SpringLayout) informationBar.getLayout();
         InformationBarInteractionHandler handler = new InformationBarInteractionHandler();
@@ -100,9 +99,7 @@ public final class PointsOfInterestController extends Controller {
         addPointsToPointsOfInterestBar();
         poiButtons.setPreferredSize(new Dimension(150, BUTTONS_HEIGHT));
         informationBarLayout.putConstraint(WEST, poiButtons, DISTANCE_FROM_LEFT_EDGE_TO_BUTTONS, WEST, informationBar);
-        //informationBarLayout.putConstraint(NORTH, poiButtons, DISTANCE_FROM_SMALLPOIBARTOP_TO_BUTTONS, NORTH, informationBar);
-        informationBarLayout.putConstraint(VERTICAL_CENTER, poiButtons, 0, VERTICAL_CENTER, informationBar);
-        //informationBarLayout.putConstraint(SOUTH, poiButtons, -75, SOUTH, informationBar);
+        informationBarLayout.putConstraint(NORTH, poiButtons, DISTANCE_FROM_SMALLPOIBARTOP_TO_BUTTONS, NORTH, informationBar);
         informationBar.add(poiButtons);
     }
 
@@ -146,7 +143,13 @@ public final class PointsOfInterestController extends Controller {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 poiButtons.getDeleteAllButton().setForeground(ThemeHelper.color("toolActivated"));
-                PopupWindow.confirmBox(null, "Do you Wish to Delete All Points of Interest?", "Confirm Deletion", JOptionPane.YES_OPTION);
+                if(PopupWindow.confirmBox(null, "Do you Wish to Delete All Points of Interest?", "Confirm Deletion", JOptionPane.YES_OPTION) == JOptionPane.YES_OPTION) {
+                    Model.getInstance().removeAllPOI();
+                    POIpanels.clear();
+                    pointsOfInterestBar.removeAll();
+                    pointsOfInterestBar.revalidate();
+                    pointsOfInterestBar.repaint();
+                }
                 //Clear all points
                 poiButtons.getDeleteAllButton().setForeground(ThemeHelper.color("icon"));
             }
@@ -197,35 +200,39 @@ public final class PointsOfInterestController extends Controller {
     }
 
     private void addPointsToPointsOfInterestBar() {
-        places.add("København");
-        places.add("Århus, Det Jyske Musikkonservatorium");
-        places.add("hello");
-        places.add("world");
-        places.add("testing");
-        places.add("scrollbar");
-        places.add("more");
-        places.add("Jpanels");
-        places.add("are");
-        places.add("apparently");
-        places.add("needed");
-        places.add("oh lord");
-        places.add("pls");
-        places.add("is");
-        places.add("anything");
-        places.add("happening");
+        /*pointsOfInterest.add("København");
+        pointsOfInterest.add("Århus, Det Jyske Musikkonservatorium");
+        pointsOfInterest.add("hello");
+        pointsOfInterest.add("world");
+        pointsOfInterest.add("testing");
+        pointsOfInterest.add("scrollbar");
+        pointsOfInterest.add("more");
+        pointsOfInterest.add("Jpanels");
+        pointsOfInterest.add("are");
+        pointsOfInterest.add("apparently");
+        pointsOfInterest.add("needed");
+        pointsOfInterest.add("oh lord");
+        pointsOfInterest.add("pls");
+        pointsOfInterest.add("is");
+        pointsOfInterest.add("anything");
+        pointsOfInterest.add("happening");*/
 
 
-        for(String s : places) {
-            PointProfile profile = new PointProfile(s);
-            profile.addMouseListener(new PointsInteractionHandler(profile));
-            profile.getDeleteButton().addMouseListener(new PointDeleteButtonInteractionHandler(profile.getDeleteButton()));
-            panelPlaces.add(profile);
+        for(POI poi : pointsOfInterest) {
+            addPOI(poi);
             //pointsOfInterestBar.addPlaceToList(profile);
             //pointsOfInterestBar.createVerticalSpace(10);
             //pointsOfInterestBar.addHorizontalGlue();
         }
-        pointsOfInterestBar.setPointProfiles(panelPlaces);
+        pointsOfInterestBar.setPointProfiles(POIpanels);
         pointsOfInterestBar.revalidate();
+    }
+
+    public void addPOI(POI poi) {
+        PointProfile pointProfile = new PointProfile(poi.getDescription(), poi.x, poi.y);
+        pointProfile.addMouseListener(new PointsInteractionHandler(pointProfile));
+        pointProfile.getDeleteButton().addMouseListener(new PointDeleteButtonInteractionHandler(pointProfile.getDeleteButton()));
+        POIpanels.add(pointProfile);
     }
 
     public void repaintPointsOfInterestBar() {
@@ -285,7 +292,12 @@ public final class PointsOfInterestController extends Controller {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            //
+            int index = POIpanels.indexOf(point);
+            Model.getInstance().removePOI(index);
+            POIpanels.remove(point);
+            pointsOfInterestBar.remove(point);
+            pointsOfInterestBar.revalidate();
+            pointsOfInterestBar.repaint();
         }
 
 

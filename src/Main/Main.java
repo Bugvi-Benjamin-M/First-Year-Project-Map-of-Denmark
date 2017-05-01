@@ -45,7 +45,7 @@ public class Main {
                 e.printStackTrace();
                 PopupWindow.infoBox(null, "Could Not Find Preferred Startup File: " + PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
                         "Loading " + DefaultSettings.DEFAULT_FILE_NAME, "Preferred Startup File Not Found!");
-                FileHandler.loadDefaultResource();
+                //FileHandler.loadDefaultResource();
                 loadDefaultFile = true;
             }
         }

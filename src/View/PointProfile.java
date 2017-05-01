@@ -21,8 +21,16 @@ public class PointProfile extends View {
     private boolean isDoubleLine;
     private JLabel deleteButton;
 
+    private String description;
 
-    public PointProfile(String description) {
+    private float x;
+    private float y;
+
+
+    public PointProfile(String description, float x, float y) {
+        this.x = x;
+        this.y = y;
+        this.description = description;
         isDoubleLine = false;
         if(description.length() > 28) {
             description = "<html>" + description.substring(0,28) + "<br>" + description.substring(28, description.length()) + "</html>";
@@ -64,5 +72,14 @@ public class PointProfile extends View {
 
     public JLabel getDeleteButton() {
         return deleteButton;
+    }
+
+
+    public float getPOIX() {
+        return x;
+    }
+
+    public float getPOIY() {
+        return y;
     }
 }

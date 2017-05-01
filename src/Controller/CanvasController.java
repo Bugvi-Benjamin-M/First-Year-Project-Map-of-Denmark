@@ -6,6 +6,7 @@ import Enums.ZoomLevel;
 import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
 import Model.Elements.Element;
+import Model.Elements.POI;
 import Model.Elements.Road;
 import Model.Model;
 import View.CanvasPopup;
@@ -261,9 +262,11 @@ public final class CanvasController extends Controller implements Observer {
                         Point2D p = mapCanvas.toModelCoords(mousePosition);
                        String description = PopupWindow.textInputBox(null, "Point of interest", "Enter description: ");
                        if(description != null){
-                           if(description.length() < 52) {
-                               model.addPOI((float) p.getX(), (float) p.getY(), description);
+                           if(description.length() <= 56) {
+                               POI poi = new POI((float) p.getX(), (float) p.getY(), description);
+                               model.addPOI(poi);
                                mapCanvas.setPOIs(model.getPointsOfInterest());
+                               PointsOfInterestController.getInstance().addPOI(poi);
                            }else{
                                PopupWindow.warningBox(null, "The message is not allowed to be longer than 56 signs.");
                            }
