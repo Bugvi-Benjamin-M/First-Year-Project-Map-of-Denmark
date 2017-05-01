@@ -1,6 +1,7 @@
 package RouteSearch;
 
 import Enums.TravelType;
+import javafx.geometry.Point2D;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,15 @@ public class GraphTest {
         graph.addEdge(new Edge(8,9,20,0.6f, TravelType.VEHICLE));
         graph.addEdge(new Edge(1,8,50,0.9f, TravelType.BICYCLE));
         System.out.println(graph.toString());
+    }
+
+    @Test
+    public void hashcodeTest() {
+        System.out.println(new Point2D(5,5).hashCode());
+        System.out.println(new Point2D(6,5).hashCode());
+        System.out.println(new Point2D(5,6).hashCode());
+        System.out.println(new Point2D(6,6).hashCode());
+        System.out.println(new Point2D(5,5).hashCode());
     }
 
     @After

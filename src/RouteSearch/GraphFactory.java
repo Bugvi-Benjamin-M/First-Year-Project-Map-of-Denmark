@@ -23,7 +23,6 @@ public class GraphFactory {
     private List<Edge> roadSegments;
     private Map<Point2D,LinkedList<Road>> adjacent;
     private Graph graph;
-    private long counter = 0;
     private LongToPointMap points;
 
     public GraphFactory(KDTree roads) {
@@ -33,7 +32,7 @@ public class GraphFactory {
                 model.getMaxLongitude(false),model.getMaxLatitude(false));
         roadSegments = new LinkedList<>();
         adjacent = new HashMap<>();
-        points = new LongToPointMap(100000);
+        points = new LongToPointMap(Integer.MAX_VALUE);
         makeGraph(roadSet);
     }
 
@@ -45,42 +44,41 @@ public class GraphFactory {
                 // Adds all points to the adjacency list
                 for (OSMWay osmWay: road.getRelation()) {
                     Point2D lastPoint = osmWay.getFromNode();
-                    points.put(counter++,(float) lastPoint.getX(),
+                    points.put(lastPoint.hashCode(),(float) lastPoint.getX(),
                             (float) lastPoint.getY());
 
                     for (int i = 1; i < osmWay.size(); i++) {
                         Point2D point = osmWay.get(i);
                         addRoadToAdjacent(point,road);
-                        points.put(counter,(float) lastPoint.getX(),
+                        points.put(point.hashCode(),(float) lastPoint.getX(),
                                 (float) lastPoint.getY());
 
                         float length = (float) HelperFunctions.distanceInMeters(point,lastPoint);
                         if (road.isTravelByBikeAllowed()) {
-                            roadSegments.add(new Edge(counter-1,counter,
+                            roadSegments.add(new Edge(lastPoint.hashCode(),point.hashCode(),
                                     road.getMaxSpeed(),length,TravelType.BICYCLE));
                             if (!road.isOneWay()) {
-                                roadSegments.add(new Edge(counter,counter-1,
+                                roadSegments.add(new Edge(point.hashCode(),lastPoint.hashCode(),
                                         road.getMaxSpeed(),length,TravelType.BICYCLE));
                             }
                         }
                         if (road.isTravelByFootAllowed()) {
-                            roadSegments.add(new Edge(counter-1,counter,
+                            roadSegments.add(new Edge(lastPoint.hashCode(),point.hashCode(),
                                     road.getMaxSpeed(),length,TravelType.WALK));
                             if (!road.isOneWay()) {
-                                roadSegments.add(new Edge(counter,counter-1,
+                                roadSegments.add(new Edge(point.hashCode(),lastPoint.hashCode(),
                                         road.getMaxSpeed(),length,TravelType.WALK));
                             }
                         }
                         if (road.isTravelByCarAllowed()) {
-                            roadSegments.add(new Edge(counter-1,counter,
+                            roadSegments.add(new Edge(lastPoint.hashCode(),point.hashCode(),
                                     road.getMaxSpeed(),length,TravelType.VEHICLE));
                             if (!road.isOneWay()) {
-                                roadSegments.add(new Edge(counter,counter-1,
+                                roadSegments.add(new Edge(point.hashCode(),lastPoint.hashCode(),
                                         road.getMaxSpeed(),length,TravelType.VEHICLE));
                             }
                         }
                         lastPoint = point;
-                        counter++;
                     }
                 }
             } // else ignore
