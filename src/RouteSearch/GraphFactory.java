@@ -47,54 +47,60 @@ public class GraphFactory {
     }
 
     private void makeGraph(HashSet<Element> roads) {
+        System.out.println("Finding edges...");
         for (Object way: roads) {
+            System.out.println("... for way@"+way.hashCode());
             if (way instanceof Road) {
                 Road road = (Road) way;
 
                 // Adds all points to the adjacency list
                 for (OSMWay osmWay: road.getRelation()) {
                     Point2D lastPoint = osmWay.getFromNode();
-                    points.put(counter++,(float) lastPoint.getX(),
+                    int hashLast = Math.abs(lastPoint.hashCode());
+                    points.put(hashLast,(float) lastPoint.getX(),
                             (float) lastPoint.getY());
 
                     for (int i = 1; i < osmWay.size(); i++) {
                         Point2D point = osmWay.get(i);
                         addRoadToAdjacent(point,road);
-                        points.put(counter,(float) lastPoint.getX(),
+                        int hash = Math.abs(point.hashCode());
+                        points.put(hash,(float) lastPoint.getX(),
                                 (float) lastPoint.getY());
 
                         float length = (float) HelperFunctions.distanceInMeters(point,lastPoint);
                         if (road.isTravelByBikeAllowed()) {
-                            roadSegments.add(new Edge(counter-1,counter,
+                            roadSegments.add(new Edge(hashLast,hash,
                                     road.getMaxSpeed(),length,TravelType.BICYCLE));
                             if (!road.isOneWay()) {
-                                roadSegments.add(new Edge(counter,counter-1,
+                                roadSegments.add(new Edge(hash,hashLast,
                                         road.getMaxSpeed(),length,TravelType.BICYCLE));
                             }
                         }
                         if (road.isTravelByFootAllowed()) {
-                            roadSegments.add(new Edge(counter-1,counter,
+                            roadSegments.add(new Edge(hashLast,hash,
                                     road.getMaxSpeed(),length,TravelType.WALK));
                             if (!road.isOneWay()) {
-                                roadSegments.add(new Edge(counter,counter-1,
+                                roadSegments.add(new Edge(hash,hashLast,
                                         road.getMaxSpeed(),length,TravelType.WALK));
                             }
                         }
                         if (road.isTravelByCarAllowed()) {
-                            roadSegments.add(new Edge(counter-1,counter,
+                            roadSegments.add(new Edge(hashLast,hash,
                                     road.getMaxSpeed(),length,TravelType.VEHICLE));
                             if (!road.isOneWay()) {
-                                roadSegments.add(new Edge(counter,counter-1,
+                                roadSegments.add(new Edge(hash,hashLast,
                                         road.getMaxSpeed(),length,TravelType.VEHICLE));
                             }
                         }
                         lastPoint = point;
-                        counter++;
+                        hashLast = hash;
                     }
                 }
             } // else ignore
         }
+        System.out.println("Finished finding edges");
         graph = new Graph(roadSegments.size());
+        System.out.println("Initialized graph");
         for (Edge edge : roadSegments) {
             graph.addEdge(edge);
         }

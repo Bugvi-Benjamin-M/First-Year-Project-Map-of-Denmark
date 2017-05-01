@@ -48,8 +48,11 @@ public class Main {
             }
         }
         new Thread(() -> {
+            System.out.println("Starting graph building");
             KDTree roads = Model.getInstance().getElements(ElementType.HIGHWAY);
+            System.out.println("Retrieved elements");
             Model.getInstance().setGraph((new GraphFactory(roads)).getGraph());
+            System.out.println("Graph building complete");
             System.out.println(model.getGraph().toString());
         }).start();
 
