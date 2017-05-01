@@ -58,11 +58,6 @@ public class MapCanvas extends View {
     private float dynMaxLat;
     private float dynMinLat;
 
-    /**
-   * The base Constructor for the MapCanvas.
-   */
-    public MapCanvas()
-    {
     //default level of detals on zoom levels
     private static final double DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.000001;
     private static final double DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.00005;
@@ -72,6 +67,10 @@ public class MapCanvas extends View {
     private static final double DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.005;
     private static final double DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.03;
 
+
+    /**
+   * The base Constructor for the MapCanvas.
+   */
 
     public MapCanvas() {
         transform = new AffineTransform();

@@ -45,7 +45,6 @@ public class NightTheme implements Theme {
     public Color toolTipForeground() { return new Color(0xFEFDFF); }
     public Color canvasPopupBackground() { return new Color(0x7562A9); }
     public Color canvasPopupForeground() { return new Color(0xFFFFFF); }
-    public Color toolActivated() { return new Color(0xB2ACB1); }
 
     public Color toolActivated() { return new Color(0x875997); }
     public Color toolHover() {return new Color(0xD1B1E4);}
