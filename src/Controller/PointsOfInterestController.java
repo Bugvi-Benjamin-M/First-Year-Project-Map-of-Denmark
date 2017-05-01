@@ -182,10 +182,11 @@ public final class PointsOfInterestController extends Controller {
 
 
     public void themeHasChanged() {
-        largeScroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
-        poiButtons.applyTheme();
-        informationBar.applyTheme();
-        pointsOfInterestBar.applyTheme();
+
+        if(largeScroll != null) largeScroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
+        if(poiButtons != null) poiButtons.applyTheme();
+        if(informationBar != null) informationBar.applyTheme();
+        if(pointsOfInterestBar != null) pointsOfInterestBar.applyTheme();
     }
 
     public InformationBar getInformationBar() {
