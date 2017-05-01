@@ -1,12 +1,10 @@
 package View;
 
-import Enums.BoundType;
+import Helpers.ThemeHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import Helpers.ThemeHelper;
-import Model.*;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -22,14 +20,8 @@ public class MapCanvasTest {
 
     @Before
     public void setUp() throws Exception {
-        Model.getInstance();
-        Model.getInstance().setBound(BoundType.MAX_LATITUDE, 1f);
-        Model.getInstance().setBound(BoundType.MIN_LATITUDE, 1f);
-        Model.getInstance().setBound(BoundType.MAX_LONGITUDE, 1f);
-        Model.getInstance().setBound(BoundType.MIN_LONGITUDE, 1f);
         ThemeHelper.setTheme("Default");
         mapCanvas = new MapCanvas();
-
     }
 
     @After
@@ -78,8 +70,73 @@ public class MapCanvasTest {
     }
 
     @Test
-    public void paintComponent() throws Exception {
+    public void setCoastLines() throws Exception {
         //A visual test may be best.
+    }
+
+    @Test
+    public void getCameraMaxLon() throws Exception {
+
+    }
+
+    @Test
+    public void getCameraMinLon() throws Exception {
+
+    }
+
+    @Test
+    public void getCameraMaxLat() throws Exception {
+
+    }
+
+    @Test
+    public void getCameraMinLat() throws Exception {
+
+    }
+
+    @Test
+    public void setMaxLon() throws Exception {
+
+    }
+
+    @Test
+    public void setMinLon() throws Exception {
+
+    }
+
+    @Test
+    public void setMaxLat() throws Exception {
+
+    }
+
+    @Test
+    public void setMinLat() throws Exception {
+
+    }
+
+    @Test
+    public void setDynMaxLon() throws Exception {
+
+    }
+
+    @Test
+    public void setDynMinLon() throws Exception {
+
+    }
+
+    @Test
+    public void setDynMaxLat() throws Exception {
+
+    }
+
+    @Test
+    public void setDynMinLat() throws Exception {
+
+    }
+
+    @Test
+    public void paintComponent() throws Exception {
+
     }
 
     @Test
