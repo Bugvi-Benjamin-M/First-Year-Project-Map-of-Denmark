@@ -12,8 +12,9 @@ public enum ElementType {
     UNKNOWN, // ukendte elementer
 
     WATER, // Søer og lign.
+    WETLAND, //Sump, marsk etc.
 
-    // BIOMES
+    // BIOMES AREAS
     PARK,
     FOREST,
     GRASSLAND,
@@ -21,6 +22,18 @@ public enum ElementType {
     GRASS,
     FARMLAND,
     MEADOW,
+    COMMON_LAND,
+    BEACH,
+    SPORTSPITCH,
+    SPORTSTRACK,
+    PLAYGROUND,
+    HEDGE,
+    RIVER,
+    //ARTIFICIAL BIOME (SHARES THE SAME FEATURES AS BIOME, BUT IS NOT NATURAL).
+    AIRPORT_TAXIWAY,
+    AIRPORT_RUNWAY,
+    DRAIN,
+
 
     // PLACES - NAMES
     CITY_NAME, // navne på byer over 100k
@@ -60,14 +73,25 @@ public enum ElementType {
     ROAD, // Temporary setting
 
     RAIL,
+    BRIDGE,
+    PIER,
+
+    PARKING,
+
+
+    POI, //Point of interest
 
     // AMENITIES
     BAR, // night
     NIGHT_CLUB, // Night
-
-    FAST_FOOD, // Children
-    ICE_CREAM, // Children
+    FAST_FOOD, // Night
 
     HOSPITAL, // Default
     PLACE_OF_WORSHIP, // Default
+    PARKING_AMENITY, //Default
+    SPORT_AMENITY, //Default
+    RAILWAY_STATION, //Default
+    RAILWAY_STATION_AREA, //Default
+    AIRPORT_AMENITY, //Default
+    UNIVERSITY, //Default
 }

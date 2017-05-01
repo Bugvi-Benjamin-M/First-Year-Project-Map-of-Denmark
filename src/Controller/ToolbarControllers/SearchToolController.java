@@ -1,10 +1,13 @@
 package Controller.ToolbarControllers;
 
-import Controller.Controller;
+import Controller.*;
 import Enums.ToolType;
 import Helpers.OSDetector;
 import Helpers.ThemeHelper;
+import Model.Addresses.Value;
 import Model.Model;
+import Parser.Address;
+import View.PopupWindow;
 import View.SearchTool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,6 +25,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -115,10 +120,31 @@ public final class SearchToolController extends Controller {
             searchTool.getField().requestFocus();
         }
         else if(allowSearch) {
-            //TODO Does not work as intended
-            this.saveHistory(searchTool.getText());
-            Point2D p = Model.getInstance().getTst().get(searchTool.getText());
-            System.out.println(Model.getInstance().getTst().get(searchTool.getText()));
+            ArrayList<Value> list = Model.getInstance().getTst().get(searchTool.getText());
+            if(list != null) {
+                this.saveHistory(searchTool.getText());
+                if (list.size() > 1) {
+                    String[] cities = new String[list.size()];
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).getCitynameindex() != 0) {
+                            cities[i] = Model.getInstance().getIndexToCity(list.get(i).getCitynameindex());
+                        } else {
+                            cities[i] = currentQuery + " " + i;
+                        }
+                    }
+                    JComboBox jcb = new JComboBox(cities);
+                    jcb.setEditable(true);
+                    JOptionPane.showMessageDialog(null, jcb, "Select a City: ", JOptionPane.QUESTION_MESSAGE);
+
+                    System.out.println(searchTool.getText() + " " + list.get(jcb.getSelectedIndex()).getX() + " " + list.get(jcb.getSelectedIndex()).getY());
+                    CanvasController.getInstance().markLocation(list.get(jcb.getSelectedIndex()).getX(), list.get(jcb.getSelectedIndex()).getY());
+                } else {
+                    System.out.println(searchTool.getText() + " " + list.get(0).getX() + " " + list.get(0).getY());
+                    CanvasController.getInstance().markLocation(list.get(0).getX(), list.get(0).getY());
+                }
+            }else{
+                PopupWindow.warningBox(null, "Invalid Address");
+            }
 
             ToolbarController.getInstance().transferFocusToCanvas();
             allowSearch = true;
@@ -129,10 +155,20 @@ public final class SearchToolController extends Controller {
         //Todo implement proper search
         if(searchTool.getField().isPopupVisible() && searchTool.getField().getItemCount() == 0) searchTool.getField().hidePopup();
         searchTool.getField().removeAllItems();
-        ArrayList<String> list = Model.getInstance().getTst().keysThatMatch(currentQuery);
-        for(String s : list) {
+        HashMap<Boolean , ArrayList<String>> map = Model.getInstance().getTst().keysThatMatch(currentQuery.toLowerCase());
+        ArrayList<String> listToShow = new ArrayList<>();
+        for(String s : map.get(true)){
+            listToShow.add(s);
+        }
+        int i = 0;
+        while(listToShow.size() <= 10 && i < map.get(false).size()){
+            listToShow.add(map.get(false).get(i));
+            i++;
+        }
+        for(String s : listToShow) {
             searchTool.getField().addItem(s);
         }
+        searchTool.getField().hidePopup();
         searchTool.getField().showPopup();
     }
 
@@ -145,10 +181,16 @@ public final class SearchToolController extends Controller {
             searchTool.getField().addItem(iterator.next());
         }
         searchTool.getField().setSelectedIndex(-1);
+        searchTool.getField().hidePopup();
         searchTool.getField().showPopup();
     }
 
     private void saveHistory(String query){
+        if(searchHistory.contains(query)){
+            return;
+        }
+
+
         searchHistory.add(query);
 
         try {
@@ -191,6 +233,7 @@ public final class SearchToolController extends Controller {
 
                 switch (e.getKeyChar()) {
                     case KeyEvent.VK_ENTER:
+                        currentQuery = searchTool.getText();
                         searchActivatedEvent();
                         break;
                     case KeyEvent.VK_ESCAPE:
@@ -243,7 +286,7 @@ public final class SearchToolController extends Controller {
         public void focusGained(FocusEvent e) {
             super.focusGained(e);
             if(editor.getItem().equals(defaultText)) {
-                //showHistory();
+                showHistory();
                 searchTool.setText("");
             } else {
                 showMatchingResults();

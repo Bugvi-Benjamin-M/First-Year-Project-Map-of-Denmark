@@ -44,8 +44,15 @@ public interface Theme {
     public abstract Color heath();
     public abstract Color farmland();
     public abstract Color meadow();
-    public abstract Color sand();
+    public abstract Color beach();
     public abstract Color building();
+    public abstract Color bridge();
+    public abstract Color sportspitch();
+    public abstract Color wetland();
+    public abstract Color commonland();
+    public abstract Color playground();
+    public abstract Color parking();
+    public abstract Color sportstrack();
 
     // Roads
     public abstract Color motorway();
@@ -69,7 +76,7 @@ public interface Theme {
     public abstract Color cycleway();
     public abstract Color path();
     public abstract Color road();
-    public abstract Color roadBorder();
+    public abstract Color airport();
 
     public abstract Color rail();
 
@@ -78,10 +85,14 @@ public interface Theme {
     public abstract Color barName();
     public abstract Color nightClubName();
     public abstract Color fastFoodName();
-    public abstract Color iceCreamName();
 
     public abstract Color hospital();
     public abstract Color placeOfWorship();
+    public abstract Color parkingAmenity();
+    public abstract Color sportAmenity();
+    public abstract Color railwayStation();
+    public abstract Color airportAmenity();
+    public abstract Color poi();
 
     public abstract String getName();
 }

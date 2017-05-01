@@ -10,6 +10,7 @@ import Model.Elements.Road;
 import Model.Model;
 import View.CanvasPopup;
 import View.MapCanvas;
+import View.PopupWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,12 +66,16 @@ public final class CanvasController extends Controller implements Observer {
 
     }
 
-    public static CanvasController getInstance()
-    {
+    public static CanvasController getInstance() {
         if (instance == null) {
             instance = new CanvasController();
         }
         return instance;
+    }
+
+    public void markLocation(float x, float y){
+        mapCanvas.setLocationMarker(new Point2D.Float(x, y));
+        mapCanvas.panToPoint(new Point2D.Float(x, y));
     }
 
     public void resizeEvent()
@@ -112,6 +117,10 @@ public final class CanvasController extends Controller implements Observer {
         toggleKeyBindings();
 
 
+    }
+
+    public void updateCanvasElements(){
+        mapCanvas.setElements(model.getElements());
     }
 
     private void addInteractionHandlerToCanvas()
@@ -236,6 +245,32 @@ public final class CanvasController extends Controller implements Observer {
                     Model.getInstance().modelHasChanged();
                 }
             });
+        handler.addKeyBinding(KeyEvent.VK_L, Helpers.OSDetector.getActivationKey(),
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        /*
+                         *  The cursor position is not the upper left corner of the boundry box
+                         *  of the cursor, but the lower left corner.
+                         *  This take that into consideration.
+                         */
+                        Point2D mousePosition = MouseInfo.getPointerInfo().getLocation();
+                        double x = mousePosition.getX();
+                        double y = mousePosition.getY()-24; //A cursor height of 24?
+                        mousePosition = new Point2D.Double(x, y);
+                        Point2D p = mapCanvas.toModelCoords(mousePosition);
+                       String description = PopupWindow.textInputBox(null, "Point of interest", "Enter description: ");
+                       if(description != null){
+                           if(description.length() < 52) {
+                               model.addPOI((float) p.getX(), (float) p.getY(), description);
+                               mapCanvas.setPOIs(model.getPointsOfInterest());
+                           }else{
+                               PopupWindow.warningBox(null, "The message is not allowed to be longer than 56 signs.");
+                           }
+                       }
+                    }
+                });
     }
 
     private void panEvent(PanType type)
@@ -275,7 +310,10 @@ public final class CanvasController extends Controller implements Observer {
 
         Point2D newCenterPoint = mapCanvas.toModelCoords(new Point2D.Double(canvasX, canvasY));
 
-        if (newCenterPoint.getX() < model.getMinLongitude(false) || newCenterPoint.getX() > model.getMaxLongitude(false) || newCenterPoint.getY() < model.getMaxLatitude(false) || newCenterPoint.getY() > model.getMinLatitude(false)) {
+        if (newCenterPoint.getX() < model.getMinLongitude(true)
+                || newCenterPoint.getX() > model.getMaxLongitude(true)
+                || newCenterPoint.getY() < model.getMaxLatitude(true)
+                || newCenterPoint.getY() > model.getMinLatitude(true)) {
             mapCanvas.pan(-dx, -dy);
         }
         repaintCanvas();

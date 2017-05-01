@@ -8,6 +8,7 @@ import KDtree.KDTree;
 import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
 import Model.Coastlines.CoastlineHandler;
+import Model.Elements.POI;
 import Model.Model;
 import OSM.OSMHandler;
 import View.PopupWindow;
@@ -17,7 +18,9 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.zip.ZipInputStream;
 
 import static Helpers.GlobalValue.DEBUG_MODE_ACTIVE;
@@ -116,11 +119,12 @@ public class FileHandler {
                 in = new ObjectInputStream(new BufferedInputStream(
                     FileHandler.class.getResourceAsStream(filename)));
             } else {
-                in = new ObjectInputStream(new FileInputStream(filename));
+                in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)));
             }
             long time = -System.nanoTime();
             Model.getInstance().setElements(
                 (EnumMap<ElementType, KDTree>)in.readObject());
+                System.out.println( " Done loading elements ");
             if (isLoadingFromStart) {
                 Model.getInstance().setBound(BoundType.MIN_LONGITUDE, in.readFloat());
                 Model.getInstance().setBound(BoundType.MAX_LONGITUDE, in.readFloat());
@@ -137,6 +141,9 @@ public class FileHandler {
                     in.readFloat());
             }
             Model.getInstance().setTst((TenarySearchTrie)in.readObject());
+            Model.getInstance().setCityToIndexMap((HashMap<String, Integer>) in.readObject());
+            Model.getInstance().setIndexToCityMap((HashMap<Integer, String>) in.readObject());
+            Model.getInstance().setPointsOfInterest((ArrayList<POI>) in.readObject());
             time += System.nanoTime();
             System.out.printf("Object deserialization: %f s\n",
                 time / 1000000 / 1000d);
@@ -151,13 +158,16 @@ public class FileHandler {
     {
         // File f = new File(fileName);
         // if(f.exists()) f.delete();
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)))) {
             out.writeObject(Model.getInstance().getElements());
             out.writeFloat(Model.getInstance().getMinLongitude(dynamic));
             out.writeFloat(Model.getInstance().getMaxLongitude(dynamic));
             out.writeFloat(Model.getInstance().getMinLatitude(dynamic));
             out.writeFloat(Model.getInstance().getMaxLatitude(dynamic));
             out.writeObject(Model.getInstance().getTst());
+            out.writeObject(Model.getInstance().getCityToIndexMap());
+            out.writeObject(Model.getInstance().getIndexToCityMap());
+            out.writeObject(Model.getInstance().getPointsOfInterest());
             System.out.println("DONE");
         } catch (IOException e) {
             e.printStackTrace();

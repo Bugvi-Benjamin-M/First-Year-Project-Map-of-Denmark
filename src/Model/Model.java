@@ -5,6 +5,7 @@ import Helpers.Utilities.DebugWindow;
 import KDtree.*;
 import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
+import Model.Elements.POI;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -27,23 +28,28 @@ public final class Model extends Observable {
     private EnumMap<BoundType, Float> bounds;
     private EnumMap<BoundType, Float> dynamicBounds;
     private EnumMap<BoundType, Float> camera_bounds;
+    private HashMap<String, Integer> cityToIndex;
+    private HashMap<Integer, String> indexToCity;
+    private ArrayList<POI> pointsOfInterest;
 
     private Model()
     {
         bounds = new EnumMap<>(BoundType.class);
         dynamicBounds = new EnumMap<>(BoundType.class);
         camera_bounds = new EnumMap<>(BoundType.class);
+        cityToIndex = new HashMap<>();
+        indexToCity = new HashMap<>();
         for (BoundType type : BoundType.values()) {
             bounds.put(type, 0.0f);
             camera_bounds.put(type, 0.0f);
         }
 
         elements = new EnumMap<>(ElementType.class);
-        tst = new TenarySearchTrie();
         for (ElementType type : ElementType.values()) {
             elements.put(type, new KDTree());
         }
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
+        pointsOfInterest = new ArrayList<>();
     }
 
     public static Model getInstance()
@@ -52,6 +58,39 @@ public final class Model extends Observable {
             instance = new Model();
         }
         return instance;
+    }
+
+    public String getIndexToCity(int index){
+        return indexToCity.get(index);
+    }
+
+    public int getCityToIndex(String cityName){
+        return cityToIndex.get(cityName);
+    }
+
+    public boolean cityEntryExists(String cityName){
+        return cityToIndex.containsKey(cityName);
+    }
+
+    public void putCityToIndex(String cityName, int i){
+            cityToIndex.put(cityName, i);
+            indexToCity.put(i, cityName);
+    }
+
+    public HashMap<String, Integer> getCityToIndexMap(){
+        return cityToIndex;
+    }
+
+    public void setCityToIndexMap(HashMap<String, Integer> map){
+        this.cityToIndex = map;
+    }
+
+    public HashMap<Integer, String> getIndexToCityMap(){
+        return indexToCity;
+    }
+
+    public void setIndexToCityMap(HashMap<Integer, String> map){
+        this.indexToCity = map;
     }
 
     public EnumMap<ElementType, KDTree> getElements() { return elements; }
@@ -168,4 +207,24 @@ public final class Model extends Observable {
     public void resetInstance() { instance = null; }
 
     public CoastlineFactory getCoastlineFactory() { return coastlineFactory; }
+
+    public ArrayList<POI> getPointsOfInterest() {
+        return pointsOfInterest;
+    }
+
+    public void setPointsOfInterest(ArrayList<POI> pointsOfInterest) {
+        this.pointsOfInterest = pointsOfInterest;
+    }
+
+    public void addPOI(float x, float y, String description){
+        pointsOfInterest.add(new POI(x, y, description));
+    }
+
+    public void removePOI(int index){
+        pointsOfInterest.remove(index);
+    }
+
+    public void removeAllPOI(){
+        pointsOfInterest.clear();
+    }
 }

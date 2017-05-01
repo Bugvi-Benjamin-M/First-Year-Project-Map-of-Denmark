@@ -427,7 +427,6 @@ What we did since last time:
 - Autocomplete and address parser BETA/WIP done on feature
 - Zoom panning restriction
 - Path generalisation of relations
-- 
 
 
 What we will do until next time:
@@ -440,5 +439,53 @@ Impediments:
 
 Next Time:
 - Wednesday the 26th of April
+W
+## Logbook 27/4 (Scribe Hedam)
+What we did since last time:
+- GUI changes
+- Disable AA on pan or zoom
+- Bugfixes
+- Added more cartographic elements
+- Preperation for Dijkstra/A* implementation next week
+
+
+What we will do until next time:
+- Graph preperation for GUI
+- Bugfixes on Trello
+- Dijkstra
+- Report writing
+- POI
+
+
+Impediments:
+- Lecture at 12 pm
+
+Next Time:
+- Monday the 1st of May 10:00
+
+##Logbook 1/5 (Scribe Nikolaj)
+
+What we did since last time:
+- Study dijkstras algorithm. 
+- Work with building the graph for dijkstras algorithm.
+- Optimizing Tenary search trie.
+- Testing the Tenary search trie.
+- Optimizing save and load.
+- Work with GUI.
+- Optimized relations.
+- Testing mapcanvas.
+- Implemented point of interest.
+
+What we will do until next time:
+- Add the remaining cartographic elements.
+- Finish poi implementation.
+- Continue working with dijkstras algorithm.
+- Blackbox testing.
+
+Impediments:
+- none
+
+Next scrum meeting:
+- 3/5 9:30 am.
 
 ## Next logbook...
