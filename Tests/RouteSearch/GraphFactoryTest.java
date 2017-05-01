@@ -37,13 +37,10 @@ public class GraphFactoryTest {
         road.setTravelByFootAllowed(true);
         OSMWay way = new OSMWay();
         Point2D point = new Point2D.Float(0.5f,0.2f);
-        System.out.println(point.hashCode());
         way.add(point);
         point = new Point2D.Float(0.2f,0.5f);
-        System.out.println(point.hashCode());
         way.add(point);
         point = new Point2D.Float(0.1f,0.6f);
-        System.out.println(point.hashCode());
         way.add(point);
         road.setWay(way);
         roads.add(road);
