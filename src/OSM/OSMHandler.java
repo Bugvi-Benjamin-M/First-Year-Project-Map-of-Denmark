@@ -184,9 +184,6 @@ public final class OSMHandler implements ContentHandler {
             place = ElementType.UNKNOWN;
 
             loadednodes++;
-            if ((loadednodes & 0xFFFF) == 0) {
-                System.out.println("Numnodes: " + loadednodes);
-            }
             break;
         case "relation":
             long relationID = Long.parseLong(atts.getValue("id"));
@@ -203,9 +200,6 @@ public final class OSMHandler implements ContentHandler {
 
             elementType = ElementType.UNKNOWN;
             loadedRelations++;
-            if ((loadedRelations & 0xFF) == 0) {
-                System.out.println("Numrelations: " + loadedRelations);
-            }
             break;
         case "way":
             if (!initialized && defaultMode) {
@@ -283,9 +277,6 @@ public final class OSMHandler implements ContentHandler {
             isCycleAllowed = false;
             maxSpeed = 0;
             loadedWays++;
-            if ((loadedWays & 0xFF) == 0) {
-                System.out.println("Numways: " + loadedWays);
-            }
             break;
         case "nd":
             long ref = Long.parseLong(atts.getValue("ref"));
