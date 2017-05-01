@@ -29,8 +29,8 @@ public class GraphFactory {
     public GraphFactory(KDTree roads) {
         if (roads == null) throw new NullPointerException("KDTree has not been initialized");
         Model model = Model.getInstance();
-        HashSet<Element> roadSet = roads.getManySections(model.getMinLongitude(false),model.getMinLatitude(false),
-                model.getMaxLongitude(false),model.getMaxLatitude(false));
+        HashSet<Element> roadSet = roads.getManySections(-Integer.MAX_VALUE,-Integer.MAX_VALUE,
+                Integer.MAX_VALUE,Integer.MAX_VALUE);
         roadSegments = new LinkedList<>();
         adjacent = new HashMap<>();
         points = new LongToPointMap(100000);

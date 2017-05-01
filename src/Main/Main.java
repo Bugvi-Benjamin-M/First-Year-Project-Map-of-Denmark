@@ -8,6 +8,7 @@ import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Model;
 import RouteSearch.GraphFactory;
+import KDtree.KDTree;
 
 import javax.swing.*;
 
@@ -29,18 +30,21 @@ public class Main {
 
         Model model = Model.getInstance();
         FileHandler.loadDefaultResource();
+        new Thread(() -> {
+            KDTree roads = Model.getInstance().getElements(ElementType.HIGHWAY);
+            Model.getInstance().setGraph((new GraphFactory(roads)).getGraph());
+            System.out.println(model.getGraph().toString());
+        }).start();
         splashScreenDestruct();
         createControllers();
+
         PreferencesController.getInstance().setupPreferences();
         SwingUtilities.invokeLater(() -> {
             MainWindowController.getInstance().setupMainWindow();
             SettingsWindowController.getInstance().setupSettingsWindow();
-            model.setGraph(new GraphFactory(
-                    model.getElements(ElementType.ROAD)).getGraph());
             model.modelHasChanged();
             MainWindowController.getInstance().showWindow();
             MainWindowController.getInstance().transferFocusToMapCanvas();
-            System.out.println(model.getGraph().toString());
 
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
