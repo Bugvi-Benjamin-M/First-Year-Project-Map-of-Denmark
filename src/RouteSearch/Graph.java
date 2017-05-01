@@ -47,7 +47,6 @@ public class Graph {
         validateNode(w);
         adjacencyLists[v].add(edge);
         nEdges++;
-        System.out.println("Added edge: "+edge.toString());
     }
 
     public Iterable<Edge> adjacent(int node) {
@@ -72,7 +71,7 @@ public class Graph {
                     if (selfLoops % 2 == 0) list.add(e);
                     selfLoops++;
                 }
-                
+
             }
         }
         return list;
