@@ -18,7 +18,6 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Class details:
  * The MapCanvas is a visual component, which purpose is to display the
  * elements (roads, points, structure, etc.) of the model. The MapCanvas
  * is able to be zoomed to and from as well as panned around upon.
@@ -67,11 +66,6 @@ public class MapCanvas extends View {
     private static final double DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.005;
     private static final double DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.03;
 
-
-    /**
-   * The base Constructor for the MapCanvas.
-   */
-
     public MapCanvas() {
         transform = new AffineTransform();
         poiList = new ArrayList<>();
@@ -83,11 +77,11 @@ public class MapCanvas extends View {
         setBackground(ThemeHelper.color("water"));
     }
 
-    public void toggleAntiAliasing(boolean status) {
-        antiAliasing = status;
+    public void toggleAntiAliasing(boolean isAntiAliasing) {
+        antiAliasing = isAntiAliasing;
     }
 
-    public void setCurrentRectangle() {
+    private void setCurrentRectangle() {
         Rectangle2D rectangle = getVisibleRect();
         rectangle.setRect(rectangle.getX(),rectangle.getY() + GlobalValue.getToolbarHeight(), rectangle.getWidth(), rectangle.getHeight());
         Point2D point = toModelCoords(new Point2D.Double(0, GlobalValue.getToolbarHeight()));
@@ -168,10 +162,6 @@ public class MapCanvas extends View {
         drawCoastlines(g2D);
         if (GlobalValue.getDidProgramLoadDefault()) drawElements(g2D);
 
-        //g2D.setColor(Color.black);
-        //g2D.setStroke(new BasicStroke(0.00001f));
-        //g2D.draw(currentRectangle);
-
         drawLocationMarker(g2D);
         drawPOI(g2D);
         drawBoundaries(g2D);
@@ -195,18 +185,15 @@ public class MapCanvas extends View {
         }
     }
 
-    private Ellipse2D getEllipseFromCenter(double x, double y, double width, double height)
-    {
+    private Ellipse2D getEllipseFromCenter(double x, double y, double width, double height) {
         double newX = x - width / 2.0;
         double newY = y - height / 2.0;
 
         Ellipse2D ellipse = new Ellipse2D.Double(newX, newY, width, height);
-
         return ellipse;
     }
 
-    private void drawBackground(Graphics2D g)
-    {
+    private void drawBackground(Graphics2D g) {
         //Todo get rid of coupling here.
         g.setColor(ThemeHelper.color("water"));
         Path2D boundary = new Path2D.Float();
@@ -215,19 +202,10 @@ public class MapCanvas extends View {
         boundary.lineTo(maxLon, maxLat);
         boundary.lineTo(minLon, maxLat);
         boundary.lineTo(minLon, minLat);
-        /*Model model = Model.getInstance();
-        boundary.moveTo(model.getMinLongitude(false), model.getMinLatitude(false));
-        boundary.lineTo(model.getMaxLongitude(false), model.getMinLatitude(false));
-        boundary.lineTo(model.getMaxLongitude(false), model.getMaxLatitude(false));
-        boundary.lineTo(model.getMinLongitude(false), model.getMaxLatitude(false));
-        boundary.lineTo(model.getMinLongitude(false), model.getMinLatitude(false));
-        */
         g.fill(boundary);
     }
 
-    private void drawCoastlines(Graphics2D g)
-    {
-        //List<Path2D> coastlines = Model.getInstance().getCoastlines();
+    private void drawCoastlines(Graphics2D g) {
         g.setColor(ThemeHelper.color("background"));
         for (Path2D path : coastlines) {
             g.fill(path);
