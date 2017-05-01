@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static javax.swing.SpringLayout.NORTH;
+import static javax.swing.SpringLayout.WEST;
 
 /**
  * Class details:
@@ -66,6 +67,7 @@ public final class PointsOfInterestController extends Controller {
         pointsOfInterestBar = new PointsOfInterestBar();
         pointsOfInterestBar.setOpaque(true);
         poiButtons = new PointsOfInterestButtons();
+        poiButtons.setOpaque(true);
         addInteractionHandlersPointsOfInterestButtons();
     }
 
@@ -94,10 +96,10 @@ public final class PointsOfInterestController extends Controller {
         pointsOfInterestBar.setMinimumSize(new Dimension(window.getFrame().getWidth(), SMALL_POINTS_OF_INTERESTBAR_HEIGHT));
         setupSmallScrollbar();
         addPointsToPointsOfInterestBar();
-        poiButtons.setPreferredSize(new Dimension(200, BUTTONS_HEIGHT));
-        informationBarLayout.putConstraint(SpringLayout.VERTICAL_CENTER, poiButtons, 0, SpringLayout.VERTICAL_CENTER, informationBar);
-        //informationBarLayout.putConstraint(WEST, poiButtons, DISTANCE_FROM_LEFT_EDGE_TO_BUTTONS, WEST, informationBar);
-        informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, poiButtons, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
+        poiButtons.setPreferredSize(new Dimension(150, BUTTONS_HEIGHT));
+        informationBarLayout.putConstraint(WEST, poiButtons, DISTANCE_FROM_LEFT_EDGE_TO_BUTTONS, WEST, informationBar);
+        informationBarLayout.putConstraint(NORTH, poiButtons, 75, NORTH, informationBar);
+        //informationBarLayout.putConstraint(SOUTH, poiButtons, -75, SOUTH, informationBar);
         informationBar.add(poiButtons);
     }
 
@@ -223,9 +225,8 @@ public final class PointsOfInterestController extends Controller {
     }
 
     public void repaintPointsOfInterestBar() {
-        pointsOfInterestBar.applyTheme();
+        if(pointsOfInterestBar != null) pointsOfInterestBar.applyTheme();
     }
-
 
     private class PointsInteractionHandler extends MouseAdapter {
 

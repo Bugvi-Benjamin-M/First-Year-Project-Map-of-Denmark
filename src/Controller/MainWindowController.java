@@ -1,6 +1,7 @@
 package Controller;
 
 import Controller.ToolbarControllers.ToolbarController;
+import Enums.ToolType;
 import Enums.ToolbarType;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
@@ -22,6 +23,14 @@ public final class MainWindowController extends WindowController {
     private static final String MAIN_TITLE = "OSM Map Viewer v0.4";
     private static MainWindowController instance;
     private JLayeredPane layeredPane;
+
+    private enum PoiType {
+        LARGE,
+        SMALL,
+        NONE;
+    }
+
+    private PoiType type;
 
     private MainWindowController() { super(); }
 
@@ -53,6 +62,7 @@ public final class MainWindowController extends WindowController {
         setToolTipTheme();
         toggleKeyBindings();
         hideWindow();
+        type = PoiType.NONE;
     }
 
     private void setToolTipTheme()
@@ -109,23 +119,28 @@ public final class MainWindowController extends WindowController {
     }
 
     public void activateLargePointsOfInterestInformationBar() {
+        type = PoiType.LARGE;
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, GlobalValue.getInformationBarWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
         PointsOfInterestController.getInstance().getInformationBar().revalidate();
     }
 
     public void activateSmallPointsOfInterestInformationBar() {
-        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight()-300, window.getFrame().getWidth(), window.getFrame().getHeight());
+        type = PoiType.SMALL;
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight()-150, window.getFrame().getWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
         PointsOfInterestController.getInstance().getInformationBar().revalidate();
     }
 
     public void deactivateSmallPointsOfInterestInformationBar() {
+        type = PoiType.NONE;
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().clearPointsOfInterestBar();
         CanvasController.repaintCanvas();
     }
 
     public void deactivateLargePointsOfInterestInformationBar() {
+        type = PoiType.NONE;
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
         PointsOfInterestController.getInstance().clearPointsOfInterestBar();
         CanvasController.repaintCanvas();
@@ -263,6 +278,14 @@ public final class MainWindowController extends WindowController {
         {
             super.componentResized(e);
             adjustBounds();
+            if(type == PoiType.LARGE) {
+                ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
+                deactivateLargePointsOfInterestInformationBar();
+            } else if(type == PoiType.SMALL) {
+                ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
+                deactivateSmallPointsOfInterestInformationBar();
+            }
+
             ToolbarController.getInstance().resizeEvent();
             CanvasController.getInstance().resizeEvent();
             CanvasController.getInstance().disablePopup();

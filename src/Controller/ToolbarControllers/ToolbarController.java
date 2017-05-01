@@ -431,6 +431,10 @@ public final class ToolbarController extends Controller {
         }
     }
 
+    public void setIsPoiToolActive(boolean status) {
+        poiToolActive = status;
+    }
+
     private void searchButtonEvent()
     {
         SearchToolController.getInstance().searchActivatedEvent();
