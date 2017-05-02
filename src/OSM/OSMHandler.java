@@ -130,7 +130,9 @@ public final class OSMHandler implements ContentHandler {
     public void startDocument() throws SAXException {}
 
     @Override
-    public void endDocument() throws SAXException {}
+    public void endDocument() throws SAXException {
+        model.setGraph(graph);
+    }
 
     @Override
     public void startPrefixMapping(String prefix, String uri)
@@ -150,7 +152,7 @@ public final class OSMHandler implements ContentHandler {
             maxLatitude = Float.parseFloat(atts.getValue("maxlat"));
             minLongitude = Float.parseFloat(atts.getValue("minlon"));
             maxLongitude = Float.parseFloat(atts.getValue("maxlon"));
-            if (defaultMode == true) {
+            if (defaultMode) {
                 float avglat = minLatitude + (maxLatitude - minLatitude) / 2;
                 longitudeFactor = (float)Math.cos(avglat / 180 * Math.PI);
             } else {
@@ -161,7 +163,7 @@ public final class OSMHandler implements ContentHandler {
             maxLongitude *= longitudeFactor;
             minLatitude = -minLatitude;
             maxLatitude = -maxLatitude;
-            if (defaultMode == true) {
+            if (defaultMode) {
                 model.setBound(BoundType.MIN_LONGITUDE, minLongitude);
                 model.setBound(BoundType.MAX_LONGITUDE, maxLongitude);
                 model.setBound(BoundType.MIN_LATITUDE, minLatitude);
@@ -179,7 +181,7 @@ public final class OSMHandler implements ContentHandler {
             longitude = Float.parseFloat(atts.getValue("lon"));
             idToNode.put(id, longitude * longitudeFactor, -latitude);
 
-            if (defaultMode == true) {
+            if (defaultMode) {
                 nodeGenerator.addPoint(
                     new Point2D.Float(longitude * longitudeFactor, -latitude));
             }
@@ -192,6 +194,7 @@ public final class OSMHandler implements ContentHandler {
             isAddress = false;
             place = ElementType.UNKNOWN;
 
+            if (loadednodes % 1000 == 0) System.out.println("NumNodes: "+loadednodes);
             loadednodes++;
             break;
         case "relation":
@@ -208,6 +211,8 @@ public final class OSMHandler implements ContentHandler {
             relation = new OSMRelation(relationID);
             refRelation = new ArrayList<>();
             elementType = ElementType.UNKNOWN;
+
+            if (loadedRelations % 100 == 0) System.out.println("NumRelations: "+loadedRelations);
             loadedRelations++;
             break;
         case "way":
@@ -286,6 +291,8 @@ public final class OSMHandler implements ContentHandler {
             isWalkingAllowed = false;
             isCycleAllowed = false;
             maxSpeed = 0;
+
+            if (loadedWays % 1000 == 0) System.out.println("NumWays: "+loadedWays);
             loadedWays++;
             break;
         case "nd":
