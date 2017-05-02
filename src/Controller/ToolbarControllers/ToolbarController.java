@@ -29,7 +29,7 @@ import static javax.swing.SpringLayout.*;
  */
 public final class ToolbarController extends Controller {
 
-    private static final int SMALL_LARGE_EVENT_WIDTH = (int) ((Toolkit.getDefaultToolkit().getScreenSize().width) / 1.8);
+    private static final int SMALL_LARGE_EVENT_WIDTH = (int) (0.133036*Toolkit.getDefaultToolkit().getScreenSize().getWidth() + 814.714);
 
     private Toolbar toolbar;
     private SpringLayout toolbarLayout;
@@ -277,8 +277,6 @@ public final class ToolbarController extends Controller {
     {
         SearchToolController.getInstance().searchToolFixedSizeEvent();
         ToolComponent search = toolbar.getTool(ToolType.SEARCHBAR);
-        //toolbarLayout.putConstraint(EAST, search, MARGIN_SMALLEST_RIGHT, WEST,
-          //  tool);
         toolbarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, search, 0 , SpringLayout.HORIZONTAL_CENTER, toolbar);
         toolbarLayout.putConstraint(SpringLayout.VERTICAL_CENTER, search, 0,
             SpringLayout.VERTICAL_CENTER, toolbar);
@@ -435,6 +433,10 @@ public final class ToolbarController extends Controller {
         poiToolActive = status;
     }
 
+    public boolean isPoiToolActive() {
+        return poiToolActive;
+    }
+
     private void searchButtonEvent()
     {
         SearchToolController.getInstance().searchActivatedEvent();
@@ -497,7 +499,7 @@ public final class ToolbarController extends Controller {
             JWindow loadWindow;
             @Override
             protected Object doInBackground() throws Exception {
-                loadWindow = PopupWindow.LoadingScreen("Loading Default File!", 10, toolbar.getLocationOnScreen().y + toolbar.getHeight() + 10);
+                loadWindow = PopupWindow.LoadingScreen("Loading Default File!", toolbar.getLocationOnScreen().x + 10, toolbar.getLocationOnScreen().y + toolbar.getHeight() + 10);
 
                 if (PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
                     FileHandler.loadDefaultResource();
@@ -508,7 +510,7 @@ public final class ToolbarController extends Controller {
                         PopupWindow.infoBox(null, "Could Not Find Preferred Default File: " +
                                 PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
                                 "Loading Danmark.bin.", "File Not Found");
-                        FileHandler.loadDefaultResource();
+                         FileHandler.loadDefaultResource();
                     }
                 }
                 return "Done";
@@ -526,31 +528,6 @@ public final class ToolbarController extends Controller {
         };
 
         worker.execute();
-
-        //Todo discuss splashscreen. Is blank
-        /*Main.splashScreenInit();
-        SwingUtilities.invokeLater(() -> {
-            MainWindowController.getInstance().hideWindow();
-            if(PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
-                FileHandler.loadDefaultResource();
-            } else {
-                try {
-                    FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
-                } catch (Exception e) {
-                    PopupWindow.infoBox(null, "Could Not Find Preferred Default File: " +
-                    PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
-                            "Loading Danmark.bin.", "File Not Found");
-                    FileHandler.loadDefaultResource();
-                }
-            }
-            MainWindowController.getInstance().requestCanvasResetElements();
-            MainWindowController.getInstance().requestCanvasRepaint();
-            //todo bounds can't adjust, messes up zoom level
-            GlobalValue.setMaxZoom(GlobalValue.MAX_ZOOM_DECREASE);
-            MainWindowController.getInstance().showWindow();
-            Main.splashScreenDestruct();
-        });*/
-
     }
 
     private void loadNewFile()
@@ -562,14 +539,31 @@ public final class ToolbarController extends Controller {
         };
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {
-            try {
-                FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
-                CanvasController.adjustToDynamicBounds();
-                CanvasController.getInstance().updateCanvasElements();
-                CanvasController.getInstance().updateCanvasPOI();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            SwingWorker worker = new SwingWorker() {
+                JWindow loadWindow;
+                @Override
+                protected Object doInBackground() throws Exception {
+                    loadWindow = PopupWindow.LoadingScreen("Loading: " + chooser.getSelectedFile().getName(), toolbar.getLocationOnScreen().x + 10, toolbar.getLocationOnScreen().y + toolbar.getHeight() + 10);
+                    try {
+                        FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return "Done";
+                }
+
+                @Override
+                protected void done() {
+                    MainWindowController.getInstance().requestCanvasAdjustToDynamicBounds();
+                    MainWindowController.getInstance().requestCanvasResetElements();
+                    CanvasController.getInstance().updateCanvasPOI();
+
+                    MainWindowController.getInstance().requestCanvasRepaint();
+                    loadWindow.setVisible(false);
+                    loadWindow = null;
+                }
+            };
+            worker.execute();
         }
     }
 
@@ -582,14 +576,30 @@ public final class ToolbarController extends Controller {
         };
         JFileChooser chooser = PopupWindow.fileSaver(false, filters);
         if (chooser != null) {
-            try {
-                FileHandler.fileChooserSave(chooser.getSelectedFile().toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            SwingWorker worker = new SwingWorker() {
+                JWindow loadWindow;
+
+                @Override
+                protected Object doInBackground() throws Exception {
+                    loadWindow = PopupWindow.LoadingScreen("Saving File: " + chooser.getSelectedFile().getName(), toolbar.getLocationOnScreen().x + 10, toolbar.getLocationOnScreen().y + toolbar.getHeight() + 10);
+                    try {
+                        FileHandler.fileChooserSave(chooser.getSelectedFile().toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return "Done";
+                }
+
+                @Override
+                protected void done() {
+                    loadWindow.setVisible(false);
+                    loadWindow = null;
+                    if (type == ToolbarType.LARGE)
+                        toolbar.getTool(ToolType.SAVE).toggleActivate(false);
+                }
+            };
+            worker.execute();
         }
-        if (type == ToolbarType.LARGE)
-            toolbar.getTool(ToolType.SAVE).toggleActivate(false);
     }
 
 
@@ -624,6 +634,10 @@ public final class ToolbarController extends Controller {
                     PreferencesController.getInstance().getKeyBindingsSetting());
             }
         }
+    }
+
+    public void requestSearchToolHideList() {
+        SearchToolController.getInstance().closeSearchToolList();
     }
 
     private void mouseEnteredTool(ToolType type, MouseEvent e) {
@@ -705,7 +719,7 @@ public final class ToolbarController extends Controller {
                 }
                 toolEvent(toolType);
             }
-
+            requestSearchToolHideList();
         }
 
         @Override
@@ -713,7 +727,7 @@ public final class ToolbarController extends Controller {
             super.mouseEntered(e);
             if(tool != null) {
                 mouseEnteredTool(toolType, e);
-                tool.grabFocus();
+                if(!doesSearchbarHaveFocus()) tool.grabFocus();
             }
 
 
@@ -753,33 +767,34 @@ public final class ToolbarController extends Controller {
             super.mouseClicked(e);
             if(isMenuToolPopupVisible()) requestHideMenuToolPopup();
             toolbar.grabFocus();
+            requestSearchToolHideList();
         }
 
         @Override
         public void mousePressed(MouseEvent e)
         {
             super.mousePressed(e);
-            toolbar.grabFocus();
+            if(!doesSearchbarHaveFocus()) toolbar.grabFocus();
         }
 
         @Override
         public void mouseReleased(MouseEvent e)
         {
             super.mouseReleased(e);
-            toolbar.grabFocus();
+            if(!doesSearchbarHaveFocus()) toolbar.grabFocus();
         }
 
         @Override
         public void mouseDragged(MouseEvent e)
         {
             super.mouseDragged(e);
-            toolbar.grabFocus();
+            if(!doesSearchbarHaveFocus()) toolbar.grabFocus();
         }
 
         @Override
         public void mouseEntered(MouseEvent e) {
             super.mouseEntered(e);
-            toolbar.grabFocus();
+            if(!doesSearchbarHaveFocus()) toolbar.grabFocus();
         }
     }
 }

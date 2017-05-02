@@ -59,12 +59,21 @@ public class PointsOfInterestBar extends View {
         }
     }
 
-    public void setPointProfiles(List<PointProfile> pointProfiles) {
+    public void setPointProfilesVertically(List<PointProfile> pointProfiles) {
         points = pointProfiles;
         for (PointProfile point : points) {
             add(point);
             createVerticalSpace(SPACE_BETWEEN_PROFILES);
             addHorizontalGlue();
+        }
+    }
+
+    public void setPointProfilesHorizontally(List<PointProfile> pointProfiles) {
+        points = pointProfiles;
+        for(PointProfile point : points) {
+            add(point);
+            createHorizontalSpace(SPACE_BETWEEN_PROFILES);
+            addVerticalGlue();
         }
     }
 

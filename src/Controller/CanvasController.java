@@ -37,12 +37,14 @@ public final class CanvasController extends Controller implements Observer {
     private CanvasPopup popup;
 
     private final int POPUP_DELAY = 1100;
-    private static final int ANTIALIASING_ZOOM_DELAY = 200;
-    private static final int COASTLINES_UPDATE_DELAY = 200;
+    private static final int ANTIALIASING_ZOOM_DELAY = 150;
+    private static final int COASTLINES_UPDATE_DELAY = 150;
+    private final int ANTIALIASING_RESIZE_DELAY = 150;
     private final float MINIMUM_ACCEPTED_DISTANCE = 0.09f;
     private Timer toolTipTimer;
     private Timer antiAliasingZoomTimer;
     private static Timer coastLinesUpdateTimer;
+    private Timer antiAliasingResizeTimer;
 
 
 
@@ -81,6 +83,23 @@ public final class CanvasController extends Controller implements Observer {
     public void resizeEvent()
     {
         mapCanvas.revalidate();
+        if (PreferencesController.getInstance().getAntiAliasingSetting()) {
+            mapCanvas.toggleAntiAliasing(false);
+            repaintCanvas();
+        }
+        if (PreferencesController.getInstance().getAntiAliasingSetting()) {
+            if (antiAliasingResizeTimer == null) {
+                antiAliasingResizeTimer = new Timer(ANTIALIASING_RESIZE_DELAY, a -> {
+                    if (a.getSource() == antiAliasingResizeTimer) {
+                        antiAliasingResizeTimer.stop();
+                        antiAliasingResizeTimer = null;
+                        mapCanvas.toggleAntiAliasing(true);
+                        repaintCanvas();
+                    }
+                });
+                antiAliasingResizeTimer.start();
+            } else antiAliasingResizeTimer.restart();
+        }
     }
 
     public void disablePopup()
@@ -106,7 +125,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.setPreferredSize(new Dimension(
                 window.getFrame().getWidth(),
                 window.getFrame().getHeight() - GlobalValue.getToolbarHeight()));
-        mapCanvas.setElements(model.getElements());
+        updateCanvasElements();
         mapCanvas.setCoastLines(model.getCoastlines());
         alignCanvasAndModel();
         mapCanvas.toggleAntiAliasing(
@@ -430,6 +449,8 @@ public final class CanvasController extends Controller implements Observer {
             Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
             mapCanvas.setCurrentPoint(mouseInModel);
         }
+        MainWindowController.getInstance().requestSearchToolCloseList();
+        mapCanvas.grabFocus();
         if(GlobalValue.isAddNewPointActive()){
             if(SwingUtilities.isLeftMouseButton(event))
             poiCreationEvent(event.getPoint());
@@ -552,7 +573,7 @@ public final class CanvasController extends Controller implements Observer {
     private void mouseEnteredEvent(MouseEvent e) {
         MainWindowController.getInstance().requestPointsOfInterestBarRepaint();
         MainWindowController.getInstance().requestToolbarRepaint();
-        mapCanvas.grabFocus();
+        if(!MainWindowController.getInstance().doesSearchToolHaveFocus())mapCanvas.grabFocus();
     }
 
     private void keyboardZoomEvent(double keyboardZoomFactor)

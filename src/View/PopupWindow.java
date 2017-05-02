@@ -118,7 +118,7 @@ public class PopupWindow {
         text.setOpaque(true);
         loadWindow = new JWindow();
         loadWindow.setLayout(new BorderLayout());
-        loadWindow.setLocation(x,y);
+        loadWindow.setLocation(new Point(x,y));
         loadWindow.add(BorderLayout.NORTH, icon);
         loadWindow.add(BorderLayout.CENTER, text);
         loadWindow.add(BorderLayout.SOUTH, progressBar);

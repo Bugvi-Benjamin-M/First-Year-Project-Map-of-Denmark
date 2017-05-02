@@ -15,7 +15,7 @@ import java.awt.*;
 public class PointProfile extends View {
 
     private final int PROFILE_HEIGHT = 90;
-    private final int PROFILE_WIDHT = 290;
+    private final int PROFILE_WIDTH = 290;
     private JLabel label;
     private SpringLayout layout;
     private boolean isDoubleLine;
@@ -39,9 +39,9 @@ public class PointProfile extends View {
         layout = new SpringLayout();
         setLayout(layout);
         setBorder(BorderFactory.createLineBorder(ThemeHelper.color("border")));
-        setPreferredSize(new Dimension(PROFILE_WIDHT, PROFILE_HEIGHT));
-        setMaximumSize(new Dimension(PROFILE_WIDHT, PROFILE_HEIGHT));
-        setMinimumSize(new Dimension(PROFILE_WIDHT, PROFILE_HEIGHT));
+        setPreferredSize(new Dimension(PROFILE_WIDTH, PROFILE_HEIGHT));
+        setMaximumSize(new Dimension(PROFILE_WIDTH, PROFILE_HEIGHT));
+        setMinimumSize(new Dimension(PROFILE_WIDTH, PROFILE_HEIGHT));
         label = new JLabel(description);
         label.setFont(new Font(label.getFont().getFontName(), label.getFont().getStyle(), 15));
         layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, label, -10, SpringLayout.HORIZONTAL_CENTER, this);

@@ -24,14 +24,6 @@ public final class MainWindowController extends WindowController {
     private static MainWindowController instance;
     private JLayeredPane layeredPane;
 
-    private enum PoiType {
-        LARGE,
-        SMALL,
-        NONE;
-    }
-
-    private PoiType type;
-
     private MainWindowController() { super(); }
 
     public static MainWindowController getInstance()
@@ -62,7 +54,6 @@ public final class MainWindowController extends WindowController {
         setToolTipTheme();
         toggleKeyBindings();
         hideWindow();
-        type = PoiType.NONE;
     }
 
     private void setToolTipTheme()
@@ -119,28 +110,24 @@ public final class MainWindowController extends WindowController {
     }
 
     public void activateLargePointsOfInterestInformationBar() {
-        type = PoiType.LARGE;
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, GlobalValue.getInformationBarWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
         PointsOfInterestController.getInstance().getInformationBar().revalidate();
     }
 
     public void activateSmallPointsOfInterestInformationBar() {
-        type = PoiType.SMALL;
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight()-150, window.getFrame().getWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
         PointsOfInterestController.getInstance().getInformationBar().revalidate();
     }
 
     public void deactivateSmallPointsOfInterestInformationBar() {
-        type = PoiType.NONE;
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().clearPointsOfInterestBar();
         CanvasController.repaintCanvas();
     }
 
     public void deactivateLargePointsOfInterestInformationBar() {
-        type = PoiType.NONE;
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
         PointsOfInterestController.getInstance().clearPointsOfInterestBar();
         CanvasController.repaintCanvas();
@@ -256,6 +243,10 @@ public final class MainWindowController extends WindowController {
         ToolbarController.getInstance().repaintToolbar();
     }
 
+    public void requestSearchToolCloseList() {
+        ToolbarController.getInstance().requestSearchToolHideList();
+    }
+
     public void setProgressBarTheme() {
         UIManager.put("ProgressBar.border", BorderFactory.createLineBorder(ThemeHelper.color("border")));
         UIManager.put("ProgressBar.background", ThemeHelper.color("progressBarBackground"));
@@ -270,6 +261,10 @@ public final class MainWindowController extends WindowController {
         ToolbarController.getInstance().requestHideMenuToolPopup();
     }
 
+    public boolean doesSearchToolHaveFocus() {
+        return ToolbarController.getInstance().doesSearchbarHaveFocus();
+    }
+
     private class MainWindowInteractionHandler
         extends MainWindowController.WindowInteractionHandler {
 
@@ -278,11 +273,11 @@ public final class MainWindowController extends WindowController {
         {
             super.componentResized(e);
             adjustBounds();
-            if(type == PoiType.LARGE) {
+            if(ToolbarController.getInstance().getType() == ToolbarType.LARGE && ToolbarController.getInstance().isPoiToolActive()) {
                 ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
                 ToolbarController.getInstance().setIsPoiToolActive(false);
                 deactivateLargePointsOfInterestInformationBar();
-            } else if(type == PoiType.SMALL) {
+            } else if(ToolbarController.getInstance().getType() == ToolbarType.SMALL && ToolbarController.getInstance().isPoiToolActive() ) {
                 ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
                 ToolbarController.getInstance().setIsPoiToolActive(false);
                 deactivateSmallPointsOfInterestInformationBar();

@@ -29,18 +29,22 @@ public final class PointsOfInterestController extends Controller {
     private final int LARGE_POINTS_OF_INTERESTBAR_WIDTH = 300;
     private final int BUTTONS_HEIGHT = 50;
     private final int LARGE_SCROLLBAR_HEIGHT = (int) (0.976316*Toolkit.getDefaultToolkit().getScreenSize().getHeight() + (-292.289));
+    private final int SMALL_SCROLLBAR_WIDTH = 770;
     private final int DISTANCE_BETWEEN_TOOLBAR_AND_BUTTONS = GlobalValue.getToolbarHeight() + 10;
     private final int DISTANCE_BETWEEN_BUTTONS_AND_SCROLLPANE = 60;
     private final int SCROLLBAR_SPEED = 14;
-    private final int SMALL_POINTS_OF_INTERESTBAR_HEIGHT = 200;
-    private final int DISTANCE_FROM_LEFT_EDGE_TO_BUTTONS = 50;
-    private final int DISTANCE_FROM_SMALLPOIBARTOP_TO_BUTTONS = 30;
+    private final int SMALL_POINTS_OF_INTERESTBAR_HEIGHT = 150;
+    private final int DISTANCE_FROM_SMALLINFORMATIONBAR_LEFT_EDGE_TO_BUTTONS = 25;
+    private final int DISTANCE_FROM_SMALLPOIBARTOP_TO_BUTTONS = 35;
+    private final int SMALL_SCROLLBAR_HEIGHT = 100;
+    private final int DISTANCE_FROM_SMALLPOIBARTOP_TO_SCROLLPANE = 10;
 
     private static PointsOfInterestController instance;
     private InformationBar informationBar;
     private SpringLayout informationBarLayout;
     private PointsOfInterestBar pointsOfInterestBar;
     private JScrollPane largeScroll;
+    private JScrollPane smallScroll;
     private PointsOfInterestButtons poiButtons;
 
     private List<POI> pointsOfInterest;
@@ -78,8 +82,7 @@ public final class PointsOfInterestController extends Controller {
         pointsOfInterestBar.specifyLayout(BoxLayout.PAGE_AXIS);
         pointsOfInterestBar.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, PROFILE_HEIGHT));
         setupLargeScrollbar();
-        addPointsToPointsOfInterestBar();
-        //poiButtons = new PointsOfInterestButtons();
+        addPointsToVerticalPointsOfInterestBar();
         poiButtons.setPreferredSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, BUTTONS_HEIGHT));
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, poiButtons, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
         informationBarLayout.putConstraint(NORTH, poiButtons, DISTANCE_BETWEEN_TOOLBAR_AND_BUTTONS, NORTH, informationBar);
@@ -87,26 +90,30 @@ public final class PointsOfInterestController extends Controller {
         informationBarLayout.putConstraint(NORTH, largeScroll, DISTANCE_BETWEEN_BUTTONS_AND_SCROLLPANE, NORTH, poiButtons);
         informationBar.add(poiButtons);
         informationBar.add(largeScroll);
-        //InformationBarInteractionHandler handler = new InformationBarInteractionHandler();
-        //informationBar.addMouseListener(handler);
-        //addInteractionHandlersPointsOfInterestButtons();
     }
 
     public void setupSmallPointsOfInterestBar() {
         informationBar.setPreferredSize(new Dimension(window.getFrame().getWidth(), SMALL_POINTS_OF_INTERESTBAR_HEIGHT));
         pointsOfInterestBar.specifyLayout(BoxLayout.LINE_AXIS);
-        pointsOfInterestBar.setMinimumSize(new Dimension(window.getFrame().getWidth(), SMALL_POINTS_OF_INTERESTBAR_HEIGHT));
+        pointsOfInterestBar.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, PROFILE_HEIGHT+10));
         setupSmallScrollbar();
-        addPointsToPointsOfInterestBar();
+        addPointsToHorizontalPointsOfInterestBar();
         poiButtons.setPreferredSize(new Dimension(150, BUTTONS_HEIGHT));
-        informationBarLayout.putConstraint(WEST, poiButtons, DISTANCE_FROM_LEFT_EDGE_TO_BUTTONS, WEST, informationBar);
+        informationBarLayout.putConstraint(WEST, poiButtons, DISTANCE_FROM_SMALLINFORMATIONBAR_LEFT_EDGE_TO_BUTTONS, WEST, informationBar);
         informationBarLayout.putConstraint(NORTH, poiButtons, DISTANCE_FROM_SMALLPOIBARTOP_TO_BUTTONS, NORTH, informationBar);
+        informationBarLayout.putConstraint(NORTH, smallScroll, DISTANCE_FROM_SMALLPOIBARTOP_TO_SCROLLPANE, NORTH, informationBar);
+        informationBarLayout.putConstraint(WEST, smallScroll, 30, EAST, poiButtons);
         informationBar.add(poiButtons);
+        informationBar.add(smallScroll);
     }
 
     public void clearPointsOfInterestBar() {
+        if(largeScroll != null) largeScroll.remove(pointsOfInterestBar);
+        if(smallScroll != null) smallScroll.remove(pointsOfInterestBar);
         informationBarLayout.removeLayoutComponent(poiButtons);
         informationBarLayout.removeLayoutComponent(pointsOfInterestBar);
+        informationBarLayout.removeLayoutComponent(largeScroll);
+        informationBarLayout.removeLayoutComponent(smallScroll);
         informationBar.removeAll();
         pointsOfInterestBar.removeAll();
     }
@@ -159,7 +166,6 @@ public final class PointsOfInterestController extends Controller {
                     pointsOfInterestBar.revalidate();
                     pointsOfInterestBar.repaint();
                 }
-                //Clear all points
                 poiButtons.getDeleteAllButton().setForeground(ThemeHelper.color("icon"));
             }
 
@@ -191,7 +197,16 @@ public final class PointsOfInterestController extends Controller {
     }
 
     private void setupSmallScrollbar() {
-
+        smallScroll = new JScrollPane(pointsOfInterestBar);
+        smallScroll.setOpaque(true);
+        smallScroll.setPreferredSize(new Dimension(SMALL_SCROLLBAR_WIDTH, SMALL_SCROLLBAR_HEIGHT+10));
+        smallScroll.setMinimumSize(new Dimension(SMALL_SCROLLBAR_WIDTH, SMALL_SCROLLBAR_HEIGHT+10));
+        smallScroll.setMaximumSize(new Dimension(SMALL_SCROLLBAR_WIDTH, SMALL_SCROLLBAR_HEIGHT+10));
+        smallScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        smallScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        smallScroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
+        smallScroll.getHorizontalScrollBar().setUI(new CustomScrollbarUI());
+        smallScroll.getHorizontalScrollBar().setUnitIncrement(SCROLLBAR_SPEED);
     }
 
 
@@ -199,6 +214,7 @@ public final class PointsOfInterestController extends Controller {
     public void themeHasChanged() {
 
         if(largeScroll != null) largeScroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
+        if(smallScroll != null) smallScroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
         if(poiButtons != null) poiButtons.applyTheme();
         if(informationBar != null) informationBar.applyTheme();
         if(pointsOfInterestBar != null) pointsOfInterestBar.applyTheme();
@@ -207,32 +223,20 @@ public final class PointsOfInterestController extends Controller {
     public InformationBar getInformationBar() {
         return informationBar;
     }
-
-    private void addPointsToPointsOfInterestBar() {
-        /*pointsOfInterest.add("København");
-        pointsOfInterest.add("Århus, Det Jyske Musikkonservatorium");
-        pointsOfInterest.add("hello");
-        pointsOfInterest.add("world");
-        pointsOfInterest.add("testing");
-        pointsOfInterest.add("scrollbar");
-        pointsOfInterest.add("more");
-        pointsOfInterest.add("Jpanels");
-        pointsOfInterest.add("are");
-        pointsOfInterest.add("apparently");
-        pointsOfInterest.add("needed");
-        pointsOfInterest.add("oh lord");
-        pointsOfInterest.add("pls");
-        pointsOfInterest.add("is");
-        pointsOfInterest.add("anything");
-        pointsOfInterest.add("happening");*/
-        POIpanels.clear();
-
+    //Todo figure out why elements are added multiple times
+    private void addPointsToVerticalPointsOfInterestBar() {
         for(POI poi : pointsOfInterest) {
             addPOI(poi);
-            //pointsOfInterestBar.addPlaceToList(profile);
-            //pointsOfInterestBar.createVerticalSpace(10);
-            //pointsOfInterestBar.addHorizontalGlue();
         }
+        pointsOfInterestBar.setPointProfilesVertically(POIpanels);
+        pointsOfInterestBar.revalidate();
+    }
+
+    public void addPointsToHorizontalPointsOfInterestBar() {
+        for(POI poi : pointsOfInterest) {
+            addPOI(poi);
+        }
+        pointsOfInterestBar.setPointProfilesHorizontally(POIpanels);
         pointsOfInterestBar.revalidate();
     }
 
@@ -276,6 +280,7 @@ public final class PointsOfInterestController extends Controller {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+            MainWindowController.getInstance().requestSearchToolCloseList();
             CanvasController.getInstance().getMapCanvas().panToPoint(new Point2D.Float(point.getPOIX(), point.getPOIY()));
             CanvasController.getInstance().repaintCanvas();
         }
@@ -313,6 +318,7 @@ public final class PointsOfInterestController extends Controller {
             pointsOfInterestBar.remove(point);
             pointsOfInterestBar.revalidate();
             pointsOfInterestBar.repaint();
+            MainWindowController.getInstance().requestSearchToolCloseList();
         }
 
 
@@ -336,6 +342,7 @@ public final class PointsOfInterestController extends Controller {
         @Override
         public void mouseClicked(MouseEvent e) {
             if(MainWindowController.getInstance().isMenuToolPopupVisible()) MainWindowController.getInstance().requestMenuToolHidePopup();
+            MainWindowController.getInstance().requestSearchToolCloseList();
         }
 
     }
