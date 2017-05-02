@@ -194,7 +194,6 @@ public class MapCanvas extends View {
     }
 
     private void drawBackground(Graphics2D g) {
-        //Todo get rid of coupling here.
         g.setColor(ThemeHelper.color("water"));
         Path2D boundary = new Path2D.Float();
         boundary.moveTo(minLon, minLat);
@@ -218,7 +217,6 @@ public class MapCanvas extends View {
                 g.draw(path);
             }
         }
-
     }
 
     private void drawElements(Graphics2D g) {
@@ -828,8 +826,7 @@ public class MapCanvas extends View {
         }
     }
 
-    private void drawBuilding(Graphics2D g, Color color)
-    {
+    private void drawBuilding(Graphics2D g, Color color) {
         setCurrentSection(ElementType.BUILDING);
         Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .9f);
         g.setComposite(c);
@@ -852,7 +849,7 @@ public class MapCanvas extends View {
         Font font = new Font("Times New Roman", Font.PLAIN, 12);
 
         // Transparency
-        Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f); // TODO want transparency for road names ?
+        Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f);
         g.setComposite(c);
 
         // Color
@@ -1231,7 +1228,6 @@ public class MapCanvas extends View {
     }
 
     private void drawPOI(Graphics2D g) {
-
         //Calculation of the scalefactor used to derive the font
         float scaleFactor;
         scaleFactor = 960000f*(float) (Math.pow(ZoomLevel.getZoomFactor(), -4.0f));
