@@ -73,16 +73,16 @@ public class FileHandler {
         }
     }
 
-    public static void loadDefaultResource()
+    public static void loadDefaultResource(boolean isLoadingFromStart)
     {
         try {
             try {
                 long startTime = System.currentTimeMillis();
                 if (!DEBUG_MODE_ACTIVE) {
                     try {
-                        FileHandler.loadBin(GlobalValue.DEFAULT_BIN_RESOURCE, true);
+                        FileHandler.loadBin(GlobalValue.DEFAULT_BIN_RESOURCE, isLoadingFromStart);
                     } catch (FileWasNotFoundException e) {
-                        FileHandler.loadResource(GlobalValue.DEFAULT_RESOURCE, true);
+                        FileHandler.loadResource(GlobalValue.DEFAULT_RESOURCE, isLoadingFromStart);
                     }
                 }
                 long stopTime = System.currentTimeMillis();
@@ -120,7 +120,12 @@ public class FileHandler {
                 in = new ObjectInputStream(new BufferedInputStream(
                     FileHandler.class.getResourceAsStream(filename)));
             } else {
-                in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)));
+                try {
+                    in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)));
+                }catch(FileNotFoundException e){
+                    in = new ObjectInputStream(new BufferedInputStream(
+                            FileHandler.class.getResourceAsStream(filename)));
+                }
             }
             long time = -System.nanoTime();
             Model.getInstance().setElements(

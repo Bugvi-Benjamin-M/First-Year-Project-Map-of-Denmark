@@ -35,7 +35,7 @@ public class Main {
         splashScreenInit();
         Model model = Model.getInstance();
         CanvasController.getInstance().setupAsObserver();
-        FileHandler.loadDefaultResource();
+        FileHandler.loadDefaultResource(true);
         loadDefaultFile = true;
         if(!PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
             try {

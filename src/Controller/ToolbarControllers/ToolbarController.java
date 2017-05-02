@@ -502,7 +502,7 @@ public final class ToolbarController extends Controller {
                 loadWindow = PopupWindow.LoadingScreen("Loading Default File!", toolbar.getLocationOnScreen().x + 10, toolbar.getLocationOnScreen().y + toolbar.getHeight() + 10);
 
                 if (PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
-                    FileHandler.loadDefaultResource();
+                    FileHandler.loadDefaultResource(false);
                 } else {
                     try {
                         FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
@@ -510,7 +510,7 @@ public final class ToolbarController extends Controller {
                         PopupWindow.infoBox(null, "Could Not Find Preferred Default File: " +
                                 PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
                                 "Loading Danmark.bin.", "File Not Found");
-                         FileHandler.loadDefaultResource();
+                        FileHandler.loadDefaultResource(false);
                     }
                 }
                 return "Done";

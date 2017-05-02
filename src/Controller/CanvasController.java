@@ -271,8 +271,11 @@ public final class CanvasController extends Controller implements Observer {
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        Point2D mousePosition = MouseInfo.getPointerInfo().getLocation();
-                        poiCreationEvent(mousePosition);
+                        if(GlobalValue.isAddNewPointActive()){
+                            PointsOfInterestController.getInstance().poiModeOff();
+                        }else {
+                            PointsOfInterestController.getInstance().poiModeOn();
+                        }
                     }
                 });
     }
@@ -298,6 +301,7 @@ public final class CanvasController extends Controller implements Observer {
                 PointsOfInterestController.getInstance().addPOI(poi);
                 repaintCanvas();
                 PointsOfInterestController.getInstance().updatePointsOfInterestBar();
+                PointsOfInterestController.getInstance().poiModeOff();
             }else{
                 PopupWindow.warningBox(null, "The message is not allowed to be longer than 56 signs.");
             }
@@ -363,6 +367,8 @@ public final class CanvasController extends Controller implements Observer {
         double distancetoreach = 0;
         double currentdistance = 1;
         resetBounds();
+        zoom_value = 0.0;
+        GlobalValue.setZoomLevel(0.0);
         double factor = mapCanvas.getWidth() / (model.getMaxLongitude(false) - model.getMinLongitude(false));
         mapCanvas.pan(-model.getMinLongitude(true), -model.getMaxLatitude(true));
         mapCanvas.zoom(factor);
@@ -452,10 +458,13 @@ public final class CanvasController extends Controller implements Observer {
         MainWindowController.getInstance().requestSearchToolCloseList();
         mapCanvas.grabFocus();
         if(GlobalValue.isAddNewPointActive()){
-            if(SwingUtilities.isLeftMouseButton(event))
-            poiCreationEvent(event.getPoint());
+            if(SwingUtilities.isLeftMouseButton(event)) {
+                poiCreationEvent(event.getPoint());
+                //changeCanvasMouseCursorToPoint();
+            }
             else if(SwingUtilities.isRightMouseButton(event)){
                 GlobalValue.setIsAddNewPointActive(false);
+                //changeCanvasMouseCursorToNormal();
                 PointsOfInterestController.getInstance().poiModeOff();
             }
         }
