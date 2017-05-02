@@ -2,6 +2,8 @@ package RouteSearch;
 
 import Enums.TravelType;
 
+import java.io.Serializable;
+
 /**
  * Class details:
  *
@@ -12,7 +14,7 @@ import Enums.TravelType;
  * @author Andreas Blanke, blan@itu.dk
  * @version 27-04-2017
  */
-public class Edge implements Comparable<Edge>{
+public class Edge implements Comparable<Edge>, Serializable {
 
     private final int from;
     private final int to;

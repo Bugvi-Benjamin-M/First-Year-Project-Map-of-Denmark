@@ -5,6 +5,7 @@ import Model.Elements.Road;
 import OSM.OSMWay;
 import OSM.OSMWayRef;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Map;
  * @author Andreas Blanke, blan@itu.dk
  * @version 27-04-2017
  */
-public class Graph {
+public class Graph implements Serializable {
 
     public static final String NEWLINE = System.getProperty("line.separator");
 
@@ -24,8 +25,8 @@ public class Graph {
     private LongToIntMap idMap;
 
     public Graph() {
-        adjacencyLists = new ArrayList<>(1000000);
-        idMap = new LongToIntMap(1000000);
+        adjacencyLists = new ArrayList<>(10000000);
+        idMap = new LongToIntMap(10000000);
     }
 
     public int getNumberOfNodes() {
@@ -47,12 +48,14 @@ public class Graph {
                 road.isTravelByBikeAllowed(),road.isTravelByCarAllowed(),
                 road.isOneWay());
         for (OSMWayRef way : road.getRelation()){
-            long ref, lastRef = way.refOf(way.getFromNode());
-            for (int i = 1; i < way.size(); i++) {
-                ref = way.refOf(way.get(i));
-                float length = (float) HelperFunctions.distanceInMeters(way.get(i-1),way.get(i));
-                addEdge(lastRef,ref,type,length,road.getMaxSpeed());
-                lastRef = ref;
+            if (way != null) {
+                long ref, lastRef = way.refOf(way.getFromNode());
+                for (int i = 1; i < way.size(); i++) {
+                    ref = way.refOf(way.get(i));
+                    float length = (float) HelperFunctions.distanceInMeters(way.get(i - 1), way.get(i));
+                    addEdge(lastRef, ref, type, length, road.getMaxSpeed());
+                    lastRef = ref;
+                }
             }
         }
     }
@@ -92,6 +95,9 @@ public class Graph {
 
     @Override
     public String toString() {
-        return null;
+        return "Graph containing: "+getNumberOfNodes()+" nodes and " +
+                getNumberOfEdges() + " edges";
     }
+
+
 }

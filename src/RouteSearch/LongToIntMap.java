@@ -1,5 +1,6 @@
 package RouteSearch;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -17,13 +18,14 @@ import java.util.*;
  * @author Andreas Blanke, blan@itu.dk
  * @version 27-04-2017
  */
-public class LongToIntMap {
+public class LongToIntMap implements Serializable {
 
     private final static int DEFAULT_SIZE = 10;
 
     private int[] ints;
     private long[] longs;
     private int N;
+    private static long total;
 
     /**
      * Creates a LongToIntMap with the initial size of 10
@@ -64,7 +66,7 @@ public class LongToIntMap {
     }
 
     /**
-     * Resizes the arrays containing keys and values
+     * Resize the arrays containing keys and values
      * Runtime: O(N^3)
      * @param size the new size of the arrays
      */
@@ -97,10 +99,21 @@ public class LongToIntMap {
      * @param value a long value contained in the map
      */
     public int getInt(long value) {
+        long time = System.nanoTime();
         for (int id = N-1; id >= 0; id--) {
             if (value == longs[id]) return id;
         }
+        total += (System.nanoTime()-time);
+        if (N != 0 && N % 10000 == 0) {
+            System.out.println("... avg time for key search: "+(total / N)+" ns");
+        }
         return -1;  // not found value
+    }
+
+    public int getInt(long value, boolean ignore) {
+        int id = new Long(value).hashCode();
+        if (id < 0) return -1;
+        else return id;
     }
 
     /**

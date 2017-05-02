@@ -1,6 +1,7 @@
 package OSM;
 
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * @author Andreas Blanke, blan@itu.dk
  * @version 01-05-2017
  */
-public class OSMWayRef implements Iterable {
+public class OSMWayRef implements Iterable, Serializable {
 
     private List<Long> references;
     private OSMWay way;
