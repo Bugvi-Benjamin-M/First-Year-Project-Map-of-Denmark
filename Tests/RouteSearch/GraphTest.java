@@ -21,14 +21,14 @@ public class GraphTest {
 
     @Before
     public void setUp() throws Exception {
-        graph = new Graph(10);
+        graph = new Graph();
     }
 
     @Test
     public void testAddingEdges() {
-        graph.addEdge(new Edge(0,1,20,0.5f, TravelType.WALK));
-        graph.addEdge(new Edge(8,9,20,0.6f, TravelType.VEHICLE));
-        graph.addEdge(new Edge(1,8,50,0.9f, TravelType.BICYCLE));
+        graph.addEdge(0,1,(byte) 1,0.5f, 20);
+        graph.addEdge(8,9, (byte) 4, 0.6f, 20);
+        graph.addEdge(1,8,(byte) 2, 0.9f, 50);
         System.out.println(graph.toString());
     }
 

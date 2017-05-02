@@ -5,6 +5,7 @@ import KDtree.Pointer;
 import Model.Elements.Element;
 import Model.Elements.Road;
 import OSM.OSMWay;
+import OSM.OSMWayRef;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,16 +36,16 @@ public class GraphFactoryTest {
         road.setTravelByBikeAllowed(true);
         road.setTravelByCarAllowed(true);
         road.setTravelByFootAllowed(true);
-        OSMWay way = new OSMWay();
+        OSMWayRef way = new OSMWayRef();
         Point2D point = new Point2D.Float(0.5f,0.2f);
-        way.add(point);
+        way.add(point, 32L);
         point = new Point2D.Float(0.2f,0.5f);
-        way.add(point);
+        way.add(point, 34L);
         point = new Point2D.Float(0.1f,0.6f);
-        way.add(point);
+        way.add(point, 33L);
         road.setWay(way);
         roads.add(road);
-        factory = new GraphFactory(roads);
+        factory = new GraphFactory();
     }
 
     @Test

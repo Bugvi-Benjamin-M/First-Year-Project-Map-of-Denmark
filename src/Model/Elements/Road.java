@@ -6,10 +6,13 @@ import Helpers.Shapes.MultiPolygonApprox;
 import Helpers.Shapes.PolygonApprox;
 import OSM.OSMRelation;
 import OSM.OSMWay;
+import OSM.OSMWayRef;
 
 import java.awt.*;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -24,12 +27,13 @@ public class Road extends Element {
     private boolean travelByBikeAllowed = false;
     private boolean travelByFootAllowed = false;
     private boolean travelByCarAllowed = false;
-    private OSMRelation relation = new OSMRelation(-1);
+    private java.util.List<OSMWayRef> relation;
 
     public Road(PolygonApprox polygon, String name)
     {
         super(polygon);
         this.name = name;
+        relation = new ArrayList<>();
     }
 
     public Road(PolygonApprox polygon, String name, boolean area)
@@ -72,15 +76,16 @@ public class Road extends Element {
 
     public int getMaxSpeed() {return maxSpeed;}
 
-    public OSMRelation getRelation() {
+    public List<OSMWayRef> getRelation() {
         return relation;
     }
 
-    public void setRelation(OSMRelation relation) {
-        this.relation = relation;
+    public void setRelation(List<OSMWayRef> relation) {
+        this.relation = new ArrayList<>();
+        relation.forEach(this::setWay);
     }
 
-    public void setWay(OSMWay way) {
+    public void setWay(OSMWayRef way) {
         this.relation.add(way);
     }
 

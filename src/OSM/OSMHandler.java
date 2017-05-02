@@ -11,6 +11,7 @@ import Model.Addresses.TenarySearchTrie;
 import Model.Addresses.Value;
 import Model.Elements.*;
 import Model.Model;
+import RouteSearch.Graph;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -20,6 +21,7 @@ import java.awt.geom.Point2D;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,7 +33,10 @@ public final class OSMHandler implements ContentHandler {
 
     private LongToPointMap idToNode;
     private Map<Long, OSMWay> idToWay;
+    private Map<Long,OSMWayRef> idToRefWay;
     private OSMWay way;
+    private OSMWayRef refWay;
+    private List<OSMWayRef> refRelation;
     private OSMRelation relation;
     private OSMNode node;
     private ElementType elementType;
@@ -72,10 +77,12 @@ public final class OSMHandler implements ContentHandler {
     private boolean isAddress;
     private int indexCounter = 1;
 
+    private Graph graph;
 
     private OSMHandler() {
         idToNode = new LongToPointMap(22);
         idToWay = new HashMap<>();
+        idToRefWay = new HashMap<>();
         model = Model.getInstance();
         model.setTst(new TenarySearchTrie());
         nodeGenerator = new NodeGenerator();
@@ -90,6 +97,8 @@ public final class OSMHandler implements ContentHandler {
         nightClubs = new ArrayList<>();
         fastFoods = new ArrayList<>();
         railwayStations = new ArrayList<>();
+
+        graph = new Graph();
     }
 
     public void parseDefault(Boolean mode){
@@ -197,7 +206,7 @@ public final class OSMHandler implements ContentHandler {
             isCycleAllowed = false;
             maxSpeed = 0;
             relation = new OSMRelation(relationID);
-
+            refRelation = new ArrayList<>();
             elementType = ElementType.UNKNOWN;
             loadedRelations++;
             break;
@@ -266,6 +275,7 @@ public final class OSMHandler implements ContentHandler {
             }
 
             way = new OSMWay();
+            refWay = new OSMWayRef();
             id = Long.parseLong(atts.getValue("id"));
             elementType = ElementType.UNKNOWN;
             place = ElementType.UNKNOWN;
@@ -281,6 +291,7 @@ public final class OSMHandler implements ContentHandler {
         case "nd":
             long ref = Long.parseLong(atts.getValue("ref"));
             way.add(idToNode.get(ref));
+            refWay.add(idToNode.get(ref),ref);
             break;
         case "tag":
             String k = atts.getValue("k");
@@ -376,6 +387,7 @@ public final class OSMHandler implements ContentHandler {
         case "member":
             ref = Long.parseLong(atts.getValue("ref"));
             relation.add(idToWay.get(ref));
+            refRelation.add(idToRefWay.get(ref));
             break;
         }
     }
@@ -992,8 +1004,6 @@ public final class OSMHandler implements ContentHandler {
 
     private void addRoad(ElementType type, boolean isRelation, boolean area)
     {
-        // FIXME: ROADS NEEDS TO STORE THEIR PATH AS WELL AS WHETHER THEY ARE ONE WAY AND THEIR MAX SPEED
-        // FIXME: THE POINTS IN THEIR PATH NEEDS TO EITHER CONTAIN A ID (REF) OR SOME MAYOR REFACTORING IS REQUIRED
         Road road;
         if (!isRelation) {
             PolygonApprox polygonApprox = new PolygonApprox(way);
@@ -1007,7 +1017,8 @@ public final class OSMHandler implements ContentHandler {
             road.setTravelByFootAllowed(isWalkingAllowed);
             road.setMaxSpeed(maxSpeed);
             road.setOneWay(isOneWay);
-            road.setWay(way);
+            road.setWay(refWay);
+            graph.addEdges(road);
             for (int i = 0; i < way.size(); i += 5) {
                 Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
@@ -1025,7 +1036,8 @@ public final class OSMHandler implements ContentHandler {
             road.setTravelByFootAllowed(isWalkingAllowed);
             road.setMaxSpeed(maxSpeed);
             road.setOneWay(isOneWay);
-            road.setRelation(relation);
+            road.setRelation(refRelation);
+            graph.addEdges(road);
             for (int i = 0; i < relation.size(); i++) {
                 if (relation.get(i) != null) {
                     for (int j = 0; j < relation.get(i).size(); j += 5) {

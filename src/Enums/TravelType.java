@@ -12,5 +12,5 @@ import Model.Elements.Element;
 public enum TravelType {
     VEHICLE,
     BICYCLE,
-    WALK;
+    WALK
 }

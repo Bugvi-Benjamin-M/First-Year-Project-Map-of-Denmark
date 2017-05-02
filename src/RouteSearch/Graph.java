@@ -1,5 +1,11 @@
 package RouteSearch;
 
+import Helpers.HelperFunctions;
+import Model.Elements.Road;
+import OSM.OSMWay;
+import OSM.OSMWayRef;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -13,81 +19,79 @@ public class Graph {
 
     public static final String NEWLINE = System.getProperty("line.separator");
 
-    private final int nNodes;
     private int nEdges;
-    private LinkedList<Edge>[] adjacencyLists;
+    private ArrayList<LinkedList<Edge>> adjacencyLists;
+    private LongToIntMap idMap;
 
-    public Graph(int nNodes) {
-        if (nNodes <= 0) throw new IllegalArgumentException("Number of nodes has to be greater than zero");
-        this.nNodes = nNodes;
-        adjacencyLists = new LinkedList[nNodes];
-        for (int n = 0; n < nNodes; n++) {
-            adjacencyLists[n] = new LinkedList<>();
-        }
+    public Graph() {
+        adjacencyLists = new ArrayList<>(1000);
+        idMap = new LongToIntMap(1000);
     }
 
     public int getNumberOfNodes() {
-        return nNodes;
+        return adjacencyLists.size();
     }
 
     public int getNumberOfEdges() {
         return nEdges;
     }
 
-    private void validateNode(long node) {
-        if (node < 0 || node >= nNodes) {
-            throw new IllegalArgumentException("node "+node+" is not between 0 and "+(nNodes-1));
+    private void validateNode(int id) {
+        if (id < 0 || id > adjacencyLists.size()) {
+            throw new ArrayIndexOutOfBoundsException("id "+id+" is out of bounds");
         }
     }
 
-    public void addEdge(Edge edge) {
-        int v = (int) edge.either();
-        int w = (int) edge.other(v);
-        validateNode(v);
-        validateNode(w);
-        adjacencyLists[v].add(edge);
+    public void addEdges(Road road) {
+        byte type = Edge.getTravelTypeValue(road.isTravelByFootAllowed(),
+                road.isTravelByBikeAllowed(),road.isTravelByCarAllowed(),
+                road.isOneWay());
+        for (OSMWayRef way : road.getRelation()){
+            long ref, lastRef = way.refOf(way.getFromNode());
+            for (int i = 1; i < way.size(); i++) {
+                ref = way.refOf(way.get(i));
+                float length = (float) HelperFunctions.distanceInMeters(way.get(i-1),way.get(i));
+                addEdge(lastRef,ref,type,length,road.getMaxSpeed());
+                lastRef = ref;
+            }
+        }
+    }
+
+    public void addEdge(long lastRef, long ref, byte type, float length, int speed) {
+        idMap.insert(lastRef);
+        idMap.insert(ref);
+        int lastID = idMap.getInt(lastRef);
+        int ID = idMap.getInt(ref);
+        if (lastID >= adjacencyLists.size()) {
+            if (lastID == adjacencyLists.size()) adjacencyLists.add(new LinkedList<>());
+            else {
+                for (int i = adjacencyLists.size();
+                     i <= lastID; i++) {
+                    adjacencyLists.add(new LinkedList<>());
+                }
+            }
+        }
+        adjacencyLists.get(lastID).add(new Edge(lastID,ID,speed,length,type));
         nEdges++;
+        System.out.println("... added edge - total: "+nEdges);
     }
 
-    public Iterable<Edge> adjacent(int node) {
-        validateNode(node);
-        return adjacencyLists[node];
+    public Iterable<Edge> adjacent(int id) {
+        validateNode(id);
+        return adjacencyLists.get(id);
     }
 
-    public int degree(int node) {
-        validateNode(node);
-        return adjacencyLists[node].size();
+    public int degree(int id) {
+        validateNode(id);
+        return adjacencyLists.get(id).size();
     }
 
     public Iterable<Edge> edges() {
-        LinkedList<Edge> list = new LinkedList<>();
-        for (int n = 0; n < nNodes; n++) {
-            int selfLoops = 0;
-            for (Edge e: adjacent(n)) {
-                if (e.other(n) > n) {
-                    list.add(e);
-                } // only add one copy of each self loop (selfloops will be consecutive)
-                else if (e.other(n) == n) {
-                    if (selfLoops % 2 == 0) list.add(e);
-                    selfLoops++;
-                }
-
-            }
-        }
-        return list;
+        return null;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(nNodes+" "+nEdges + NEWLINE);
-        for (int n = 0; n < nNodes; n++) {
-            sb.append(n + ": ");
-            for (Edge e: adjacencyLists[n]) {
-                sb.append(e + " ");
-            }
-            sb.append(NEWLINE);
-        }
-        return sb.toString();
+        return null;
     }
 }

@@ -51,16 +51,16 @@ public class LongToIntMap {
      */
     public void insert(long value) {
         int id = getInt(value);
-        if (id != -1) throw new IllegalArgumentException("value is already associated with the id "+id);
+        if (id == -1) {
+            if (N == ints.length) {
+                // resize arrays
+                resize(N * 2);
+            }
 
-        if (N == ints.length) {
-            // resize arrays
-            resize(N*2);
+            ints[N] = N;
+            longs[N] = value;
+            N++;
         }
-
-        ints[N] = N;
-        longs[N] = value;
-        N++;
     }
 
     /**
