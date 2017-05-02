@@ -24,8 +24,8 @@ public class Graph {
     private LongToIntMap idMap;
 
     public Graph() {
-        adjacencyLists = new ArrayList<>(1000);
-        idMap = new LongToIntMap(1000);
+        adjacencyLists = new ArrayList<>(1000000);
+        idMap = new LongToIntMap(1000000);
     }
 
     public int getNumberOfNodes() {
@@ -73,7 +73,7 @@ public class Graph {
         }
         adjacencyLists.get(lastID).add(new Edge(lastID,ID,speed,length,type));
         nEdges++;
-        System.out.println("... added edge - total: "+nEdges);
+        if (nEdges % 1000 == 0) System.out.println("... added edge - total: "+nEdges);
     }
 
     public Iterable<Edge> adjacent(int id) {
