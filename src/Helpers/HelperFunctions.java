@@ -8,10 +8,11 @@ import java.util.List;
 
 /**
  * Class details:
+ * A collection of different mathematical functions used for different
+ * purposes in different parts of the program.
  *
  * @author Andreas Blanke, blan@itu.dk
- * @version 04-04-2017.
- * @project BFST
+ * @version 04-04-2017
  */
 public class HelperFunctions {
 
@@ -160,7 +161,7 @@ public class HelperFunctions {
     }
 
     /**
-     * Calcalates the total distance between each consecutive set of points in a collection
+     * Calculates the total distance between each consecutive set of points in a collection
      * @param way An ordered collection of points
      */
     public static double distanceInMeters(List<Point2D> way) {

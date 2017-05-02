@@ -77,7 +77,6 @@ public class Main {
         MainWindowController.getInstance();
         ToolbarController.getInstance();
         CanvasController.getInstance();
-        //InfobarController.getInstance();
         SettingsWindowController.getInstance();
     }
 

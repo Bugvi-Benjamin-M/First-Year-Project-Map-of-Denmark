@@ -97,7 +97,7 @@ public class LongToIntMap {
      * @param value a long value contained in the map
      */
     public int getInt(long value) {
-        for (int id = 0; id < N; id++) {
+        for (int id = N-1; id >= 0; id--) {
             if (value == longs[id]) return id;
         }
         return -1;  // not found value
