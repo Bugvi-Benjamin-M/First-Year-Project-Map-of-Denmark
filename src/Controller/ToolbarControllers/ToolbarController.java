@@ -7,6 +7,7 @@ import Controller.SettingsWindowController;
 import Enums.FileType;
 import Enums.ToolType;
 import Enums.ToolbarType;
+import Exceptions.FileWasNotFoundException;
 import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.GlobalValue;
@@ -23,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
 
 import static javax.swing.SpringLayout.*;
 
@@ -521,7 +523,7 @@ public final class ToolbarController extends Controller {
                 } else {
                     try {
                         FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
-                    } catch (Exception e) {
+                    } catch (FileNotFoundException | FileWasNotFoundException e) {
                         PopupWindow.infoBox(null, "Could Not Find Preferred Default File: " +
                                 PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
                                 "Loading Danmark.bin.", "File Not Found");
@@ -591,7 +593,6 @@ public final class ToolbarController extends Controller {
         JFileChooser chooser = PopupWindow.fileSaver(false, filters);
         if (chooser != null) {
             SwingWorker worker = new SwingWorker() {
-                //JWindow loadWindow;
                 @Override
                 protected Object doInBackground() throws Exception {
                     loadWindow = PopupWindow.LoadingScreen("Saving File: " + chooser.getSelectedFile().getName());

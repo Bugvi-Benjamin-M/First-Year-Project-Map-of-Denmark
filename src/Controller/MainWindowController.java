@@ -7,6 +7,7 @@ import Helpers.GlobalValue;
 import Helpers.OSDetector;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
+import Model.Elements.POI;
 import Model.Model;
 import View.PopupWindow;
 import View.Window;
@@ -286,6 +287,14 @@ public final class MainWindowController extends WindowController {
 
     public void requestPoiModeOn() {
         PointsOfInterestController.getInstance().poiModeOn();
+    }
+
+    public void requestAddPOI(POI poi) {
+        PointsOfInterestController.getInstance().addPOI(poi);
+    }
+
+    public void requestUpdatePointsOfInterestBar() {
+        PointsOfInterestController.getInstance().updatePointsOfInterestBar();
     }
 
     private class MainWindowInteractionHandler
