@@ -511,7 +511,6 @@ public final class ToolbarController extends Controller {
 
     private void loadDefaultFile() {
         SwingWorker worker = new SwingWorker() {
-            //JWindow loadWindow;
             @Override
             protected Object doInBackground() throws Exception {
                 loadWindow = PopupWindow.LoadingScreen("Loading Default File!");
@@ -556,7 +555,6 @@ public final class ToolbarController extends Controller {
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {
             SwingWorker worker = new SwingWorker() {
-                //JWindow loadWindow;
                 @Override
                 protected Object doInBackground() throws Exception {
                     loadWindow = PopupWindow.LoadingScreen("Loading: " + chooser.getSelectedFile().getName());
@@ -615,7 +613,7 @@ public final class ToolbarController extends Controller {
                 }
             };
             worker.execute();
-        }
+        } else if (type == ToolbarType.LARGE) toolbar.getTool(ToolType.SAVE).toggleActivate(false);
     }
 
 
