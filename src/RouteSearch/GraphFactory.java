@@ -26,7 +26,6 @@ public class GraphFactory {
             references.add(lon);
         }
         nodeBelongs = new HashMap<>();
-        /*
         for (Road road : roads) {
             for (OSMWayRef way: road.getRelation()) {
                 for (long lon : way.references()) {
@@ -35,7 +34,7 @@ public class GraphFactory {
                     nodeBelongs.get(lon).add(road);
                 }
             }
-        }*/
+        }
     }
 
     public int getID(long value) {

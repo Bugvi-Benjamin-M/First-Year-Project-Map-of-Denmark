@@ -7,13 +7,16 @@ import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
+import Model.Elements.Road;
 import Model.Model;
 import RouteSearch.Graph;
 import RouteSearch.Edge;
 import KDtree.KDTree;
+import RouteSearch.GraphFactory;
 import View.PopupWindow;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -63,10 +66,13 @@ public class Main {
             DebugWindow.getInstance().setLoadtimeLabel();
         });
 
-        Graph graph = model.getGraph();
-        RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(graph, 497325210L, Enums.TravelType.VEHICLE);
-        for(Edge edge : dijk.pathTo(715938988L)){
+        GraphFactory factory = model.getGraphFactory();
+        RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(factory.getGraph(), 717195900L, Enums.TravelType.VEHICLE);
+        for(Edge edge : dijk.pathTo(717706804L)){
             //FIXME: Road names here
+            List<Road> road = factory.getRoads(edge.either());
+            List<Road> second = factory.getRoads(edge.other(edge.either()));
+            System.out.println(road.get(0).getName() + " --> "+second.get(0).getName());
             //System.out.println(edge.either() + " --> " + edge.other(edge.either()));
         }
     }
