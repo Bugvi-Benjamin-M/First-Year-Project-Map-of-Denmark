@@ -67,8 +67,8 @@ public class Main {
         });
 
         GraphFactory factory = model.getGraphFactory();
-        RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(factory.getGraph(), 717195900L, Enums.TravelType.VEHICLE);
-        for(Edge edge : dijk.pathTo(717706804L)){
+        RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(factory.getGraph(), 493450751L, Enums.TravelType.VEHICLE);
+        for(Edge edge : dijk.pathTo(2186107065L)){
             //FIXME: Road names here
             List<Road> road = factory.getRoads(edge.either());
             List<Road> second = factory.getRoads(edge.other(edge.either()));

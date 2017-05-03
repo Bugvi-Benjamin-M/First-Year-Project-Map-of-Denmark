@@ -86,7 +86,7 @@ public class Dijkstra {
    * @throws IllegalArgumentException unless {@code 0 <= v < V}
    */
   public boolean hasPathTo(long v) {
-    return distTo.get(v) != Double.POSITIVE_INFINITY;
+    return distTo.get(v) < Double.POSITIVE_INFINITY;
   }
 
   /**
