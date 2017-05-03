@@ -1,15 +1,8 @@
 package RouteSearch;
 
-import Enums.TravelType;
-import Helpers.HelperFunctions;
-import Helpers.LongToPointMap;
-import KDtree.KDTree;
-import Model.Elements.Element;
 import Model.Elements.Road;
-import Model.Model;
-import OSM.OSMWay;
+import OSM.OSMWayRef;
 
-import java.awt.geom.Point2D;
 import java.util.*;
 
 /**
@@ -22,8 +15,8 @@ public class GraphFactory {
 
     private List<Road> roads;
     private List<Long> references;
+    private Map<Long,List<Road>> nodeBelongs;
     private Graph graph;
-    private int counter = 0;
 
     public GraphFactory(Graph graph, List<Road> roads) {
         this.graph = graph;
@@ -31,8 +24,18 @@ public class GraphFactory {
         references = new ArrayList<>();
         for (Long lon: graph.getAdjacencyMap().keySet()) {
             references.add(lon);
-            counter++;
         }
+        nodeBelongs = new HashMap<>();
+        /*
+        for (Road road : roads) {
+            for (OSMWayRef way: road.getRelation()) {
+                for (long lon : way.references()) {
+                    List list = nodeBelongs.get(lon);
+                    if (list == null) nodeBelongs.put(lon,new LinkedList<>());
+                    nodeBelongs.get(lon).add(road);
+                }
+            }
+        }*/
     }
 
     public int getID(long value) {
@@ -51,5 +54,9 @@ public class GraphFactory {
 
     public void setGraph(Graph graph) {
         this.graph = graph;
+    }
+
+    public List<Road> getRoads(long ref) {
+        return nodeBelongs.get(ref);
     }
 }

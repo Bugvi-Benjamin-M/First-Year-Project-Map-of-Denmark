@@ -82,7 +82,10 @@ public class Road extends Element {
         if (super.getShape() == null) {
             if (area) {
                 OSMRelation osmRelation = new OSMRelation(12L);
-                osmRelation.addAll(relation.stream().map(OSMWayRef::getWay).collect(Collectors.toList()));
+                for (OSMWayRef way: relation) {
+                    OSMWay osmway = way.getWay();
+                    if (osmway != null) osmRelation.add(osmway);
+                }
                 super.setShape(new MultiPolygonApprox(osmRelation));
             } else {
                 super.setShape(new PolygonApprox(relation.get(0).getWay()));

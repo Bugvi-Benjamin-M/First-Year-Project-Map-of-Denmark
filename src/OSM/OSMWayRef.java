@@ -62,8 +62,8 @@ public class OSMWayRef implements Iterable, Serializable {
         return way.iterator();
     }
 
-    public Iterator references() {
-        return references.iterator();
+    public List<Long> references() {
+        return references;
     }
 
     public int size() {
