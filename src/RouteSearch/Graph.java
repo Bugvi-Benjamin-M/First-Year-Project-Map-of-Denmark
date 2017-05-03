@@ -18,8 +18,6 @@ import java.util.Map;
  */
 public class Graph implements Serializable {
 
-    public static final String NEWLINE = System.getProperty("line.separator");
-
     private int nEdges;
     private ArrayList<LinkedList<Edge>> adjacencyLists;
     private LongToIntMap idMap;
@@ -43,6 +41,11 @@ public class Graph implements Serializable {
         }
     }
 
+    /**
+     *
+     * runtime: O(W * wE)
+     * @param road
+     */
     public void addEdges(Road road) {
         byte type = Edge.getTravelTypeValue(road.isTravelByFootAllowed(),
                 road.isTravelByBikeAllowed(),road.isTravelByCarAllowed(),
@@ -63,8 +66,8 @@ public class Graph implements Serializable {
     public void addEdge(long lastRef, long ref, byte type, float length, int speed) {
         idMap.insert(lastRef);
         idMap.insert(ref);
-        int lastID = idMap.getInt(lastRef);
-        int ID = idMap.getInt(ref);
+        int lastID = idMap.getInt(lastRef,false);
+        int ID = idMap.getInt(ref,false);
         if (lastID >= adjacencyLists.size()) {
             if (lastID == adjacencyLists.size()) adjacencyLists.add(new LinkedList<>());
             else {

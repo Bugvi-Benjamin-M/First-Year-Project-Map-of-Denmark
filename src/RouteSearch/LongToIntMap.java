@@ -52,17 +52,22 @@ public class LongToIntMap implements Serializable {
      * @param value a long value to be inserted into the map
      */
     public void insert(long value) {
-        int id = getInt(value);
-        if (id == -1) {
-            if (N == ints.length) {
-                // resize arrays
-                resize(N * 2);
-            }
-
-            ints[N] = N;
-            longs[N] = value;
-            N++;
+        int id = getInt(value,false);
+        if (N == ints.length) {
+            // resize arrays
+            resize(N * 2);
         }
+
+        long val;
+        while ((val = getLong(id)) != 0) {
+            if (val != value) {
+                id++;
+                if (id == longs.length) id = 0;
+            }
+        }
+        ints[id] = id;
+        longs[id] = value;
+        N++;
     }
 
     /**
@@ -88,7 +93,7 @@ public class LongToIntMap implements Serializable {
      * @param key id for the long value
      */
     public long getLong(int key) {
-        if (key < 0 || key > N) throw new ArrayIndexOutOfBoundsException("key has to be between 0 - "+N+": was "+key);
+        if (key < 0 || key > longs.length) throw new ArrayIndexOutOfBoundsException("key has to be between 0 - "+longs.length+": was "+key);
         return longs[key];
     }
 
@@ -99,21 +104,20 @@ public class LongToIntMap implements Serializable {
      * @param value a long value contained in the map
      */
     public int getInt(long value) {
-        long time = System.nanoTime();
         for (int id = N-1; id >= 0; id--) {
             if (value == longs[id]) return id;
-        }
-        total += (System.nanoTime()-time);
-        if (N != 0 && N % 10000 == 0) {
-            System.out.println("... avg time for key search: "+(total / N)+" ns");
         }
         return -1;  // not found value
     }
 
     public int getInt(long value, boolean ignore) {
-        int id = new Long(value).hashCode();
-        if (id < 0) return -1;
-        else return id;
+        if (!ignore) {
+            int id = new Long(value).hashCode();
+            id = (id & 0x7fffffff) % ints.length;
+            return id;
+        } else {
+            return getInt(value);
+        }
     }
 
     /**
