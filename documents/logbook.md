@@ -488,4 +488,18 @@ Impediments:
 Next scrum meeting:
 - 3/5 9:30 am.
 
+##Logbook 3/5 (Scribe Nikolaj)
+
+What we did since last time:
+
+
+What we will do until next time:
+
+
+Impediments:
+Nikolaj has to go at 10 am.
+
+Next scrum meeting:
+- 5/5 10 am.
+
 ## Next logbook...
