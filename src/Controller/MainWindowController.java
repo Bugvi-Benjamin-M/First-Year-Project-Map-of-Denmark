@@ -22,6 +22,7 @@ import java.awt.event.*;
 public final class MainWindowController extends WindowController {
 
     private static final String MAIN_TITLE = "OSM Map Viewer v0.4";
+    private final int FROM_RESIZE_EVENT_TO_MINIMUMWIDTH = 70;
     private static MainWindowController instance;
     private JLayeredPane layeredPane;
 
@@ -46,10 +47,11 @@ public final class MainWindowController extends WindowController {
                      .layout(new BorderLayout())
                      .icon()
                      .hide();
-        window.setMinimumWindowSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 1.9),(int) ((Toolkit.getDefaultToolkit().getScreenSize().getHeight()) /1.3)));
+        window.setMinimumWindowSize(new Dimension(ToolbarController.getSmallLargeEventWidth()-FROM_RESIZE_EVENT_TO_MINIMUMWIDTH,(int) ((Toolkit.getDefaultToolkit().getScreenSize().getHeight()) /1.3)));
         setupToolbar();
         setupCanvas();
         setupPointsOfInterestBar();
+        setupJourneyPlannerBar();
         setupLayeredPane();
         addInteractionHandlerToWindow();
         setToolTipTheme();
@@ -75,8 +77,10 @@ public final class MainWindowController extends WindowController {
                 new Integer(2));
         layeredPane.add(CanvasController.getInstance().getMapCanvas(),
             new Integer(1));
+        layeredPane.add(JourneyPlannerBarController.getInstance().getInformationBar(),
+                new Integer(3));
         layeredPane.add(ToolbarController.getInstance().getToolbar(),
-            new Integer(3));
+            new Integer(4));
     }
 
     private void adjustBounds()
@@ -89,6 +93,8 @@ public final class MainWindowController extends WindowController {
             0, 0, window.getFrame().getWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().getInformationBar().setBounds(
             0, 0, 0, window.getFrame().getHeight());
+        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(
+                0, 0, 0, window.getFrame().getHeight());
     }
 
     private void setupToolbar()
@@ -108,6 +114,11 @@ public final class MainWindowController extends WindowController {
         PointsOfInterestController.getInstance().specifyWindow(window);
         PointsOfInterestController.getInstance().setupInformationBar();
         PointsOfInterestController.getInstance().setupBasePointsOfInterestBar();
+    }
+
+    private void setupJourneyPlannerBar() {
+        JourneyPlannerBarController.getInstance().specifyWindow(window);
+        JourneyPlannerBarController.getInstance().setupInformationBar();
     }
 
     public void activateLargePointsOfInterestInformationBar() {
@@ -132,6 +143,14 @@ public final class MainWindowController extends WindowController {
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
         PointsOfInterestController.getInstance().clearPointsOfInterestBar();
         CanvasController.repaintCanvas();
+    }
+
+    public void activateLargeJourneyPlannerInformationBar() {
+
+    }
+
+    public void activateSmallJourneyPlannerInformationBar() {
+
     }
 
     public void transferFocusToMapCanvas()

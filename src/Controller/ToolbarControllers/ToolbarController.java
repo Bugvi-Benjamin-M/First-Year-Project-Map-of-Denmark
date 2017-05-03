@@ -37,6 +37,7 @@ import static javax.swing.SpringLayout.*;
  */
 public final class ToolbarController extends Controller {
 
+
     private static final int SMALL_LARGE_EVENT_WIDTH = (int) (0.133036*Toolkit.getDefaultToolkit().getScreenSize().getWidth() + 814.714);
 
     private Toolbar toolbar;
@@ -50,8 +51,6 @@ public final class ToolbarController extends Controller {
     private final int MARGIN_MEDIUM_LEFT = 35;
     private final int MARGIN_SMALL_RIGHT = -20;
     private final int MARGIN_SMALLEST_LEFT = 10;
-    private final int MARGIN_SMALLEST_RIGHT = -10;
-    private final int MARGIN_LARGE_RIGHT = -60;
     private final int MARGIN_TOP = 20;
     private final int LOADING_SCREEN_OFFSET = 10;
     private JWindow loadWindow;
@@ -69,6 +68,10 @@ public final class ToolbarController extends Controller {
             instance = new ToolbarController();
         }
         return instance;
+    }
+
+    public static int getSmallLargeEventWidth() {
+        return SMALL_LARGE_EVENT_WIDTH;
     }
 
     public void setupToolbar(ToolbarType type)

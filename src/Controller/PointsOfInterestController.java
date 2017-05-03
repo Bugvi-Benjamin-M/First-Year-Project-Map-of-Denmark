@@ -31,7 +31,7 @@ public final class PointsOfInterestController extends Controller {
     //private final int LARGE_SCROLLBAR_HEIGHT = (int) (0.976316*Toolkit.getDefaultToolkit().getScreenSize().getHeight() + (-292.289));
     private final double LARGE_SCROLLBAR_HEIGHT_DECREASE = -242.289;
     private final double SMALL_SCROLLBAR_WIDTH_DECREASE = -219.421;
-    private final int SMALL_SCROLLBAR_WIDTH = 790;
+    //private final int SMALL_SCROLLBAR_WIDTH = 790;
     private final int DISTANCE_BETWEEN_TOOLBAR_AND_BUTTONS = GlobalValue.getToolbarHeight() + 10;
     private final int DISTANCE_BETWEEN_BUTTONS_AND_SCROLLPANE = 60;
     private final int SCROLLBAR_SPEED = 14;
@@ -85,11 +85,11 @@ public final class PointsOfInterestController extends Controller {
 
     public void setupLargePointsOfInterestBar() {
         isLargePOIVisible = true;
-        informationBar.setPreferredSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()));
+        //todo any strange behaviour and you should change informationBarWidth to 300;
+        informationBar.setPreferredSize(new Dimension(GlobalValue.getInformationBarWidth(), window.getFrame().getHeight()));
         pointsOfInterestBar.specifyLayout(BoxLayout.PAGE_AXIS);
         pointsOfInterestBar.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, PROFILE_HEIGHT));
         setupLargeScrollbar();
-        //pointsOfInterestBar.addNoPoiPanel();
         addPointsToVerticalPointsOfInterestBar();
         poiButtons.setPreferredSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, BUTTONS_HEIGHT));
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, poiButtons, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
@@ -106,7 +106,6 @@ public final class PointsOfInterestController extends Controller {
         pointsOfInterestBar.specifyLayout(BoxLayout.LINE_AXIS);
         pointsOfInterestBar.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, PROFILE_HEIGHT+10));
         setupSmallScrollbar();
-        //pointsOfInterestBar.addNoPoiPanel();
         addPointsToHorizontalPointsOfInterestBar();
         poiButtons.setPreferredSize(new Dimension(150, BUTTONS_HEIGHT));
         informationBarLayout.putConstraint(WEST, poiButtons, DISTANCE_FROM_SMALLINFORMATIONBAR_LEFT_EDGE_TO_BUTTONS, WEST, informationBar);
@@ -249,7 +248,6 @@ public final class PointsOfInterestController extends Controller {
             addPOI(poi);
         }
         if(POIpanels != null && POIpanels.size() == 0) pointsOfInterestBar.addNoPoiPanel();
-        //pointsOfInterestBar.setPointProfilesVertically(POIpanels);
         pointsOfInterestBar.revalidate();
     }
 
@@ -258,7 +256,6 @@ public final class PointsOfInterestController extends Controller {
             addPOI(poi);
         }
         if(POIpanels != null && POIpanels.size() == 0) pointsOfInterestBar.addNoPoiPanel();
-        //pointsOfInterestBar.setPointProfilesHorizontally(POIpanels);
         pointsOfInterestBar.revalidate();
     }
 
