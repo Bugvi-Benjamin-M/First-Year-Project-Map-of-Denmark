@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="CGImap 0.5.8 (12631 thorn-02.openstreetmap.org)" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+ <bounds minlat="55.7200000" minlon="11.4600000" maxlat="55.7400000" maxlon="11.4800000"/>
+
+ <node id="1000000001" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7250000" lon="11.4650000"/>
+ <node id="1000000002" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7250000" lon="11.4660000"/>
+ <node id="1000000003" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7250000" lon="11.4670000"/>
+ <node id="1000000004" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7250000" lon="11.4680000"/>
+ <node id="1000000005" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7260000" lon="11.4640000"/>
+ <node id="1000000006" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7260000" lon="11.4650000"/>
+ <node id="1000000007" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7260000" lon="11.4660000"/>
+ <node id="1000000008" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7260000" lon="11.4670000"/>
+ <node id="1000000009" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7260000" lon="11.4680000"/>
+ <node id="1000000010" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7260000" lon="11.4690000"/>
+ <node id="1000000011" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7270000" lon="11.4640000"/>
+ <node id="1000000012" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7270000" lon="11.4650000"/>
+ <node id="1000000013" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7270000" lon="11.4660000"/>
+ <node id="1000000014" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7270000" lon="11.4670000"/>
+ <node id="1000000015" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7270000" lon="11.4680000"/>
+ <node id="1000000016" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7270000" lon="11.4690000"/>
+ <node id="1000000017" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7280000" lon="11.4640000"/>
+ <node id="1000000018" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7280000" lon="11.4650000"/>
+ <node id="1000000019" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7280000" lon="11.4660000"/>
+ <node id="1000000020" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7280000" lon="11.4670000"/>
+ <node id="1000000021" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7280000" lon="11.4680000"/>
+ <node id="1000000022" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7280000" lon="11.4690000"/>
+ <node id="1000000023" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7290000" lon="11.4650000"/>
+ <node id="1000000024" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7290000" lon="11.4660000"/>
+ <node id="1000000025" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7290000" lon="11.4670000"/>
+ <node id="1000000026" visible="true" version="1" changeset="1" timestamp="2017-03-05T13:00:00Z" user="Jakob" uid="1" lat="55.7290000" lon="11.4680000"/>
+
+ <way id="200000001" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000001"/>
+  <nd ref="1000000006"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="1"/>
+ </way>
+ <way id="200000002" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000002"/>
+  <nd ref="1000000007"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="2"/>
+ </way>
+ <way id="200000003" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000003"/>
+  <nd ref="1000000008"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="3"/>
+ </way>
+ <way id="200000004" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000004"/>
+  <nd ref="1000000009"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="4"/>
+ </way>
+ <way id="200000005" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000005"/>
+  <nd ref="1000000006"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="5"/>
+ </way>
+ <way id="200000006" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000006"/>
+  <nd ref="1000000007"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="6"/>
+ </way>
+ <way id="200000007" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000007"/>
+  <nd ref="1000000008"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="7"/>
+ </way>
+ <way id="200000008" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000008"/>
+  <nd ref="1000000009"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="8"/>
+ </way>
+ <way id="200000009" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000009"/>
+  <nd ref="1000000010"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="9"/>
+ </way>
+ <way id="200000010" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000006"/>
+  <nd ref="1000000012"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="10"/>
+ </way>
+ <way id="200000011" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000007"/>
+  <nd ref="1000000013"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="11"/>
+ </way>
+ <way id="200000012" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000008"/>
+  <nd ref="1000000014"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="12"/>
+ </way>
+ <way id="200000013" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000009"/>
+  <nd ref="1000000015"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="13"/>
+ </way>
+ <way id="200000014" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000011"/>
+  <nd ref="1000000012"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="14"/>
+ </way>
+ <way id="200000015" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000012"/>
+  <nd ref="1000000013"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="15"/>
+ </way>
+ <way id="200000016" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000013"/>
+  <nd ref="1000000014"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="16"/>
+ </way>
+ <way id="200000017" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000014"/>
+  <nd ref="1000000015"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="17"/>
+ </way>
+ <way id="200000018" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000015"/>
+  <nd ref="1000000016"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="18"/>
+ </way>
+ <way id="200000019" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000012"/>
+  <nd ref="1000000018"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="19"/>
+ </way>
+ <way id="200000020" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000013"/>
+  <nd ref="1000000019"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="20"/>
+ </way>
+ <way id="200000021" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000014"/>
+  <nd ref="1000000020"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="21"/>
+ </way>
+ <way id="200000022" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000015"/>
+  <nd ref="1000000021"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="22"/>
+ </way>
+ <way id="200000023" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000017"/>
+  <nd ref="1000000018"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="23"/>
+ </way>
+ <way id="200000024" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000018"/>
+  <nd ref="1000000019"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="24"/>
+ </way>
+ <way id="200000025" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000019"/>
+  <nd ref="1000000020"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="25"/>
+ </way>
+ <way id="200000026" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000020"/>
+  <nd ref="1000000021"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="26"/>
+ </way>
+ <way id="200000027" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000021"/>
+  <nd ref="1000000022"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="27"/>
+ </way>
+ <way id="200000028" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000018"/>
+  <nd ref="1000000023"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="28"/>
+ </way>
+ <way id="200000029" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000019"/>
+  <nd ref="1000000024"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="29"/>
+ </way>
+ <way id="200000030" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000020"/>
+  <nd ref="1000000025"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="30"/>
+ </way>
+ <way id="200000031" visible="true" version="8" changeset="41843523" timestamp="2016-09-01T08:34:29Z" user="Hjart" uid="207581">
+  <nd ref="1000000021"/>
+  <nd ref="1000000026"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="foot" v="yes"/>
+  <tag k="maxspeed" v="40"/>
+  <tag k="vehicle" v="yes"/>
+  <tag k="name" v="31"/>
+ </way>
+</osm>

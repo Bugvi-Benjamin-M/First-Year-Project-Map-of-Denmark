@@ -92,6 +92,7 @@ public interface Theme {
     public abstract Color sportAmenity();
     public abstract Color railwayStation();
     public abstract Color airportAmenity();
+    public abstract Color university();
     public abstract Color poi();
 
     public abstract String getName();
