@@ -14,6 +14,7 @@ import java.util.Map;
  * Class details:
  *
  * @author Andreas Blanke, blan@itu.dk
+ * @author Niclas Hedam, nhed@itu.dk
  * @version 27-04-2017
  */
 public class Graph implements Serializable {
@@ -28,6 +29,15 @@ public class Graph implements Serializable {
         adjacencyLists = new ArrayList<>(10000000);
         idMap = new LongToIntMap(10000000);
     }
+
+    public int getInt(Long id){
+        return idMap.getInt(id);
+    }
+
+    public long getLong(int id){
+        return idMap.getLong(id);
+    }
+
 
     public int getNumberOfNodes() {
         return adjacencyLists.size();
@@ -53,14 +63,14 @@ public class Graph implements Serializable {
                 for (int i = 1; i < way.size(); i++) {
                     ref = way.refOf(way.get(i));
                     float length = (float) HelperFunctions.distanceInMeters(way.get(i - 1), way.get(i));
-                    addEdge(lastRef, ref, type, length, road.getMaxSpeed());
+                    addEdge(lastRef, ref, type, length, road.getMaxSpeed(), road.getName());
                     lastRef = ref;
                 }
             }
         }
     }
 
-    public void addEdge(long lastRef, long ref, byte type, float length, int speed) {
+    public void addEdge(long lastRef, long ref, byte type, float length, int speed, String name) {
         idMap.insert(lastRef);
         idMap.insert(ref);
         int lastID = idMap.getInt(lastRef);
@@ -74,7 +84,7 @@ public class Graph implements Serializable {
                 }
             }
         }
-        adjacencyLists.get(lastID).add(new Edge(lastID,ID,speed,length,type));
+        adjacencyLists.get(lastID).add(new Edge(lastID,ID,speed,length,type,name));
         nEdges++;
         if (nEdges % 1000 == 0) System.out.println("... added edge - total: "+nEdges);
     }

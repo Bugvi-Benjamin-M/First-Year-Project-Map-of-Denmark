@@ -8,7 +8,8 @@ import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Model;
-import RouteSearch.GraphFactory;
+import RouteSearch.Graph;
+import RouteSearch.Edge;
 import KDtree.KDTree;
 import View.PopupWindow;
 
@@ -47,14 +48,6 @@ public class Main {
                 loadDefaultFile = true;
             }
         }
-        /*new Thread(() -> {
-            System.out.println("Starting graph building");
-            KDTree roads = Model.getInstance().getElements(ElementType.HIGHWAY);
-            System.out.println("Retrieved elements");
-            Model.getInstance().setGraph((new GraphFactory(roads)).getGraph());
-            System.out.println("Graph building complete");
-            System.out.println(model.getGraph().toString());
-        }).start();*/
 
         splashScreenDestruct();
         SwingUtilities.invokeLater(() -> {
@@ -68,6 +61,13 @@ public class Main {
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();
+
+
+            Graph graph = model.getGraph();
+            RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(graph, graph.getInt(493450751l), Enums.TravelType.VEHICLE);
+            for(Edge edge : dijk.pathTo(graph.getInt(732503177l))){
+                System.out.println(edge.getName());
+            }
         });
     }
 

@@ -12,6 +12,7 @@ import java.io.Serializable;
  *  4 byte for float + 1 byte for byte value = 29 bytes (w/ 3 byte filler)
  *
  * @author Andreas Blanke, blan@itu.dk
+ * @author Niclas Hedam, nhed@itu.dk
  * @version 27-04-2017
  */
 public class Edge implements Comparable<Edge>, Serializable {
@@ -21,6 +22,7 @@ public class Edge implements Comparable<Edge>, Serializable {
     private final int speed;
     private final float length;
     private final byte travelType;
+    private final String name;
 
     /**
      *
@@ -30,7 +32,7 @@ public class Edge implements Comparable<Edge>, Serializable {
      * @param length
      * @param type
      */
-    public Edge(int from, int to, int speed, float length, byte type) {
+    public Edge(int from, int to, int speed, float length, byte type, String name) {
         if (from < 0) throw new IllegalArgumentException("node index "+from+" must be nonnegative");
         if (to < 0) throw new IllegalArgumentException("node index "+to+" must be nonnegative");
         if (Double.isNaN(length)) throw new IllegalArgumentException("length is NaN");
@@ -40,20 +42,39 @@ public class Edge implements Comparable<Edge>, Serializable {
         this.speed = speed;
         this.length = length;
         this.travelType = type;
+        this.name = name;
+    }
+
+
+    /**
+    * Returns the name of the road
+    */
+    public String getName(){
+        return name;
     }
 
     /**
      * Returns the weight of this edge, e.g. the consumption of travelling down this edge
      */
-    public double weight(byte type) {
+    public double weight(TravelType type) {
         // TODO: Update to be able to calculate based on time needed to travel this edge
+        System.out.println(this.travelType);
+        if(type == TravelType.VEHICLE && !getTravelTypeName(this.travelType).contains("DRIVE")){
+            return Double.POSITIVE_INFINITY;
+        }
+        if(type == TravelType.BICYCLE && !getTravelTypeName(this.travelType).contains("CYCLE")){
+            return Double.POSITIVE_INFINITY;
+        }
+        if(type == TravelType.WALK && !getTravelTypeName(this.travelType).contains("WALK")){
+            return Double.POSITIVE_INFINITY;
+        }
         return length;
     }
 
     /**
      * Returns either one of the two nodes (quite often the start node)
      */
-    public long either() {
+    public int either() {
         return from;
     }
 
@@ -61,7 +82,7 @@ public class Edge implements Comparable<Edge>, Serializable {
      * Returns the reference to the other node than the one given
      * @param node One of the two nodes in this Edge
      */
-    public long other(long node) {
+    public int other(long node) {
         if      (node == from)  return to;
         else if (node == to)    return from;
         else throw new IllegalArgumentException("Not an endpoint");
