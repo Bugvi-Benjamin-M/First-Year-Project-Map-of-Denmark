@@ -77,4 +77,8 @@ public class OSMWayRef implements Iterable, Serializable {
     public Point2D getToNode() {
         return way.getToNode();
     }
+
+    public OSMWay getWay() {
+        return way;
+    }
 }

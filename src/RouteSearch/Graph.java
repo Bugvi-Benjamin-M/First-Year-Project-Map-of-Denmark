@@ -85,8 +85,8 @@ import java.util.Map;
          return adjacencyLists.get(id).size();
      }
 
-     public Iterable<Edge> edges() {
-         return null;
+     public Map<Long,LinkedList<Edge>> getAdjacencyMap(){
+         return adjacencyLists;
      }
 
      @Override

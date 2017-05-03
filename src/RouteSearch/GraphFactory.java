@@ -20,5 +20,24 @@ import java.util.*;
  */
 public class GraphFactory {
 
+    private List<Road> roads;
+    private List<Long> references;
+    private Graph graph;
+    private int counter = 0;
 
+    public GraphFactory(Graph graph, List<Road> roads) {
+        this.graph = graph;
+        this.roads = roads;
+        references = new ArrayList<>();
+        for (Long lon: graph.getAdjacencyMap().keySet()) {
+            references.add(lon);
+            counter++;
+        }
+    }
+
+    public int getID(long value) {
+        int indexOf = references.indexOf(value);
+        if (indexOf == -1) throw new IllegalArgumentException("N/A value!");
+        return indexOf;
+    }
 }

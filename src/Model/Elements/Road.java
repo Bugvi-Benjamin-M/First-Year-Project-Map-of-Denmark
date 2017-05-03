@@ -13,6 +13,7 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -42,6 +43,15 @@ public class Road extends Element {
         this.area = area;
     }
 
+    public Road(String name) {
+        this(null,name);
+    }
+
+    public Road(String name, boolean area) {
+        this(null,name);
+        this.area = area;
+    }
+
     public void setTravelByBikeAllowed(boolean travelByBikeAllowed) {
         this.travelByBikeAllowed = travelByBikeAllowed;
     }
@@ -68,7 +78,18 @@ public class Road extends Element {
 
     public boolean isArea() { return area; }
 
-    public PolygonApprox getShape() { return (PolygonApprox)super.getShape(); }
+    public PolygonApprox getShape() {
+        if (super.getShape() == null) {
+            if (area) {
+                OSMRelation osmRelation = new OSMRelation(12L);
+                osmRelation.addAll(relation.stream().map(OSMWayRef::getWay).collect(Collectors.toList()));
+                super.setShape(new MultiPolygonApprox(osmRelation));
+            } else {
+                super.setShape(new PolygonApprox(relation.get(0).getWay()));
+            }
+        }
+        return (PolygonApprox)super.getShape();
+    }
 
     public String getName() { return name; }
 

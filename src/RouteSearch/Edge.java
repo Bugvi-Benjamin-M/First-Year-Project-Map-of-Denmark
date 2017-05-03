@@ -7,9 +7,9 @@ import java.io.Serializable;
 /**
  * Class details:
  *
- * Each Edge object should only fill approx. 32 bytes:
- *  12 bytes overhead + 4 byte for int + 4 byte for int + 4 byte for int +
- *  4 byte for float + 1 byte for byte value = 29 bytes (w/ 3 byte filler)
+ * Each Edge object should only fill approx. 40 bytes:
+ *  12 bytes overhead + 8 byte for long + 8 byte for long + 4 byte for int +
+ *  4 byte for float + 1 byte for byte value = 37 bytes (w/ 3 byte filler)
  *
  * @author Andreas Blanke, blan@itu.dk
  * @author Niclas Hedam, nhed@itu.dk
