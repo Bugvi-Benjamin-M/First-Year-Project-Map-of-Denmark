@@ -62,9 +62,9 @@ import java.util.Map;
          LinkedList<Edge> list = adjacencyLists.get(lastRef);
          if (list == null) {
              list = new LinkedList<>();
-             adjacencyLists.put(lastRef,list);
          }
-         adjacencyLists.get(lastRef).add(edge);
+         list.add(edge);
+         adjacencyLists.put(lastRef,list);
          nEdges++;
          if (nEdges % 1000 == 0) System.out.println("... added edge - total: "+nEdges);
      }
