@@ -48,7 +48,7 @@ public class Edge implements Comparable<Edge>, Serializable {
      */
     public double weight(TravelType type) {
         // TODO: Update to be able to calculate based on time needed to travel this edge
-        if(type == TravelType.VEHICLE && !getTravelTypeName(this.travelType).contains("DRIVE")){
+        /*if(type == TravelType.VEHICLE && !getTravelTypeName(this.travelType).contains("DRIVE")){
             return Double.POSITIVE_INFINITY;
         }
         if(type == TravelType.BICYCLE && !getTravelTypeName(this.travelType).contains("CYCLE")){
@@ -56,7 +56,7 @@ public class Edge implements Comparable<Edge>, Serializable {
         }
         if(type == TravelType.WALK && !getTravelTypeName(this.travelType).contains("WALK")){
             return Double.POSITIVE_INFINITY;
-        }
+        }*/
         return length;
     }
 

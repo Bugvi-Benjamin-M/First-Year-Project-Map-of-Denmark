@@ -59,12 +59,14 @@ import java.util.Map;
 
      public void addEdge(long lastRef, long ref, byte type, float length, int speed) {
          Edge edge = new Edge(lastRef,ref,speed,length,type);
-         LinkedList<Edge> list = adjacencyLists.get(lastRef);
-         if (list == null) {
-             list = new LinkedList<>();
-         }
+         LinkedList<Edge> lastList = adjacencyLists.get(lastRef);
+         LinkedList<Edge> list = adjacencyLists.get(ref);
+         if (list == null) {list = new LinkedList<>();}
+         if (lastList == null) lastList = new LinkedList<>();
          list.add(edge);
-         adjacencyLists.put(lastRef,list);
+         lastList.add(edge);
+         adjacencyLists.put(ref,list);
+         adjacencyLists.put(lastRef,lastList);
          nEdges++;
          if (nEdges % 1000 == 0) System.out.println("... added edge - total: "+nEdges);
      }
