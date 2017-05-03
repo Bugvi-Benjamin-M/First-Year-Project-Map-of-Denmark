@@ -68,6 +68,7 @@ public final class OSMHandler implements ContentHandler {
     private int maxSpeed;
 
     private ArrayList<Pointer> railwayStations;
+    private ArrayList<Road> roads;
 
     private String roadName;
     private String roadNumber;
@@ -97,8 +98,7 @@ public final class OSMHandler implements ContentHandler {
         nightClubs = new ArrayList<>();
         fastFoods = new ArrayList<>();
         railwayStations = new ArrayList<>();
-
-        graph = new Graph();
+        roads = new ArrayList<>();
     }
 
     public void parseDefault(Boolean mode){
@@ -131,6 +131,10 @@ public final class OSMHandler implements ContentHandler {
 
     @Override
     public void endDocument() throws SAXException {
+        graph = new Graph();
+        for (Road road:roads) {
+            graph.addEdges(road);
+        }
         model.setGraph(graph);
     }
 
@@ -1025,7 +1029,7 @@ public final class OSMHandler implements ContentHandler {
             road.setMaxSpeed(maxSpeed);
             road.setOneWay(isOneWay);
             road.setWay(refWay);
-            graph.addEdges(road);
+            roads.add(road);
             for (int i = 0; i < way.size(); i += 5) {
                 Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
@@ -1044,7 +1048,7 @@ public final class OSMHandler implements ContentHandler {
             road.setMaxSpeed(maxSpeed);
             road.setOneWay(isOneWay);
             road.setRelation(refRelation);
-            graph.addEdges(road);
+            roads.add(road);
             for (int i = 0; i < relation.size(); i++) {
                 if (relation.get(i) != null) {
                     for (int j = 0; j < relation.get(i).size(); j += 5) {

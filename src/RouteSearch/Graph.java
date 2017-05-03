@@ -7,6 +7,7 @@ import OSM.OSMWayRef;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -19,15 +20,11 @@ import java.util.Map;
  */
 public class Graph implements Serializable {
 
-    public static final String NEWLINE = System.getProperty("line.separator");
-
     private int nEdges;
-    private ArrayList<LinkedList<Edge>> adjacencyLists;
-    private LongToIntMap idMap;
+    private Map<Long,LinkedList<Edge>> adjacencyLists;
 
     public Graph() {
-        adjacencyLists = new ArrayList<>(10000000);
-        idMap = new LongToIntMap(10000000);
+        adjacencyLists = new HashMap<>(10000000);
     }
 
     public int getInt(Long id){
@@ -53,6 +50,11 @@ public class Graph implements Serializable {
         }
     }
 
+    /**
+     *
+     * runtime: O(W * wE)
+     * @param road
+     */
     public void addEdges(Road road) {
         byte type = Edge.getTravelTypeValue(road.isTravelByFootAllowed(),
                 road.isTravelByBikeAllowed(),road.isTravelByCarAllowed(),
@@ -70,21 +72,14 @@ public class Graph implements Serializable {
         }
     }
 
-    public void addEdge(long lastRef, long ref, byte type, float length, int speed, String name) {
-        idMap.insert(lastRef);
-        idMap.insert(ref);
-        int lastID = idMap.getInt(lastRef);
-        int ID = idMap.getInt(ref);
-        if (lastID >= adjacencyLists.size()) {
-            if (lastID == adjacencyLists.size()) adjacencyLists.add(new LinkedList<>());
-            else {
-                for (int i = adjacencyLists.size();
-                     i <= lastID; i++) {
-                    adjacencyLists.add(new LinkedList<>());
-                }
-            }
+    public void addEdge(long lastRef, long ref, byte type, float length, int speed) {
+        Edge edge = new Edge(lastRef,ref,speed,length,type);
+        LinkedList<Edge> list = adjacencyLists.get(lastRef);
+        if (list == null) {
+            list = new LinkedList<>();
+            adjacencyLists.put(lastRef,list);
         }
-        adjacencyLists.get(lastID).add(new Edge(lastID,ID,speed,length,type,name));
+        list.add(edge);
         nEdges++;
         if (nEdges % 1000 == 0) System.out.println("... added edge - total: "+nEdges);
     }
