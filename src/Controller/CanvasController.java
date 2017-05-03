@@ -277,26 +277,20 @@ public final class CanvasController extends Controller implements Observer {
                     public void actionPerformed(ActionEvent e)
                     {
                         if(GlobalValue.isAddNewPointActive()){
-                            PointsOfInterestController.getInstance().poiModeOff();
+                            MainWindowController.getInstance().requestPoiModeOff();
                         }else {
-                            PointsOfInterestController.getInstance().poiModeOn();
+                            MainWindowController.getInstance().requestPoiModeOn();
                         }
                     }
                 });
     }
     //Todo get rid of direct coupling between poiController and CanvasController
     private void poiCreationEvent(Point2D point){
-        /*
-         *  The cursor position is not the upper left corner of the boundry box
-         *  of the cursor, but the lower left corner.
-         *  This take that into consideration.
-         */
         double x = point.getX();
-        double y = point.getY(); //A cursor height of 24?
+        double y = point.getY();
         point = new Point2D.Double(x, y);
         Point2D p = mapCanvas.toModelCoords(point);
-        //fixme there must be something wrong here, since the cursor swaps back to normal
-        String description = PopupWindow.textInputBox(null, "Point of interest", "Enter description: ");
+        String description = PopupWindow.textInputBox(null, "Point of Interest", "Enter description: ");
         if(description != null){
             if(description.length() <= 56) {
                 POI poi = new POI((float) p.getX(), (float) p.getY(), description);
@@ -305,11 +299,11 @@ public final class CanvasController extends Controller implements Observer {
                 PointsOfInterestController.getInstance().addPOI(poi);
                 repaintCanvas();
                 PointsOfInterestController.getInstance().updatePointsOfInterestBar();
-                PointsOfInterestController.getInstance().poiModeOff();
+                MainWindowController.getInstance().requestPoiModeOff();
             }else{
                 PopupWindow.warningBox(null, "The Description has to be no Longer than 56 Characters!");
             }
-        }
+        } else MainWindowController.getInstance().requestPoiModeOff();
     }
 
     private void panEvent(PanType type)
@@ -525,6 +519,8 @@ public final class CanvasController extends Controller implements Observer {
 
     private void mouseMovedEvent(MouseEvent e)
     {
+        if(GlobalValue.isAddNewPointActive()) changeCanvasMouseCursorToPoint();
+        else changeCanvasMouseCursorToNormal();
         if (PreferencesController.getInstance()
                 .getCanvasRealTimeInformationSetting()) {
             if (mapCanvas.hasFocus()) {
@@ -587,12 +583,14 @@ public final class CanvasController extends Controller implements Observer {
 
     private void mouseExitedEvent(MouseEvent e) {
         disablePopup();
+        if(GlobalValue.isAddNewPointActive()) changeCanvasMouseCursorToNormal();
     }
 
     private void mouseEnteredEvent(MouseEvent e) {
         MainWindowController.getInstance().requestPointsOfInterestBarRepaint();
         MainWindowController.getInstance().requestToolbarRepaint();
         if(!MainWindowController.getInstance().doesSearchToolHaveFocus())mapCanvas.grabFocus();
+        if(GlobalValue.isAddNewPointActive()) changeCanvasMouseCursorToPoint();
     }
 
     private void keyboardZoomEvent(double keyboardZoomFactor)

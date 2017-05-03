@@ -2,6 +2,7 @@ package Main;
 
 import Controller.*;
 import Controller.ToolbarControllers.ToolbarController;
+import Exceptions.FileWasNotFoundException;
 import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
@@ -10,6 +11,7 @@ import Model.Model;
 import View.PopupWindow;
 
 import javax.swing.*;
+import java.io.FileNotFoundException;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -35,17 +37,24 @@ public class Main {
         splashScreenInit();
         Model model = Model.getInstance();
         CanvasController.getInstance().setupAsObserver();
-        FileHandler.loadDefaultResource(true);
+        try {
+            FileHandler.loadDefaultResource(true);
+        } catch (FileNotFoundException | FileWasNotFoundException e) {
+            e.printStackTrace();
+        }
         loadDefaultFile = true;
         if(!PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
             try {
                 FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
                 loadDefaultFile = false;
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (FileWasNotFoundException | FileNotFoundException e) {
                 PopupWindow.infoBox(null, "Could Not Find Preferred Startup File: " + PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
                         "Loading " + DefaultSettings.DEFAULT_FILE_NAME, "Preferred Startup File Not Found!");
-                //FileHandler.loadDefaultResource();
+                try {
+                    FileHandler.loadDefaultResource(true);
+                } catch (FileNotFoundException | FileWasNotFoundException e1) {
+                    e1.printStackTrace();
+                }
                 loadDefaultFile = true;
             }
         }

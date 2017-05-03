@@ -28,15 +28,17 @@ public final class PointsOfInterestController extends Controller {
     private final int PROFILE_HEIGHT = 90;
     private final int LARGE_POINTS_OF_INTERESTBAR_WIDTH = 300;
     private final int BUTTONS_HEIGHT = 50;
-    private final int LARGE_SCROLLBAR_HEIGHT = (int) (0.976316*Toolkit.getDefaultToolkit().getScreenSize().getHeight() + (-292.289));
-    private final int SMALL_SCROLLBAR_WIDTH = 770;
+    //private final int LARGE_SCROLLBAR_HEIGHT = (int) (0.976316*Toolkit.getDefaultToolkit().getScreenSize().getHeight() + (-292.289));
+    private final double LARGE_SCROLLBAR_HEIGHT_DECREASE = -242.289;
+    private final double SMALL_SCROLLBAR_WIDTH_DECREASE = -219.421;
+    private final int SMALL_SCROLLBAR_WIDTH = 790;
     private final int DISTANCE_BETWEEN_TOOLBAR_AND_BUTTONS = GlobalValue.getToolbarHeight() + 10;
     private final int DISTANCE_BETWEEN_BUTTONS_AND_SCROLLPANE = 60;
     private final int SCROLLBAR_SPEED = 14;
     private final int SMALL_POINTS_OF_INTERESTBAR_HEIGHT = 150;
     private final int DISTANCE_FROM_SMALLINFORMATIONBAR_LEFT_EDGE_TO_BUTTONS = 25;
     private final int DISTANCE_FROM_SMALLPOIBARTOP_TO_BUTTONS = 35;
-    private final int SMALL_SCROLLBAR_HEIGHT = 100;
+    private final int SMALL_SCROLLBAR_HEIGHT = 110;
     private final int DISTANCE_FROM_SMALLPOIBARTOP_TO_SCROLLPANE = 10;
 
     private static PointsOfInterestController instance;
@@ -69,8 +71,6 @@ public final class PointsOfInterestController extends Controller {
         informationBar.addMouseListener(handler);
         isLargePOIVisible = false;
         isSmallPOIVisible = false;
-        System.out.println(Toolkit.getDefaultToolkit().getScreenSize().getWidth());
-        System.out.println(SMALL_SCROLLBAR_WIDTH);
     }
 
     public void setupBasePointsOfInterestBar() {
@@ -200,6 +200,7 @@ public final class PointsOfInterestController extends Controller {
     private void setupLargeScrollbar() {
         largeScroll = new JScrollPane(pointsOfInterestBar);
         largeScroll.setOpaque(true);
+        int LARGE_SCROLLBAR_HEIGHT = (int) (window.getFrame().getHeight() + LARGE_SCROLLBAR_HEIGHT_DECREASE);
         largeScroll.setPreferredSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, LARGE_SCROLLBAR_HEIGHT));
         largeScroll.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, LARGE_SCROLLBAR_HEIGHT));
         largeScroll.setMaximumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, LARGE_SCROLLBAR_HEIGHT));
@@ -213,9 +214,10 @@ public final class PointsOfInterestController extends Controller {
     private void setupSmallScrollbar() {
         smallScroll = new JScrollPane(pointsOfInterestBar);
         smallScroll.setOpaque(true);
-        smallScroll.setPreferredSize(new Dimension(SMALL_SCROLLBAR_WIDTH, SMALL_SCROLLBAR_HEIGHT+10));
-        smallScroll.setMinimumSize(new Dimension(SMALL_SCROLLBAR_WIDTH, SMALL_SCROLLBAR_HEIGHT+10));
-        smallScroll.setMaximumSize(new Dimension(SMALL_SCROLLBAR_WIDTH, SMALL_SCROLLBAR_HEIGHT+10));
+        int SMALL_SCROLLBAR_WIDTH = (int) (window.getFrame().getWidth() + SMALL_SCROLLBAR_WIDTH_DECREASE);
+        smallScroll.setPreferredSize(new Dimension(SMALL_SCROLLBAR_WIDTH, SMALL_SCROLLBAR_HEIGHT));
+        smallScroll.setMinimumSize(new Dimension(SMALL_SCROLLBAR_WIDTH, SMALL_SCROLLBAR_HEIGHT));
+        smallScroll.setMaximumSize(new Dimension(SMALL_SCROLLBAR_WIDTH, SMALL_SCROLLBAR_HEIGHT));
         smallScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         smallScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         smallScroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));

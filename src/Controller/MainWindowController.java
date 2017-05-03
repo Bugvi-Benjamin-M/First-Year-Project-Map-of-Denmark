@@ -280,6 +280,14 @@ public final class MainWindowController extends WindowController {
         CanvasController.getInstance().panToPoint(aFloat);
     }
 
+    public void requestPoiModeOff() {
+        PointsOfInterestController.getInstance().poiModeOff();
+    }
+
+    public void requestPoiModeOn() {
+        PointsOfInterestController.getInstance().poiModeOn();
+    }
+
     private class MainWindowInteractionHandler
         extends MainWindowController.WindowInteractionHandler {
 

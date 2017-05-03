@@ -1,6 +1,5 @@
 package Helpers;
 
-import Controller.CanvasController;
 import Enums.BoundType;
 import Enums.FileType;
 import Enums.OSMEnums.ElementType;
@@ -34,7 +33,7 @@ public class FileHandler {
 
     private static String pathStart = OSDetector.getPathPrefix();
 
-    public static void loadResource(String fileName, boolean isLoadingFromStart)
+    public static void loadResource(String fileName, boolean isLoadingFromStart) throws FileNotFoundException, FileWasNotFoundException
     {
         try {
             if (fileExists(fileName) && fileName.endsWith(FileType.OSM.getExtension())) {
@@ -71,12 +70,11 @@ public class FileHandler {
                     null, "Unsupported File Type. Please Select a New File!");
             }
         } catch (FileNotFoundException | FileWasNotFoundException e) {
-            e.printStackTrace();
+            throw new FileWasNotFoundException("File Not Found");
         }
     }
 
-    public static void loadDefaultResource(boolean isLoadingFromStart)
-    {
+    public static void loadDefaultResource(boolean isLoadingFromStart) throws FileNotFoundException, FileWasNotFoundException {
         try {
             try {
                 long startTime = System.currentTimeMillis();
@@ -214,12 +212,12 @@ public class FileHandler {
         saveBin(fileName, true);
     }
 
-    public static void fileChooserLoad(String fileName)
+    public static void fileChooserLoad(String fileName) throws FileNotFoundException, FileWasNotFoundException
     {
         loadResource(fileName, false);
     }
 
-    public static void loadOSM(InputSource inputSource)
+    public static void loadOSM(InputSource inputSource) throws FileWasNotFoundException, FileNotFoundException
     {
         try {
             Model.getInstance().clear();
@@ -228,7 +226,7 @@ public class FileHandler {
             reader.parse(inputSource);
             Model.getInstance().modelHasChanged();
         } catch (SAXException | IOException e) {
-            e.printStackTrace();
+            throw new FileWasNotFoundException("OSM File not Found");
         }
     }
 

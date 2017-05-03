@@ -93,7 +93,7 @@ public class PopupWindow {
     }
 
     public static String textInputBox(JFrame relativeTo, String title, String message){
-        return JOptionPane.showInputDialog(null, message, title, JOptionPane.QUESTION_MESSAGE);
+        return JOptionPane.showInputDialog(relativeTo, message, title, JOptionPane.QUESTION_MESSAGE);
     }
 
     public static JWindow LoadingScreen(String description) {
