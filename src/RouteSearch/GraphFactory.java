@@ -40,4 +40,12 @@ public class GraphFactory {
         if (indexOf == -1) throw new IllegalArgumentException("N/A value!");
         return indexOf;
     }
+
+    public Graph getGraph() {
+        return graph;
+    }
+
+    public void setGraph(Graph graph) {
+        this.graph = graph;
+    }
 }

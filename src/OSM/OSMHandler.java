@@ -135,7 +135,7 @@ public final class OSMHandler implements ContentHandler {
         for (Road road:roads) {
             graph.addEdges(road);
         }
-        model.setGraph(graph);
+        model.setGraph(graph,roads);
     }
 
     @Override
