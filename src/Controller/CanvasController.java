@@ -286,15 +286,13 @@ public final class CanvasController extends Controller implements Observer {
     }
     //Todo get rid of direct coupling between poiController and CanvasController
     private void poiCreationEvent(Point2D point){
-
-
         /*
          *  The cursor position is not the upper left corner of the boundry box
          *  of the cursor, but the lower left corner.
          *  This take that into consideration.
          */
         double x = point.getX();
-        double y = point.getY()-24; //A cursor height of 24?
+        double y = point.getY(); //A cursor height of 24?
         point = new Point2D.Double(x, y);
         Point2D p = mapCanvas.toModelCoords(point);
         //fixme there must be something wrong here, since the cursor swaps back to normal
