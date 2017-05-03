@@ -44,6 +44,7 @@ public class FileHandler {
                         new InputSource(FileHandler.class.getResourceAsStream(fileName)));
                 } else {
                     OSMHandler.getInstance().parseDefault(false);
+                    OSMHandler.getInstance().setIsInitialized(false);
                     FileHandler.loadOSM(new InputSource(pathStart + fileName));
                 }
             } else if (fileExists(fileName) && fileName.endsWith(FileType.ZIP.getExtension())) {
@@ -54,6 +55,7 @@ public class FileHandler {
                         FileHandler.class.getResourceAsStream(fileName)));
                 } else {
                     OSMHandler.getInstance().parseDefault(false);
+                    OSMHandler.getInstance().setIsInitialized(false);
                     zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(fileName)));
                 }
                 try {

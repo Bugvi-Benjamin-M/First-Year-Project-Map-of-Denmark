@@ -17,7 +17,6 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import java.awt.geom.Point2D;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,8 +40,8 @@ public final class OSMHandler implements ContentHandler {
     private float longitudeFactor;
     private Model model;
     private int loadednodes, loadedRelations, loadedWays;
-    private boolean defaultMode;
-    private boolean initialized;
+    private boolean isDefaultMode;
+    private boolean isInitialized;
     private float latitude;
     private float longitude;
     private ArrayList<Pointer> cityNames;
@@ -89,7 +88,11 @@ public final class OSMHandler implements ContentHandler {
     }
 
     public void parseDefault(Boolean mode){
-        defaultMode = mode;
+        isDefaultMode = mode;
+    }
+
+    public void setIsInitialized(boolean isInitialized){
+        this.isInitialized = isInitialized;
     }
 
     public float getLongitudeFactor(){
@@ -137,7 +140,7 @@ public final class OSMHandler implements ContentHandler {
             maxLatitude = Float.parseFloat(atts.getValue("maxlat"));
             minLongitude = Float.parseFloat(atts.getValue("minlon"));
             maxLongitude = Float.parseFloat(atts.getValue("maxlon"));
-            if (defaultMode == true) {
+            if (isDefaultMode) {
                 float avglat = minLatitude + (maxLatitude - minLatitude) / 2;
                 longitudeFactor = (float)Math.cos(avglat / 180 * Math.PI);
             } else {
@@ -148,7 +151,7 @@ public final class OSMHandler implements ContentHandler {
             maxLongitude *= longitudeFactor;
             minLatitude = -minLatitude;
             maxLatitude = -maxLatitude;
-            if (defaultMode == true) {
+            if (isDefaultMode) {
                 model.setBound(BoundType.MIN_LONGITUDE, minLongitude);
                 model.setBound(BoundType.MAX_LONGITUDE, maxLongitude);
                 model.setBound(BoundType.MIN_LATITUDE, minLatitude);
@@ -166,7 +169,7 @@ public final class OSMHandler implements ContentHandler {
             longitude = Float.parseFloat(atts.getValue("lon"));
             idToNode.put(id, longitude * longitudeFactor, -latitude);
 
-            if (defaultMode == true) {
+            if (isDefaultMode) {
                 nodeGenerator.addPoint(
                     new Point2D.Float(longitude * longitudeFactor, -latitude));
             }
@@ -200,13 +203,14 @@ public final class OSMHandler implements ContentHandler {
             }
             break;
         case "way":
-            if (!initialized && defaultMode) {
+            if (!isInitialized && isDefaultMode) {
                 nodeGenerator.initialise();
                 for (ElementType type : ElementType.values()) {
                     nodeGenerator.setupTree(model.getElements().get(type));
                 }
-                initialized = true;
-
+            }
+            if(!isInitialized){
+                isInitialized = true;
                 for (Pointer p : cityNames) {
                     model.getElements().get(ElementType.CITY_NAME).putPointer(p);
                 }
