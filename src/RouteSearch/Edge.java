@@ -22,7 +22,6 @@ public class Edge implements Comparable<Edge>, Serializable {
     private final int speed;
     private final float length;
     private final byte travelType;
-    private final String name;
 
     /**
      *
@@ -32,7 +31,7 @@ public class Edge implements Comparable<Edge>, Serializable {
      * @param length
      * @param type
      */
-    public Edge(long from, long to, int speed, float length, byte type, String name) {
+    public Edge(long from, long to, int speed, float length, byte type) {
         if (from < 0) throw new IllegalArgumentException("node index "+from+" must be nonnegative");
         if (to < 0) throw new IllegalArgumentException("node index "+to+" must be nonnegative");
         if (Double.isNaN(length)) throw new IllegalArgumentException("length is NaN");
@@ -42,15 +41,6 @@ public class Edge implements Comparable<Edge>, Serializable {
         this.speed = speed;
         this.length = length;
         this.travelType = type;
-        this.name = name;
-    }
-
-
-    /**
-    * Returns the name of the road
-    */
-    public String getName(){
-        return name;
     }
 
     /**
@@ -58,7 +48,6 @@ public class Edge implements Comparable<Edge>, Serializable {
      */
     public double weight(TravelType type) {
         // TODO: Update to be able to calculate based on time needed to travel this edge
-        System.out.println(this.travelType);
         if(type == TravelType.VEHICLE && !getTravelTypeName(this.travelType).contains("DRIVE")){
             return Double.POSITIVE_INFINITY;
         }
@@ -74,7 +63,7 @@ public class Edge implements Comparable<Edge>, Serializable {
     /**
      * Returns either one of the two nodes (quite often the start node)
      */
-    public int either() {
+    public long either() {
         return from;
     }
 
@@ -82,7 +71,7 @@ public class Edge implements Comparable<Edge>, Serializable {
      * Returns the reference to the other node than the one given
      * @param node One of the two nodes in this Edge
      */
-    public int other(long node) {
+    public long other(long node) {
         if      (node == from)  return to;
         else if (node == to)    return from;
         else throw new IllegalArgumentException("Not an endpoint");

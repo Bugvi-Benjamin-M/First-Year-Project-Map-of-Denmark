@@ -61,14 +61,13 @@ public class Main {
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();
-
-
-            Graph graph = model.getGraph();
-            RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(graph, graph.getInt(493450751l), Enums.TravelType.VEHICLE);
-            for(Edge edge : dijk.pathTo(graph.getInt(732503177l))){
-                System.out.println(edge.getName());
-            }
         });
+
+        Graph graph = model.getGraph();
+        RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(graph, 497323568l, Enums.TravelType.VEHICLE);
+        for(Edge edge : dijk.pathTo(2626387296l)){
+            System.out.println(edge.getName());
+        }
     }
 
     private static void createControllers()
