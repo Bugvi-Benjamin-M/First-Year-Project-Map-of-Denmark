@@ -1,6 +1,9 @@
 package Controller.ToolbarControllers;
 
-import Controller.*;
+import Controller.Controller;
+import Controller.MainWindowController;
+import Controller.PreferencesController;
+import Controller.SettingsWindowController;
 import Enums.FileType;
 import Enums.ToolType;
 import Enums.ToolbarType;
@@ -8,7 +11,10 @@ import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
-import View.*;
+import View.PopupWindow;
+import View.ToolComponent;
+import View.ToolFeature;
+import View.Toolbar;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -45,6 +51,8 @@ public final class ToolbarController extends Controller {
     private final int MARGIN_SMALLEST_RIGHT = -10;
     private final int MARGIN_LARGE_RIGHT = -60;
     private final int MARGIN_TOP = 20;
+    private final int LOADING_SCREEN_OFFSET = 10;
+    private JWindow loadWindow;
 
     private ToolbarController()
     {
@@ -189,14 +197,21 @@ public final class ToolbarController extends Controller {
         }
         if (type == ToolbarType.LARGE)
             searchToolResizeEvent();
-        else
-            MenuToolController.getInstance().windowResizedEvent();
+        else MenuToolController.getInstance().windowResizedEvent();
+        calculateLoadingScreenPosition();
     }
 
     public void moveEvent()
     {
         if (type == ToolbarType.SMALL)
             MenuToolController.getInstance().windowMovedEvent();
+        calculateLoadingScreenPosition();
+    }
+
+    private void calculateLoadingScreenPosition() {
+        if(loadWindow != null) {
+            loadWindow.setLocation(toolbar.getLocationOnScreen().x + LOADING_SCREEN_OFFSET, toolbar.getLocationOnScreen().y + toolbar.getHeight() + LOADING_SCREEN_OFFSET);
+        }
     }
 
     private void removeAllComponentsFromToolbar()
@@ -496,10 +511,11 @@ public final class ToolbarController extends Controller {
 
     private void loadDefaultFile() {
         SwingWorker worker = new SwingWorker() {
-            JWindow loadWindow;
+            //JWindow loadWindow;
             @Override
             protected Object doInBackground() throws Exception {
-                loadWindow = PopupWindow.LoadingScreen("Loading Default File!", toolbar.getLocationOnScreen().x + 10, toolbar.getLocationOnScreen().y + toolbar.getHeight() + 10);
+                loadWindow = PopupWindow.LoadingScreen("Loading Default File!");
+                calculateLoadingScreenPosition();
 
                 if (PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
                     FileHandler.loadDefaultResource(false);
@@ -515,11 +531,11 @@ public final class ToolbarController extends Controller {
                 }
                 return "Done";
             }
-
             @Override
             protected void done() {
                 MainWindowController.getInstance().requestCanvasResetElements();
                 MainWindowController.getInstance().requestCanvasAdjustToDynamicBounds();
+                MainWindowController.getInstance().requestCanvasUpdatePOI();
                 GlobalValue.setMaxZoom(GlobalValue.MAX_ZOOM_DECREASE);
                 MainWindowController.getInstance().requestCanvasRepaint();
                 loadWindow.setVisible(false);
@@ -540,10 +556,11 @@ public final class ToolbarController extends Controller {
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {
             SwingWorker worker = new SwingWorker() {
-                JWindow loadWindow;
+                //JWindow loadWindow;
                 @Override
                 protected Object doInBackground() throws Exception {
-                    loadWindow = PopupWindow.LoadingScreen("Loading: " + chooser.getSelectedFile().getName(), toolbar.getLocationOnScreen().x + 10, toolbar.getLocationOnScreen().y + toolbar.getHeight() + 10);
+                    loadWindow = PopupWindow.LoadingScreen("Loading: " + chooser.getSelectedFile().getName());
+                    calculateLoadingScreenPosition();
                     try {
                         FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
                     } catch (Exception e) {
@@ -551,12 +568,11 @@ public final class ToolbarController extends Controller {
                     }
                     return "Done";
                 }
-
                 @Override
                 protected void done() {
                     MainWindowController.getInstance().requestCanvasAdjustToDynamicBounds();
                     MainWindowController.getInstance().requestCanvasResetElements();
-                    CanvasController.getInstance().updateCanvasPOI();
+                    MainWindowController.getInstance().requestCanvasUpdatePOI();
 
                     MainWindowController.getInstance().requestCanvasRepaint();
                     loadWindow.setVisible(false);
@@ -577,11 +593,11 @@ public final class ToolbarController extends Controller {
         JFileChooser chooser = PopupWindow.fileSaver(false, filters);
         if (chooser != null) {
             SwingWorker worker = new SwingWorker() {
-                JWindow loadWindow;
-
+                //JWindow loadWindow;
                 @Override
                 protected Object doInBackground() throws Exception {
-                    loadWindow = PopupWindow.LoadingScreen("Saving File: " + chooser.getSelectedFile().getName(), toolbar.getLocationOnScreen().x + 10, toolbar.getLocationOnScreen().y + toolbar.getHeight() + 10);
+                    loadWindow = PopupWindow.LoadingScreen("Saving File: " + chooser.getSelectedFile().getName());
+                    calculateLoadingScreenPosition();
                     try {
                         FileHandler.fileChooserSave(chooser.getSelectedFile().toString());
                     } catch (Exception e) {
@@ -615,6 +631,12 @@ public final class ToolbarController extends Controller {
     }
 
     public Toolbar getToolbar() { return toolbar; }
+
+    public void setLoadingScreenAlwaysOnTopStatus(boolean status) {
+        if(loadWindow != null) {
+            loadWindow.setAlwaysOnTop(status);
+        }
+    }
 
     public void resetInstance() { instance = null; }
 

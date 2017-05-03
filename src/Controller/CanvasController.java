@@ -47,7 +47,6 @@ public final class CanvasController extends Controller implements Observer {
     private Timer antiAliasingResizeTimer;
 
 
-
     private enum PanType { LEFT,
         RIGHT,
         UP,
@@ -62,6 +61,9 @@ public final class CanvasController extends Controller implements Observer {
     private CanvasFocusHandler focusHandler;
     private static double zoom_value;
     private HashSet<Element> roads;
+
+    private Cursor crossCursor;
+    private Cursor normalCursor;
 
     private CanvasController()
     {
@@ -134,6 +136,9 @@ public final class CanvasController extends Controller implements Observer {
         addInteractionHandlerToCanvas();
         addFocusHandlerToCanvas();
         toggleKeyBindings();
+        crossCursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
+        normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+        changeCanvasMouseCursorToNormal();
     }
 
     public void updateCanvasElements(){
@@ -279,7 +284,7 @@ public final class CanvasController extends Controller implements Observer {
                     }
                 });
     }
-
+    //Todo get rid of direct coupling between poiController and CanvasController
     private void poiCreationEvent(Point2D point){
 
 
@@ -292,6 +297,7 @@ public final class CanvasController extends Controller implements Observer {
         double y = point.getY()-24; //A cursor height of 24?
         point = new Point2D.Double(x, y);
         Point2D p = mapCanvas.toModelCoords(point);
+        //fixme there must be something wrong here, since the cursor swaps back to normal
         String description = PopupWindow.textInputBox(null, "Point of interest", "Enter description: ");
         if(description != null){
             if(description.length() <= 56) {
@@ -303,7 +309,7 @@ public final class CanvasController extends Controller implements Observer {
                 PointsOfInterestController.getInstance().updatePointsOfInterestBar();
                 PointsOfInterestController.getInstance().poiModeOff();
             }else{
-                PopupWindow.warningBox(null, "The message is not allowed to be longer than 56 signs.");
+                PopupWindow.warningBox(null, "The Description has to be no Longer than 56 Characters!");
             }
         }
     }
@@ -386,6 +392,10 @@ public final class CanvasController extends Controller implements Observer {
         GlobalValue.setMaxZoom(ZoomLevel.getZoomFactor() - 50);
     }
 
+    public void panToPoint(Point.Float aFloat) {
+        mapCanvas.panToPoint(aFloat);
+    }
+
     public static void repaintCanvas() {
         if (mapCanvas != null) {
             quickRepaint();
@@ -450,13 +460,15 @@ public final class CanvasController extends Controller implements Observer {
     private void mouseClickedEvent(MouseEvent event)
     {
         if(MainWindowController.getInstance().isMenuToolPopupVisible()) MainWindowController.getInstance().requestMenuToolHidePopup();
-        if(mapCanvas.hasFocus()) {
-            Point2D mousePosition = event.getPoint();
-            Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
-            mapCanvas.setCurrentPoint(mouseInModel);
-        }
+        //if(mapCanvas.hasFocus()) {
         MainWindowController.getInstance().requestSearchToolCloseList();
         mapCanvas.grabFocus();
+        Point2D mousePosition = event.getPoint();
+        Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
+        mapCanvas.setCurrentPoint(mouseInModel);
+        //}
+        //MainWindowController.getInstance().requestSearchToolCloseList();
+        //mapCanvas.grabFocus();
         if(GlobalValue.isAddNewPointActive()){
             if(SwingUtilities.isLeftMouseButton(event)) {
                 poiCreationEvent(event.getPoint());
@@ -663,11 +675,15 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     public void changeCanvasMouseCursorToPoint() {
-        if(mapCanvas != null) mapCanvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+        if(mapCanvas != null) {
+            mapCanvas.setCursor(crossCursor);
+        }
     }
 
     public void changeCanvasMouseCursorToNormal() {
-        if(mapCanvas != null) mapCanvas.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        if(mapCanvas != null) {
+            mapCanvas.setCursor(normalCursor);
+        }
     }
 
     public MapCanvas getMapCanvas() { return mapCanvas; }

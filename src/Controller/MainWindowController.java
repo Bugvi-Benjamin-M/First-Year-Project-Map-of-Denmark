@@ -192,6 +192,13 @@ public final class MainWindowController extends WindowController {
             public void windowLostFocus(WindowEvent e)
             {
                 CanvasController.getInstance().disablePopup();
+                ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(false);
+
+            }
+
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(true);
             }
         });
     }
@@ -265,6 +272,14 @@ public final class MainWindowController extends WindowController {
         return ToolbarController.getInstance().doesSearchbarHaveFocus();
     }
 
+    public void requestCanvasUpdatePOI() {
+        CanvasController.getInstance().updateCanvasPOI();
+    }
+
+    public void requestCanvasPanToPoint(Point.Float aFloat) {
+        CanvasController.getInstance().panToPoint(aFloat);
+    }
+
     private class MainWindowInteractionHandler
         extends MainWindowController.WindowInteractionHandler {
 
@@ -301,6 +316,12 @@ public final class MainWindowController extends WindowController {
         {
             super.componentHidden(e);
             CanvasController.getInstance().disablePopup();
+            ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(false);
+        }
+
+        @Override
+        public void componentShown(ComponentEvent e) {
+            ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(true);
         }
     }
 }

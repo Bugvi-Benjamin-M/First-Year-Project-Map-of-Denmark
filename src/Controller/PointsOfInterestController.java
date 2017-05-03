@@ -49,6 +49,8 @@ public final class PointsOfInterestController extends Controller {
 
     private List<POI> pointsOfInterest;
     private List<PointProfile> POIpanels;
+    private boolean isLargePOIVisible;
+    private boolean isSmallPOIVisible;
 
     private PointsOfInterestController() { super();}
 
@@ -67,6 +69,8 @@ public final class PointsOfInterestController extends Controller {
         informationBarLayout = (SpringLayout) informationBar.getLayout();
         InformationBarInteractionHandler handler = new InformationBarInteractionHandler();
         informationBar.addMouseListener(handler);
+        isLargePOIVisible = false;
+        isSmallPOIVisible = false;
     }
 
     public void setupBasePointsOfInterestBar() {
@@ -78,10 +82,12 @@ public final class PointsOfInterestController extends Controller {
     }
 
     public void setupLargePointsOfInterestBar() {
+        isLargePOIVisible = true;
         informationBar.setPreferredSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, window.getFrame().getHeight()));
         pointsOfInterestBar.specifyLayout(BoxLayout.PAGE_AXIS);
         pointsOfInterestBar.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, PROFILE_HEIGHT));
         setupLargeScrollbar();
+        pointsOfInterestBar.addNoPoiPanel();
         addPointsToVerticalPointsOfInterestBar();
         poiButtons.setPreferredSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, BUTTONS_HEIGHT));
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, poiButtons, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
@@ -93,10 +99,12 @@ public final class PointsOfInterestController extends Controller {
     }
 
     public void setupSmallPointsOfInterestBar() {
+        isSmallPOIVisible = true;
         informationBar.setPreferredSize(new Dimension(window.getFrame().getWidth(), SMALL_POINTS_OF_INTERESTBAR_HEIGHT));
         pointsOfInterestBar.specifyLayout(BoxLayout.LINE_AXIS);
         pointsOfInterestBar.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, PROFILE_HEIGHT+10));
         setupSmallScrollbar();
+        pointsOfInterestBar.addNoPoiPanel();
         addPointsToHorizontalPointsOfInterestBar();
         poiButtons.setPreferredSize(new Dimension(150, BUTTONS_HEIGHT));
         informationBarLayout.putConstraint(WEST, poiButtons, DISTANCE_FROM_SMALLINFORMATIONBAR_LEFT_EDGE_TO_BUTTONS, WEST, informationBar);
@@ -108,6 +116,8 @@ public final class PointsOfInterestController extends Controller {
     }
 
     public void clearPointsOfInterestBar() {
+        isLargePOIVisible = false;
+        isSmallPOIVisible = false;
         if(largeScroll != null) largeScroll.remove(pointsOfInterestBar);
         if(smallScroll != null) smallScroll.remove(pointsOfInterestBar);
         informationBarLayout.removeLayoutComponent(poiButtons);
@@ -116,8 +126,8 @@ public final class PointsOfInterestController extends Controller {
         informationBarLayout.removeLayoutComponent(smallScroll);
         informationBar.removeAll();
         pointsOfInterestBar.removeAll();
+        POIpanels.clear();
     }
-
     public void poiModeOn(){
         poiButtons.getNewPointButton().setForeground(ThemeHelper.color("toolActivated"));
         MainWindowController.getInstance().changeCanvasMouseCursorToPoint();
@@ -163,6 +173,7 @@ public final class PointsOfInterestController extends Controller {
                     Model.getInstance().removeAllPOI();
                     POIpanels.clear();
                     pointsOfInterestBar.removeAll();
+                    pointsOfInterestBar.addNoPoiPanel();
                     pointsOfInterestBar.revalidate();
                     pointsOfInterestBar.repaint();
                 }
@@ -223,7 +234,6 @@ public final class PointsOfInterestController extends Controller {
     public InformationBar getInformationBar() {
         return informationBar;
     }
-    //Todo figure out why elements are added multiple times
     private void addPointsToVerticalPointsOfInterestBar() {
         for(POI poi : pointsOfInterest) {
             addPOI(poi);
@@ -240,12 +250,16 @@ public final class PointsOfInterestController extends Controller {
         pointsOfInterestBar.revalidate();
     }
 
+
     public void addPOI(POI poi) {
-        PointProfile pointProfile = new PointProfile(poi.getDescription(), poi.x, poi.y);
-        pointProfile.addMouseListener(new PointsInteractionHandler(pointProfile));
-        pointProfile.getDeleteButton().addMouseListener(new PointDeleteButtonInteractionHandler(pointProfile.getDeleteButton()));
-        POIpanels.add(pointProfile);
-        pointsOfInterestBar.add(pointProfile);
+        if(isSmallPOIVisible || isLargePOIVisible) {
+            PointProfile pointProfile = new PointProfile(poi.getDescription(), poi.x, poi.y);
+            pointProfile.addMouseListener(new PointsInteractionHandler(pointProfile));
+            pointProfile.getDeleteButton().addMouseListener(new PointDeleteButtonInteractionHandler(pointProfile.getDeleteButton()));
+            POIpanels.add(pointProfile);
+            if (isLargePOIVisible) pointsOfInterestBar.addPlaceToVerticaList(pointProfile);
+            else if (isSmallPOIVisible) pointsOfInterestBar.addPlaceToHorizontalList(pointProfile);
+        }
     }
 
     public void repaintPointsOfInterestBar() {
@@ -281,8 +295,8 @@ public final class PointsOfInterestController extends Controller {
         @Override
         public void mouseClicked(MouseEvent e) {
             MainWindowController.getInstance().requestSearchToolCloseList();
-            CanvasController.getInstance().getMapCanvas().panToPoint(new Point2D.Float(point.getPOIX(), point.getPOIY()));
-            CanvasController.getInstance().repaintCanvas();
+            MainWindowController.getInstance().requestCanvasPanToPoint(new Point2D.Float(point.getPOIX(), point.getPOIY()));
+            MainWindowController.getInstance().requestCanvasRepaint();
         }
 
     }
@@ -315,10 +329,14 @@ public final class PointsOfInterestController extends Controller {
             int index = POIpanels.indexOf(point);
             Model.getInstance().removePOI(index);
             POIpanels.remove(point);
-            pointsOfInterestBar.remove(point);
+            if(POIpanels.isEmpty()) {
+                pointsOfInterestBar.removeAll();
+                pointsOfInterestBar.addNoPoiPanel();
+            } else pointsOfInterestBar.remove(point);
             pointsOfInterestBar.revalidate();
             pointsOfInterestBar.repaint();
             MainWindowController.getInstance().requestSearchToolCloseList();
+            MainWindowController.getInstance().requestCanvasRepaint();
         }
 
 
