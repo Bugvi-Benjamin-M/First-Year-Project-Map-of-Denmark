@@ -55,6 +55,7 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> nightClubs;
     private ArrayList<Pointer> fastFoods;
     private ArrayList<Pointer> railwayStations;
+    private ArrayList<Pointer> airports;
     private boolean specialRelationCase;
     private boolean isArea;
     private boolean isWikiDataAvalible;
@@ -86,6 +87,7 @@ public final class OSMHandler implements ContentHandler {
         nightClubs = new ArrayList<>();
         fastFoods = new ArrayList<>();
         railwayStations = new ArrayList<>();
+        airports = new ArrayList<>();
     }
 
     public void parseDefault(Boolean mode){
@@ -267,6 +269,11 @@ public final class OSMHandler implements ContentHandler {
                     model.getElements().get(ElementType.RAILWAY_STATION).putPointer(p);
                 }
                 railwayStations.clear();
+
+                for (Pointer p : airports){
+                    model.getElements().get(ElementType.AIRPORT_AMENITY).putPointer(p);
+                }
+                airports.clear();
             }
 
             way = new OSMWay();
@@ -354,6 +361,9 @@ public final class OSMHandler implements ContentHandler {
                     isAddress = true;
                     break;
                 case "wikidata":
+                    isWikiDataAvalible = true;
+                    break;
+                case "website": //Not the same as wikidata, but RUC dont have a wikidata-tag, but a website-tag
                     isWikiDataAvalible = true;
                     break;
                 case "tunnel":
@@ -672,6 +682,7 @@ public final class OSMHandler implements ContentHandler {
                     case NIGHT_CLUB:
                     case FAST_FOOD:
                     case RAILWAY_STATION:
+                    case AIRPORT_AMENITY:
                         addAmenity(place, false);
                         break;
                 }
@@ -1107,10 +1118,17 @@ public final class OSMHandler implements ContentHandler {
                 }
                 break;
             case AIRPORT_AMENITY:
-                polygonApprox = new PolygonApprox(way);
-                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
-                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
-                model.getElements().get(ElementType.AIRPORT_AMENITY).putPointer(p);
+                if(way == null){
+                    amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                    p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
+                    airports.add(p);
+                }
+                else{
+                    polygonApprox = new PolygonApprox(way);
+                    amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                    p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                    model.getElements().get(ElementType.AIRPORT_AMENITY).putPointer(p);
+                }
                 break;
         }
     }
