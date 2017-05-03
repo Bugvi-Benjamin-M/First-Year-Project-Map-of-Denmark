@@ -16,8 +16,8 @@ import java.io.Serializable;
  */
 public class Edge implements Comparable<Edge>, Serializable {
 
-    private final int from;
-    private final int to;
+    private final long from;
+    private final long to;
     private final int speed;
     private final float length;
     private final byte travelType;
@@ -30,7 +30,7 @@ public class Edge implements Comparable<Edge>, Serializable {
      * @param length
      * @param type
      */
-    public Edge(int from, int to, int speed, float length, byte type) {
+    public Edge(long from, long to, int speed, float length, byte type) {
         if (from < 0) throw new IllegalArgumentException("node index "+from+" must be nonnegative");
         if (to < 0) throw new IllegalArgumentException("node index "+to+" must be nonnegative");
         if (Double.isNaN(length)) throw new IllegalArgumentException("length is NaN");
