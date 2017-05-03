@@ -9,8 +9,8 @@ import java.util.List;
  */
 public class NodeGenerator {
 
-    private static final int AMOUNT_OF_NODES_DEFAULT = 15822;
-    private static final int DEPTH_DEFAULT = 8;
+    private static final int AMOUNT_OF_NODES_DEFAULT = 18788597;
+    private static final int DEPTH_DEFAULT = 14;
     private int depth;
     private int amountOfNodes;
     private Point2D.Float[] points;

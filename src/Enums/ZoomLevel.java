@@ -37,9 +37,6 @@ public enum ZoomLevel {
      */
     public static ZoomLevel getZoomLevel()
     {
-        //FIXME
-        return ZoomLevel.LEVEL_2;
-/*
         if (zoom_factor <= 150) {           // LEVEL_6
             return ZoomLevel.LEVEL_6;
         } else if (zoom_factor <= 250) {    // LEVEL_5
@@ -54,7 +51,7 @@ public enum ZoomLevel {
             return ZoomLevel.LEVEL_1;
         } else {                            // LEVEL_0
             return ZoomLevel.LEVEL_0;
-        }*/
+        }
     }
 
     /**
