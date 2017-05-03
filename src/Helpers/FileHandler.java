@@ -54,7 +54,7 @@ public class FileHandler {
                         FileHandler.class.getResourceAsStream(fileName)));
                 } else {
                     OSMHandler.getInstance().parseDefault(false);
-                    zip = new ZipInputStream(new FileInputStream(fileName));
+                    zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(fileName)));
                 }
                 try {
                     zip.getNextEntry();

@@ -291,6 +291,7 @@ public class MapCanvas extends View {
             drawNight(g);
             drawRailwayStation(g);
             drawHospital(g);
+            drawUniversity(g);
             drawAirportAmenity(g);
             drawParkingAmenity(g);
             drawPlaceOfWorship(g);
@@ -350,6 +351,7 @@ public class MapCanvas extends View {
 
             // Amenities
             drawHospital(g);
+            drawUniversity(g);
             drawAirportAmenity(g);
             drawRailwayStation(g);
             drawParkingAmenity(g);
@@ -1065,6 +1067,37 @@ public class MapCanvas extends View {
             drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
         }
     }
+
+    private void drawUniversity(Graphics2D g){
+        float scaleFactor;
+        scaleFactor = 1.7f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
+        setCurrentSection(ElementType.UNIVERSITY);
+
+        //Color and font
+        g.setColor(ThemeHelper.color("university"));
+        Font font = Helpers.FontAwesome.getFontAwesome();
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+
+        for (Element element : currentSection) {
+            Amenity amenity = (Amenity)element;
+            drawString("\uf19c" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+        }
+
+        float deltay = ((getFontMetrics(font).getHeight()* scaleFactor)/2);
+
+        //Font for drawing name
+        font = new Font("Arial", Font.ITALIC, 18);
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+        for (Element element : currentSection){
+            Amenity amenity = (Amenity)element;
+
+            String name = amenity.getName();
+            float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
+
+            drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+        }
+    }
+
     private void drawRailwayStation(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 1.7f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));

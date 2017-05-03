@@ -34,18 +34,21 @@ public class PolygonApprox implements Shape, Serializable {
 
     protected void init()
     {
-        bx = coords[0];
-        by = coords[1];
-        bw = coords[0];
-        bh = coords[1];
-        for (int i = 2; i < coords.length; i += 2) {
-            bx = Math.min(bx, coords[i]);
-            bw = Math.max(bw, coords[i]);
-            by = Math.min(by, coords[i + 1]);
-            bh = Math.max(bh, coords[i + 1]);
+        if(coords.length > 2){
+            bx = coords[0];
+            by = coords[1];
+            bw = coords[0];
+            bh = coords[1];
+            for (int i = 2; i < coords.length; i += 2) {
+                bx = Math.min(bx, coords[i]);
+                bw = Math.max(bw, coords[i]);
+                by = Math.min(by, coords[i + 1]);
+                bh = Math.max(bh, coords[i + 1]);
+            }
+            bw -= bx;
+            bh -= by;
         }
-        bw -= bx;
-        bh -= by;
+
     }
 
     public double distTo(Point2D p)
