@@ -35,12 +35,6 @@ import java.util.Map;
          return nEdges;
      }
 
-     private void validateNode(int id) {
-         if (id < 0 || id > adjacencyLists.size()) {
-             throw new ArrayIndexOutOfBoundsException("id "+id+" is out of bounds");
-         }
-     }
-
      /**
       *
       * runtime: O(W * wE)
@@ -75,13 +69,11 @@ import java.util.Map;
          if (nEdges % 1000 == 0) System.out.println("... added edge - total: "+nEdges);
      }
 
-     public Iterable<Edge> adjacent(int id) {
-         validateNode(id);
+     public Iterable<Edge> adjacent(long id) {
          return adjacencyLists.get(id);
      }
 
-     public int degree(int id) {
-         validateNode(id);
+     public int degree(long id) {
          return adjacencyLists.get(id).size();
      }
 
