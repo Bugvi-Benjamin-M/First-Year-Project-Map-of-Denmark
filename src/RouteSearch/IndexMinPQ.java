@@ -3,6 +3,14 @@ package RouteSearch;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Class details:
+ *
+ * @author Robert Sedgewick
+ * @author Kevin Wayne
+ * @author Niclas Hedam, nhed@itu.dk
+ * @version 27-04-2017
+ */
 
 public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer> {
     private int maxN;        // maximum number of elements on PQ

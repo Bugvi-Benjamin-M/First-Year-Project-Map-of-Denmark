@@ -41,6 +41,10 @@ public class GraphFactory {
         return indexOf;
     }
 
+    public long getLong(int id){
+        return references.get(id);
+    }
+
     public Graph getGraph() {
         return graph;
     }

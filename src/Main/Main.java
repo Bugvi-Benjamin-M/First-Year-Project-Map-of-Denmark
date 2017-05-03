@@ -66,7 +66,7 @@ public class Main {
         Graph graph = model.getGraph();
         RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(graph, 497323568l, Enums.TravelType.VEHICLE);
         for(Edge edge : dijk.pathTo(2626387296l)){
-            System.out.println(edge.getName());
+            System.out.println(edge.either() + " --> " + edge.other(edge.either()));
         }
     }
 

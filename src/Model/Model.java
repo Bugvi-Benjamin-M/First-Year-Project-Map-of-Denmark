@@ -64,6 +64,10 @@ public final class Model extends Observable {
         return instance;
     }
 
+    public GraphFactory getGraphFactory(){
+        return this.graphFactory;
+    }
+
     public Graph getGraph() {
         if (graphFactory == null) throw new NullPointerException("The graph has not been initialized");
         else return graphFactory.getGraph();
