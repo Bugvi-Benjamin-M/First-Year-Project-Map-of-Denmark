@@ -64,9 +64,10 @@ public class Main {
         });
 
         Graph graph = model.getGraph();
-        RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(graph, 497323568L, Enums.TravelType.VEHICLE);
-        for(Edge edge : dijk.pathTo(2626387296L)){
-            System.out.println(edge.either() + " --> " + edge.other(edge.either()));
+        RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(graph, 497325210L, Enums.TravelType.VEHICLE);
+        for(Edge edge : dijk.pathTo(715938988L)){
+            //FIXME: Road names here
+            //System.out.println(edge.either() + " --> " + edge.other(edge.either()));
         }
     }
 

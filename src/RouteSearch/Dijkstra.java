@@ -54,9 +54,7 @@ public class Dijkstra {
   // relax edge e and update pq if changed
   private void relax(Edge e) {
     long v = e.either(), w = e.other(e.either());
-    if (distTo.get(w)
-            > distTo.get(v) +
-            e.weight(type)) {
+    if (distTo.get(w) > distTo.get(v) + e.weight(type)) {
       distTo.put(w, distTo.get(v) + e.weight(type));
       edgeTo.put(w, e);
       if (pq.contains(graphFactory.getID(w))) {
