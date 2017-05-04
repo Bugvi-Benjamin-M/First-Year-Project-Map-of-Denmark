@@ -16,6 +16,7 @@ public class GraphFactory {
     private List<Road> roads;
     private List<Long> references;
     private Map<Long,List<Road>> nodeBelongs;
+    private List<Road> route;
     private Graph graph;
 
     public GraphFactory(Graph graph, List<Road> roads) {
@@ -57,5 +58,43 @@ public class GraphFactory {
 
     public List<Road> getRoads(long ref) {
         return nodeBelongs.get(ref);
+    }
+
+    public void setRoute(List<Long> refs) {
+        if (refs == null) throw new NullPointerException("References not found...");
+        route = new ArrayList<>();
+        List<Road> lastRoads, roads;
+        for (int i = 1; i < refs.size(); i++) {
+            boolean doBreak = false;
+            lastRoads = getRoads(refs.get(i-1));
+            roads = getRoads(refs.get(i));
+            for (Road last : lastRoads) {
+                for (Road road : roads) {
+                    if (last.equals(road)) {
+                        /*if (route.size() > 0 &&
+                                !route.get(route.size()-1).equals(road)) {
+                            route.add(road);
+                        } else if (route.size() == 0) route.add(road);*/
+                        route.add(road);
+                        doBreak = true;
+                        break;
+                    }
+                }
+                if (doBreak) break;
+            }
+        }
+    }
+
+    public void setRoute(Iterable<Edge> iterator) {
+        if (iterator == null) throw new NullPointerException("Iterator not found...");
+        List<Long> refs = new ArrayList<>();
+        for (Edge edge : iterator) {
+            if (edge != null) refs.add(edge.either());
+        }
+        setRoute(refs);
+    }
+
+    public List<Road> getRoute() {
+        return route;
     }
 }

@@ -41,6 +41,7 @@ public class MapCanvas extends View {
     private ArrayList<POI> poiList;
 
     private List<Path2D> coastlines;
+    private List<Road> route;
 
     private float cameraMaxLon;
     private float cameraMinLon;
@@ -165,6 +166,7 @@ public class MapCanvas extends View {
         drawLocationMarker(g2D);
         drawPOI(g2D);
         drawBoundaries(g2D);
+        drawRoute(g2D);
         Main.FPS_COUNTER.interrupt();
         DebugWindow.getInstance().setFPSLabel();
     }
@@ -218,7 +220,18 @@ public class MapCanvas extends View {
                 g.draw(path);
             }
         }
+    }
 
+    private void drawRoute(Graphics2D g) {
+        if (route != null) {
+            for (Road road: route) {
+                g.draw(road.getShape());
+            }
+        }
+    }
+
+    public void setRoute(List<Road> route) {
+        this.route = route;
     }
 
     private void drawElements(Graphics2D g) {

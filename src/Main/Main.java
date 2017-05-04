@@ -16,6 +16,7 @@ import RouteSearch.GraphFactory;
 import View.PopupWindow;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,14 +67,26 @@ public class Main {
             DebugWindow.getInstance().setLoadtimeLabel();
         });
 
+        long start = 3173503300L;
+        long end = 704484133L;
+
         GraphFactory factory = model.getGraphFactory();
-        RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(factory.getGraph(), 493450751L, Enums.TravelType.VEHICLE);
-        for(Edge edge : dijk.pathTo(2186107065L)){
-            //FIXME: Road names here
-            List<Road> road = factory.getRoads(edge.either());
-            List<Road> second = factory.getRoads(edge.other(edge.either()));
-            System.out.println(road.get(0).getName() + " --> "+second.get(0).getName());
-            //System.out.println(edge.either() + " --> " + edge.other(edge.either()));
+        RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(factory.getGraph(),
+                start, Enums.TravelType.VEHICLE);
+        Iterable<Edge> iterator = dijk.pathTo(end);
+        if (iterator != null) {
+            factory.setRoute(iterator);
+            List<Road> route = factory.getRoute();
+            if (route != null && route.size() != 0) {
+                for (Road road : route) {
+                    System.out.println(road.getName());
+                }
+                CanvasController.getInstance().getMapCanvas().setRoute(route);
+            } else {
+                System.out.println("No route found...");
+            }
+        } else {
+            System.out.println("No path found...");
         }
     }
 
