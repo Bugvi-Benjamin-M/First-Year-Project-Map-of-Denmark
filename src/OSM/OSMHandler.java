@@ -428,7 +428,6 @@ public final class OSMHandler implements ContentHandler {
     private void determineLeisure(String value) {
         switch (value) {
             case "park":
-            case "nature_reserve":
             case "dog_park":
             case "garden":
                 elementType = ElementType.PARK;
