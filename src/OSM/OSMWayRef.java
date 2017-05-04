@@ -47,6 +47,8 @@ public class OSMWayRef implements Iterable, Serializable {
         return way.indexOf(point);
     }
 
+    public int indexOf(long key) {return references.indexOf(key);}
+
     public long refOf(Point2D point) {
         int index = indexOf(point);
         if (index < 0 || index >= references.size()) return -1;

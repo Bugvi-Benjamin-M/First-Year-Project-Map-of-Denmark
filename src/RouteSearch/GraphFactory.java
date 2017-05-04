@@ -17,6 +17,7 @@ public class GraphFactory {
     private List<Long> references;
     private Map<Long,List<Road>> nodeBelongs;
     private List<Road> route;
+    private List<Long> routeRefs;
     private Graph graph;
 
     public GraphFactory(Graph graph, List<Road> roads) {
@@ -83,6 +84,7 @@ public class GraphFactory {
                 if (doBreak) break;
             }
         }
+        routeRefs = refs;
     }
 
     public void setRoute(Iterable<Edge> iterator) {
@@ -92,9 +94,14 @@ public class GraphFactory {
             if (edge != null) refs.add(edge.either());
         }
         setRoute(refs);
+        routeRefs = refs;
     }
 
     public List<Road> getRoute() {
         return route;
+    }
+
+    public List<Long> getRouteRefs() {
+        return routeRefs;
     }
 }

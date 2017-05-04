@@ -94,6 +94,30 @@ public class Road extends Element {
         return (PolygonApprox)super.getShape();
     }
 
+    public PolygonApprox getShapeSection(long start, long end) {
+        if (area) {
+
+        } else {
+            OSMWay osmWay = new OSMWay();
+            OSMWayRef way = relation.get(0);
+            int s = way.indexOf(start);
+            int e = way.indexOf(end);
+            if (s != -1 && e != -1) {
+                if (s < e) {
+                    for (int i = s; i <= e; i++) {
+                        osmWay.add(way.get(i));
+                    }
+                } else {
+                    for (int i = e; i <= s; i++) {
+                        osmWay.add(way.get(i));
+                    }
+                }
+            }
+            return new PolygonApprox(osmWay);
+        }
+        return null;
+    }
+
     public String getName() { return name; }
 
     public boolean isOneWay() {return oneWay;}

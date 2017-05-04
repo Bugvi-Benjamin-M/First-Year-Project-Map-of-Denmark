@@ -81,7 +81,7 @@ public class Main {
                 for (Road road : route) {
                     System.out.println(road.getName());
                 }
-                CanvasController.getInstance().getMapCanvas().setRoute(route);
+                CanvasController.getInstance().getMapCanvas().setRoute(route, factory.getRouteRefs());
             } else {
                 System.out.println("No route found...");
             }
