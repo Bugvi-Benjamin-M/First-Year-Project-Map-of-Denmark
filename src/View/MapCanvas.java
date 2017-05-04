@@ -874,7 +874,7 @@ public class MapCanvas extends View {
         for (Element element : currentSection) {
             Road road = (Road)element;
             g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-            PolygonApprox polygon = (PolygonApprox)road.getShape();
+            PolygonApprox polygon = road.getShape();
 
             // The polygon coords
             float[] coords = polygon.getCoords();
@@ -945,9 +945,10 @@ public class MapCanvas extends View {
             if (vectorLength(longestVectorX2 - longestVectorX1,longestVectorY2 - longestVectorY1) > stringLength) {
                 AffineTransform old = g.getTransform();
                 g.rotate(angle, drawFromX, drawFromY);
-                drawString(road.getName(), g, drawFromX, drawFromY, font, scaleFactor,false);
+                if(!road.isArea())drawString(road.getName(), g, drawFromX, drawFromY, font, scaleFactor,false);
                 g.setTransform(old);
             }
+            if(road.isArea())drawString(road.getName(), g, road.getShape().getCenterX(), road.getShape().getCenterY(), font, scaleFactor,true);
         }
         // Transparency off
         c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
