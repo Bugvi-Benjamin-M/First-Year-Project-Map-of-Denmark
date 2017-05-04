@@ -96,7 +96,20 @@ public class Road extends Element {
 
     public PolygonApprox getShapeSection(long start, long end) {
         if (area) {
-
+            int sI = -1, eI = -1, sR = -1, eR = -1;
+            for (int j = 0; j < relation.size(); j++) {
+                OSMWayRef way = relation.get(j);
+                int s = way.indexOf(start);
+                if (s != -1) {sI = s; sR = j;}
+                int e = way.indexOf(end);
+                if (e != -1) {eI = e; eR = j;}
+            }
+            if (sI != -1 && eI != -1 && sR != -1 && eR != -1) {
+                OSMWay way = new OSMWay();
+                way.add(relation.get(sR).get(sI));
+                way.add(relation.get(eR).get(eI));
+                return new PolygonApprox(way);
+            }
         } else {
             OSMWay osmWay = new OSMWay();
             OSMWayRef way = relation.get(0);
