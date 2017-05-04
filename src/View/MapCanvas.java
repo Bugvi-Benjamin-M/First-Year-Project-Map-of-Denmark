@@ -840,7 +840,6 @@ public class MapCanvas extends View {
             Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
             g.setComposite(c);
         }
-
     }
 
     private void drawBuilding(Graphics2D g, Color color) {
@@ -1035,7 +1034,7 @@ public class MapCanvas extends View {
                 for (Element element : currentSection) {
                     Amenity amenity = (Amenity)element;
                     g.setColor(ThemeHelper.color("barName"));
-                    drawString("\uf000" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
+                    drawString("\uf000" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
                 }
                 setCurrentSection(ElementType.NIGHT_CLUB);
                 for (Element element : currentSection) {
@@ -1048,6 +1047,22 @@ public class MapCanvas extends View {
                     Amenity amenity = (Amenity)element;
                     g.setColor(ThemeHelper.color("fastFoodName"));
                     drawString("\uf0f5" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
+                }
+                //Drawing names
+                float deltay = ((getFontMetrics(font).getHeight()* scaleFactor)/2);
+
+                //Font for drawing name
+                font = new Font("Arial", Font.PLAIN, 20);
+                g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+
+                setCurrentSection(ElementType.BAR);
+                for (Element element : currentSection){
+                    Amenity amenity = (Amenity)element;
+
+                    String name = amenity.getName();
+                    float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
+
+                    drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
                 }
             }
         }
