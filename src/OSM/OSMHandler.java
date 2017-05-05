@@ -138,6 +138,12 @@ public final class OSMHandler implements ContentHandler {
 
     @Override
     public void endDocument() throws SAXException {
+        idToRefWay = new HashMap<>();
+        refWay = null;
+        idToNode = new LongToPointMap(22);
+        relation = null;
+        refRelation = null;
+        nodeGenerator = new NodeGenerator();
         Graph graph = new Graph();
         for (Road road:roads) {
             graph.addEdges(road);
@@ -240,62 +246,62 @@ public final class OSMHandler implements ContentHandler {
                 for (Pointer p : cityNames) {
                     model.getElements().get(ElementType.CITY_NAME).putPointer(p);
                 }
-                cityNames.clear();
+                cityNames = new ArrayList<>();
 
                 for (Pointer p : townNames) {
                     model.getElements().get(ElementType.TOWN_NAME).putPointer(p);
                 }
-                townNames.clear();
+                townNames = new ArrayList<>();
 
                 for (Pointer p : villageNames) {
                     model.getElements().get(ElementType.VILLAGE_NAME).putPointer(p);
                 }
-                villageNames.clear();
+                villageNames = new ArrayList<>();
 
                 for (Pointer p : hamletNames) {
                     model.getElements().get(ElementType.HAMLET_NAME).putPointer(p);
                 }
-                hamletNames.clear();
+                hamletNames = new ArrayList<>();
 
                 for (Pointer p : suburbNames) {
                     model.getElements().get(ElementType.SUBURB_NAME).putPointer(p);
                 }
-                suburbNames.clear();
+                suburbNames = new ArrayList<>();
 
                 for (Pointer p : quarterNames) {
                     model.getElements().get(ElementType.QUARTER_NAME).putPointer(p);
                 }
-                quarterNames.clear();
+                quarterNames = new ArrayList<>();
 
                 for (Pointer p : neighbourhoodNames) {
                     model.getElements().get(ElementType.NEIGHBOURHOOD_NAME).putPointer(p);
                 }
-                neighbourhoodNames.clear();
+                neighbourhoodNames = new ArrayList<>();
 
                 for (Pointer p : bars) {
                     model.getElements().get(ElementType.BAR).putPointer(p);
                 }
-                bars.clear();
+                bars = new ArrayList<>();
 
                 for (Pointer p : nightClubs) {
                     model.getElements().get(ElementType.NIGHT_CLUB).putPointer(p);
                 }
-                nightClubs.clear();
+                nightClubs = new ArrayList<>();
 
                 for (Pointer p : fastFoods) {
                     model.getElements().get(ElementType.FAST_FOOD).putPointer(p);
                 }
-                fastFoods.clear();
+                fastFoods = new ArrayList<>();
 
                 for (Pointer p : railwayStations){
                     model.getElements().get(ElementType.RAILWAY_STATION).putPointer(p);
                 }
-                railwayStations.clear();
+                railwayStations = new ArrayList<>();
 
                 for (Pointer p : airports){
                     model.getElements().get(ElementType.AIRPORT_AMENITY).putPointer(p);
                 }
-                airports.clear();
+                airports = new ArrayList<>();
             }
 
             // way = new OSMWay();

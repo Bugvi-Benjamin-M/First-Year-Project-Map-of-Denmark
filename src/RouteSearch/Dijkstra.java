@@ -50,7 +50,7 @@ public class Dijkstra {
       long v = graphFactory.getLong(pq.delMin());
       for (Edge e : G.adjacent(v)) {
         relax(e);
-        System.out.println("Relaxing " + v + "; Distance = " + distTo.get(v));
+        // System.out.println("Relaxing " + v + "; Distance = " + distTo.get(v));
       }
       if (v == end) {
         return;
