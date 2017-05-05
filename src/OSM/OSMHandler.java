@@ -68,6 +68,7 @@ public final class OSMHandler implements ContentHandler {
 
     private boolean isAddress;
     private int indexCounter = 1;
+    private static final int precision = 3;
 
 
     private OSMHandler() {
@@ -862,7 +863,7 @@ public final class OSMHandler implements ContentHandler {
             PolygonApprox polygonApprox = new PolygonApprox(way);
             Rail rail;
             rail = new Rail(polygonApprox, isInTunnel);
-            for (int i = 0; i < way.size(); i += 5){
+            for (int i = 0; i < way.size(); i += precision){
                 Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), rail);
                 model.getElements().get(ElementType.RAIL).putPointer(p);
             }
@@ -872,7 +873,7 @@ public final class OSMHandler implements ContentHandler {
             Rail rail = new Rail(multiPolygonApprox, isInTunnel);
             for (int i = 0; i < relation.size(); i++){
                 if (relation.get(i) != null){
-                    for (int j = 0; j < relation.get(i).size(); j += 5){
+                    for (int j = 0; j < relation.get(i).size(); j += precision){
                         if (relation.get(i).size() > j){
                             Pointer p = new Pointer((float)relation.get(i).get(j).getX(), (float)relation.get(i).get(j).getY(), rail);
                             model.getElements().get(ElementType.RAIL).putPointer(p);
@@ -888,7 +889,7 @@ public final class OSMHandler implements ContentHandler {
         polygonApprox = new PolygonApprox(way);
         if (!isRelation) {
             Building building = new Building(polygonApprox);
-            for (int i = 0; i < way.size(); i += 5) {
+            for (int i = 0; i < way.size(); i += precision) {
                 Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), building);
                 model.getElements().get(type).putPointer(p);
             }
@@ -899,7 +900,7 @@ public final class OSMHandler implements ContentHandler {
             Building building = new Building(multiPolygonApprox);
             for (int i = 0; i < relation.size(); i++) {
                 if (relation.get(i) != null) {
-                    for (int j = 0; j < relation.get(i).size(); j += 5) {
+                    for (int j = 0; j < relation.get(i).size(); j += precision) {
                         if (relation.get(i).size() > j) {
                             Pointer p = new Pointer((float)relation.get(i).get(j).getX(), (float)relation.get(i).get(j).getY(), building);
                             model.getElements().get(type).putPointer(p);
@@ -942,7 +943,7 @@ public final class OSMHandler implements ContentHandler {
             PolygonApprox polygonApprox = new PolygonApprox(way);
             ManMade manMade;
             manMade = new ManMade(polygonApprox, area);
-            for (int i = 0; i < way.size(); i += 5){
+            for (int i = 0; i < way.size(); i += precision){
                 Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), manMade);
                 model.getElements().get(type).putPointer(p);
             }
@@ -953,7 +954,7 @@ public final class OSMHandler implements ContentHandler {
             manMade = new ManMade(multiPolygonApprox, area);
             for (int i = 0; i < relation.size(); i++){
                 if (relation.get(i) != null){
-                    for (int j = 0; j < relation.get(i).size(); j += 5){
+                    for (int j = 0; j < relation.get(i).size(); j += precision){
                         if (relation.get(i).size() > j){
                             Pointer p = new Pointer((float)relation.get(i).get(j).getX(), (float)relation.get(i).get(j).getY(), manMade);
                             model.getElements().get(type).putPointer(p);
@@ -970,10 +971,9 @@ public final class OSMHandler implements ContentHandler {
             Road road;
             if (!area) road = new Road(polygonApprox, name);
             else road = new Road(polygonApprox, name, area);
-            for (int i = 0; i < way.size(); i += 5) {
+            for (int i = 0; i < way.size(); i += precision) {
                 Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
-                model.getElements().get(ElementType.HIGHWAY).putPointer(p);
             }
         } else {
             MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
@@ -984,12 +984,11 @@ public final class OSMHandler implements ContentHandler {
                 road = new Road(multiPolygonApprox, name, true);
             for (int i = 0; i < relation.size(); i++) {
                 if (relation.get(i) != null) {
-                    for (int j = 0; j < relation.get(i).size(); j += 5) {
+                    for (int j = 0; j < relation.get(i).size(); j += precision) {
                         if (relation.get(i).size() > j) {
                             Pointer p = new Pointer((float)relation.get(i).get(j).getX(),
                                 (float)relation.get(i).get(j).getY(), road);
                             model.getElements().get(type).putPointer(p);
-                            model.getElements().get(ElementType.HIGHWAY).putPointer(p);
                         }
                     }
                 }
@@ -1005,7 +1004,7 @@ public final class OSMHandler implements ContentHandler {
                 PolygonApprox polygonApprox;
                 polygonApprox = new PolygonApprox(way);
                 Biome biome = new Biome(polygonApprox);
-                for (int i = 0; i < way.size(); i += 5) {
+                for (int i = 0; i < way.size(); i += precision) {
                     Pointer p = new Pointer((float)way.get(i).getX(),
                         (float)way.get(i).getY(), biome);
                     model.getElements().get(type).putPointer(p);
@@ -1016,7 +1015,7 @@ public final class OSMHandler implements ContentHandler {
                 Biome biome = new Biome(multiPolygonApprox);
                 for (int i = 0; i < relation.size() - 1; i++) {
                     if (relation.get(i) != null) {
-                        for (int j = 0; j < relation.get(i).size(); j += 5) {
+                        for (int j = 0; j < relation.get(i).size(); j += precision) {
                             Pointer p = new Pointer((float)relation.get(i).get(j).getX(),
                                 (float)relation.get(i).get(j).getY(), biome);
                             model.getElements().get(type).putPointer(p);

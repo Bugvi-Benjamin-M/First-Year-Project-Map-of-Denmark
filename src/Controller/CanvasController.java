@@ -20,6 +20,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
@@ -617,28 +618,64 @@ public final class CanvasController extends Controller implements Observer {
         }
     }
 
-    private String calculateNearestNeighbour(float x, float y)
-    {
-        roads = model.getElements()
-                    .get(ElementType.HIGHWAY)
-                    .getManySections(x - 1f, y - 1f, x + 1f, y + 1f);
+    private String calculateNearestNeighbour(float x, float y) {
+        ArrayList<HashSet<Element>> roads = getNearestNeighbourOfAllRoads(x, y);
+
         float minDist = 1000;
         Road e = null;
-        for (Element element : roads) {
-            Road r = (Road)element;
+        for(HashSet<Element> set : roads){
+            for (Element element : set) {
+            Road r = (Road) element;
             if (r.getShape().distTo(new Point2D.Float(x, y)) < minDist) {
                 if (!r.getName().equals("")) {
                     e = r;
-                    minDist = (float)r.getShape().distTo(new Point2D.Float(x, y));
+                    minDist = (float) r.getShape().distTo(new Point2D.Float(x, y));
+                    }
                 }
             }
         }
+
         if (minDist > MINIMUM_ACCEPTED_DISTANCE)
             return null;
         if (e != null) {
             return e.getName();
         } else
             return "error";
+    }
+
+    private ArrayList<HashSet<Element>> getNearestNeighbourOfAllRoads(float x, float y){
+        ArrayList<HashSet<Element>> roads = new ArrayList<>();
+        roads.add(getNearestNeighbour(ElementType.PRIMARY_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.SECONDARY_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.MOTORWAY, x, y));
+        roads.add(getNearestNeighbour(ElementType.MOTORWAY_LINK, x, y));
+        roads.add(getNearestNeighbour(ElementType.TERTIARY_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.TERTIARY_ROAD_LINK, x, y));
+        roads.add(getNearestNeighbour(ElementType.TRUNK_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.TERTIARY_ROAD_LINK, x, y));
+        roads.add(getNearestNeighbour(ElementType.UNCLASSIFIED_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.RESIDENTIAL_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.LIVING_STREET, x, y));
+        roads.add(getNearestNeighbour(ElementType.SERVICE_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.BUS_GUIDEWAY, x, y));
+        roads.add(getNearestNeighbour(ElementType.ESCAPE, x, y));
+        roads.add(getNearestNeighbour(ElementType.RACEWAY, x, y));
+        roads.add(getNearestNeighbour(ElementType.PEDESTRIAN_STREET, x, y));
+        roads.add(getNearestNeighbour(ElementType.TRACK, x, y));
+        roads.add(getNearestNeighbour(ElementType.STEPS, x, y));
+        roads.add(getNearestNeighbour(ElementType.FOOTWAY, x, y));
+        roads.add(getNearestNeighbour(ElementType.BRIDLEWAY, x, y));
+        roads.add(getNearestNeighbour(ElementType.CYCLEWAY, x, y));
+        roads.add(getNearestNeighbour(ElementType.PATH, x, y));
+        roads.add(getNearestNeighbour(ElementType.ROAD, x, y));
+
+        return roads;
+    }
+
+    private HashSet<Element> getNearestNeighbour(ElementType type, float x, float y){
+        return model.getElements()
+                .get(type)
+                .getManySections(x - 1f, y - 1f, x + 1f, y + 1f);
     }
 
     public void themeHasChanged()
