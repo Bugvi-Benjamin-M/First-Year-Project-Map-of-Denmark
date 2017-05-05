@@ -84,7 +84,6 @@ public final class PointsOfInterestController extends Controller {
 
     public void setupLargePointsOfInterestBar() {
         isLargePOIVisible = true;
-        //todo any strange behaviour and you should change informationBarWidth to 300;
         informationBar.setPreferredSize(new Dimension(GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight()));
         pointsOfInterestBar.specifyLayout(BoxLayout.PAGE_AXIS);
         pointsOfInterestBar.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, PROFILE_HEIGHT));

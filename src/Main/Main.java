@@ -83,6 +83,7 @@ public class Main {
         CanvasController.getInstance();
         PointsOfInterestController.getInstance();
         SettingsWindowController.getInstance();
+        JourneyPlannerBarController.getInstance();
     }
 
     public static void splashScreenDestruct()

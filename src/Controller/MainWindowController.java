@@ -177,9 +177,10 @@ public final class MainWindowController extends WindowController {
         ToolbarController.getInstance().themeHasChanged();
         CanvasController.getInstance().themeHasChanged();
         PointsOfInterestController.getInstance().themeHasChanged();
+        JourneyPlannerBarController.getInstance().themeHasChanged();
         setToolTipTheme();
         setProgressBarTheme();
-        transferFocusToMapCanvas();
+        //transferFocusToMapCanvas();
     }
 
     @Override
@@ -338,14 +339,16 @@ public final class MainWindowController extends WindowController {
         {
             super.componentResized(e);
             adjustBounds();
-            if(ToolbarController.getInstance().getType() == ToolbarType.LARGE && ToolbarController.getInstance().isPoiToolActive()) {
+            if(ToolbarController.getInstance().isPoiToolActive()) {
                 ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
                 ToolbarController.getInstance().setIsPoiToolActive(false);
-                deactivateLargePointsOfInterestInformationBar();
-            } else if(ToolbarController.getInstance().getType() == ToolbarType.SMALL && ToolbarController.getInstance().isPoiToolActive() ) {
-                ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
-                ToolbarController.getInstance().setIsPoiToolActive(false);
-                deactivateSmallPointsOfInterestInformationBar();
+                if(ToolbarController.getInstance().getType() == ToolbarType.SMALL) deactivateSmallPointsOfInterestInformationBar();
+                else if(ToolbarController.getInstance().getType() == ToolbarType.LARGE) deactivateLargePointsOfInterestInformationBar();
+            } else if(ToolbarController.getInstance().isJourneyPlannerToolActive()) {
+                ToolbarController.getInstance().getToolbar().getTool(ToolType.ROUTES).toggleActivate(false);
+                ToolbarController.getInstance().setIsJourneyPlannerToolActive(false);
+                if(ToolbarController.getInstance().getType() == ToolbarType.LARGE) deactivateLargeJourneyPlannerInformationBar();
+                else if(ToolbarController.getInstance().getType() == ToolbarType.SMALL) deactivateSmallJourneyPlannerInformationBar();
             }
 
             ToolbarController.getInstance().resizeEvent();

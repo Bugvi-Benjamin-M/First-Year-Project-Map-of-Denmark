@@ -13,7 +13,7 @@ import java.awt.*;
  * @author bugvimagnussen
  * @version 04/05/2017
  */
-public class JourneyPlannerButtons extends View {
+public class JourneyPlannerTransportTypeButtons extends View {
 
 
     private JLabel onFootButton;
@@ -26,12 +26,13 @@ public class JourneyPlannerButtons extends View {
     private final int CAR_BUTTON_WIDTH = 55;
     private final int BUTTON_HEIGHT = 45;
     private final int SPACE_BETWEEN_BUTTONS = 18;
+    private final int TITLE_FONT = 15;
     private final String ON_FOOT_TOOLTIP = "Walking!";
     private final String BICYCLE_TOOLTIP = "Cycling!";
     private final String CAR_TOOLTIP = "Driving!";
 
-    public JourneyPlannerButtons() {
-        setBorder(BorderFactory.createTitledBorder(null,"Means of Transportation:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font("Verdana", Font.PLAIN, 20), ThemeHelper.color("icon")));
+    public JourneyPlannerTransportTypeButtons() {
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),"Means of Transportation:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font("Verdana", Font.PLAIN, TITLE_FONT), ThemeHelper.color("icon")));
         onFootButton = new JLabel("\uf183");
         onFootButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
         onFootButton.setOpaque(true);
@@ -69,7 +70,7 @@ public class JourneyPlannerButtons extends View {
         carButton.setBackground(ThemeHelper.color("toolbar"));
         carButton.setForeground(ThemeHelper.color("icon"));
         carButton.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
-        setBorder(BorderFactory.createTitledBorder(null,"Means of Transportation:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font("Verdana", Font.PLAIN, 10), ThemeHelper.color("icon")));
+        setBorder(BorderFactory.createTitledBorder(null,"Means of Transportation:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font("Verdana", Font.PLAIN, TITLE_FONT), ThemeHelper.color("icon")));
     }
 
     public JLabel getOnFootButton() {

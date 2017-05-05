@@ -131,6 +131,7 @@ public class FileHandler {
             Model.getInstance().setElements(
                 (EnumMap<ElementType, KDTree>)in.readObject());
                 System.out.println( " Done loading elements ");
+
             if (isLoadingFromStart) {
                 Model.getInstance().setBound(BoundType.MIN_LONGITUDE, in.readFloat());
                 Model.getInstance().setBound(BoundType.MAX_LONGITUDE, in.readFloat());
