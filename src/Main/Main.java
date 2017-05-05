@@ -67,8 +67,8 @@ public class Main {
             DebugWindow.getInstance().setLoadtimeLabel();
         });
 
-        long start = 3173503300L;
-        long end = 704484133L;
+        long start = 2186106984L;
+        long end = 497314113L;
 
         GraphFactory factory = model.getGraphFactory();
         RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(factory.getGraph(),
