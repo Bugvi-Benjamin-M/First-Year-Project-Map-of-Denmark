@@ -79,6 +79,7 @@ public class Main {
             DebugWindow.getInstance().setLoadtimeLabel();
         });
 
+        long time = System.currentTimeMillis();
         long start = 2186106984L;
         long end = 497314113L;
 
@@ -102,6 +103,7 @@ public class Main {
         } else {
             System.out.println("No path found...");
         }
+        System.out.println("Route time: "+(System.currentTimeMillis() - time) + " ms");
     }
 
     private static void createControllers()
