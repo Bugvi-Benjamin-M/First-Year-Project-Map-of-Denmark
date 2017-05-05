@@ -18,6 +18,7 @@ public class GraphFactory {
     private Map<Long,List<Road>> nodeBelongs;
     private List<Road> route;
     private List<Long> routeRefs;
+    private List<Float> routeLength;
     private Graph graph;
 
     public GraphFactory(Graph graph, List<Road> roads) {
@@ -87,6 +88,7 @@ public class GraphFactory {
             }
         }
         routeRefs = refs;
+        setLengths();
     }
 
     public void setRoute(Iterable<Edge> iterator) {
@@ -106,4 +108,24 @@ public class GraphFactory {
     public List<Long> getRouteRefs() {
         return routeRefs;
     }
+
+    private void setLengths() {
+        if (route != null) {
+            List<Float> lengths = new LinkedList<>();
+            Map<Long,LinkedList<Edge>> map = graph.getAdjacencyMap();
+            for (int i = 1; i < routeRefs.size(); i++) {
+                List<Edge> last = map.get(routeRefs.get(i-1));
+                List<Edge> edges = map.get(routeRefs.get(i));
+                for (Edge lastEdge: last) {
+                    for (Edge edge: edges) {
+                        if(lastEdge.equals(edge))
+                            lengths.add(edge.getLength());
+                    }
+                }
+            }
+            routeLength = lengths;
+        }
+    }
+
+    public List<Float> getLengths() {return routeLength;}
 }

@@ -77,9 +77,11 @@ public class Main {
         if (iterator != null) {
             factory.setRoute(iterator);
             List<Road> route = factory.getRoute();
+            List<Float> lengths = factory.getLengths();
             if (route != null && route.size() != 0) {
-                for (Road road : route) {
-                    System.out.println(road.getName());
+                for (int i = 0; i < route.size(); i++) {
+                    System.out.println(route.get(i).getName() +
+                        ": "+lengths.get(i)+" m");
                 }
                 CanvasController.getInstance().getMapCanvas().setRoute(route, factory.getRouteRefs());
             } else {

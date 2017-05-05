@@ -33,7 +33,7 @@ public class Road extends Element {
     public Road(PolygonApprox polygon, String name)
     {
         super(polygon);
-        this.name = name;
+        this.name = name.intern();
         relation = new ArrayList<>();
     }
 

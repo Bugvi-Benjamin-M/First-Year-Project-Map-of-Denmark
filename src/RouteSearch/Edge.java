@@ -141,4 +141,7 @@ public class Edge implements Comparable<Edge>, Serializable {
         }
     }
 
+    public float getLength() {
+        return length;
+    }
 }
