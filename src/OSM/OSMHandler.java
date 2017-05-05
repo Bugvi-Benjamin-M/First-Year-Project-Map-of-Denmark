@@ -55,9 +55,11 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> nightClubs;
     private ArrayList<Pointer> fastFoods;
     private ArrayList<Pointer> railwayStations;
+    private ArrayList<Pointer> airports;
     private boolean specialRelationCase;
     private boolean isArea;
     private boolean isWikiDataAvalible;
+    private boolean isInTunnel;
 
     private String roadName;
     private String roadNumber;
@@ -85,6 +87,7 @@ public final class OSMHandler implements ContentHandler {
         nightClubs = new ArrayList<>();
         fastFoods = new ArrayList<>();
         railwayStations = new ArrayList<>();
+        airports = new ArrayList<>();
     }
 
     public void parseDefault(Boolean mode){
@@ -194,6 +197,7 @@ public final class OSMHandler implements ContentHandler {
             }
             name = "";
             isArea = false;
+            isInTunnel = false;
             place = ElementType.UNKNOWN;
             relation = new OSMRelation();
             elementType = ElementType.UNKNOWN;
@@ -265,6 +269,11 @@ public final class OSMHandler implements ContentHandler {
                     model.getElements().get(ElementType.RAILWAY_STATION).putPointer(p);
                 }
                 railwayStations.clear();
+
+                for (Pointer p : airports){
+                    model.getElements().get(ElementType.AIRPORT_AMENITY).putPointer(p);
+                }
+                airports.clear();
             }
 
             way = new OSMWay();
@@ -273,6 +282,7 @@ public final class OSMHandler implements ContentHandler {
             place = ElementType.UNKNOWN;
             idToWay.put(id, way);
             name = "";
+            isInTunnel = false;
             isWikiDataAvalible = false;
             isArea = false;
             loadedWays++;
@@ -353,6 +363,12 @@ public final class OSMHandler implements ContentHandler {
                 case "wikidata":
                     isWikiDataAvalible = true;
                     break;
+                case "website": //Not the same as wikidata, but RUC dont have a wikidata-tag, but a website-tag
+                    isWikiDataAvalible = true;
+                    break;
+                case "tunnel":
+                    if(v.equals("yes")) isInTunnel = true;
+                    break;
             }
             break;
         case "member":
@@ -412,7 +428,6 @@ public final class OSMHandler implements ContentHandler {
     private void determineLeisure(String value) {
         switch (value) {
             case "park":
-            case "nature_reserve":
             case "dog_park":
             case "garden":
                 elementType = ElementType.PARK;
@@ -666,6 +681,7 @@ public final class OSMHandler implements ContentHandler {
                     case NIGHT_CLUB:
                     case FAST_FOOD:
                     case RAILWAY_STATION:
+                    case AIRPORT_AMENITY:
                         addAmenity(place, false);
                         break;
                 }
@@ -709,13 +725,15 @@ public final class OSMHandler implements ContentHandler {
                 case CYCLEWAY:
                 case PATH:
                 case ROAD:
-                case RAIL:
                     if (isArea == false) {
                         addRoad(elementType, false, false);
                     } else {
                         addRoad(elementType, false, true);
                         isArea = false;
                     }
+                    break;
+                case RAIL:
+                    addRail(false, isInTunnel);
                     break;
                 case BUILDING:
                     addBuilding(elementType, false);
@@ -793,9 +811,11 @@ public final class OSMHandler implements ContentHandler {
                     case CYCLEWAY:
                     case PATH:
                     case ROAD:
-                    case RAIL:
                         addRoad(elementType, true, true);
                         isArea = false;
+                        break;
+                    case RAIL:
+                        addRail(true, isInTunnel);
                         break;
                     case BUILDING:
                         addBuilding(elementType, true);
@@ -837,6 +857,32 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    private void addRail(boolean isRelation, boolean isInTunnel){
+        if (!isRelation) {
+            PolygonApprox polygonApprox = new PolygonApprox(way);
+            Rail rail;
+            rail = new Rail(polygonApprox, isInTunnel);
+            for (int i = 0; i < way.size(); i += 5){
+                Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), rail);
+                model.getElements().get(ElementType.RAIL).putPointer(p);
+            }
+        } else {
+            MultiPolygonApprox multiPolygonApprox;
+            multiPolygonApprox = new MultiPolygonApprox(relation);
+            Rail rail = new Rail(multiPolygonApprox, isInTunnel);
+            for (int i = 0; i < relation.size(); i++){
+                if (relation.get(i) != null){
+                    for (int j = 0; j < relation.get(i).size(); j += 5){
+                        if (relation.get(i).size() > j){
+                            Pointer p = new Pointer((float)relation.get(i).get(j).getX(), (float)relation.get(i).get(j).getY(), rail);
+                            model.getElements().get(ElementType.RAIL).putPointer(p);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private void addBuilding(ElementType type, boolean isRelation) {
         PolygonApprox polygonApprox;
         polygonApprox = new PolygonApprox(way);
@@ -848,10 +894,6 @@ public final class OSMHandler implements ContentHandler {
             }
         } else {
             MultiPolygonApprox multiPolygonApprox;
-            relation = OSMRelation.sortWays(relation);
-            relation = OSMRelation.sortWays(relation);
-            relation = OSMRelation.sortWays(relation);
-            relation = OSMRelation.sortWays(relation);
             relation = OSMRelation.sortWays(relation);
             multiPolygonApprox = new MultiPolygonApprox(relation);
             Building building = new Building(multiPolygonApprox);
@@ -1075,10 +1117,17 @@ public final class OSMHandler implements ContentHandler {
                 }
                 break;
             case AIRPORT_AMENITY:
-                polygonApprox = new PolygonApprox(way);
-                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
-                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
-                model.getElements().get(ElementType.AIRPORT_AMENITY).putPointer(p);
+                if(way == null){
+                    amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                    p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
+                    airports.add(p);
+                }
+                else{
+                    polygonApprox = new PolygonApprox(way);
+                    amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                    p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                    model.getElements().get(ElementType.AIRPORT_AMENITY).putPointer(p);
+                }
                 break;
         }
     }

@@ -43,17 +43,15 @@ public class OSMRelation extends ArrayList<OSMWay> {
                         temp[counter] = temp[i];
                         temp[i] = tempWay;
                     }
-                    counter++;
                     break;
                 }
-                else if(lastSortedX == checkingXLast && lastSortedY == checkingYLast){
+                if(lastSortedX == checkingXLast && lastSortedY == checkingYLast){
                     Collections.reverse(temp[i]);
                     if(counter != i){
                         tempWay = temp[counter];
                         temp[counter] = temp[i];
                         temp[i] = tempWay;
                     }
-                    counter++;
                     break;
                 }
             }

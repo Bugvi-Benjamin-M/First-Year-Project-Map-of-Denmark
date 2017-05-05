@@ -75,8 +75,8 @@ public class NightTheme implements Theme {
     public Color parkingAmenity() { return new Color(0x000000); }
     public Color sportAmenity() { return new Color(0x000000); }
     public Color railwayStation() { return new Color(0x000000 ); }
-    public Color airportAmenity() { return new Color(0x787878); }
-    public Color university() { return new Color(0x787878); }
+    public Color airportAmenity() { return new Color(0x000000); }
+    public Color university() { return new Color(0x000000); }
     public Color poi() { return new Color(0x3EFF00); }
 
     public Color water()
@@ -120,7 +120,7 @@ public class NightTheme implements Theme {
         return new Color(0x044512);
     }
     public Color wetland(){
-        return new Color(0x000000);
+        return new Color(0x34445A);
     }
     public Color commonland(){
         return new Color(0x044512);
@@ -129,7 +129,7 @@ public class NightTheme implements Theme {
         return new Color(0x044512);
     }
     public Color parking(){
-        return new Color(0x000000);
+        return new Color(0x8B8B8B);
     }
     public Color sportstrack(){ return new Color(0x044512); }
 
