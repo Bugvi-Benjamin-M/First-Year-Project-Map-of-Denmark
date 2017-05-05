@@ -2,6 +2,7 @@ package Main;
 
 import Controller.*;
 import Controller.ToolbarControllers.ToolbarController;
+import Exceptions.FileWasNotFoundException;
 import Enums.OSMEnums.ElementType;
 import Helpers.DefaultSettings;
 import Helpers.FileHandler;
@@ -16,6 +17,7 @@ import RouteSearch.GraphFactory;
 import View.PopupWindow;
 
 import javax.swing.*;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,15 +42,24 @@ public class Main {
 
         Model model = Model.getInstance();
         CanvasController.getInstance().setupAsObserver();
-        FileHandler.loadDefaultResource();
-        if (!PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
+        try {
+            FileHandler.loadDefaultResource(true);
+        } catch (FileNotFoundException | FileWasNotFoundException e) {
+            e.printStackTrace();
+        }
+        loadDefaultFile = true;
+        if(!PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
             try {
                 FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
                 loadDefaultFile = false;
-            } catch (Exception e) {
-                e.printStackTrace();
-                PopupWindow.infoBox(null,"Could Not Find Preferred Startup File: "+PreferencesController.getInstance().getStartupFileNameSetting()+".\n" +
-                "Loading "+DefaultSettings.DEFAULT_FILE_NAME,"Preferred Startup File Not Found!");
+            } catch (FileWasNotFoundException | FileNotFoundException e) {
+                PopupWindow.infoBox(null, "Could Not Find Preferred Startup File: " + PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
+                        "Loading " + DefaultSettings.DEFAULT_FILE_NAME, "Preferred Startup File Not Found!");
+                try {
+                    FileHandler.loadDefaultResource(true);
+                } catch (FileNotFoundException | FileWasNotFoundException e1) {
+                    e1.printStackTrace();
+                }
                 loadDefaultFile = true;
             }
         }
@@ -61,6 +72,7 @@ public class Main {
             MainWindowController.getInstance().showWindow();
             if (loadDefaultFile) CanvasController.adjustToBounds();
             else CanvasController.adjustToDynamicBounds();
+            CanvasController.getInstance().updateCanvasPOI();
             CanvasController.repaintCanvas();
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");

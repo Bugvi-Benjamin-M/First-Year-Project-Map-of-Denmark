@@ -17,4 +17,5 @@ public class POI extends Point2D.Float{
     public String getDescription() {
         return description;
     }
+
 }

@@ -7,6 +7,7 @@ import Helpers.GlobalValue;
 import Helpers.OSDetector;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
+import Model.Elements.POI;
 import Model.Model;
 import View.PopupWindow;
 import View.Window;
@@ -20,17 +21,10 @@ import java.awt.event.*;
  */
 public final class MainWindowController extends WindowController {
 
-    private static final String MAIN_TITLE = "Google Maps RipOff v0.5";
+    private static final String MAIN_TITLE = "OSM Map Viewer v0.4";
+    private final int FROM_RESIZE_EVENT_TO_MINIMUMWIDTH = 70;
     private static MainWindowController instance;
     private JLayeredPane layeredPane;
-
-    private enum PoiType {
-        LARGE,
-        SMALL,
-        NONE;
-    }
-
-    private PoiType type;
 
     private MainWindowController() { super(); }
 
@@ -53,16 +47,16 @@ public final class MainWindowController extends WindowController {
                      .layout(new BorderLayout())
                      .icon()
                      .hide();
-        window.setMinimumWindowSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 1.9),(int) ((Toolkit.getDefaultToolkit().getScreenSize().getHeight()) /1.3)));
+        window.setMinimumWindowSize(new Dimension(ToolbarController.getSmallLargeEventWidth()-FROM_RESIZE_EVENT_TO_MINIMUMWIDTH,(int) ((Toolkit.getDefaultToolkit().getScreenSize().getHeight()) /1.3)));
         setupToolbar();
         setupCanvas();
         setupPointsOfInterestBar();
+        setupJourneyPlannerBar();
         setupLayeredPane();
         addInteractionHandlerToWindow();
         setToolTipTheme();
         toggleKeyBindings();
         hideWindow();
-        type = PoiType.NONE;
     }
 
     private void setToolTipTheme()
@@ -79,12 +73,15 @@ public final class MainWindowController extends WindowController {
         ToolbarController.getInstance().getToolbar().setOpaque(true);
         CanvasController.getInstance().getMapCanvas().setOpaque(true);
         PointsOfInterestController.getInstance().getInformationBar().setOpaque(true);
+        JourneyPlannerBarController.getInstance().getInformationBar().setOpaque(true);
         layeredPane.add(PointsOfInterestController.getInstance().getInformationBar(),
                 new Integer(2));
         layeredPane.add(CanvasController.getInstance().getMapCanvas(),
             new Integer(1));
+        layeredPane.add(JourneyPlannerBarController.getInstance().getInformationBar(),
+                new Integer(3));
         layeredPane.add(ToolbarController.getInstance().getToolbar(),
-            new Integer(3));
+            new Integer(4));
     }
 
     private void adjustBounds()
@@ -97,6 +94,8 @@ public final class MainWindowController extends WindowController {
             0, 0, window.getFrame().getWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().getInformationBar().setBounds(
             0, 0, 0, window.getFrame().getHeight());
+        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(
+                0, 0, 0, window.getFrame().getHeight());
     }
 
     private void setupToolbar()
@@ -118,32 +117,54 @@ public final class MainWindowController extends WindowController {
         PointsOfInterestController.getInstance().setupBasePointsOfInterestBar();
     }
 
+    private void setupJourneyPlannerBar() {
+        JourneyPlannerBarController.getInstance().specifyWindow(window);
+        JourneyPlannerBarController.getInstance().setupInformationBar();
+        JourneyPlannerBarController.getInstance().setupBaseJourneyPlannerBar();
+    }
+
     public void activateLargePointsOfInterestInformationBar() {
-        type = PoiType.LARGE;
-        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, GlobalValue.getInformationBarWidth(), window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
         PointsOfInterestController.getInstance().getInformationBar().revalidate();
     }
 
     public void activateSmallPointsOfInterestInformationBar() {
-        type = PoiType.SMALL;
-        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight()-150, window.getFrame().getWidth(), window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight()-GlobalValue.getSmallInformationBarHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
         PointsOfInterestController.getInstance().getInformationBar().revalidate();
     }
 
     public void deactivateSmallPointsOfInterestInformationBar() {
-        type = PoiType.NONE;
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().clearPointsOfInterestBar();
         CanvasController.repaintCanvas();
     }
 
     public void deactivateLargePointsOfInterestInformationBar() {
-        type = PoiType.NONE;
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
         PointsOfInterestController.getInstance().clearPointsOfInterestBar();
         CanvasController.repaintCanvas();
+    }
+
+    public void activateLargeJourneyPlannerInformationBar() {
+        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight());
+        JourneyPlannerBarController.getInstance().setupLargeJourneyPlannerBar();
+        JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
+    }
+
+    public void activateSmallJourneyPlannerInformationBar() {
+
+    }
+
+    public void deactivateLargeJourneyPlannerInformationBar() {
+        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
+        JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
+        CanvasController.repaintCanvas();
+    }
+
+    public void deactivateSmallJourneyPlannerInformationBar() {
+
     }
 
     public void transferFocusToMapCanvas()
@@ -205,6 +226,13 @@ public final class MainWindowController extends WindowController {
             public void windowLostFocus(WindowEvent e)
             {
                 CanvasController.getInstance().disablePopup();
+                ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(false);
+
+            }
+
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(true);
             }
         });
     }
@@ -256,6 +284,10 @@ public final class MainWindowController extends WindowController {
         ToolbarController.getInstance().repaintToolbar();
     }
 
+    public void requestSearchToolCloseList() {
+        ToolbarController.getInstance().requestSearchToolHideList();
+    }
+
     public void setProgressBarTheme() {
         UIManager.put("ProgressBar.border", BorderFactory.createLineBorder(ThemeHelper.color("border")));
         UIManager.put("ProgressBar.background", ThemeHelper.color("progressBarBackground"));
@@ -270,6 +302,34 @@ public final class MainWindowController extends WindowController {
         ToolbarController.getInstance().requestHideMenuToolPopup();
     }
 
+    public boolean doesSearchToolHaveFocus() {
+        return ToolbarController.getInstance().doesSearchbarHaveFocus();
+    }
+
+    public void requestCanvasUpdatePOI() {
+        CanvasController.getInstance().updateCanvasPOI();
+    }
+
+    public void requestCanvasPanToPoint(Point.Float aFloat) {
+        CanvasController.getInstance().panToPoint(aFloat);
+    }
+
+    public void requestPoiModeOff() {
+        PointsOfInterestController.getInstance().poiModeOff();
+    }
+
+    public void requestPoiModeOn() {
+        PointsOfInterestController.getInstance().poiModeOn();
+    }
+
+    public void requestAddPOI(POI poi) {
+        PointsOfInterestController.getInstance().addPOI(poi);
+    }
+
+    public void requestUpdatePointsOfInterestBar() {
+        PointsOfInterestController.getInstance().updatePointsOfInterestBar();
+    }
+
     private class MainWindowInteractionHandler
         extends MainWindowController.WindowInteractionHandler {
 
@@ -278,11 +338,13 @@ public final class MainWindowController extends WindowController {
         {
             super.componentResized(e);
             adjustBounds();
-            if(type == PoiType.LARGE) {
+            if(ToolbarController.getInstance().getType() == ToolbarType.LARGE && ToolbarController.getInstance().isPoiToolActive()) {
                 ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
+                ToolbarController.getInstance().setIsPoiToolActive(false);
                 deactivateLargePointsOfInterestInformationBar();
-            } else if(type == PoiType.SMALL) {
+            } else if(ToolbarController.getInstance().getType() == ToolbarType.SMALL && ToolbarController.getInstance().isPoiToolActive() ) {
                 ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
+                ToolbarController.getInstance().setIsPoiToolActive(false);
                 deactivateSmallPointsOfInterestInformationBar();
             }
 
@@ -304,6 +366,12 @@ public final class MainWindowController extends WindowController {
         {
             super.componentHidden(e);
             CanvasController.getInstance().disablePopup();
+            ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(false);
+        }
+
+        @Override
+        public void componentShown(ComponentEvent e) {
+            ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(true);
         }
     }
 }

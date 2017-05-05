@@ -34,7 +34,7 @@ public class FileHandler {
 
     private static String pathStart = OSDetector.getPathPrefix();
 
-    public static void loadResource(String fileName, boolean isLoadingFromStart)
+    public static void loadResource(String fileName, boolean isLoadingFromStart) throws FileNotFoundException, FileWasNotFoundException
     {
         try {
             if (fileExists(fileName) && fileName.endsWith(FileType.OSM.getExtension())) {
@@ -44,6 +44,7 @@ public class FileHandler {
                         new InputSource(FileHandler.class.getResourceAsStream(fileName)));
                 } else {
                     OSMHandler.getInstance().parseDefault(false);
+                    OSMHandler.getInstance().setIsInitialized(false);
                     FileHandler.loadOSM(new InputSource(pathStart + fileName));
                 }
             } else if (fileExists(fileName) && fileName.endsWith(FileType.ZIP.getExtension())) {
@@ -54,7 +55,8 @@ public class FileHandler {
                         FileHandler.class.getResourceAsStream(fileName)));
                 } else {
                     OSMHandler.getInstance().parseDefault(false);
-                    zip = new ZipInputStream(new FileInputStream(fileName));
+                    OSMHandler.getInstance().setIsInitialized(false);
+                    zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(fileName)));
                 }
                 try {
                     zip.getNextEntry();
@@ -69,20 +71,19 @@ public class FileHandler {
                     null, "Unsupported File Type. Please Select a New File!");
             }
         } catch (FileNotFoundException | FileWasNotFoundException e) {
-            e.printStackTrace();
+            throw new FileWasNotFoundException("File Not Found");
         }
     }
 
-    public static void loadDefaultResource()
-    {
+    public static void loadDefaultResource(boolean isLoadingFromStart) throws FileNotFoundException, FileWasNotFoundException {
         try {
             try {
                 long startTime = System.currentTimeMillis();
                 if (!DEBUG_MODE_ACTIVE) {
                     try {
-                        FileHandler.loadBin(GlobalValue.DEFAULT_BIN_RESOURCE, true);
+                        FileHandler.loadBin(GlobalValue.DEFAULT_BIN_RESOURCE, isLoadingFromStart);
                     } catch (FileWasNotFoundException e) {
-                        FileHandler.loadResource(GlobalValue.DEFAULT_RESOURCE, true);
+                        FileHandler.loadResource(GlobalValue.DEFAULT_RESOURCE, isLoadingFromStart);
                     }
                 }
                 long stopTime = System.currentTimeMillis();
@@ -120,7 +121,12 @@ public class FileHandler {
                 in = new ObjectInputStream(new BufferedInputStream(
                     FileHandler.class.getResourceAsStream(filename)));
             } else {
-                in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)));
+                try {
+                    in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)));
+                }catch(FileNotFoundException e){
+                    in = new ObjectInputStream(new BufferedInputStream(
+                            FileHandler.class.getResourceAsStream(filename)));
+                }
             }
             long time = -System.nanoTime();
             Model.getInstance().setElements(
@@ -209,12 +215,12 @@ public class FileHandler {
         saveBin(fileName, true);
     }
 
-    public static void fileChooserLoad(String fileName)
+    public static void fileChooserLoad(String fileName) throws FileNotFoundException, FileWasNotFoundException
     {
         loadResource(fileName, false);
     }
 
-    public static void loadOSM(InputSource inputSource)
+    public static void loadOSM(InputSource inputSource) throws FileWasNotFoundException, FileNotFoundException
     {
         try {
             Model.getInstance().clear();
@@ -223,7 +229,7 @@ public class FileHandler {
             reader.parse(inputSource);
             Model.getInstance().modelHasChanged();
         } catch (SAXException | IOException e) {
-            e.printStackTrace();
+            throw new FileWasNotFoundException("OSM File not Found");
         }
     }
 

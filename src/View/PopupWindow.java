@@ -93,10 +93,10 @@ public class PopupWindow {
     }
 
     public static String textInputBox(JFrame relativeTo, String title, String message){
-        return JOptionPane.showInputDialog(null, message, title, JOptionPane.QUESTION_MESSAGE);
+        return JOptionPane.showInputDialog(relativeTo, message, title, JOptionPane.QUESTION_MESSAGE);
     }
 
-    public static JWindow LoadingScreen(String description, int x, int y) {
+    public static JWindow LoadingScreen(String description) {
         JWindow loadWindow = new JWindow();
         JProgressBar progressBar = new JProgressBar();
         progressBar.setIndeterminate(true);
@@ -118,7 +118,7 @@ public class PopupWindow {
         text.setOpaque(true);
         loadWindow = new JWindow();
         loadWindow.setLayout(new BorderLayout());
-        loadWindow.setLocation(x,y);
+        //loadWindow.setLocation(new Point(x,y));
         loadWindow.add(BorderLayout.NORTH, icon);
         loadWindow.add(BorderLayout.CENTER, text);
         loadWindow.add(BorderLayout.SOUTH, progressBar);

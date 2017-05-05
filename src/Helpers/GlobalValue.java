@@ -83,7 +83,7 @@ public class GlobalValue {
 
     public static boolean getMarkCoastlines() { return markCoastlines; }
 
-    public static int getInformationBarWidth() {
+    public static int getLargeInformationBarWidth() {
         return 400;
     }
 
@@ -93,5 +93,9 @@ public class GlobalValue {
 
     public static boolean isAddNewPointActive() {
         return isAddNewPointActive;
+    }
+
+    public static int getSmallInformationBarHeight() {
+        return 150;
     }
 }

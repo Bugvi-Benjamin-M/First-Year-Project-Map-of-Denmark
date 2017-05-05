@@ -1,12 +1,12 @@
 package Controller.ToolbarControllers;
 
-import Controller.*;
+import Controller.CanvasController;
+import Controller.Controller;
 import Enums.ToolType;
 import Helpers.OSDetector;
 import Helpers.ThemeHelper;
 import Model.Addresses.Value;
 import Model.Model;
-import Parser.Address;
 import View.PopupWindow;
 import View.SearchTool;
 import org.json.simple.JSONArray;
@@ -19,14 +19,12 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -45,7 +43,7 @@ public final class SearchToolController extends Controller {
     private String currentQuery;
     //Todo accept down and up key when the list is not empty
     private final int[] prohibitedKeys = new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_ALT, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
-            KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_META, KeyEvent.VK_WINDOWS, KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_UNDEFINED};
+              KeyEvent.VK_META, KeyEvent.VK_DOWN, KeyEvent.VK_UP, KeyEvent.VK_WINDOWS, KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_UNDEFINED};
 
     private SearchToolController() {
         super();
@@ -104,6 +102,16 @@ public final class SearchToolController extends Controller {
         }
     }
 
+    public void closeSearchToolList() {
+        if(searchTool.getField().isPopupVisible()) {
+            setToDefaultText();
+            allowSearch = false;
+            searchTool.getField().hidePopup();
+            ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBUTTON).toggleActivate(false);
+            ToolbarController.getInstance().requestCanvasRepaint();
+        }
+    }
+
     private void addFocusListenerToSearchTool() {
         searchTool.getField().getEditor().getEditorComponent().addFocusListener(new SearchToolFocusHandler());
     }
@@ -152,7 +160,6 @@ public final class SearchToolController extends Controller {
     }
 
     private void showMatchingResults(){
-        //Todo implement proper search
         if(searchTool.getField().isPopupVisible() && searchTool.getField().getItemCount() == 0) searchTool.getField().hidePopup();
         searchTool.getField().removeAllItems();
         HashMap<Boolean , ArrayList<String>> map = Model.getInstance().getTst().keysThatMatch(currentQuery.toLowerCase());
@@ -214,13 +221,16 @@ public final class SearchToolController extends Controller {
     }
 
     private boolean checkForProhibitedKey(KeyEvent e) {
-        for(int key : prohibitedKeys) {
-            if(e.getKeyCode() == key) return true;
-        }
+        /*if(searchTool.getField().isPopupVisible()) {
+            if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) return false;
+        } else {*/
+            for (int key : prohibitedKeys) {
+                if (e.getKeyCode() == key) return true;
+            }
+        //}
         return false;
     }
     //Todo, make sure that the up and down arrows can be used when history is not empty
-    //Todo fix bug regarding the list appearing when pressing the down key. Seems to be a Windows issue.
     private void specifyKeyBindings() {
         searchTool.getField().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
@@ -229,7 +239,6 @@ public final class SearchToolController extends Controller {
                 if (checkForProhibitedKey(e)) {
                     return;
                 }
-
 
                 switch (e.getKeyChar()) {
                     case KeyEvent.VK_ENTER:
@@ -249,7 +258,6 @@ public final class SearchToolController extends Controller {
                 if (checkForProhibitedKey(e)) {
                     return;
                 }
-
                 if (e.getKeyChar() != KeyEvent.VK_BACK_SPACE && e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE) {
                     currentQuery = searchTool.getText();
                     showMatchingResults();

@@ -240,8 +240,8 @@ public final class Model extends Observable {
         this.pointsOfInterest = pointsOfInterest;
     }
 
-    public void addPOI(float x, float y, String description){
-        pointsOfInterest.add(new POI(x, y, description));
+    public void addPOI(POI poi){
+        pointsOfInterest.add(poi);
     }
 
     public void removePOI(int index){

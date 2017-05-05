@@ -115,7 +115,7 @@ public class DefaultTheme implements Theme {
         return new Color(0x90E49E);
     }
     public Color wetland(){
-        return new Color(0x2BD5CB);
+        return new Color(0x55C76B);
     }
     public Color commonland(){
         return new Color(0xC0E48F);
@@ -129,6 +129,7 @@ public class DefaultTheme implements Theme {
     }
     public Color railwayStation() { return new Color(0x00CEE4); }
     public Color airportAmenity() { return new Color(0x000000); }
+    public Color university() { return new Color(0xF37700); }
     public Color poi() { return new Color(0xE40006); }
 
     // Roads:

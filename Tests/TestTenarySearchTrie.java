@@ -19,11 +19,6 @@ public class TestTenarySearchTrie {
         assertEquals("Rued Langgaards Vej 7", output);
     }
 
-    /**
-     * This test is difficult to get to work as expected because it is not easy to return to
-     * an earlier node in the trie. The prefix has to reset itself everytime it meets a node that does not
-     * match the pattern.
-     */
     @Test
     public void testSpecialCaseKeysThatMatch(){
         TenarySearchTrie trie = new TenarySearchTrie();
@@ -71,6 +66,19 @@ public class TestTenarySearchTrie {
         TenarySearchTrie trie = new TenarySearchTrie();
         trie.put(" A B C ", new Value(0, 0f, 0f, false));
         assertEquals(null, trie.get("A BC"));
+    }
+
+    /**
+     * This test is difficult to get to work as expected because it is not easy to return to
+     * an earlier node in the trie. The prefix has to reset itself everytime it meets a node that does not
+     * match the pattern.
+     */
+    @Test
+    public void testExpectedFail() {
+        TenarySearchTrie trie = new TenarySearchTrie();
+        trie.put("AAABAAAAB", new Value(0, 0f, 0f, false));
+        int size = trie.keysThatMatch("AABAA").get(false).size();
+        assertEquals(0, size);
     }
 
 

@@ -4,8 +4,7 @@ import Helpers.ThemeHelper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.event.MouseListener;
 
 /**
  * Created by  on .
@@ -16,15 +15,32 @@ import java.util.List;
 public class PointsOfInterestBar extends View {
 
     private final int SPACE_BETWEEN_PROFILES = 10;
+    private final int HORIZONTAL_NOPOI_LABEL_NORTH_OFFSET = 35;
+    private final int NOPOI_LARGE_OFFSET = -20;
+    private final int NOPOI_SMALL_OFFSET = -10;
 
-    private List<PointProfile> points;
+    private final PointProfile NO_POI_SAVED = new PointProfile("No Points Of Interest Saved!", 0, 0);
+
+    private int orientation;
+
     public PointsOfInterestBar() {
-        points = new ArrayList<>();
         applyTheme();
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        orientation = BoxLayout.PAGE_AXIS;
+        setupNoPOIPanel();
+    }
+
+
+    public void setupNoPOIPanel() {
+        NO_POI_SAVED.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
+        NO_POI_SAVED.remove(NO_POI_SAVED.getDeleteButton());
+        for(MouseListener listener : NO_POI_SAVED.getMouseListeners()) {
+            NO_POI_SAVED.removeMouseListener(listener);
+        }
     }
 
     public void specifyLayout(int layout) {
+        orientation = layout;
         setLayout(new BoxLayout(this, layout));
     }
 
@@ -54,18 +70,25 @@ public class PointsOfInterestBar extends View {
 
     public void applyTheme() {
         setBackground(ThemeHelper.color("toolbar"));
-        for(PointProfile panel : points) {
-           panel.applyTheme();
+    }
+
+    public void addNoPoiPanel() {
+        if(orientation == BoxLayout.LINE_AXIS){
+            SpringLayout spl = (SpringLayout) NO_POI_SAVED.getLayout();
+            spl.removeLayoutComponent(NO_POI_SAVED.getDescription());
+            spl.putConstraint(SpringLayout.NORTH, NO_POI_SAVED.getDescription(), HORIZONTAL_NOPOI_LABEL_NORTH_OFFSET, SpringLayout.NORTH, NO_POI_SAVED);
+            spl.putConstraint(SpringLayout.HORIZONTAL_CENTER, NO_POI_SAVED.getDescription(), NOPOI_SMALL_OFFSET, SpringLayout.HORIZONTAL_CENTER, NO_POI_SAVED);
+            add(NO_POI_SAVED);
+        } else {
+            SpringLayout spl = (SpringLayout) NO_POI_SAVED.getLayout();
+            spl.removeLayoutComponent(NO_POI_SAVED.getDescription());
+            spl.putConstraint(SpringLayout.HORIZONTAL_CENTER, NO_POI_SAVED.getDescription(), NOPOI_SMALL_OFFSET, SpringLayout.HORIZONTAL_CENTER, NO_POI_SAVED);
+            spl.putConstraint(SpringLayout.VERTICAL_CENTER, NO_POI_SAVED.getDescription(), NOPOI_LARGE_OFFSET, SpringLayout.VERTICAL_CENTER, NO_POI_SAVED);
+            add(NO_POI_SAVED);
         }
     }
 
-    public void setPointProfiles(List<PointProfile> pointProfiles) {
-        points = pointProfiles;
-        for (PointProfile point : points) {
-            add(point);
-            createVerticalSpace(SPACE_BETWEEN_PROFILES);
-            addHorizontalGlue();
-        }
+    public void removeNoPoiPanel() {
+        remove(NO_POI_SAVED);
     }
-
 }

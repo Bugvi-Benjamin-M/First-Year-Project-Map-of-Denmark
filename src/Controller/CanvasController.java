@@ -6,6 +6,7 @@ import Enums.ZoomLevel;
 import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
 import Model.Elements.Element;
+import Model.Elements.POI;
 import Model.Elements.Road;
 import Model.Model;
 import View.CanvasPopup;
@@ -19,6 +20,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
@@ -36,13 +38,14 @@ public final class CanvasController extends Controller implements Observer {
     private CanvasPopup popup;
 
     private final int POPUP_DELAY = 1100;
-    private static final int ANTIALIASING_ZOOM_DELAY = 200;
-    private static final int COASTLINES_UPDATE_DELAY = 200;
+    private static final int ANTIALIASING_ZOOM_DELAY = 150;
+    private static final int COASTLINES_UPDATE_DELAY = 150;
+    private final int ANTIALIASING_RESIZE_DELAY = 150;
     private final float MINIMUM_ACCEPTED_DISTANCE = 0.09f;
     private Timer toolTipTimer;
     private Timer antiAliasingZoomTimer;
     private static Timer coastLinesUpdateTimer;
-
+    private Timer antiAliasingResizeTimer;
 
 
     private enum PanType { LEFT,
@@ -60,10 +63,12 @@ public final class CanvasController extends Controller implements Observer {
     private static double zoom_value;
     private HashSet<Element> roads;
 
+    private Cursor crossCursor;
+    private Cursor normalCursor;
+
     private CanvasController()
     {
         super();
-
     }
 
     public static CanvasController getInstance() {
@@ -81,6 +86,23 @@ public final class CanvasController extends Controller implements Observer {
     public void resizeEvent()
     {
         mapCanvas.revalidate();
+        if (PreferencesController.getInstance().getAntiAliasingSetting()) {
+            mapCanvas.toggleAntiAliasing(false);
+            repaintCanvas();
+        }
+        if (PreferencesController.getInstance().getAntiAliasingSetting()) {
+            if (antiAliasingResizeTimer == null) {
+                antiAliasingResizeTimer = new Timer(ANTIALIASING_RESIZE_DELAY, a -> {
+                    if (a.getSource() == antiAliasingResizeTimer) {
+                        antiAliasingResizeTimer.stop();
+                        antiAliasingResizeTimer = null;
+                        mapCanvas.toggleAntiAliasing(true);
+                        repaintCanvas();
+                    }
+                });
+                antiAliasingResizeTimer.start();
+            } else antiAliasingResizeTimer.restart();
+        }
     }
 
     public void disablePopup()
@@ -106,7 +128,7 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.setPreferredSize(new Dimension(
                 window.getFrame().getWidth(),
                 window.getFrame().getHeight() - GlobalValue.getToolbarHeight()));
-        mapCanvas.setElements(model.getElements());
+        updateCanvasElements();
         mapCanvas.setCoastLines(model.getCoastlines());
         alignCanvasAndModel();
         mapCanvas.toggleAntiAliasing(
@@ -115,12 +137,17 @@ public final class CanvasController extends Controller implements Observer {
         addInteractionHandlerToCanvas();
         addFocusHandlerToCanvas();
         toggleKeyBindings();
-
-
+        crossCursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
+        normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+        changeCanvasMouseCursorToNormal();
     }
 
     public void updateCanvasElements(){
         mapCanvas.setElements(model.getElements());
+    }
+
+    public void updateCanvasPOI(){
+        mapCanvas.setPOIs(model.getPointsOfInterest());
     }
 
     private void addInteractionHandlerToCanvas()
@@ -250,27 +277,34 @@ public final class CanvasController extends Controller implements Observer {
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        /*
-                         *  The cursor position is not the upper left corner of the boundry box
-                         *  of the cursor, but the lower left corner.
-                         *  This take that into consideration.
-                         */
-                        Point2D mousePosition = MouseInfo.getPointerInfo().getLocation();
-                        double x = mousePosition.getX();
-                        double y = mousePosition.getY()-24; //A cursor height of 24?
-                        mousePosition = new Point2D.Double(x, y);
-                        Point2D p = mapCanvas.toModelCoords(mousePosition);
-                       String description = PopupWindow.textInputBox(null, "Point of interest", "Enter description: ");
-                       if(description != null){
-                           if(description.length() < 52) {
-                               model.addPOI((float) p.getX(), (float) p.getY(), description);
-                               mapCanvas.setPOIs(model.getPointsOfInterest());
-                           }else{
-                               PopupWindow.warningBox(null, "The message is not allowed to be longer than 56 signs.");
-                           }
-                       }
+                        if(GlobalValue.isAddNewPointActive()){
+                            MainWindowController.getInstance().requestPoiModeOff();
+                        }else {
+                            MainWindowController.getInstance().requestPoiModeOn();
+                        }
                     }
                 });
+    }
+
+    private void poiCreationEvent(Point2D point){
+        double x = point.getX();
+        double y = point.getY();
+        point = new Point2D.Double(x, y);
+        Point2D p = mapCanvas.toModelCoords(point);
+        String description = PopupWindow.textInputBox(null, "Point of Interest", "Enter description: ");
+        if(description != null){
+            if(description.length() <= 56) {
+                POI poi = new POI((float) p.getX(), (float) p.getY(), description);
+                model.addPOI(poi);
+                mapCanvas.setPOIs(model.getPointsOfInterest());
+                MainWindowController.getInstance().requestAddPOI(poi);
+                repaintCanvas();
+                MainWindowController.getInstance().requestUpdatePointsOfInterestBar();
+                MainWindowController.getInstance().requestPoiModeOff();
+            }else{
+                PopupWindow.warningBox(null, "The Description has to be no Longer than 56 Characters!");
+            }
+        } else MainWindowController.getInstance().requestPoiModeOff();
     }
 
     private void panEvent(PanType type)
@@ -332,6 +366,8 @@ public final class CanvasController extends Controller implements Observer {
         double distancetoreach = 0;
         double currentdistance = 1;
         resetBounds();
+        zoom_value = 0.0;
+        GlobalValue.setZoomLevel(0.0);
         double factor = mapCanvas.getWidth() / (model.getMaxLongitude(false) - model.getMinLongitude(false));
         mapCanvas.pan(-model.getMinLongitude(true), -model.getMaxLatitude(true));
         mapCanvas.zoom(factor);
@@ -347,6 +383,10 @@ public final class CanvasController extends Controller implements Observer {
         }
         repaintCanvas();
         GlobalValue.setMaxZoom(ZoomLevel.getZoomFactor() - 50);
+    }
+
+    public void panToPoint(Point.Float aFloat) {
+        mapCanvas.panToPoint(aFloat);
     }
 
     public static void repaintCanvas() {
@@ -413,10 +453,19 @@ public final class CanvasController extends Controller implements Observer {
     private void mouseClickedEvent(MouseEvent event)
     {
         if(MainWindowController.getInstance().isMenuToolPopupVisible()) MainWindowController.getInstance().requestMenuToolHidePopup();
-        if(mapCanvas.hasFocus()) {
-            Point2D mousePosition = event.getPoint();
-            Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
-            mapCanvas.setCurrentPoint(mouseInModel);
+        MainWindowController.getInstance().requestSearchToolCloseList();
+        mapCanvas.grabFocus();
+        Point2D mousePosition = event.getPoint();
+        Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
+        mapCanvas.setCurrentPoint(mouseInModel);
+        if(GlobalValue.isAddNewPointActive()){
+            if(SwingUtilities.isLeftMouseButton(event)) {
+                poiCreationEvent(event.getPoint());
+            }
+            else if(SwingUtilities.isRightMouseButton(event)){
+                GlobalValue.setIsAddNewPointActive(false);
+                MainWindowController.getInstance().requestPoiModeOff();
+            }
         }
     }
 
@@ -465,6 +514,8 @@ public final class CanvasController extends Controller implements Observer {
 
     private void mouseMovedEvent(MouseEvent e)
     {
+        if(GlobalValue.isAddNewPointActive()) changeCanvasMouseCursorToPoint();
+        else changeCanvasMouseCursorToNormal();
         if (PreferencesController.getInstance()
                 .getCanvasRealTimeInformationSetting()) {
             if (mapCanvas.hasFocus()) {
@@ -527,12 +578,14 @@ public final class CanvasController extends Controller implements Observer {
 
     private void mouseExitedEvent(MouseEvent e) {
         disablePopup();
+        if(GlobalValue.isAddNewPointActive()) changeCanvasMouseCursorToNormal();
     }
 
     private void mouseEnteredEvent(MouseEvent e) {
         MainWindowController.getInstance().requestPointsOfInterestBarRepaint();
         MainWindowController.getInstance().requestToolbarRepaint();
-        mapCanvas.grabFocus();
+        if(!MainWindowController.getInstance().doesSearchToolHaveFocus())mapCanvas.grabFocus();
+        if(GlobalValue.isAddNewPointActive()) changeCanvasMouseCursorToPoint();
     }
 
     private void keyboardZoomEvent(double keyboardZoomFactor)
@@ -565,28 +618,64 @@ public final class CanvasController extends Controller implements Observer {
         }
     }
 
-    private String calculateNearestNeighbour(float x, float y)
-    {
-        roads = model.getElements()
-                    .get(ElementType.HIGHWAY)
-                    .getManySections(x - 1f, y - 1f, x + 1f, y + 1f);
+    private String calculateNearestNeighbour(float x, float y) {
+        ArrayList<HashSet<Element>> roads = getNearestNeighbourOfAllRoads(x, y);
+
         float minDist = 1000;
         Road e = null;
-        for (Element element : roads) {
-            Road r = (Road)element;
+        for(HashSet<Element> set : roads){
+            for (Element element : set) {
+            Road r = (Road) element;
             if (r.getShape() != null && r.getShape().distTo(new Point2D.Float(x, y)) < minDist) {
                 if (!r.getName().equals("")) {
                     e = r;
-                    minDist = (float)r.getShape().distTo(new Point2D.Float(x, y));
+                    minDist = (float) r.getShape().distTo(new Point2D.Float(x, y));
+                    }
                 }
             }
         }
+
         if (minDist > MINIMUM_ACCEPTED_DISTANCE)
             return null;
         if (e != null) {
             return e.getName();
         } else
             return "error";
+    }
+
+    private ArrayList<HashSet<Element>> getNearestNeighbourOfAllRoads(float x, float y){
+        ArrayList<HashSet<Element>> roads = new ArrayList<>();
+        roads.add(getNearestNeighbour(ElementType.PRIMARY_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.SECONDARY_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.MOTORWAY, x, y));
+        roads.add(getNearestNeighbour(ElementType.MOTORWAY_LINK, x, y));
+        roads.add(getNearestNeighbour(ElementType.TERTIARY_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.TERTIARY_ROAD_LINK, x, y));
+        roads.add(getNearestNeighbour(ElementType.TRUNK_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.TERTIARY_ROAD_LINK, x, y));
+        roads.add(getNearestNeighbour(ElementType.UNCLASSIFIED_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.RESIDENTIAL_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.LIVING_STREET, x, y));
+        roads.add(getNearestNeighbour(ElementType.SERVICE_ROAD, x, y));
+        roads.add(getNearestNeighbour(ElementType.BUS_GUIDEWAY, x, y));
+        roads.add(getNearestNeighbour(ElementType.ESCAPE, x, y));
+        roads.add(getNearestNeighbour(ElementType.RACEWAY, x, y));
+        roads.add(getNearestNeighbour(ElementType.PEDESTRIAN_STREET, x, y));
+        roads.add(getNearestNeighbour(ElementType.TRACK, x, y));
+        roads.add(getNearestNeighbour(ElementType.STEPS, x, y));
+        roads.add(getNearestNeighbour(ElementType.FOOTWAY, x, y));
+        roads.add(getNearestNeighbour(ElementType.BRIDLEWAY, x, y));
+        roads.add(getNearestNeighbour(ElementType.CYCLEWAY, x, y));
+        roads.add(getNearestNeighbour(ElementType.PATH, x, y));
+        roads.add(getNearestNeighbour(ElementType.ROAD, x, y));
+
+        return roads;
+    }
+
+    private HashSet<Element> getNearestNeighbour(ElementType type, float x, float y){
+        return model.getElements()
+                .get(type)
+                .getManySections(x - 1f, y - 1f, x + 1f, y + 1f);
     }
 
     public void themeHasChanged()
@@ -613,11 +702,15 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     public void changeCanvasMouseCursorToPoint() {
-        if(mapCanvas != null) mapCanvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+        if(mapCanvas != null) {
+            mapCanvas.setCursor(crossCursor);
+        }
     }
 
     public void changeCanvasMouseCursorToNormal() {
-        if(mapCanvas != null) mapCanvas.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        if(mapCanvas != null) {
+            mapCanvas.setCursor(normalCursor);
+        }
     }
 
     public MapCanvas getMapCanvas() { return mapCanvas; }

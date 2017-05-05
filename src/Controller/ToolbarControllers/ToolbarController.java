@@ -1,14 +1,21 @@
 package Controller.ToolbarControllers;
 
-import Controller.*;
+import Controller.Controller;
+import Controller.MainWindowController;
+import Controller.PreferencesController;
+import Controller.SettingsWindowController;
 import Enums.FileType;
 import Enums.ToolType;
 import Enums.ToolbarType;
+import Exceptions.FileWasNotFoundException;
 import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
-import View.*;
+import View.PopupWindow;
+import View.ToolComponent;
+import View.ToolFeature;
+import View.Toolbar;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -17,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
 
 import static javax.swing.SpringLayout.*;
 
@@ -29,12 +37,15 @@ import static javax.swing.SpringLayout.*;
  */
 public final class ToolbarController extends Controller {
 
-    private static final int SMALL_LARGE_EVENT_WIDTH = (int) ((Toolkit.getDefaultToolkit().getScreenSize().width) / 1.8);
+
+    private static final int SMALL_LARGE_EVENT_WIDTH = (int) (0.133036*Toolkit.getDefaultToolkit().getScreenSize().getWidth() + 814.714);
 
     private Toolbar toolbar;
     private SpringLayout toolbarLayout;
     private static ToolbarController instance;
     private boolean poiToolActive;
+    private boolean journeyPlannerToolActive;
+
 
     private ToolbarType type;
 
@@ -42,9 +53,9 @@ public final class ToolbarController extends Controller {
     private final int MARGIN_MEDIUM_LEFT = 35;
     private final int MARGIN_SMALL_RIGHT = -20;
     private final int MARGIN_SMALLEST_LEFT = 10;
-    private final int MARGIN_SMALLEST_RIGHT = -10;
-    private final int MARGIN_LARGE_RIGHT = -60;
     private final int MARGIN_TOP = 20;
+    private final int LOADING_SCREEN_OFFSET = 10;
+    private JWindow loadWindow;
 
     private ToolbarController()
     {
@@ -61,10 +72,15 @@ public final class ToolbarController extends Controller {
         return instance;
     }
 
+    public static int getSmallLargeEventWidth() {
+        return SMALL_LARGE_EVENT_WIDTH;
+    }
+
     public void setupToolbar(ToolbarType type)
     {
         toolbar = new Toolbar();
         poiToolActive = false;
+        journeyPlannerToolActive = false;
         toolbarLayout = toolbar.getLayout();
         toolbar.setPreferredSize(new Dimension(window.getFrame().getWidth(),
             GlobalValue.getToolbarHeight()));
@@ -189,14 +205,21 @@ public final class ToolbarController extends Controller {
         }
         if (type == ToolbarType.LARGE)
             searchToolResizeEvent();
-        else
-            MenuToolController.getInstance().windowResizedEvent();
+        else MenuToolController.getInstance().windowResizedEvent();
+        calculateLoadingScreenPosition();
     }
 
     public void moveEvent()
     {
         if (type == ToolbarType.SMALL)
             MenuToolController.getInstance().windowMovedEvent();
+        calculateLoadingScreenPosition();
+    }
+
+    private void calculateLoadingScreenPosition() {
+        if(loadWindow != null) {
+            loadWindow.setLocation(toolbar.getLocationOnScreen().x + LOADING_SCREEN_OFFSET, toolbar.getLocationOnScreen().y + toolbar.getHeight() + LOADING_SCREEN_OFFSET);
+        }
     }
 
     private void removeAllComponentsFromToolbar()
@@ -277,8 +300,6 @@ public final class ToolbarController extends Controller {
     {
         SearchToolController.getInstance().searchToolFixedSizeEvent();
         ToolComponent search = toolbar.getTool(ToolType.SEARCHBAR);
-        //toolbarLayout.putConstraint(EAST, search, MARGIN_SMALLEST_RIGHT, WEST,
-          //  tool);
         toolbarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, search, 0 , SpringLayout.HORIZONTAL_CENTER, toolbar);
         toolbarLayout.putConstraint(SpringLayout.VERTICAL_CENTER, search, 0,
             SpringLayout.VERTICAL_CENTER, toolbar);
@@ -435,6 +456,10 @@ public final class ToolbarController extends Controller {
         poiToolActive = status;
     }
 
+    public boolean isPoiToolActive() {
+        return poiToolActive;
+    }
+
     private void searchButtonEvent()
     {
         SearchToolController.getInstance().searchActivatedEvent();
@@ -445,7 +470,7 @@ public final class ToolbarController extends Controller {
             toolbar.getTool(ToolType.POI).toggleActivate(true);
             if(type == ToolbarType.LARGE) MainWindowController.getInstance().activateLargePointsOfInterestInformationBar();
             else if(type == ToolbarType.SMALL) MainWindowController.getInstance().activateSmallPointsOfInterestInformationBar();
-            MainWindowController.getInstance().transferFocusToInformationBar();
+            //MainWindowController.getInstance().transferFocusToInformationBar();
             poiToolActive = true;
         } else {
             toolbar.getTool(ToolType.POI).toggleActivate(false);
@@ -456,11 +481,19 @@ public final class ToolbarController extends Controller {
         }
 
     }
-
+    //Todo need to deal with the case when one is active and the other is activated
     private void routesToolActivatedEvent() {
-        toolbar.getTool(ToolType.ROUTES).toggleActivate(true);
-        PopupWindow.infoBox(null, "Routes tool activated", "Temporary popup");
-        toolbar.getTool(ToolType.ROUTES).toggleActivate(false);
+        if(!journeyPlannerToolActive) {
+            toolbar.getTool(ToolType.ROUTES).toggleActivate(true);
+            if(type == ToolbarType.LARGE) MainWindowController.getInstance().activateLargeJourneyPlannerInformationBar();
+            else if(type == ToolbarType.SMALL) MainWindowController.getInstance().activateSmallJourneyPlannerInformationBar();
+            journeyPlannerToolActive = true;
+        } else {
+            toolbar.getTool(ToolType.ROUTES).toggleActivate(false);
+            if(type == ToolbarType.LARGE) MainWindowController.getInstance().deactivateLargeJourneyPlannerInformationBar();
+            else if(type == ToolbarType.SMALL) MainWindowController.getInstance().deactivateSmallJourneyPlannerInformationBar();
+            journeyPlannerToolActive = false;
+        }
     }
 
     private void menuEvent()
@@ -494,30 +527,30 @@ public final class ToolbarController extends Controller {
 
     private void loadDefaultFile() {
         SwingWorker worker = new SwingWorker() {
-            JWindow loadWindow;
             @Override
             protected Object doInBackground() throws Exception {
-                loadWindow = PopupWindow.LoadingScreen("Loading Default File!", 10, toolbar.getLocationOnScreen().y + toolbar.getHeight() + 10);
+                loadWindow = PopupWindow.LoadingScreen("Loading Default File!");
+                calculateLoadingScreenPosition();
 
                 if (PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
-                    FileHandler.loadDefaultResource();
+                    FileHandler.loadDefaultResource(false);
                 } else {
                     try {
                         FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
-                    } catch (Exception e) {
+                    } catch (FileNotFoundException | FileWasNotFoundException e) {
                         PopupWindow.infoBox(null, "Could Not Find Preferred Default File: " +
                                 PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
                                 "Loading Danmark.bin.", "File Not Found");
-                        FileHandler.loadDefaultResource();
+                        FileHandler.loadDefaultResource(false);
                     }
                 }
                 return "Done";
             }
-
             @Override
             protected void done() {
                 MainWindowController.getInstance().requestCanvasResetElements();
                 MainWindowController.getInstance().requestCanvasAdjustToDynamicBounds();
+                MainWindowController.getInstance().requestCanvasUpdatePOI();
                 GlobalValue.setMaxZoom(GlobalValue.MAX_ZOOM_DECREASE);
                 MainWindowController.getInstance().requestCanvasRepaint();
                 loadWindow.setVisible(false);
@@ -526,31 +559,6 @@ public final class ToolbarController extends Controller {
         };
 
         worker.execute();
-
-        //Todo discuss splashscreen. Is blank
-        /*Main.splashScreenInit();
-        SwingUtilities.invokeLater(() -> {
-            MainWindowController.getInstance().hideWindow();
-            if(PreferencesController.getInstance().getStartupFileNameSetting().equals(DefaultSettings.DEFAULT_FILE_NAME)) {
-                FileHandler.loadDefaultResource();
-            } else {
-                try {
-                    FileHandler.fileChooserLoad(PreferencesController.getInstance().getStartupFilePathSetting());
-                } catch (Exception e) {
-                    PopupWindow.infoBox(null, "Could Not Find Preferred Default File: " +
-                    PreferencesController.getInstance().getStartupFileNameSetting() + ".\n" +
-                            "Loading Danmark.bin.", "File Not Found");
-                    FileHandler.loadDefaultResource();
-                }
-            }
-            MainWindowController.getInstance().requestCanvasResetElements();
-            MainWindowController.getInstance().requestCanvasRepaint();
-            //todo bounds can't adjust, messes up zoom level
-            GlobalValue.setMaxZoom(GlobalValue.MAX_ZOOM_DECREASE);
-            MainWindowController.getInstance().showWindow();
-            Main.splashScreenDestruct();
-        });*/
-
     }
 
     private void loadNewFile()
@@ -562,13 +570,30 @@ public final class ToolbarController extends Controller {
         };
         JFileChooser chooser = PopupWindow.fileLoader(false, filters);
         if (chooser != null) {
-            try {
-                FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
-                CanvasController.adjustToDynamicBounds();
-                CanvasController.getInstance().updateCanvasElements();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            SwingWorker worker = new SwingWorker() {
+                @Override
+                protected Object doInBackground() throws Exception {
+                    loadWindow = PopupWindow.LoadingScreen("Loading: " + chooser.getSelectedFile().getName());
+                    calculateLoadingScreenPosition();
+                    try {
+                        FileHandler.fileChooserLoad(chooser.getSelectedFile().toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return "Done";
+                }
+                @Override
+                protected void done() {
+                    MainWindowController.getInstance().requestCanvasAdjustToDynamicBounds();
+                    MainWindowController.getInstance().requestCanvasResetElements();
+                    MainWindowController.getInstance().requestCanvasUpdatePOI();
+
+                    MainWindowController.getInstance().requestCanvasRepaint();
+                    loadWindow.setVisible(false);
+                    loadWindow = null;
+                }
+            };
+            worker.execute();
         }
     }
 
@@ -581,14 +606,29 @@ public final class ToolbarController extends Controller {
         };
         JFileChooser chooser = PopupWindow.fileSaver(false, filters);
         if (chooser != null) {
-            try {
-                FileHandler.fileChooserSave(chooser.getSelectedFile().toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        if (type == ToolbarType.LARGE)
-            toolbar.getTool(ToolType.SAVE).toggleActivate(false);
+            SwingWorker worker = new SwingWorker() {
+                @Override
+                protected Object doInBackground() throws Exception {
+                    loadWindow = PopupWindow.LoadingScreen("Saving File: " + chooser.getSelectedFile().getName());
+                    calculateLoadingScreenPosition();
+                    try {
+                        FileHandler.fileChooserSave(chooser.getSelectedFile().toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return "Done";
+                }
+
+                @Override
+                protected void done() {
+                    loadWindow.setVisible(false);
+                    loadWindow = null;
+                    if (type == ToolbarType.LARGE)
+                        toolbar.getTool(ToolType.SAVE).toggleActivate(false);
+                }
+            };
+            worker.execute();
+        } else if (type == ToolbarType.LARGE) toolbar.getTool(ToolType.SAVE).toggleActivate(false);
     }
 
 
@@ -604,6 +644,12 @@ public final class ToolbarController extends Controller {
     }
 
     public Toolbar getToolbar() { return toolbar; }
+
+    public void setLoadingScreenAlwaysOnTopStatus(boolean status) {
+        if(loadWindow != null) {
+            loadWindow.setAlwaysOnTop(status);
+        }
+    }
 
     public void resetInstance() { instance = null; }
 
@@ -623,6 +669,10 @@ public final class ToolbarController extends Controller {
                     PreferencesController.getInstance().getKeyBindingsSetting());
             }
         }
+    }
+
+    public void requestSearchToolHideList() {
+        SearchToolController.getInstance().closeSearchToolList();
     }
 
     private void mouseEnteredTool(ToolType type, MouseEvent e) {
@@ -704,7 +754,7 @@ public final class ToolbarController extends Controller {
                 }
                 toolEvent(toolType);
             }
-
+            requestSearchToolHideList();
         }
 
         @Override
@@ -712,7 +762,7 @@ public final class ToolbarController extends Controller {
             super.mouseEntered(e);
             if(tool != null) {
                 mouseEnteredTool(toolType, e);
-                tool.grabFocus();
+                if(!doesSearchbarHaveFocus()) tool.grabFocus();
             }
 
 
@@ -752,33 +802,34 @@ public final class ToolbarController extends Controller {
             super.mouseClicked(e);
             if(isMenuToolPopupVisible()) requestHideMenuToolPopup();
             toolbar.grabFocus();
+            requestSearchToolHideList();
         }
 
         @Override
         public void mousePressed(MouseEvent e)
         {
             super.mousePressed(e);
-            toolbar.grabFocus();
+            if(!doesSearchbarHaveFocus()) toolbar.grabFocus();
         }
 
         @Override
         public void mouseReleased(MouseEvent e)
         {
             super.mouseReleased(e);
-            toolbar.grabFocus();
+            if(!doesSearchbarHaveFocus()) toolbar.grabFocus();
         }
 
         @Override
         public void mouseDragged(MouseEvent e)
         {
             super.mouseDragged(e);
-            toolbar.grabFocus();
+            if(!doesSearchbarHaveFocus()) toolbar.grabFocus();
         }
 
         @Override
         public void mouseEntered(MouseEvent e) {
             super.mouseEntered(e);
-            toolbar.grabFocus();
+            if(!doesSearchbarHaveFocus()) toolbar.grabFocus();
         }
     }
 }
