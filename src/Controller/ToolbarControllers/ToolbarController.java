@@ -44,6 +44,8 @@ public final class ToolbarController extends Controller {
     private SpringLayout toolbarLayout;
     private static ToolbarController instance;
     private boolean poiToolActive;
+    private boolean journeyPlannerToolActive;
+
 
     private ToolbarType type;
 
@@ -78,6 +80,7 @@ public final class ToolbarController extends Controller {
     {
         toolbar = new Toolbar();
         poiToolActive = false;
+        journeyPlannerToolActive = false;
         toolbarLayout = toolbar.getLayout();
         toolbar.setPreferredSize(new Dimension(window.getFrame().getWidth(),
             GlobalValue.getToolbarHeight()));
@@ -467,7 +470,7 @@ public final class ToolbarController extends Controller {
             toolbar.getTool(ToolType.POI).toggleActivate(true);
             if(type == ToolbarType.LARGE) MainWindowController.getInstance().activateLargePointsOfInterestInformationBar();
             else if(type == ToolbarType.SMALL) MainWindowController.getInstance().activateSmallPointsOfInterestInformationBar();
-            MainWindowController.getInstance().transferFocusToInformationBar();
+            //MainWindowController.getInstance().transferFocusToInformationBar();
             poiToolActive = true;
         } else {
             toolbar.getTool(ToolType.POI).toggleActivate(false);
@@ -478,11 +481,19 @@ public final class ToolbarController extends Controller {
         }
 
     }
-
+    //Todo need to deal with the case when one is active and the other is activated
     private void routesToolActivatedEvent() {
-        toolbar.getTool(ToolType.ROUTES).toggleActivate(true);
-        PopupWindow.infoBox(null, "Routes tool activated", "Temporary popup");
-        toolbar.getTool(ToolType.ROUTES).toggleActivate(false);
+        if(!journeyPlannerToolActive) {
+            toolbar.getTool(ToolType.ROUTES).toggleActivate(true);
+            if(type == ToolbarType.LARGE) MainWindowController.getInstance().activateLargeJourneyPlannerInformationBar();
+            else if(type == ToolbarType.SMALL) MainWindowController.getInstance().activateSmallJourneyPlannerInformationBar();
+            journeyPlannerToolActive = true;
+        } else {
+            toolbar.getTool(ToolType.ROUTES).toggleActivate(false);
+            if(type == ToolbarType.LARGE) MainWindowController.getInstance().deactivateLargeJourneyPlannerInformationBar();
+            else if(type == ToolbarType.SMALL) MainWindowController.getInstance().deactivateSmallJourneyPlannerInformationBar();
+            journeyPlannerToolActive = false;
+        }
     }
 
     private void menuEvent()

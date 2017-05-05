@@ -35,7 +35,6 @@ public final class PointsOfInterestController extends Controller {
     private final int DISTANCE_BETWEEN_TOOLBAR_AND_BUTTONS = GlobalValue.getToolbarHeight() + 10;
     private final int DISTANCE_BETWEEN_BUTTONS_AND_SCROLLPANE = 60;
     private final int SCROLLBAR_SPEED = 14;
-    private final int SMALL_POINTS_OF_INTERESTBAR_HEIGHT = 150;
     private final int DISTANCE_FROM_SMALLINFORMATIONBAR_LEFT_EDGE_TO_BUTTONS = 25;
     private final int DISTANCE_FROM_SMALLPOIBARTOP_TO_BUTTONS = 35;
     private final int SMALL_SCROLLBAR_HEIGHT = 110;
@@ -86,7 +85,7 @@ public final class PointsOfInterestController extends Controller {
     public void setupLargePointsOfInterestBar() {
         isLargePOIVisible = true;
         //todo any strange behaviour and you should change informationBarWidth to 300;
-        informationBar.setPreferredSize(new Dimension(GlobalValue.getInformationBarWidth(), window.getFrame().getHeight()));
+        informationBar.setPreferredSize(new Dimension(GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight()));
         pointsOfInterestBar.specifyLayout(BoxLayout.PAGE_AXIS);
         pointsOfInterestBar.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, PROFILE_HEIGHT));
         setupLargeScrollbar();
@@ -102,7 +101,7 @@ public final class PointsOfInterestController extends Controller {
 
     public void setupSmallPointsOfInterestBar() {
         isSmallPOIVisible = true;
-        informationBar.setPreferredSize(new Dimension(window.getFrame().getWidth(), SMALL_POINTS_OF_INTERESTBAR_HEIGHT));
+        informationBar.setPreferredSize(new Dimension(window.getFrame().getWidth(), GlobalValue.getSmallInformationBarHeight()));
         pointsOfInterestBar.specifyLayout(BoxLayout.LINE_AXIS);
         pointsOfInterestBar.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, PROFILE_HEIGHT+10));
         setupSmallScrollbar();

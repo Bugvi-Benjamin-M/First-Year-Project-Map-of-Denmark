@@ -73,6 +73,7 @@ public final class MainWindowController extends WindowController {
         ToolbarController.getInstance().getToolbar().setOpaque(true);
         CanvasController.getInstance().getMapCanvas().setOpaque(true);
         PointsOfInterestController.getInstance().getInformationBar().setOpaque(true);
+        JourneyPlannerBarController.getInstance().getInformationBar().setOpaque(true);
         layeredPane.add(PointsOfInterestController.getInstance().getInformationBar(),
                 new Integer(2));
         layeredPane.add(CanvasController.getInstance().getMapCanvas(),
@@ -119,16 +120,17 @@ public final class MainWindowController extends WindowController {
     private void setupJourneyPlannerBar() {
         JourneyPlannerBarController.getInstance().specifyWindow(window);
         JourneyPlannerBarController.getInstance().setupInformationBar();
+        JourneyPlannerBarController.getInstance().setupBaseJourneyPlannerBar();
     }
 
     public void activateLargePointsOfInterestInformationBar() {
-        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, GlobalValue.getInformationBarWidth(), window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
         PointsOfInterestController.getInstance().getInformationBar().revalidate();
     }
 
     public void activateSmallPointsOfInterestInformationBar() {
-        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight()-150, window.getFrame().getWidth(), window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight()-GlobalValue.getSmallInformationBarHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
         PointsOfInterestController.getInstance().getInformationBar().revalidate();
     }
@@ -146,10 +148,22 @@ public final class MainWindowController extends WindowController {
     }
 
     public void activateLargeJourneyPlannerInformationBar() {
-
+        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight());
+        JourneyPlannerBarController.getInstance().setupLargeJourneyPlannerBar();
+        JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
     }
 
     public void activateSmallJourneyPlannerInformationBar() {
+
+    }
+
+    public void deactivateLargeJourneyPlannerInformationBar() {
+        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
+        JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
+        CanvasController.repaintCanvas();
+    }
+
+    public void deactivateSmallJourneyPlannerInformationBar() {
 
     }
 
