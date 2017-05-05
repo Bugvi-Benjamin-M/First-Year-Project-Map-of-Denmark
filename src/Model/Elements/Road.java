@@ -80,14 +80,25 @@ public class Road extends Element {
 
     public PolygonApprox getShape() {
         if (super.getShape() == null) {
-            if (area) {
+            if (relation.size() > 1) {
+                //FIXME
                 OSMRelation osmRelation = new OSMRelation(12L);
                 for (OSMWayRef way: relation) {
-                    OSMWay osmway = way.getWay();
-                    if (osmway != null) osmRelation.add(osmway);
+                    if(way != null){
+                        OSMWay osmway = way.getWay();
+                        if (osmway != null) osmRelation.add(osmway);
+                    }
                 }
-                super.setShape(new MultiPolygonApprox(osmRelation));
-            } else {
+                if(osmRelation.size() == 0){
+                    return null;
+                }else if(osmRelation.size() == 1){
+                    super.setShape(new PolygonApprox(relation.get(0).getWay()));
+
+                }else{
+                    super.setShape(new MultiPolygonApprox(osmRelation));
+                }
+
+            } else if (relation.size() == 1) {
                 super.setShape(new PolygonApprox(relation.get(0).getWay()));
             }
         }

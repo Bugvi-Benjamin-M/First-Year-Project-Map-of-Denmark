@@ -16,6 +16,7 @@ import Model.Model;
 public class Dijkstra {
   private HashMap<Long, Double> distTo;
   private HashMap<Long, Edge> edgeTo;
+  private long end;
 
   private IndexMinPQ<Double> pq; // priority queue of vertices
   private TravelType type;
@@ -30,24 +31,30 @@ public class Dijkstra {
    * @throws IllegalArgumentException if an edge weight is negative
    * @throws IllegalArgumentException unless {@code 0 <= s < V}
    */
-  public Dijkstra(Graph G, long s, TravelType type) {
+  public Dijkstra(Graph G, long start, long end, TravelType type) {
     distTo = new HashMap<Long, Double>();
     edgeTo = new HashMap<Long, Edge>();
     this.type = type;
     graphFactory = Model.getInstance().getGraphFactory();
+    this.end = end;
 
     for (long v : G.getAdjacencyMap().keySet()) {
       distTo.put(v, Double.POSITIVE_INFINITY);
     }
-    distTo.put(s, 0.0);
+    distTo.put(start, 0.0);
 
     // relax vertices in order of distance from s
     pq = new IndexMinPQ<Double>(G.getNumberOfNodes());
-    pq.insert(graphFactory.getID(s), distTo.get(s));
+    pq.insert(graphFactory.getID(start), distTo.get(start));
     while (!pq.isEmpty()) {
       long v = graphFactory.getLong(pq.delMin());
-      for (Edge e : G.adjacent(v))
+      for (Edge e : G.adjacent(v)) {
         relax(e);
+        System.out.println("Relaxing " + v + "; Distance = " + distTo.get(v));
+      }
+      if (v == end) {
+        return;
+      }
     }
   }
 
@@ -85,7 +92,7 @@ public class Dijkstra {
    *         {@code s} to vertex {@code v}; {@code false} otherwise
    * @throws IllegalArgumentException unless {@code 0 <= v < V}
    */
-  public boolean hasPathTo(long v) {
+  private boolean hasPathTo(long v) {
     return distTo.get(v) < Double.POSITIVE_INFINITY;
   }
 
@@ -98,11 +105,11 @@ public class Dijkstra {
    * v} as an iterable of edges, and {@code null} if no such path
    * @throws IllegalArgumentException unless {@code 0 <= v < V}
    */
-  public Iterable<Edge> pathTo(long v) {
-    if (!hasPathTo(v))
+  public Iterable<Edge> path() {
+    if (!hasPathTo(end))
       return null;
     Stack<Edge> path = new Stack<Edge>();
-    for (Edge e = edgeTo.get(v); e != null; e = edgeTo.get(e.either())) {
+    for (Edge e = edgeTo.get(end); e != null; e = edgeTo.get(e.either())) {
       path.push(e);
     }
     return path;

@@ -30,10 +30,12 @@ public class GraphFactory {
         nodeBelongs = new HashMap<>();
         for (Road road : roads) {
             for (OSMWayRef way: road.getRelation()) {
-                for (long lon : way.references()) {
-                    List list = nodeBelongs.get(lon);
-                    if (list == null) nodeBelongs.put(lon,new LinkedList<>());
-                    nodeBelongs.get(lon).add(road);
+                if(way != null){
+                    for (long lon : way.references()) {
+                        List list = nodeBelongs.get(lon);
+                        if (list == null) nodeBelongs.put(lon,new LinkedList<>());
+                        nodeBelongs.get(lon).add(road);
+                    }
                 }
             }
         }

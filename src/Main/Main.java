@@ -72,8 +72,8 @@ public class Main {
 
         GraphFactory factory = model.getGraphFactory();
         RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(factory.getGraph(),
-                start, Enums.TravelType.VEHICLE);
-        Iterable<Edge> iterator = dijk.pathTo(end);
+                start, end, Enums.TravelType.VEHICLE);
+        Iterable<Edge> iterator = dijk.path();
         if (iterator != null) {
             factory.setRoute(iterator);
             List<Road> route = factory.getRoute();

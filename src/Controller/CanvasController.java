@@ -574,7 +574,7 @@ public final class CanvasController extends Controller implements Observer {
         Road e = null;
         for (Element element : roads) {
             Road r = (Road)element;
-            if (r.getShape().distTo(new Point2D.Float(x, y)) < minDist) {
+            if (r.getShape() != null && r.getShape().distTo(new Point2D.Float(x, y)) < minDist) {
                 if (!r.getName().equals("")) {
                     e = r;
                     minDist = (float)r.getShape().distTo(new Point2D.Float(x, y));
