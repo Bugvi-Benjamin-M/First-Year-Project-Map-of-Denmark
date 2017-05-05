@@ -20,7 +20,7 @@ import java.awt.event.*;
  */
 public final class MainWindowController extends WindowController {
 
-    private static final String MAIN_TITLE = "OSM Map Viewer v0.4";
+    private static final String MAIN_TITLE = "Google Maps RipOff v0.5";
     private static MainWindowController instance;
     private JLayeredPane layeredPane;
 

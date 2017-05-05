@@ -45,7 +45,7 @@ public class GraphFactoryTest {
         way.add(point, 33L);
         road.setWay(way);
         roads.add(road);
-        factory = new GraphFactory();
+        //factory = new GraphFactory();
     }
 
     @Test

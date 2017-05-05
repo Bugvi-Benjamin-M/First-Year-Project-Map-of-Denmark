@@ -13,6 +13,7 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -42,6 +43,15 @@ public class Road extends Element {
         this.area = area;
     }
 
+    public Road(String name) {
+        this(null,name);
+    }
+
+    public Road(String name, boolean area) {
+        this(null,name);
+        this.area = area;
+    }
+
     public void setTravelByBikeAllowed(boolean travelByBikeAllowed) {
         this.travelByBikeAllowed = travelByBikeAllowed;
     }
@@ -68,7 +78,58 @@ public class Road extends Element {
 
     public boolean isArea() { return area; }
 
-    public PolygonApprox getShape() { return (PolygonApprox)super.getShape(); }
+    public PolygonApprox getShape() {
+        if (super.getShape() == null) {
+            if (area) {
+                OSMRelation osmRelation = new OSMRelation(12L);
+                for (OSMWayRef way: relation) {
+                    OSMWay osmway = way.getWay();
+                    if (osmway != null) osmRelation.add(osmway);
+                }
+                super.setShape(new MultiPolygonApprox(osmRelation));
+            } else {
+                super.setShape(new PolygonApprox(relation.get(0).getWay()));
+            }
+        }
+        return (PolygonApprox)super.getShape();
+    }
+
+    public PolygonApprox getShapeSection(long start, long end) {
+        if (area) {
+            int sI = -1, eI = -1, sR = -1, eR = -1;
+            for (int j = 0; j < relation.size(); j++) {
+                OSMWayRef way = relation.get(j);
+                int s = way.indexOf(start);
+                if (s != -1) {sI = s; sR = j;}
+                int e = way.indexOf(end);
+                if (e != -1) {eI = e; eR = j;}
+            }
+            if (sI != -1 && eI != -1 && sR != -1 && eR != -1) {
+                OSMWay way = new OSMWay();
+                way.add(relation.get(sR).get(sI));
+                way.add(relation.get(eR).get(eI));
+                return new PolygonApprox(way);
+            }
+        } else {
+            OSMWay osmWay = new OSMWay();
+            OSMWayRef way = relation.get(0);
+            int s = way.indexOf(start);
+            int e = way.indexOf(end);
+            if (s != -1 && e != -1) {
+                if (s < e) {
+                    for (int i = s; i <= e; i++) {
+                        osmWay.add(way.get(i));
+                    }
+                } else {
+                    for (int i = e; i <= s; i++) {
+                        osmWay.add(way.get(i));
+                    }
+                }
+            }
+            return new PolygonApprox(osmWay);
+        }
+        return null;
+    }
 
     public String getName() { return name; }
 

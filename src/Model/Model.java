@@ -5,6 +5,7 @@ import Helpers.Utilities.DebugWindow;
 import KDtree.*;
 import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
+import Model.Elements.Road;
 import RouteSearch.Graph;
 import RouteSearch.GraphFactory;
 import Model.Elements.POI;
@@ -26,7 +27,7 @@ public final class Model extends Observable {
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
 
     private CoastlineFactory coastlineFactory;
-    private Graph graph;
+    private GraphFactory graphFactory;
 
     private EnumMap<BoundType, Float> bounds;
     private EnumMap<BoundType, Float> dynamicBounds;
@@ -63,14 +64,22 @@ public final class Model extends Observable {
         return instance;
     }
 
-    public Graph getGraph() {
-        if (graph == null) throw new NullPointerException("The graph has not been initialized");
-        else return graph;
+    public GraphFactory getGraphFactory(){
+        return this.graphFactory;
     }
 
-    public void setGraph(Graph graph) {
+    public Graph getGraph() {
+        if (graphFactory == null) throw new NullPointerException("The graph has not been initialized");
+        else return graphFactory.getGraph();
+    }
+
+    public void setGraph(Graph graph, List<Road> roads) {
         if (graph == null) throw new IllegalArgumentException("Graph object must not be null");
-        else this.graph = graph;
+        if (graphFactory == null) {
+            graphFactory = new GraphFactory(graph,roads);
+        } else {
+            graphFactory.setGraph(graph);
+        }
     }
 
     public String getIndexToCity(int index){

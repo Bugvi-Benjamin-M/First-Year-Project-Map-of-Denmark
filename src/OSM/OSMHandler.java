@@ -135,7 +135,7 @@ public final class OSMHandler implements ContentHandler {
         for (Road road:roads) {
             graph.addEdges(road);
         }
-        model.setGraph(graph);
+        model.setGraph(graph,roads);
     }
 
     @Override
@@ -1017,11 +1017,11 @@ public final class OSMHandler implements ContentHandler {
     {
         Road road;
         if (!isRelation) {
-            PolygonApprox polygonApprox = new PolygonApprox(way);
+            //PolygonApprox polygonApprox = new PolygonApprox(way);
             if (!area) {
-                road = new Road(polygonApprox, name);
+                road = new Road(name);
             } else {
-                road = new Road(polygonApprox, name, area);
+                road = new Road(name, area);
             }
             road.setTravelByBikeAllowed(isCycleAllowed);
             road.setTravelByCarAllowed(isVehicleAllowed);
@@ -1036,11 +1036,11 @@ public final class OSMHandler implements ContentHandler {
                 model.getElements().get(ElementType.HIGHWAY).putPointer(p);
             }
         } else {
-            MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
+            //MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
             if (!area) {
-                road = new Road(multiPolygonApprox, name);
+                road = new Road(name);
             } else {
-                road = new Road(multiPolygonApprox, name, true);
+                road = new Road(name, true);
             }
             road.setTravelByBikeAllowed(isCycleAllowed);
             road.setTravelByCarAllowed(isVehicleAllowed);

@@ -55,6 +55,7 @@ public interface Theme {
     public abstract Color sportstrack();
 
     // Roads
+    public abstract Color route();
     public abstract Color motorway();
     public abstract Color trunkRoad();
     public abstract Color primaryRoad();

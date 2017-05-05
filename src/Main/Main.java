@@ -7,12 +7,17 @@ import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
+import Model.Elements.Road;
 import Model.Model;
-import RouteSearch.GraphFactory;
+import RouteSearch.Graph;
+import RouteSearch.Edge;
 import KDtree.KDTree;
+import RouteSearch.GraphFactory;
 import View.PopupWindow;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -47,14 +52,6 @@ public class Main {
                 loadDefaultFile = true;
             }
         }
-        /*new Thread(() -> {
-            System.out.println("Starting graph building");
-            KDTree roads = Model.getInstance().getElements(ElementType.HIGHWAY);
-            System.out.println("Retrieved elements");
-            Model.getInstance().setGraph((new GraphFactory(roads)).getGraph());
-            System.out.println("Graph building complete");
-            System.out.println(model.getGraph().toString());
-        }).start();*/
 
         splashScreenDestruct();
         SwingUtilities.invokeLater(() -> {
@@ -69,6 +66,28 @@ public class Main {
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();
         });
+
+        long start = 2186106984L;
+        long end = 497314113L;
+
+        GraphFactory factory = model.getGraphFactory();
+        RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(factory.getGraph(),
+                start, Enums.TravelType.VEHICLE);
+        Iterable<Edge> iterator = dijk.pathTo(end);
+        if (iterator != null) {
+            factory.setRoute(iterator);
+            List<Road> route = factory.getRoute();
+            if (route != null && route.size() != 0) {
+                for (Road road : route) {
+                    System.out.println(road.getName());
+                }
+                CanvasController.getInstance().getMapCanvas().setRoute(route, factory.getRouteRefs());
+            } else {
+                System.out.println("No route found...");
+            }
+        } else {
+            System.out.println("No path found...");
+        }
     }
 
     private static void createControllers()

@@ -7,11 +7,12 @@ import java.io.Serializable;
 /**
  * Class details:
  *
- * Each Edge object should only fill approx. 32 bytes:
- *  12 bytes overhead + 4 byte for int + 4 byte for int + 4 byte for int +
- *  4 byte for float + 1 byte for byte value = 29 bytes (w/ 3 byte filler)
+ * Each Edge object should only fill approx. 40 bytes:
+ *  12 bytes overhead + 8 byte for long + 8 byte for long + 4 byte for int +
+ *  4 byte for float + 1 byte for byte value = 37 bytes (w/ 3 byte filler)
  *
  * @author Andreas Blanke, blan@itu.dk
+ * @author Niclas Hedam, nhed@itu.dk
  * @version 27-04-2017
  */
 public class Edge implements Comparable<Edge>, Serializable {
@@ -45,8 +46,17 @@ public class Edge implements Comparable<Edge>, Serializable {
     /**
      * Returns the weight of this edge, e.g. the consumption of travelling down this edge
      */
-    public double weight(byte type) {
+    public double weight(TravelType type) {
         // TODO: Update to be able to calculate based on time needed to travel this edge
+        if(type == TravelType.VEHICLE && !getTravelTypeName(this.travelType).contains("DRIVE") && !getTravelTypeName(this.travelType).contains("ALL")){
+            return Double.POSITIVE_INFINITY;
+        }
+        if(type == TravelType.BICYCLE && !getTravelTypeName(this.travelType).contains("CYCLE") && !getTravelTypeName(this.travelType).contains("ALL")){
+            return Double.POSITIVE_INFINITY;
+        }
+        if(type == TravelType.WALK && !getTravelTypeName(this.travelType).contains("WALK") && !getTravelTypeName(this.travelType).contains("ALL")){
+            return Double.POSITIVE_INFINITY;
+        }
         return length;
     }
 

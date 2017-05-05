@@ -132,6 +132,7 @@ public class DefaultTheme implements Theme {
     public Color poi() { return new Color(0xE40006); }
 
     // Roads:
+    public Color route() {return new Color(0x9E00FF);}
     public Color motorway() { return new Color(0xE27B90); }
     public Color trunkRoad() { return new Color(0xE27B90); }
     public Color primaryRoad() { return new Color(0xF18C03); }

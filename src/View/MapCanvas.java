@@ -12,9 +12,7 @@ import Model.Elements.*;
 
 import java.awt.*;
 import java.awt.geom.*;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -41,6 +39,7 @@ public class MapCanvas extends View {
     private ArrayList<POI> poiList;
 
     private List<Path2D> coastlines;
+    private List<Shape> route;
 
     private float cameraMaxLon;
     private float cameraMinLon;
@@ -165,6 +164,7 @@ public class MapCanvas extends View {
         drawLocationMarker(g2D);
         drawPOI(g2D);
         drawBoundaries(g2D);
+        drawRoute(g2D);
         Main.FPS_COUNTER.interrupt();
         DebugWindow.getInstance().setFPSLabel();
     }
@@ -218,7 +218,24 @@ public class MapCanvas extends View {
                 g.draw(path);
             }
         }
+    }
 
+    private void drawRoute(Graphics2D g) {
+        if (route != null) {
+            for (Shape road: route) {
+                g.draw(road);
+            }
+        }
+    }
+
+    public void setRoute(List<Road> route, List<Long> routeRefs) {
+        this.route = new LinkedList<>();
+        int counter = 0;
+        for (int i = 1; i < routeRefs.size(); i++) {
+            this.route.add(route.get(counter).getShapeSection(
+                    routeRefs.get(i-1),routeRefs.get(i)));
+            counter++;
+        }
     }
 
     private void drawElements(Graphics2D g) {
