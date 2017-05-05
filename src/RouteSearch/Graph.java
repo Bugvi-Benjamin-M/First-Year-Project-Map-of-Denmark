@@ -51,7 +51,7 @@ import java.util.Map;
                      ref = way.refOf(way.get(i));
                      float length = (float) HelperFunctions.distanceInMeters(way.get(i - 1), way.get(i));
                      addEdge(lastRef, ref, type, length, road.getMaxSpeed());
-                     addEdge(ref, lastRef, type, length, road.getMaxSpeed());
+                     if (type > 8) addEdge(ref, lastRef, type, length, road.getMaxSpeed());
                      lastRef = ref;
                  }
              }
