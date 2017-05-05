@@ -83,12 +83,12 @@ public class MapCanvas extends View {
 
     private void setCurrentRectangle() {
         Rectangle2D rectangle = getVisibleRect();
-        rectangle.setRect(rectangle.getX(),rectangle.getY() + GlobalValue.getToolbarHeight(), rectangle.getWidth(), rectangle.getHeight());
+        rectangle.setRect(rectangle.getX(), rectangle.getY() + GlobalValue.getToolbarHeight(), rectangle.getWidth(), rectangle.getHeight());
         Point2D point = toModelCoords(new Point2D.Double(0, GlobalValue.getToolbarHeight()));
         Point2D factor = toModelCoords(new Point2D.Double(rectangle.getWidth(), rectangle.getHeight()));
         double xBounds = factor.getX() - point.getX();
         double yBounds = factor.getY() - point.getY();
-        currentRectangle = new Rectangle2D.Double(point.getX(), point.getY(), xBounds, yBounds);
+        currentRectangle = new Rectangle2D.Double(point.getX() - 0.001, point.getY() - 0.001, xBounds + 0.001, yBounds + 0.001);
         cameraMinLon = (float) point.getX();
         cameraMaxLon = (float) factor.getX();
         cameraMaxLat = (float) point.getY();
