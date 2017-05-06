@@ -71,4 +71,11 @@ public class RoadGraphFactory {
     public List<Point2D> getPoints() {
         return points;
     }
+
+    public RoadEdge getRoad(String name) {
+        for (RoadEdge road: roads) {
+            if (road.getName().equals(name)) return road;
+        }
+        return null;
+    }
 }

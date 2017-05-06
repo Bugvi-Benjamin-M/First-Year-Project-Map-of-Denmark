@@ -82,15 +82,14 @@ public class Main {
         });
 
         long time = System.currentTimeMillis();
-        long start = 2163054381L;
-        long end = 661727424L;
 
         RoadGraphFactory factory = model.getGraphFactory();
         System.out.println("starting route search...");
+        RoadEdge start = factory.getRoad("Mjøsensgade");
+        RoadEdge end = factory.getRoad("Rued Langgaards Vej");
         RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
-                factory.getGraph(), factory.getPoint(0),
-                factory.getPoint(factory.getNumberOfPoints()-1),
-                Enums.TravelType.VEHICLE);
+                factory.getGraph(), start.getEither(),
+                end.getEither(), Enums.TravelType.VEHICLE);
         Iterable<RoadEdge> iterator = dijk.path();
         if (iterator != null) {
             factory.setRoute(iterator);

@@ -33,6 +33,7 @@ public class RouteDijkstra {
             distTo.put(v, Float.POSITIVE_INFINITY);
         }
         distTo.put(start, 0.0f);
+        int counter = 0;
 
         // relax vertices in order of distance from s
         pQ = new IndexMinPQ<>(graph.getNumberOfVertices());
@@ -41,9 +42,13 @@ public class RouteDijkstra {
             Point2D v = factory.getPoint(pQ.delMin());
             for (RoadEdge e : graph.adjacent(v)) {
                 relax(e);
-                // System.out.println("Relaxing " + v + "; Distance = " + distTo.get(v));
+                if (counter % 1000 == 0) {
+                    System.out.println("Relaxing " + v + "; Distance = " + distTo.get(v));
+                }
+                counter++;
             }
             if (v.equals(end)) {
+                System.out.println("Found route!");
                 return;
             }
         }
