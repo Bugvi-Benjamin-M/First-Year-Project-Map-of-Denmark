@@ -6,9 +6,12 @@ import KDtree.*;
 import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
 import Model.Elements.Road;
+import Model.Elements.RoadEdge;
 import RouteSearch.Graph;
 import RouteSearch.GraphFactory;
 import Model.Elements.POI;
+import RouteSearch.RoadGraph;
+import RouteSearch.RoadGraphFactory;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -27,7 +30,7 @@ public final class Model extends Observable {
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
 
     private CoastlineFactory coastlineFactory;
-    private GraphFactory graphFactory;
+    private RoadGraphFactory graphFactory;
 
     private EnumMap<BoundType, Float> bounds;
     private EnumMap<BoundType, Float> dynamicBounds;
@@ -64,19 +67,19 @@ public final class Model extends Observable {
         return instance;
     }
 
-    public GraphFactory getGraphFactory(){
+    public RoadGraphFactory getGraphFactory(){
         return this.graphFactory;
     }
 
-    public Graph getGraph() {
+    public RoadGraph getGraph() {
         if (graphFactory == null) throw new NullPointerException("The graph has not been initialized");
         else return graphFactory.getGraph();
     }
 
-    public void setGraph(Graph graph, List<Road> roads) {
+    public void setGraph(RoadGraph graph, List<RoadEdge> roads, Collection<Point2D> points) {
         if (graph == null) throw new IllegalArgumentException("Graph object must not be null");
         if (graphFactory == null) {
-            graphFactory = new GraphFactory(graph,roads);
+            graphFactory = new RoadGraphFactory(graph,roads, points);
         } else {
             graphFactory.setGraph(graph);
         }

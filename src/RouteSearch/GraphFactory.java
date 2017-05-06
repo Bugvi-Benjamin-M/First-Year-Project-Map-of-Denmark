@@ -13,6 +13,7 @@ import java.util.*;
  */
 public class GraphFactory {
 
+    /*
     private List<Road> roads;
     private List<Long> references;
     private Map<Long,List<Road>> nodeBelongs;
@@ -63,7 +64,7 @@ public class GraphFactory {
     public List<Road> getRoads(long ref) {
         return nodeBelongs.get(ref);
     }
-
+    *//*
     public void setRoute(List<Long> refs) {
         if (refs == null) throw new NullPointerException("References not found...");
         route = new ArrayList<>();
@@ -79,7 +80,7 @@ public class GraphFactory {
                                 !route.get(route.size()-1).equals(road)) {
                             route.add(road);
                         } else if (route.size() == 0) route.add(road);*/
-                        route.add(road);
+                        /*route.add(road);
                         doBreak = true;
                         break;
                     }
@@ -128,4 +129,5 @@ public class GraphFactory {
     }
 
     public List<Float> getLengths() {return routeLength;}
+    */
 }

@@ -20,26 +20,23 @@ import java.util.Map;
  */
  public class Graph implements Serializable {
 
-     private int nEdges;
-     private Map<Long,LinkedList<Edge>> adjacencyLists;
+    /*
+    private int nEdges;
+    private Map<Long,LinkedList<Edge>> adjacencyLists;
 
-     public Graph() {
-         adjacencyLists = new HashMap<>(10000000);
-     }
+    public Graph() {
+        adjacencyLists = new HashMap<>(10000000);
+    }
 
-     public int getNumberOfNodes() {
-         return adjacencyLists.size();
-     }
+    public int getNumberOfNodes() {
+        return adjacencyLists.size();
+    }
 
-     public int getNumberOfEdges() {
-         return nEdges;
-     }
+    public int getNumberOfEdges() {
+        return nEdges;
+    }
 
-     /**
-      *
-      * runtime: O(W * wE)
-      * @param road
-      */
+/*
      public void addEdges(Road road) {
          byte type = Edge.getTravelTypeValue(road.isTravelByFootAllowed(),
                  road.isTravelByBikeAllowed(),road.isTravelByCarAllowed(),
@@ -57,6 +54,7 @@ import java.util.Map;
              }
          }
      }
+     *//*
 
      public void addEdge(long lastRef, long ref, byte type, float length, int speed) {
          Edge edge = new Edge(lastRef,ref,speed,length,type);
@@ -90,5 +88,5 @@ import java.util.Map;
                  getNumberOfEdges() + " edges";
      }
 
-
+    */
  }

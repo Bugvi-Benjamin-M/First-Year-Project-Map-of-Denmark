@@ -23,6 +23,8 @@ public class GlobalValue {
 
     private static boolean isAddNewPointActive = false;
 
+    private static boolean getFastestRoute = false;
+
     public static void setDidProgramLoadDefault(boolean truth_value)
     {
         didProgramLoadDefault = truth_value;
@@ -97,5 +99,13 @@ public class GlobalValue {
 
     public static int getSmallInformationBarHeight() {
         return 150;
+    }
+
+    public static boolean isFastestRouteSet() {
+        return getFastestRoute;
+    }
+
+    public static void setFastestRoute(boolean useFastestRoute) {
+        GlobalValue.getFastestRoute = useFastestRoute;
     }
 }

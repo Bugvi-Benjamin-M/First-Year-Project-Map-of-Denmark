@@ -31,11 +31,11 @@ public class Dijkstra {
    * @throws IllegalArgumentException if an edge weight is negative
    * @throws IllegalArgumentException unless {@code 0 <= s < V}
    */
-  public Dijkstra(Graph G, long start, long end, TravelType type) {
+  /*public Dijkstra(Graph G, long start, long end, TravelType type) {
     distTo = new HashMap<Long, Double>();
     edgeTo = new HashMap<Long, Edge>();
     this.type = type;
-    graphFactory = Model.getInstance().getGraphFactory();
+    //graphFactory = Model.getInstance().getGraphFactory();
     this.end = end;
 
     for (long v : G.getAdjacencyMap().keySet()) {
@@ -81,6 +81,7 @@ public class Dijkstra {
    *         {@code Double.POSITIVE_INFINITY} if no such path
    * @throws IllegalArgumentException unless {@code 0 <= v < V}
    */
+  /*
   public double distTo(long v) { return distTo.get(v); }
 
   /**
@@ -92,6 +93,7 @@ public class Dijkstra {
    *         {@code s} to vertex {@code v}; {@code false} otherwise
    * @throws IllegalArgumentException unless {@code 0 <= v < V}
    */
+  /*
   private boolean hasPathTo(long v) {
     return distTo.get(v) < Double.POSITIVE_INFINITY;
   }
@@ -105,6 +107,7 @@ public class Dijkstra {
    * v} as an iterable of edges, and {@code null} if no such path
    * @throws IllegalArgumentException unless {@code 0 <= v < V}
    */
+  /*
   public Iterable<Edge> path() {
     if (!hasPathTo(end))
       return null;
@@ -114,4 +117,5 @@ public class Dijkstra {
     }
     return path;
   }
+  */
 }

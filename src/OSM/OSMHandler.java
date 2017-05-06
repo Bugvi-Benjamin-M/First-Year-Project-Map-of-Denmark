@@ -12,17 +12,14 @@ import Model.Addresses.Value;
 import Model.Elements.*;
 import Model.Model;
 import RouteSearch.Graph;
+import RouteSearch.RoadGraph;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -32,11 +29,11 @@ public final class OSMHandler implements ContentHandler {
     private NodeGenerator nodeGenerator;
 
     private LongToPointMap idToNode;
-    //private Map<Long, OSMWay> idToWay;
-    private Map<Long,OSMWayRef> idToRefWay;
-    // private OSMWay way;
-    private OSMWayRef refWay;
-    private List<OSMWayRef> refRelation;
+    private Map<Long, OSMWay> idToWay;
+    //private Map<Long,OSMWayRef> idToRefWay;
+    private OSMWay way;
+    //private OSMWayRef refWay;
+    // private List<OSMWayRef> refRelation;
     private OSMRelation relation;
     // private OSMNode node;
     private ElementType elementType;
@@ -84,8 +81,8 @@ public final class OSMHandler implements ContentHandler {
 
     private OSMHandler() {
         idToNode = new LongToPointMap(22);
-        // idToWay = new HashMap<>();
-        idToRefWay = new HashMap<>();
+        idToWay = new HashMap<>();
+        //idToRefWay = new HashMap<>();
         model = Model.getInstance();
         model.setTst(new TenarySearchTrie());
         nodeGenerator = new NodeGenerator();
@@ -138,17 +135,39 @@ public final class OSMHandler implements ContentHandler {
 
     @Override
     public void endDocument() throws SAXException {
-        idToRefWay = new HashMap<>();
-        refWay = null;
+        // idToRefWay = new HashMap<>();
+        // refWay = null;
+        idToWay = new HashMap<>();
         idToNode = new LongToPointMap(22);
         relation = null;
-        refRelation = null;
+        //refRelation = null;
         nodeGenerator = new NodeGenerator();
-        Graph graph = new Graph();
-        for (Road road:roads) {
-            graph.addEdges(road);
+        RoadGraph graph = new RoadGraph();
+        List<RoadEdge> roadEdges = new LinkedList<>();
+        Set<Point2D> points = new HashSet<>();
+        int counter = 0;
+        for (Road road : roads) {
+            for (OSMWay way: road.getRelation()) {
+                for (int i = 1; i < way.size(); i++) {
+                    OSMWay shape = new OSMWay();
+                    shape.add(way.get(i-1));
+                    points.add(way.get(i-1));
+                    shape.add(way.get(i));
+                    RoadEdge edge = new RoadEdge(shape,road.getName(),road.getMaxSpeed());
+                    edge.setOneWay(road.isOneWay());
+                    edge.setTravelByBikeAllowed(road.isTravelByBikeAllowed());
+                    edge.setTravelByWalkAllowed(road.isTravelByFootAllowed());
+                    edge.setTravelByCarAllowed(road.isTravelByCarAllowed());
+                    edge.setType();
+                    graph.addEdges(edge);
+                    roadEdges.add(edge);
+                    if (counter % 1000 == 0) System.out.println("... added edges: "+counter);
+                    counter++;
+                }
+                points.add(way.get(way.size()-1));
+            }
         }
-        model.setGraph(graph,roads);
+        model.setGraph(graph,roadEdges,points);
     }
 
     @Override
@@ -228,7 +247,7 @@ public final class OSMHandler implements ContentHandler {
             isCycleAllowed = false;
             maxSpeed = 0;
             relation = new OSMRelation(relationID);
-            refRelation = new ArrayList<>();
+            // refRelation = new ArrayList<>();
             elementType = ElementType.UNKNOWN;
 
             if (loadedRelations % 100 == 0) System.out.println("NumRelations: "+loadedRelations);
@@ -304,13 +323,13 @@ public final class OSMHandler implements ContentHandler {
                 airports = new ArrayList<>();
             }
 
-            // way = new OSMWay();
-            refWay = new OSMWayRef();
+            way = new OSMWay();
+            // refWay = new OSMWayRef();
             id = Long.parseLong(atts.getValue("id"));
             elementType = ElementType.UNKNOWN;
             place = ElementType.UNKNOWN;
-            // idToWay.put(id, way);
-            idToRefWay.put(id,refWay);
+            idToWay.put(id, way);
+            // idToRefWay.put(id,refWay);
             name = "";
             isInTunnel = false;
             isWikiDataAvalible = false;
@@ -325,8 +344,8 @@ public final class OSMHandler implements ContentHandler {
             break;
         case "nd":
             long ref = Long.parseLong(atts.getValue("ref"));
-            // way.add(idToNode.get(ref));
-            refWay.add(idToNode.get(ref),ref);
+            way.add(idToNode.get(ref));
+            //refWay.add(idToNode.get(ref),ref);
             break;
         case "tag":
             String k = atts.getValue("k");
@@ -430,10 +449,10 @@ public final class OSMHandler implements ContentHandler {
             break;
         case "member":
             ref = Long.parseLong(atts.getValue("ref"));
-            OSMWayRef way = idToRefWay.get(ref);
-            if (way != null && way.getWay() != null) {
-                relation.add(way.getWay());
-                refRelation.add(way);
+            OSMWay way = idToWay.get(ref);
+            if (way != null) {
+                relation.add(way);
+                //relation.add(way);
             }
             break;
         }
@@ -983,11 +1002,11 @@ public final class OSMHandler implements ContentHandler {
 
     private void addRail(boolean isRelation, boolean isInTunnel){
         if (!isRelation) {
-            PolygonApprox polygonApprox = new PolygonApprox(refWay.getWay());
+            PolygonApprox polygonApprox = new PolygonApprox(way);
             Rail rail;
             rail = new Rail(polygonApprox, isInTunnel);
-            for (int i = 0; i < refWay.size(); i += precision){
-                Pointer p = new Pointer((float)refWay.get(i).getX(), (float)refWay.get(i).getY(), rail);
+            for (int i = 0; i < way.size(); i += precision){
+                Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), rail);
                 model.getElements().get(ElementType.RAIL).putPointer(p);
             }
         } else {
@@ -1009,12 +1028,12 @@ public final class OSMHandler implements ContentHandler {
 
     private void addBuilding(ElementType type, boolean isRelation) {
         PolygonApprox polygonApprox;
-        polygonApprox = new PolygonApprox(refWay.getWay());
+        polygonApprox = new PolygonApprox(way);
         if (!isRelation) {
             Building building = new Building(polygonApprox);
-            for (int i = 0; i < refWay.size(); i += precision) {
-                Pointer p = new Pointer((float)refWay.get(i).getX(),
-                        (float)refWay.get(i).getY(), building);
+            for (int i = 0; i < way.size(); i += precision) {
+                Pointer p = new Pointer((float)way.get(i).getX(),
+                        (float)way.get(i).getY(), building);
                 model.getElements().get(type).putPointer(p);
             }
         } else {
@@ -1064,11 +1083,11 @@ public final class OSMHandler implements ContentHandler {
     }
     private void addManMade(ElementType type, boolean isRelation, boolean area){
         if (!isRelation) {
-            PolygonApprox polygonApprox = new PolygonApprox(refWay.getWay());
+            PolygonApprox polygonApprox = new PolygonApprox(way);
             ManMade manMade;
             manMade = new ManMade(polygonApprox, area);
-            for (int i = 0; i < refWay.size(); i += precision){
-                Pointer p = new Pointer((float)refWay.get(i).getX(), (float)refWay.get(i).getY(), manMade);
+            for (int i = 0; i < way.size(); i += precision){
+                Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), manMade);
                 model.getElements().get(type).putPointer(p);
             }
         }
@@ -1104,10 +1123,10 @@ public final class OSMHandler implements ContentHandler {
             road.setTravelByFootAllowed(isWalkingAllowed);
             road.setMaxSpeed(maxSpeed);
             road.setOneWay(isOneWay);
-            road.setWay(refWay);
+            road.setWay(way);
             roads.add(road);
-            for (int i = 0; i < refWay.size(); i += precision) {
-                Pointer p = new Pointer((float)refWay.get(i).getX(), (float)refWay.get(i).getY(), road);
+            for (int i = 0; i < way.size(); i += precision) {
+                Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
             }
         } else {
@@ -1122,7 +1141,7 @@ public final class OSMHandler implements ContentHandler {
             road.setTravelByFootAllowed(isWalkingAllowed);
             road.setMaxSpeed(maxSpeed);
             road.setOneWay(isOneWay);
-            road.setRelation(refRelation);
+            road.setRelation(relation);
             roads.add(road);
             for (int i = 0; i < relation.size(); i++) {
                 if (relation.get(i) != null) {
@@ -1139,16 +1158,16 @@ public final class OSMHandler implements ContentHandler {
     }
 
     private void addBiome(ElementType type, boolean isRelation) {
-        if(specialRelationCase == true){
+        if(specialRelationCase){
             specialRelationCase = false;
         }else {
             if (!isRelation) {
                 PolygonApprox polygonApprox;
-                polygonApprox = new PolygonApprox(refWay.getWay());
+                polygonApprox = new PolygonApprox(way);
                 Biome biome = new Biome(polygonApprox);
-                for (int i = 0; i < refWay.size(); i += precision) {
-                    Pointer p = new Pointer((float)refWay.get(i).getX(),
-                        (float)refWay.get(i).getY(), biome);
+                for (int i = 0; i < way.size(); i += precision) {
+                    Pointer p = new Pointer((float)way.get(i).getX(),
+                        (float)way.get(i).getY(), biome);
                     model.getElements().get(type).putPointer(p);
                 }
             } else {
@@ -1190,14 +1209,14 @@ public final class OSMHandler implements ContentHandler {
                 fastFoods.add(p);
                 break;
             case HOSPITAL:
-                polygonApprox = new PolygonApprox(refWay.getWay());
+                polygonApprox = new PolygonApprox(way);
                 amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
                 p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                 model.getElements().get(ElementType.HOSPITAL).putPointer(p);
                 break;
             case UNIVERSITY:
                 if (!isRelation){
-                    polygonApprox = new PolygonApprox(refWay.getWay());
+                    polygonApprox = new PolygonApprox(way);
                     amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
                     if(!checkForNearbyAmenity(ElementType.UNIVERSITY, amenity, 0.001f) && isWikiDataAvalible){
                         p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
@@ -1216,19 +1235,19 @@ public final class OSMHandler implements ContentHandler {
                 }
                 break;
             case PLACE_OF_WORSHIP:
-                polygonApprox = new PolygonApprox(refWay.getWay());
+                polygonApprox = new PolygonApprox(way);
                 amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
                 p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                 model.getElements().get(ElementType.PLACE_OF_WORSHIP).putPointer(p);
                 break;
             case PARKING_AMENITY:
-                polygonApprox = new PolygonApprox(refWay.getWay());
+                polygonApprox = new PolygonApprox(way);
                 amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
                 p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                 model.getElements().get(ElementType.PARKING_AMENITY).putPointer(p);
                 break;
             case SPORT_AMENITY:
-                polygonApprox = new PolygonApprox(refWay.getWay());
+                polygonApprox = new PolygonApprox(way);
                 amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
                 p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                 model.getElements().get(ElementType.SPORT_AMENITY).putPointer(p);
@@ -1241,7 +1260,7 @@ public final class OSMHandler implements ContentHandler {
                 }
                 break;
             case RAILWAY_STATION_AREA:
-                polygonApprox = new PolygonApprox(refWay.getWay());
+                polygonApprox = new PolygonApprox(way);
                 boolean isAdded;
                 amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
                 if(!checkForNearbyAmenity(ElementType.RAILWAY_STATION, amenity, 0.001f)){
@@ -1258,13 +1277,13 @@ public final class OSMHandler implements ContentHandler {
                 }
                 break;
             case AIRPORT_AMENITY:
-                if(refWay == null){
+                if(way == null){
                     amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
                     p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
                     airports.add(p);
                 }
                 else{
-                    polygonApprox = new PolygonApprox(refWay.getWay());
+                    polygonApprox = new PolygonApprox(way);
                     amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
                     p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                     model.getElements().get(ElementType.AIRPORT_AMENITY).putPointer(p);
