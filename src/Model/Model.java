@@ -76,7 +76,7 @@ public final class Model extends Observable {
         else return graphFactory.getGraph();
     }
 
-    public void setGraph(RoadGraph graph, List<RoadEdge> roads, Set<Point2D> points) {
+    public void setGraph(RoadGraph graph, List<RoadEdge> roads, Collection<Point2D> points) {
         if (graph == null) throw new IllegalArgumentException("Graph object must not be null");
         if (graphFactory == null) {
             graphFactory = new RoadGraphFactory(graph,roads, points);

@@ -18,13 +18,15 @@ public class RoadGraphFactory {
 
     private List<Point2D> points;
     private List<RoadEdge> route;
+    private List<RoadEdge> roads;
     private RoadGraph graph;
 
-    public RoadGraphFactory(RoadGraph graph, List<RoadEdge> roads, Set<Point2D> points) {
+    public RoadGraphFactory(RoadGraph graph, List<RoadEdge> roads, Collection<Point2D> points) {
         this.graph = graph;
         System.out.println("Building factory...");
         this.points = new ArrayList<>();
         this.points.addAll(points);
+        this.roads = roads;
         System.out.println("Finished building factory...");
     }
 
@@ -60,5 +62,13 @@ public class RoadGraphFactory {
             roadEdges.add(edge);
         }
         setRoute(roadEdges);
+    }
+
+    public List<RoadEdge> getEdges() {
+        return roads;
+    }
+
+    public List<Point2D> getPoints() {
+        return points;
     }
 }
