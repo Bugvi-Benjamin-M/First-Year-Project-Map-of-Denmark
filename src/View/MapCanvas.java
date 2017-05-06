@@ -220,6 +220,8 @@ public class MapCanvas extends View {
     }
 
     private void drawRoute(Graphics2D g) {
+        g.setColor(ThemeHelper.color("route"));
+        g.setStroke(new BasicStroke(0.00020f));
         if (route != null) {
             for (Shape road: route) {
                 g.draw(road);
