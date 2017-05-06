@@ -1,19 +1,13 @@
 package Model.Elements;
 
-import Enums.OSMEnums.ElementType;
-import Helpers.HelperFunctions;
 import Helpers.Shapes.MultiPolygonApprox;
 import Helpers.Shapes.PolygonApprox;
 import OSM.OSMRelation;
 import OSM.OSMWay;
 import OSM.OSMWayRef;
 
-import java.awt.*;
-import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -28,7 +22,7 @@ public class Road extends Element {
     private boolean travelByBikeAllowed = false;
     private boolean travelByFootAllowed = false;
     private boolean travelByCarAllowed = false;
-    private java.util.List<OSMWayRef> relation;
+    private java.util.List<OSMWay> relation;
 
     public Road(PolygonApprox polygon, String name)
     {
@@ -83,23 +77,22 @@ public class Road extends Element {
             if (relation.size() > 1) {
                 //FIXME
                 OSMRelation osmRelation = new OSMRelation(12L);
-                for (OSMWayRef way: relation) {
+                for (OSMWay way: relation) {
                     if(way != null){
-                        OSMWay osmway = way.getWay();
-                        if (osmway != null) osmRelation.add(osmway);
+                        osmRelation.add(way);
                     }
                 }
                 if(osmRelation.size() == 0){
                     return null;
                 }else if(osmRelation.size() == 1){
-                    super.setShape(new PolygonApprox(relation.get(0).getWay()));
+                    super.setShape(new PolygonApprox(relation.get(0)));
 
                 }else{
                     super.setShape(new MultiPolygonApprox(osmRelation));
                 }
 
             } else if (relation.size() == 1) {
-                super.setShape(new PolygonApprox(relation.get(0).getWay()));
+                super.setShape(new PolygonApprox(relation.get(0)));
             }
         }
         return (PolygonApprox)super.getShape();
@@ -109,7 +102,7 @@ public class Road extends Element {
         if (area) {
             int sI = -1, eI = -1, sR = -1, eR = -1;
             for (int j = 0; j < relation.size(); j++) {
-                OSMWayRef way = relation.get(j);
+                OSMWay way = relation.get(j);
                 int s = way.indexOf(start);
                 if (s != -1) {sI = s; sR = j;}
                 int e = way.indexOf(end);
@@ -123,7 +116,7 @@ public class Road extends Element {
             }
         } else {
             OSMWay osmWay = new OSMWay();
-            OSMWayRef way = relation.get(0);
+            OSMWay way = relation.get(0);
             int s = way.indexOf(start);
             int e = way.indexOf(end);
             if (s != -1 && e != -1) {
@@ -148,16 +141,16 @@ public class Road extends Element {
 
     public int getMaxSpeed() {return maxSpeed;}
 
-    public List<OSMWayRef> getRelation() {
+    public List<OSMWay> getRelation() {
         return relation;
     }
 
-    public void setRelation(List<OSMWayRef> relation) {
+    public void setRelation(List<OSMWay> relation) {
         this.relation = new ArrayList<>();
         relation.forEach(this::setWay);
     }
 
-    public void setWay(OSMWayRef way) {
+    public void setWay(OSMWay way) {
         this.relation.add(way);
     }
 

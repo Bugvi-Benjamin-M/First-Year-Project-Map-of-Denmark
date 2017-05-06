@@ -36,13 +36,13 @@ public class GraphFactoryTest {
         road.setTravelByBikeAllowed(true);
         road.setTravelByCarAllowed(true);
         road.setTravelByFootAllowed(true);
-        OSMWayRef way = new OSMWayRef();
+        OSMWay way = new OSMWay();
         Point2D point = new Point2D.Float(0.5f,0.2f);
-        way.add(point, 32L);
+        way.add(point);
         point = new Point2D.Float(0.2f,0.5f);
-        way.add(point, 34L);
+        way.add(point);
         point = new Point2D.Float(0.1f,0.6f);
-        way.add(point, 33L);
+        way.add(point);
         road.setWay(way);
         roads.add(road);
         //factory = new GraphFactory();
