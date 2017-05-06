@@ -237,6 +237,13 @@ public class MapCanvas extends View {
         }
     }
 
+    public void setRoute(List<RoadEdge> route) {
+        this.route = new LinkedList<>();
+        for (RoadEdge edge : route) {
+            this.route.add(edge.getShape());
+        }
+    }
+
     private void drawElements(Graphics2D g) {
         switch (ZoomLevel.getZoomLevel()) {
         case LEVEL_0:

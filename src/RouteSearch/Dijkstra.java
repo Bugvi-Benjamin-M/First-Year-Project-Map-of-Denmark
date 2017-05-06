@@ -35,7 +35,7 @@ public class Dijkstra {
     distTo = new HashMap<Long, Double>();
     edgeTo = new HashMap<Long, Edge>();
     this.type = type;
-    graphFactory = Model.getInstance().getGraphFactory();
+    //graphFactory = Model.getInstance().getGraphFactory();
     this.end = end;
 
     for (long v : G.getAdjacencyMap().keySet()) {

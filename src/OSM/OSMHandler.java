@@ -12,17 +12,14 @@ import Model.Addresses.Value;
 import Model.Elements.*;
 import Model.Model;
 import RouteSearch.Graph;
+import RouteSearch.RoadGraph;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -144,11 +141,32 @@ public final class OSMHandler implements ContentHandler {
         relation = null;
         refRelation = null;
         nodeGenerator = new NodeGenerator();
-        Graph graph = new Graph();
-        for (Road road:roads) {
-            graph.addEdges(road);
+        RoadGraph graph = new RoadGraph();
+        List<RoadEdge> roadEdges = new LinkedList<>();
+        Set<Point2D> points = new HashSet<>();
+        int counter = 0;
+        for (Road road : roads) {
+            for (OSMWayRef way: road.getRelation()) {
+                for (int i = 1; i < way.size(); i++) {
+                    OSMWay shape = new OSMWay();
+                    shape.add(way.get(i-1));
+                    points.add(way.get(i-1));
+                    shape.add(way.get(i));
+                    RoadEdge edge = new RoadEdge(shape,road.getName(),road.getMaxSpeed());
+                    edge.setOneWay(road.isOneWay());
+                    edge.setTravelByBikeAllowed(road.isTravelByBikeAllowed());
+                    edge.setTravelByWalkAllowed(road.isTravelByFootAllowed());
+                    edge.setTravelByCarAllowed(road.isTravelByCarAllowed());
+                    edge.setType();
+                    graph.addEdges(edge);
+                    roadEdges.add(edge);
+                    if (counter % 1000 == 0) System.out.println("... added edges: "+counter);
+                    counter++;
+                }
+                points.add(way.get(way.size()-1));
+            }
         }
-        model.setGraph(graph,roads);
+        model.setGraph(graph,roadEdges,points);
     }
 
     @Override

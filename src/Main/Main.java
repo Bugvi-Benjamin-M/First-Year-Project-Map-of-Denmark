@@ -9,11 +9,13 @@ import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Elements.Road;
+import Model.Elements.RoadEdge;
 import Model.Model;
 import RouteSearch.Graph;
 import RouteSearch.Edge;
 import KDtree.KDTree;
 import RouteSearch.GraphFactory;
+import RouteSearch.RoadGraphFactory;
 import View.PopupWindow;
 
 import javax.swing.*;
@@ -80,23 +82,25 @@ public class Main {
         });
 
         long time = System.currentTimeMillis();
-        long start = 2186106984L;
-        long end = 497314113L;
+        long start = 2163054381L;
+        long end = 661727424L;
 
-        GraphFactory factory = model.getGraphFactory();
-        RouteSearch.Dijkstra dijk = new RouteSearch.Dijkstra(factory.getGraph(),
-                start, end, Enums.TravelType.VEHICLE);
-        Iterable<Edge> iterator = dijk.path();
+        RoadGraphFactory factory = model.getGraphFactory();
+        System.out.println("starting route search...");
+        RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
+                factory.getGraph(), factory.getPoint(0),
+                factory.getPoint(factory.getNumberOfPoints()-1),
+                Enums.TravelType.VEHICLE);
+        Iterable<RoadEdge> iterator = dijk.path();
         if (iterator != null) {
             factory.setRoute(iterator);
-            List<Road> route = factory.getRoute();
-            List<Float> lengths = factory.getLengths();
+            List<RoadEdge> route = factory.getRoute();
             if (route != null && route.size() != 0) {
                 for (int i = 0; i < route.size(); i++) {
                     System.out.println(route.get(i).getName() +
-                        ": "+lengths.get(i)+" m");
+                        ": "+route.get(i).getLength()+" m");
                 }
-                CanvasController.getInstance().getMapCanvas().setRoute(route, factory.getRouteRefs());
+                CanvasController.getInstance().getMapCanvas().setRoute(route);
             } else {
                 System.out.println("No route found...");
             }
