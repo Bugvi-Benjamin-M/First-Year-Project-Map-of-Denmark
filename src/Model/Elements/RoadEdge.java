@@ -84,7 +84,7 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
             return Float.POSITIVE_INFINITY;
         } else {
             if (fast) {
-                return time + (float)way.getFromNode().distance(end);
+                return time + ((float)way.getFromNode().distance(end) / speed);
             } else {
                 return length +  (float)way.getFromNode().distance(end);
             }
