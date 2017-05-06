@@ -27,9 +27,9 @@ public final class PointsOfInterestController extends Controller {
 
     private final int PROFILE_HEIGHT = 90;
     private final int LARGE_POINTS_OF_INTERESTBAR_WIDTH = 300;
-    private final int BUTTONS_HEIGHT = 50;
+    private final int BUTTONS_HEIGHT = 60;
     //private final int LARGE_SCROLLBAR_HEIGHT = (int) (0.976316*Toolkit.getDefaultToolkit().getScreenSize().getHeight() + (-292.289));
-    private final double LARGE_SCROLLBAR_HEIGHT_DECREASE = -242.289;
+    private final double LARGE_SCROLLBAR_HEIGHT_DECREASE = -252.289;
     private final double SMALL_SCROLLBAR_WIDTH_DECREASE = -219.421;
     //private final int SMALL_SCROLLBAR_WIDTH = 790;
     private final int DISTANCE_BETWEEN_TOOLBAR_AND_BUTTONS = GlobalValue.getToolbarHeight() + 10;
@@ -39,6 +39,9 @@ public final class PointsOfInterestController extends Controller {
     private final int DISTANCE_FROM_SMALLPOIBARTOP_TO_BUTTONS = 35;
     private final int SMALL_SCROLLBAR_HEIGHT = 110;
     private final int DISTANCE_FROM_SMALLPOIBARTOP_TO_SCROLLPANE = 10;
+    private final int SMALL_POINTS_OF_INTERESTBAR_HEIGHT = 100;
+    private final int POI_BUTTONS_SMALL_POINTS_OF_INTERESTBAR_WIDTH = 150;
+    private final int DISTANCE_BETWEEN_POI_BUTTONS_AND_SMALL_SCROLLPANE = 30;
 
     private static PointsOfInterestController instance;
     private InformationBar informationBar;
@@ -93,7 +96,7 @@ public final class PointsOfInterestController extends Controller {
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, poiButtons, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
         informationBarLayout.putConstraint(NORTH, poiButtons, DISTANCE_BETWEEN_TOOLBAR_AND_BUTTONS, NORTH, informationBar);
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, largeScroll, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
-        informationBarLayout.putConstraint(NORTH, largeScroll, DISTANCE_BETWEEN_BUTTONS_AND_SCROLLPANE, NORTH, poiButtons);
+        informationBarLayout.putConstraint(NORTH, largeScroll, DISTANCE_BETWEEN_BUTTONS_AND_SCROLLPANE+10, NORTH, poiButtons);
         informationBar.add(poiButtons);
         informationBar.add(largeScroll);
     }
@@ -102,14 +105,14 @@ public final class PointsOfInterestController extends Controller {
         isSmallPOIVisible = true;
         informationBar.setPreferredSize(new Dimension(window.getFrame().getWidth(), GlobalValue.getSmallInformationBarHeight()));
         pointsOfInterestBar.specifyLayout(BoxLayout.LINE_AXIS);
-        pointsOfInterestBar.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, PROFILE_HEIGHT+10));
+        pointsOfInterestBar.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, SMALL_POINTS_OF_INTERESTBAR_HEIGHT));
         setupSmallScrollbar();
         addPointsToHorizontalPointsOfInterestBar();
-        poiButtons.setPreferredSize(new Dimension(150, BUTTONS_HEIGHT));
+        poiButtons.setPreferredSize(new Dimension(POI_BUTTONS_SMALL_POINTS_OF_INTERESTBAR_WIDTH, BUTTONS_HEIGHT));
         informationBarLayout.putConstraint(WEST, poiButtons, DISTANCE_FROM_SMALLINFORMATIONBAR_LEFT_EDGE_TO_BUTTONS, WEST, informationBar);
         informationBarLayout.putConstraint(NORTH, poiButtons, DISTANCE_FROM_SMALLPOIBARTOP_TO_BUTTONS, NORTH, informationBar);
         informationBarLayout.putConstraint(NORTH, smallScroll, DISTANCE_FROM_SMALLPOIBARTOP_TO_SCROLLPANE, NORTH, informationBar);
-        informationBarLayout.putConstraint(WEST, smallScroll, 30, EAST, poiButtons);
+        informationBarLayout.putConstraint(WEST, smallScroll, DISTANCE_BETWEEN_POI_BUTTONS_AND_SMALL_SCROLLPANE, EAST, poiButtons);
         informationBar.add(poiButtons);
         informationBar.add(smallScroll);
     }
