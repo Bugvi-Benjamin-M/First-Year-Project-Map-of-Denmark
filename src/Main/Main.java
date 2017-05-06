@@ -86,7 +86,7 @@ public class Main {
         RoadGraphFactory factory = model.getGraphFactory();
         System.out.println("starting route search...");
         RoadEdge start = factory.getRoad("Mjøsensgade");
-        RoadEdge end = factory.getRoad("Rued Langgaards Vej");
+        RoadEdge end = factory.getRoad("Maglevænget");
         RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
                 factory.getGraph(), start.getEither(),
                 end.getEither(), Enums.TravelType.VEHICLE);
