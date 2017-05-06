@@ -43,7 +43,7 @@ public class JourneyPlannerSearchClearButtons extends View {
         add(clearButton);
         add(Box.createHorizontalStrut(DISTANCE_BETWEEN_BUTTONS));
         add(searchButton);
-        setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+        setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
     }
 
     public void applyTheme() {

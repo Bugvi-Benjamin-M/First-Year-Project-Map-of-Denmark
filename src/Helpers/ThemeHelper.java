@@ -1,7 +1,6 @@
 package Helpers;
 
-import Controller.PreferencesController;
-import Theme.*;
+import Theme.Theme;
 
 import java.awt.*;
 import java.lang.reflect.Constructor;
@@ -25,7 +24,7 @@ public final class ThemeHelper {
             Method method = currentTheme.getClass().getDeclaredMethod(input, null);
             return (Color)method.invoke(currentTheme, null);
         } catch (Exception e) {
-            throw new RuntimeException("Color not found" + input);
+            throw new RuntimeException("Color not found " + input);
         }
     }
 
