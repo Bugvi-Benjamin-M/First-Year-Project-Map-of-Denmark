@@ -7,7 +7,6 @@ import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
 import Model.Elements.Road;
 import Model.Elements.RoadEdge;
-import RouteSearch.Graph;
 import RouteSearch.GraphFactory;
 import Model.Elements.POI;
 import RouteSearch.RoadGraph;

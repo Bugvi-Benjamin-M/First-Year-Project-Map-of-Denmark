@@ -11,8 +11,6 @@ import Helpers.Utilities.FPSCounter;
 import Model.Elements.Road;
 import Model.Elements.RoadEdge;
 import Model.Model;
-import RouteSearch.Graph;
-import RouteSearch.Edge;
 import KDtree.KDTree;
 import RouteSearch.GraphFactory;
 import RouteSearch.RoadGraphFactory;
@@ -79,34 +77,42 @@ public class Main {
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();
-        });
 
+            dijkstra(model);
+        });
+    }
+
+    private static void dijkstra(Model model){
         long time = System.currentTimeMillis();
 
         RoadGraphFactory factory = model.getGraphFactory();
         System.out.println("starting route search...");
         RoadEdge start = factory.getRoad("Mjøsensgade");
-        RoadEdge end = factory.getRoad("Rued Langgaards Vej");
-        RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
-                factory.getGraph(), start.getEither(),
-                end.getEither(), Enums.TravelType.VEHICLE);
-        Iterable<RoadEdge> iterator = dijk.path();
-        if (iterator != null) {
-            factory.setRoute(iterator);
-            List<RoadEdge> route = factory.getRoute();
-            if (route != null && route.size() != 0) {
-                for (int i = 0; i < route.size(); i++) {
-                    System.out.println(route.get(i).getName() +
-                        ": "+route.get(i).getLength()+" m");
+        RoadEdge end = factory.getRoad("Viemose Gade");
+        new Thread() {
+            public void run() {
+                RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
+                        factory.getGraph(), start.getEither(),
+                        end.getEither(), Enums.TravelType.VEHICLE);
+                Iterable<RoadEdge> iterator = dijk.path();
+                if (iterator != null) {
+                    factory.setRoute(iterator);
+                    List<RoadEdge> route = factory.getRoute();
+                    if (route != null && route.size() != 0) {
+                        for (int i = 0; i < route.size(); i++) {
+                            System.out.println(route.get(i).getName() +
+                                ": "+route.get(i).getLength()+" m");
+                        }
+                        CanvasController.getInstance().getMapCanvas().setRoute(route);
+                    } else {
+                        System.out.println("No route found...");
+                    }
+                } else {
+                    System.out.println("No path found...");
                 }
-                CanvasController.getInstance().getMapCanvas().setRoute(route);
-            } else {
-                System.out.println("No route found...");
+                System.out.println("Route time: "+(System.currentTimeMillis() - time) + " ms");
             }
-        } else {
-            System.out.println("No path found...");
-        }
-        System.out.println("Route time: "+(System.currentTimeMillis() - time) + " ms");
+        }.start();
     }
 
     private static void createControllers()

@@ -12,7 +12,6 @@ import Model.Elements.POI;
 import Model.Elements.RoadEdge;
 import Model.Model;
 import OSM.OSMHandler;
-import RouteSearch.Graph;
 import RouteSearch.RoadGraph;
 import View.PopupWindow;
 import org.xml.sax.InputSource;

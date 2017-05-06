@@ -60,34 +60,33 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
         return Double.compare(length,other.length);
     }
 
-    public float getWeight(TravelType type) {
-        String travel = getTravelTypeName(getType());
+    public float getWeight(TravelType type, Point2D start, Point2D end) {
         boolean fast = GlobalValue.isFastestRouteSet();
-        boolean returned = false;
+        boolean ok = false;
         switch (type) {
             case VEHICLE:
-                if (travel.contains("DRIVE") || travel.contains("ALL")) {
-                    returned = true;
+                if (getType() == 4 || getType() == 5 || getType() == 6 || getType() == 7 || getType() == 12 || getType() == 13 || getType() == 14 || getType() == 15) {
+                    ok = true;
                 }
                 break;
             case BICYCLE:
-                if (travel.contains("CYCLE") || travel.contains("ALL")) {
-                    returned = true;
+                if (getType() == 2 || getType() == 3 || getType() == 6 || getType() == 7 || getType() == 10 || getType() == 11 || getType() == 14 || getType() == 15) {
+                    ok = true;
                 }
                 break;
             case WALK:
-                if (travel.contains("WALK") || travel.contains("ALL")) {
-                    returned = true;
+                if (getType() == 1 || getType() == 3 || getType() == 5 || getType() == 7 || getType() == 9 || getType() == 11 || getType() == 13 || getType() == 15) {
+                    ok = true;
                 }
                 break;
         }
-        if (!returned) {
+        if (!ok) {
             return Float.POSITIVE_INFINITY;
         } else {
             if (fast) {
-                return time;
+                return time + (float)way.getFromNode().distance(end);
             } else {
-                return length;
+                return length +  (float)way.getFromNode().distance(end);
             }
         }
     }

@@ -8,16 +8,23 @@ import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 /**
+ * @author Niclas Hedam
  * @author Andreas Blanke
+ * @author Robert Sedgewick
+ * @author Kevin Wayne
  * @version 05-05-2017
  */
 public class RouteDijkstra {
 
     private Map<Point2D,Float> distTo;
     private Map<Point2D,RoadEdge> edgeTo;
-    private IndexMinPQ<Float> pQ;
+    private PriorityQueue<Node> pQ;
 
+    private Point2D start;
     private Point2D end;
     private TravelType type;
     private RoadGraphFactory factory;
@@ -27,7 +34,9 @@ public class RouteDijkstra {
         edgeTo = new HashMap<>();
         this.type = type;
         factory = Model.getInstance().getGraphFactory();
+        this.start = start;
         this.end = end;
+
 
         for (Point2D v : graph.getAdjacencyList().keySet()) {
             distTo.put(v, Float.POSITIVE_INFINITY);
@@ -36,13 +45,15 @@ public class RouteDijkstra {
         int counter = 0;
 
         // relax vertices in order of distance from s
-        pQ = new IndexMinPQ<>(graph.getNumberOfVertices());
-        pQ.insert(factory.getID(start), distTo.get(start));
-        while (!pQ.isEmpty()) {
-            Point2D v = factory.getPoint(pQ.delMin());
+        pQ = new PriorityQueue<Node>(graph.getNumberOfVertices(), new WeightComperator());
+        pQ.add(new Node(start, distTo.get(start)));
+
+        Node next;
+        while ((next = pQ.poll()) != null) {
+            Point2D v = next.point;
             for (RoadEdge e : graph.adjacent(v)) {
-                relax(e);
-                if (counter % 1000 == 0) {
+                relax(e, next);
+                if (counter % 10000 == 0) {
                     System.out.println("Relaxing " + v + "; Distance = " + distTo.get(v));
                 }
                 counter++;
@@ -55,15 +66,16 @@ public class RouteDijkstra {
     }
 
     // relax edge e and update pq if changed
-    private void relax(RoadEdge e) {
+    private void relax(RoadEdge e, Node n) {
         Point2D v = e.getEither(), w = e.getOther(v);
-        if (distTo.get(w) > distTo.get(v) + e.getWeight(type)) {
-            distTo.put(w, distTo.get(v) + e.getWeight(type));
+        if (distTo.get(w) > distTo.get(v) + e.getWeight(type, start, end)) {
+            distTo.put(w, distTo.get(v) + e.getWeight(type, start, end));
             edgeTo.put(w, e);
-            if (pQ.contains(factory.getID(w))) {
-                pQ.decreaseKey(factory.getID(w), distTo.get(w));
+            if (pQ.contains(new Node(w, 0))) {  //The weight does not matter ..
+                pQ.remove(new Node(w, 0));      //The weight does not matter ..
+                pQ.add(new Node(w, distTo.get(w)));
             } else {
-                pQ.insert(factory.getID(w), distTo.get(w));
+                pQ.add(new Node(w, distTo.get(w)));
             }
         }
     }
@@ -85,6 +97,37 @@ public class RouteDijkstra {
             path.push(e);
         }
         return path;
+    }
+
+    private class Node{
+        public Point2D point;
+        public Float weight;
+
+        public Node(Point2D point, float weight){
+            this.point = point;
+            this.weight = weight;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if(obj instanceof Node == false){
+                return false;
+            }
+
+            return this.point.equals(((Node)obj).point);
+        }
+    }
+
+    private class WeightComperator implements Comparator<Node>
+    {
+        @Override
+        public int compare(Node x, Node y)
+        {
+            return (x.weight.compareTo(y.weight));
+        }
     }
 
 }
