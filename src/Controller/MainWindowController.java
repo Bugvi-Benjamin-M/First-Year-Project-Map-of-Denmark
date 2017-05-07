@@ -191,38 +191,34 @@ public final class MainWindowController extends WindowController {
     }
 
     public void activateSmallJourneyPlannerInformationBar() {
-
+        int boundsTo = GlobalValue.getSmallInformationBarHeight();
+        final int[] boundsNow = {0};
+        inSlideTimer = new Timer(1, ae -> {
+            if (boundsTo > boundsNow[0]){
+                boundsNow[0] = boundsNow[0] + 3;
+                JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight() - boundsNow[0], window.getFrame().getWidth(), window.getFrame().getHeight());
+                JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
+                JourneyPlannerBarController.getInstance().getInformationBar().repaint();
+            } else {
+                inSlideTimer.stop();
+                inSlideTimer = null;
+            }
+        });
+        inSlideTimer.start();
+        JourneyPlannerBarController.getInstance().setupSmallJourneyPlannerBar();
     }
 
     public void deactivateLargeJourneyPlannerInformationBar() {
-        /*int boundsTo = 0;
-        final int[] boundsNow = {GlobalValue.getLargeInformationBarWidth()};
-        inSlideTimer = new Timer(1, ae -> {
-                if (boundsTo <= boundsNow[0]) {
-                    boundsNow[0] = boundsNow[0] - 3;
-                    JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, boundsNow[0], window.getFrame().getHeight());
-                    JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
-                    JourneyPlannerBarController.getInstance().getInformationBar().repaint();
-
-                } else {
-                    inSlideTimer.stop();
-                    inSlideTimer = null;
-                    JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
-                    CanvasController.repaintCanvas();
-                }
-        });
-        inSlideTimer.start();
-    }*/
-
-
-        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, 0, window.getFrame().getHeight());
-        JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
-        CanvasController.repaintCanvas();
+       JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, 0, window.getFrame().getHeight());
+       JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
+       CanvasController.repaintCanvas();
     }
 
 
     public void deactivateSmallJourneyPlannerInformationBar() {
-
+        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
+        JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
+        CanvasController.repaintCanvas();
     }
 
     public void transferFocusToMapCanvas()

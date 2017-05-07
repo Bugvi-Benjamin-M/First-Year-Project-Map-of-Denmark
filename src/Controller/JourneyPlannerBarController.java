@@ -20,7 +20,7 @@ public final class JourneyPlannerBarController extends Controller {
 
     private static JourneyPlannerBarController instance;
 
-    private final int DISTANCE_BETWEEN_TOOLBAR_AND_SCROLLPANE = GlobalValue.getToolbarHeight() + 10;
+    private final int DISTANCE_BETWEEN_TOOLBAR_AND_LARGE_JOURNEYPLANNERBAR = GlobalValue.getToolbarHeight() + 10;
     private final int TRANSPORT_BUTTONS_WIDTH = GlobalValue.getLargeInformationBarWidth() - 72;
     private final int CLEAR_SEARCH_BUTTONS_WIDTH = TRANSPORT_BUTTONS_WIDTH - 3;
     private final int TRANSPORT_BUTTONS_HEIGHT = 90;
@@ -38,6 +38,10 @@ public final class JourneyPlannerBarController extends Controller {
     private final int JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT_DECREASE = 333;
     //private final int JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT = 477;
     private final int DISTANCE_BETWEEN_SEARCHCLEAR_BUTTONS_AND_DESCRIPTION_FIELD = 30;
+    private final int SMALL_JOURNEY_PLANNERBAR_WIDTH_DECREASE = 20;
+    private final int SMALL_JOURNEY_PLANNERBAR_HEIGHT_DECREASE = 40;
+    private final int SMALL_TRANSPORT_BUTTONS_WIDTH = 150;
+    private final int SMALL_TRANSPORT_BUTTONS_HEIGHT = 60;
 
     private InformationBar informationBar;
     private SpringLayout journeyPlannerBarLayout;
@@ -97,6 +101,7 @@ public final class JourneyPlannerBarController extends Controller {
         int journeyPlannerBarHeight = window.getFrame().getHeight() - JOURNEY_PLANNERBAR_HEIGHT_DECREASE;
         journeyPlannerBar.setPreferredSize(new Dimension(JOURNEY_PLANNERBAR_WIDTH, journeyPlannerBarHeight));
         journeyPlannerTransportTypeButtons.setPreferredSize(new Dimension(TRANSPORT_BUTTONS_WIDTH, TRANSPORT_BUTTONS_HEIGHT));
+        journeyPlannerTransportTypeButtons.applyLargeState();
         journeyPlannerSearchClearButtons.setPreferredSize(new Dimension(CLEAR_SEARCH_BUTTONS_WIDTH, CLEAR_SEARCH_BUTTONS_HEIGHT));
         fromBar.getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH,SEARCHBAR_HEIGHT));
         fromBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "From:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(fromBar.getFont().getName(), fromBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
@@ -105,7 +110,7 @@ public final class JourneyPlannerBarController extends Controller {
         int journeyPlannerDescriptionFieldHeight = journeyPlannerBarHeight - JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT_DECREASE;
         travelDescription.setPreferredSize(new Dimension(JOURNEY_PLANNER_DESCRIPTION_FIELD_WIDTH, journeyPlannerDescriptionFieldHeight));
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
-        informationBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerBar, DISTANCE_BETWEEN_TOOLBAR_AND_SCROLLPANE, SpringLayout.NORTH, informationBar);
+        informationBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerBar, DISTANCE_BETWEEN_TOOLBAR_AND_LARGE_JOURNEYPLANNERBAR, SpringLayout.NORTH, informationBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, journeyPlannerTransportTypeButtons, 0, SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerTransportTypeButtons, 0, SpringLayout.NORTH, journeyPlannerBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, fromBar, 0, SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar);
@@ -127,6 +132,17 @@ public final class JourneyPlannerBarController extends Controller {
 
     public void setupSmallJourneyPlannerBar() {
         isSmallJourneyPlannerVisible = true;
+        informationBar.setPreferredSize(new Dimension(window.getFrame().getWidth(), GlobalValue.getSmallInformationBarHeight()));
+        journeyPlannerBar.setPreferredSize(new Dimension(window.getFrame().getWidth() - SMALL_JOURNEY_PLANNERBAR_WIDTH_DECREASE, GlobalValue.getSmallInformationBarHeight() - SMALL_JOURNEY_PLANNERBAR_HEIGHT_DECREASE));
+        journeyPlannerTransportTypeButtons.setPreferredSize(new Dimension(SMALL_TRANSPORT_BUTTONS_WIDTH, SMALL_TRANSPORT_BUTTONS_HEIGHT));
+        journeyPlannerTransportTypeButtons.applySmallerState();
+        informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
+        informationBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerBar, 10, SpringLayout.NORTH, informationBar);
+        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerTransportTypeButtons, 20, SpringLayout.NORTH, journeyPlannerBar);
+        journeyPlannerBarLayout.putConstraint(SpringLayout.WEST, journeyPlannerTransportTypeButtons, 5, SpringLayout.WEST, journeyPlannerBar);
+        themeHasChanged();
+        journeyPlannerBar.add(journeyPlannerTransportTypeButtons);
+        informationBar.add(journeyPlannerBar);
     }
 
     public InformationBar getInformationBar() {

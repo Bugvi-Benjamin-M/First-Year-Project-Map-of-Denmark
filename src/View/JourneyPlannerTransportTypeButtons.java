@@ -31,32 +31,31 @@ public class JourneyPlannerTransportTypeButtons extends View {
     private final String BICYCLE_TOOLTIP = "Cycling!";
     private final String CAR_TOOLTIP = "Driving!";
 
+    private final int SMALL_BICYCLE_BUTTON_WIDHT = 28;
+    private final int SMALL_ONFOOT_BUTTON_WIDTH = 15;
+    private final int SMALL_CAR_BUTTON_WIDTH = 26;
+    private final int SMALL_BUTTON_HEIGHT = 26;
+    private final float SMALL_BUTTON_FONT_SIZE = 20f;
+    private final int SMALL_SPACE_BETWEEN_BUTTONS = 8;
+    private final int SMALL_TITLE_FONT = 10;
+
+    private boolean isLargeState;
+
     public JourneyPlannerTransportTypeButtons() {
-        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),"Means of Transportation:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font("Verdana", Font.PLAIN, TITLE_FONT), ThemeHelper.color("icon")));
         onFootButton = new JLabel("\uf183");
-        onFootButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
         onFootButton.setOpaque(true);
-        onFootButton.setPreferredSize(new Dimension(ONFOOT_BUTTON_WIDTH, BUTTON_HEIGHT));
         onFootButton.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
         onFootButton.setToolTipText(ON_FOOT_TOOLTIP);
         bicycleButton = new JLabel("\uf206");
-        bicycleButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
         bicycleButton.setOpaque(true);
-        bicycleButton.setPreferredSize(new Dimension(BICYCLE_BUTTON_WIDTH, BUTTON_HEIGHT));
         bicycleButton.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
         bicycleButton.setToolTipText(BICYCLE_TOOLTIP);
         carButton = new JLabel("\uf1b9");
-        carButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
         carButton.setOpaque(true);
-        carButton.setPreferredSize(new Dimension(CAR_BUTTON_WIDTH, BUTTON_HEIGHT));
         carButton.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
         carButton.setToolTipText(CAR_TOOLTIP);
         applyTheme();
-        add(onFootButton);
-        add(Box.createHorizontalStrut(SPACE_BETWEEN_BUTTONS));
-        add(bicycleButton);
-        add(Box.createHorizontalStrut(SPACE_BETWEEN_BUTTONS));
-        add(carButton);
+        applyLargeState();
     }
 
     public void applyTheme() {
@@ -70,7 +69,8 @@ public class JourneyPlannerTransportTypeButtons extends View {
         carButton.setBackground(ThemeHelper.color("toolbar"));
         carButton.setForeground(ThemeHelper.color("icon"));
         carButton.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
-        setBorder(BorderFactory.createTitledBorder(null,"Means of Transportation:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font("Verdana", Font.PLAIN, TITLE_FONT), ThemeHelper.color("icon")));
+        if(isLargeState) setBorder(BorderFactory.createTitledBorder(null,"Means of Transportation:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font("Verdana", Font.PLAIN, TITLE_FONT), ThemeHelper.color("icon")));
+        else setBorder(BorderFactory.createTitledBorder(null,"Means of Transportation:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font("Verdana", Font.PLAIN, SMALL_TITLE_FONT), ThemeHelper.color("icon")));
     }
 
     public JLabel getOnFootButton() {
@@ -85,5 +85,37 @@ public class JourneyPlannerTransportTypeButtons extends View {
         return carButton;
     }
 
+    public void applySmallerState() {
+        isLargeState = false;
+        removeAll();
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),"Means of Transportation:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font("Verdana", Font.PLAIN, SMALL_TITLE_FONT), ThemeHelper.color("icon")));
+        onFootButton.setPreferredSize(new Dimension(SMALL_ONFOOT_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT));
+        onFootButton.setFont(FontAwesome.getFontAwesome().deriveFont(SMALL_BUTTON_FONT_SIZE));
+        bicycleButton.setPreferredSize(new Dimension(SMALL_BICYCLE_BUTTON_WIDHT, SMALL_BUTTON_HEIGHT));
+        bicycleButton.setFont(FontAwesome.getFontAwesome().deriveFont(SMALL_BUTTON_FONT_SIZE));
+        carButton.setPreferredSize(new Dimension(SMALL_CAR_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT));
+        carButton.setFont(FontAwesome.getFontAwesome().deriveFont(SMALL_BUTTON_FONT_SIZE));
+        add(onFootButton);
+        add(Box.createHorizontalStrut(SMALL_SPACE_BETWEEN_BUTTONS));
+        add(bicycleButton);
+        add(Box.createHorizontalStrut(SMALL_SPACE_BETWEEN_BUTTONS));
+        add(carButton);
+    }
 
+    public void applyLargeState() {
+        isLargeState = true;
+        removeAll();
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),"Means of Transportation:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font("Verdana", Font.PLAIN, TITLE_FONT), ThemeHelper.color("icon")));
+        onFootButton.setPreferredSize(new Dimension(ONFOOT_BUTTON_WIDTH, BUTTON_HEIGHT));
+        onFootButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
+        bicycleButton.setPreferredSize(new Dimension(BICYCLE_BUTTON_WIDTH, BUTTON_HEIGHT));
+        bicycleButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
+        carButton.setPreferredSize(new Dimension(CAR_BUTTON_WIDTH, BUTTON_HEIGHT));
+        carButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
+        add(onFootButton);
+        add(Box.createHorizontalStrut(SPACE_BETWEEN_BUTTONS));
+        add(bicycleButton);
+        add(Box.createHorizontalStrut(SPACE_BETWEEN_BUTTONS));
+        add(carButton);
+    }
 }
