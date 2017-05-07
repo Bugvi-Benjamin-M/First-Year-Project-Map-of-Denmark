@@ -25,6 +25,7 @@ public final class MainWindowController extends WindowController {
     private final int FROM_RESIZE_EVENT_TO_MINIMUMWIDTH = 70;
     private static MainWindowController instance;
     private JLayeredPane layeredPane;
+    private Timer inSlideTimer;
 
     private MainWindowController() { super(); }
 
@@ -124,15 +125,39 @@ public final class MainWindowController extends WindowController {
     }
 
     public void activateLargePointsOfInterestInformationBar() {
-        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight());
+        int boundsTo = GlobalValue.getLargeInformationBarWidth();
+        final int[] boundsNow = {0};
+        inSlideTimer = new Timer(1, ae -> {
+            if (boundsTo > boundsNow[0]){
+                boundsNow[0] = boundsNow[0] + 3;
+                PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, boundsNow[0], window.getFrame().getHeight());
+                PointsOfInterestController.getInstance().getInformationBar().revalidate();
+                PointsOfInterestController.getInstance().getInformationBar().repaint();
+            } else {
+                inSlideTimer.stop();
+                inSlideTimer = null;
+            }
+        });
+        inSlideTimer.start();
         PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
-        PointsOfInterestController.getInstance().getInformationBar().revalidate();
     }
 
     public void activateSmallPointsOfInterestInformationBar() {
-        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight()-GlobalValue.getSmallInformationBarHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
+        int boundsTo = GlobalValue.getSmallInformationBarHeight();
+        final int[] boundsNow = {0};
+        inSlideTimer = new Timer(1, ae -> {
+            if (boundsTo > boundsNow[0]){
+                boundsNow[0] = boundsNow[0] + 3;
+                PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight() - boundsNow[0], window.getFrame().getWidth(), window.getFrame().getHeight());
+                PointsOfInterestController.getInstance().getInformationBar().revalidate();
+                PointsOfInterestController.getInstance().getInformationBar().repaint();
+            } else {
+                inSlideTimer.stop();
+                inSlideTimer = null;
+            }
+        });
+        inSlideTimer.start();
         PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
-        PointsOfInterestController.getInstance().getInformationBar().revalidate();
     }
 
     public void deactivateSmallPointsOfInterestInformationBar() {
@@ -148,9 +173,21 @@ public final class MainWindowController extends WindowController {
     }
 
     public void activateLargeJourneyPlannerInformationBar() {
-        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight());
+        int boundsTo = GlobalValue.getLargeInformationBarWidth();
+        final int[] boundsNow = {0};
+        inSlideTimer = new Timer(1, ae -> {
+            if (boundsTo > boundsNow[0]){
+                boundsNow[0] = boundsNow[0] + 3;
+                JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, boundsNow[0], window.getFrame().getHeight());
+                JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
+                JourneyPlannerBarController.getInstance().getInformationBar().repaint();
+            } else {
+                inSlideTimer.stop();
+                inSlideTimer = null;
+            }
+        });
+        inSlideTimer.start();
         JourneyPlannerBarController.getInstance().setupLargeJourneyPlannerBar();
-        JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
     }
 
     public void activateSmallJourneyPlannerInformationBar() {
@@ -158,10 +195,31 @@ public final class MainWindowController extends WindowController {
     }
 
     public void deactivateLargeJourneyPlannerInformationBar() {
-        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
+        /*int boundsTo = 0;
+        final int[] boundsNow = {GlobalValue.getLargeInformationBarWidth()};
+        inSlideTimer = new Timer(1, ae -> {
+                if (boundsTo <= boundsNow[0]) {
+                    boundsNow[0] = boundsNow[0] - 3;
+                    JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, boundsNow[0], window.getFrame().getHeight());
+                    JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
+                    JourneyPlannerBarController.getInstance().getInformationBar().repaint();
+
+                } else {
+                    inSlideTimer.stop();
+                    inSlideTimer = null;
+                    JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
+                    CanvasController.repaintCanvas();
+                }
+        });
+        inSlideTimer.start();
+    }*/
+
+
+        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, 0, window.getFrame().getHeight());
         JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
         CanvasController.repaintCanvas();
     }
+
 
     public void deactivateSmallJourneyPlannerInformationBar() {
 
@@ -180,7 +238,6 @@ public final class MainWindowController extends WindowController {
         JourneyPlannerBarController.getInstance().themeHasChanged();
         setToolTipTheme();
         setProgressBarTheme();
-        //transferFocusToMapCanvas();
     }
 
     @Override

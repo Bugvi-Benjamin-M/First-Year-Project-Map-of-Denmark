@@ -29,12 +29,14 @@ public final class JourneyPlannerBarController extends Controller {
     private final int SEARCHBAR_WIDTH = 312;
     private final int SEARCHBAR_HEIGHT = 30;
     private final int JOURNEY_PLANNERBAR_WIDTH = 325;
-    private final int JOURNEY_PLANNERBAR_HEIGHT = 810;
+    //private final int JOURNEY_PLANNERBAR_HEIGHT = 810;
+    private final int JOURNEY_PLANNERBAR_HEIGHT_DECREASE = 167;
     private final int TITLE_FONT_SIZE = 15;
     private final int DISTANCE_BETWEEN_SEARCHBARS = 4;
     private final int DISTANCE_BETWEEN_TOBAR_TO_CLEARSEARCH_BUTTONS = 10;
-    private final int JOURNEY_PLANNER_DESCRIPTION_FIELD_WIDTH = 325;
-    private final int JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT = 477;
+    private final int JOURNEY_PLANNER_DESCRIPTION_FIELD_WIDTH = 328;
+    private final int JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT_DECREASE = 333;
+    //private final int JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT = 477;
     private final int DISTANCE_BETWEEN_SEARCHCLEAR_BUTTONS_AND_DESCRIPTION_FIELD = 30;
 
     private InformationBar informationBar;
@@ -92,17 +94,16 @@ public final class JourneyPlannerBarController extends Controller {
     public void setupLargeJourneyPlannerBar() {
         isLargeJourneyPlannerVisible = true;
         informationBar.setPreferredSize(new Dimension(GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight()));
-        journeyPlannerBar.setPreferredSize(new Dimension(JOURNEY_PLANNERBAR_WIDTH, JOURNEY_PLANNERBAR_HEIGHT));
+        int journeyPlannerBarHeight = window.getFrame().getHeight() - JOURNEY_PLANNERBAR_HEIGHT_DECREASE;
+        journeyPlannerBar.setPreferredSize(new Dimension(JOURNEY_PLANNERBAR_WIDTH, journeyPlannerBarHeight));
         journeyPlannerTransportTypeButtons.setPreferredSize(new Dimension(TRANSPORT_BUTTONS_WIDTH, TRANSPORT_BUTTONS_HEIGHT));
         journeyPlannerSearchClearButtons.setPreferredSize(new Dimension(CLEAR_SEARCH_BUTTONS_WIDTH, CLEAR_SEARCH_BUTTONS_HEIGHT));
         fromBar.getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH,SEARCHBAR_HEIGHT));
         fromBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "From:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(fromBar.getFont().getName(), fromBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
         toBar.getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH, SEARCHBAR_HEIGHT));
         toBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "To:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(toBar.getFont().getName(), toBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
-        travelDescription.setPreferredSize(new Dimension(JOURNEY_PLANNER_DESCRIPTION_FIELD_WIDTH, JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT));
-        //travelDescription.getField().setPreferredSize(new Dimension(325, 460));
-        //travelDescription.setScrollSize(new Dimension(325, 460));
-        //travelDescription.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.RED), "Travel Description:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(travelDescription.getFont().getName(), travelDescription.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
+        int journeyPlannerDescriptionFieldHeight = journeyPlannerBarHeight - JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT_DECREASE;
+        travelDescription.setPreferredSize(new Dimension(JOURNEY_PLANNER_DESCRIPTION_FIELD_WIDTH, journeyPlannerDescriptionFieldHeight));
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
         informationBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerBar, DISTANCE_BETWEEN_TOOLBAR_AND_SCROLLPANE, SpringLayout.NORTH, informationBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, journeyPlannerTransportTypeButtons, 0, SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar);

@@ -200,10 +200,10 @@ public final class PointsOfInterestController extends Controller {
     private void setupLargeScrollbar() {
         largeScroll = new JScrollPane(pointsOfInterestBar);
         largeScroll.setOpaque(true);
-        int LARGE_SCROLLBAR_HEIGHT = (int) (window.getFrame().getHeight() + LARGE_SCROLLBAR_HEIGHT_DECREASE);
-        largeScroll.setPreferredSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, LARGE_SCROLLBAR_HEIGHT));
-        largeScroll.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, LARGE_SCROLLBAR_HEIGHT));
-        largeScroll.setMaximumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, LARGE_SCROLLBAR_HEIGHT));
+        int largeScrollbarHeight = (int) (window.getFrame().getHeight() + LARGE_SCROLLBAR_HEIGHT_DECREASE);
+        largeScroll.setPreferredSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, largeScrollbarHeight));
+        largeScroll.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, largeScrollbarHeight));
+        largeScroll.setMaximumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, largeScrollbarHeight));
         largeScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         largeScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         largeScroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
