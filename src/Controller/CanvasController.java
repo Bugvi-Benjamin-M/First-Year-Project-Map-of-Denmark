@@ -41,7 +41,7 @@ public final class CanvasController extends Controller implements Observer {
     private static final int ANTIALIASING_ZOOM_DELAY = 150;
     private static final int COASTLINES_UPDATE_DELAY = 150;
     private final int ANTIALIASING_RESIZE_DELAY = 150;
-    private final float MINIMUM_ACCEPTED_DISTANCE = 0.09f;
+    private static final float MINIMUM_ACCEPTED_DISTANCE = 0.09f;
     private Timer toolTipTimer;
     private Timer antiAliasingZoomTimer;
     private static Timer coastLinesUpdateTimer;
@@ -560,9 +560,10 @@ public final class CanvasController extends Controller implements Observer {
     private void setPopupContent(MouseEvent event)
     {
         Point2D point2D = mapCanvas.toModelCoords(event.getPoint());
-        String content = calculateNearestNeighbour((float)point2D.getX(), (float)point2D.getY());
-        if (content == null)
+        Road road = calculateNearestNeighbour((float)point2D.getX(), (float)point2D.getY());
+        if (road == null)
             return;
+        String content = road.getName();
         AffineTransform transform = new AffineTransform();
         FontRenderContext context = new FontRenderContext(transform, true, true);
         Font font = new Font("Verdana", Font.PLAIN, 12);
@@ -618,7 +619,7 @@ public final class CanvasController extends Controller implements Observer {
         }
     }
 
-    private String calculateNearestNeighbour(float x, float y) {
+    public static Road calculateNearestNeighbour(float x, float y) {
         ArrayList<HashSet<Element>> roads = getNearestNeighbourOfAllRoads(x, y);
 
         float minDist = 1000;
@@ -638,12 +639,12 @@ public final class CanvasController extends Controller implements Observer {
         if (minDist > MINIMUM_ACCEPTED_DISTANCE)
             return null;
         if (e != null) {
-            return e.getName();
+            return e;
         } else
-            return "error";
+            return null;
     }
 
-    private ArrayList<HashSet<Element>> getNearestNeighbourOfAllRoads(float x, float y){
+    private static ArrayList<HashSet<Element>> getNearestNeighbourOfAllRoads(float x, float y){
         ArrayList<HashSet<Element>> roads = new ArrayList<>();
         roads.add(getNearestNeighbour(ElementType.PRIMARY_ROAD, x, y));
         roads.add(getNearestNeighbour(ElementType.SECONDARY_ROAD, x, y));
@@ -672,7 +673,7 @@ public final class CanvasController extends Controller implements Observer {
         return roads;
     }
 
-    private HashSet<Element> getNearestNeighbour(ElementType type, float x, float y){
+    private static HashSet<Element> getNearestNeighbour(ElementType type, float x, float y){
         return model.getElements()
                 .get(type)
                 .getManySections(x - 1f, y - 1f, x + 1f, y + 1f);
