@@ -29,6 +29,8 @@ public final class MainWindowController extends WindowController {
     private final int SLIDE_DELAY = 16;
     private final int PIXELS_TO_MOVE = 14;
 
+    private boolean isSliding;
+
     private MainWindowController() { super(); }
 
     public static MainWindowController getInstance()
@@ -60,6 +62,8 @@ public final class MainWindowController extends WindowController {
         setToolTipTheme();
         toggleKeyBindings();
         hideWindow();
+
+        isSliding = false;
     }
 
     private void setToolTipTheme()
@@ -127,24 +131,50 @@ public final class MainWindowController extends WindowController {
     }
 
     public void activateLargePointsOfInterestInformationBar() {
-        int boundsTo = GlobalValue.getLargeInformationBarWidth();
-        final int[] boundsNow = {0};
-        inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
-            if (boundsTo > boundsNow[0]){
-                boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
-                PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, boundsNow[0], window.getFrame().getHeight());
-                PointsOfInterestController.getInstance().getInformationBar().revalidate();
-                PointsOfInterestController.getInstance().getInformationBar().repaint();
-            } else {
-                inSlideTimer.stop();
-                inSlideTimer = null;
-            }
-        });
-        inSlideTimer.start();
-        PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
+        if(inSlideTimer == null) {
+            PointsOfInterestController.getInstance().clearPointsOfInterestBar();
+            int boundsTo = GlobalValue.getLargeInformationBarWidth();
+            final int[] boundsNow = {0};
+            isSliding = true;
+            inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
+                if (boundsTo > boundsNow[0]) {
+                    boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
+                    PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, boundsNow[0], window.getFrame().getHeight());
+                    PointsOfInterestController.getInstance().getInformationBar().revalidate();
+                    PointsOfInterestController.getInstance().getInformationBar().repaint();
+                } else {
+                    inSlideTimer.stop();
+                    inSlideTimer = null;
+                    isSliding = false;
+                }
+            });
+            inSlideTimer.start();
+            PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
+        }
+        /*if(inSlideTimer == null) {
+            PointsOfInterestController.getInstance().clearPointsOfInterestBar();
+            int boundsTo = GlobalValue.getLargeInformationBarWidth();
+            final int[] boundsNow = {0};
+            isSliding = true;
+            inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
+                if (boundsTo > boundsNow[0]) {
+                    boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
+                    PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, boundsNow[0], window.getFrame().getHeight());
+                    PointsOfInterestController.getInstance().getInformationBar().revalidate();
+                    PointsOfInterestController.getInstance().getInformationBar().repaint();
+                } else {
+                    inSlideTimer.stop();
+                    inSlideTimer = null;
+                    isSliding = false;
+                }
+            });
+            inSlideTimer.start();
+            PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();*/
+        //}
     }
 
     public void activateSmallPointsOfInterestInformationBar() {
+        PointsOfInterestController.getInstance().clearPointsOfInterestBar();
         int boundsTo = GlobalValue.getSmallInformationBarHeight();
         final int[] boundsNow = {0};
         inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
@@ -162,40 +192,48 @@ public final class MainWindowController extends WindowController {
         PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
     }
 
+    public void deactivateLargePointsOfInterestInformationBar() {
+        if(!isSliding) {
+            PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, 0, window.getFrame().getHeight());
+            PointsOfInterestController.getInstance().clearPointsOfInterestBar();
+            CanvasController.repaintCanvas();
+        }
+    }
+
     public void deactivateSmallPointsOfInterestInformationBar() {
         PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().clearPointsOfInterestBar();
         CanvasController.repaintCanvas();
     }
 
-    public void deactivateLargePointsOfInterestInformationBar() {
-        PointsOfInterestController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
-        PointsOfInterestController.getInstance().clearPointsOfInterestBar();
-        CanvasController.repaintCanvas();
-    }
-
     public void activateLargeJourneyPlannerInformationBar() {
-        int boundsTo = GlobalValue.getLargeInformationBarWidth();
-        final int[] boundsNow = {0};
-        inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
-            if (boundsTo > boundsNow[0]){
-                boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
-                JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, boundsNow[0], window.getFrame().getHeight());
-                JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
-                JourneyPlannerBarController.getInstance().getInformationBar().repaint();
-            } else {
-                inSlideTimer.stop();
-                inSlideTimer = null;
-            }
-        });
-        inSlideTimer.start();
-        JourneyPlannerBarController.getInstance().setupLargeJourneyPlannerBar();
+        if(inSlideTimer == null) {
+            JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
+            int boundsTo = GlobalValue.getLargeInformationBarWidth();
+            final int[] boundsNow = {0};
+            isSliding = true;
+            inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
+                if (boundsTo > boundsNow[0]) {
+                    boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
+                    JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, boundsNow[0], window.getFrame().getHeight());
+                    JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
+                    JourneyPlannerBarController.getInstance().getInformationBar().repaint();
+                } else {
+                    inSlideTimer.stop();
+                    inSlideTimer = null;
+                    isSliding = false;
+                }
+            });
+            inSlideTimer.start();
+            JourneyPlannerBarController.getInstance().setupLargeJourneyPlannerBar();
+        }
     }
 
     public void activateSmallJourneyPlannerInformationBar() {
+        JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
         int boundsTo = GlobalValue.getSmallInformationBarHeight();
         final int[] boundsNow = {0};
-        inSlideTimer = new Timer(1, ae -> {
+        inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
             if (boundsTo > boundsNow[0]){
                 boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
                 JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight() - boundsNow[0], window.getFrame().getWidth(), window.getFrame().getHeight());
@@ -211,9 +249,11 @@ public final class MainWindowController extends WindowController {
     }
 
     public void deactivateLargeJourneyPlannerInformationBar() {
-       JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, 0, window.getFrame().getHeight());
-       JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
-       CanvasController.repaintCanvas();
+        if(!isSliding) {
+            JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, 0, window.getFrame().getHeight());
+            JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
+            CanvasController.repaintCanvas();
+        }
     }
 
 
@@ -236,6 +276,10 @@ public final class MainWindowController extends WindowController {
         JourneyPlannerBarController.getInstance().themeHasChanged();
         setToolTipTheme();
         setProgressBarTheme();
+    }
+
+    public boolean isSliding() {
+        return isSliding;
     }
 
     @Override

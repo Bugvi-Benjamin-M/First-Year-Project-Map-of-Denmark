@@ -466,34 +466,56 @@ public final class ToolbarController extends Controller {
     }
 
     private void poiToolActivatedEvent() {
-        if(journeyPlannerToolActive) routesToolActivatedEvent();
-        if(!poiToolActive) {
-            toolbar.getTool(ToolType.POI).toggleActivate(true);
-            if(type == ToolbarType.LARGE) MainWindowController.getInstance().activateLargePointsOfInterestInformationBar();
-            else if(type == ToolbarType.SMALL) MainWindowController.getInstance().activateSmallPointsOfInterestInformationBar();
-            poiToolActive = true;
-        } else {
-            toolbar.getTool(ToolType.POI).toggleActivate(false);
-            if(type == ToolbarType.LARGE) MainWindowController.getInstance().deactivateLargePointsOfInterestInformationBar();
-            else if(type == ToolbarType.SMALL) MainWindowController.getInstance().deactivateSmallPointsOfInterestInformationBar();
-            MainWindowController.getInstance().transferFocusToMapCanvas();
-            poiToolActive = false;
+        if(!MainWindowController.getInstance().isSliding()) {
+            if(journeyPlannerToolActive) {
+                if(type == ToolbarType.LARGE) MainWindowController.getInstance().deactivateLargeJourneyPlannerInformationBar();
+                else MainWindowController.getInstance().deactivateSmallJourneyPlannerInformationBar();
+                journeyPlannerToolActive = false;
+                toolbar.getTool(ToolType.ROUTES).toggleActivate(false);
+            }
+            if (!poiToolActive) {
+                toolbar.getTool(ToolType.POI).toggleActivate(true);
+                if (type == ToolbarType.LARGE)
+                    MainWindowController.getInstance().activateLargePointsOfInterestInformationBar();
+                else if (type == ToolbarType.SMALL)
+                    MainWindowController.getInstance().activateSmallPointsOfInterestInformationBar();
+                poiToolActive = true;
+            } else {
+                toolbar.getTool(ToolType.POI).toggleActivate(false);
+                if (type == ToolbarType.LARGE)
+                    MainWindowController.getInstance().deactivateLargePointsOfInterestInformationBar();
+                else if (type == ToolbarType.SMALL)
+                    MainWindowController.getInstance().deactivateSmallPointsOfInterestInformationBar();
+                MainWindowController.getInstance().transferFocusToMapCanvas();
+                poiToolActive = false;
+            }
         }
-
     }
-    //Todo need to deal with the case when one is active and the other is activated
+
     private void routesToolActivatedEvent() {
-        if (poiToolActive) poiToolActivatedEvent();
-        if(!journeyPlannerToolActive) {
-            toolbar.getTool(ToolType.ROUTES).toggleActivate(true);
-            if(type == ToolbarType.LARGE) MainWindowController.getInstance().activateLargeJourneyPlannerInformationBar();
-            else if(type == ToolbarType.SMALL) MainWindowController.getInstance().activateSmallJourneyPlannerInformationBar();
-            journeyPlannerToolActive = true;
-        } else {
-            toolbar.getTool(ToolType.ROUTES).toggleActivate(false);
-            if(type == ToolbarType.LARGE) MainWindowController.getInstance().deactivateLargeJourneyPlannerInformationBar();
-            else if(type == ToolbarType.SMALL) MainWindowController.getInstance().deactivateSmallJourneyPlannerInformationBar();
-            journeyPlannerToolActive = false;
+        if(!MainWindowController.getInstance().isSliding()) {
+            if (poiToolActive) {
+                if(type == ToolbarType.LARGE) MainWindowController.getInstance().deactivateLargePointsOfInterestInformationBar();
+                else MainWindowController.getInstance().deactivateSmallJourneyPlannerInformationBar();
+                poiToolActive = false;
+                toolbar.getTool(ToolType.POI).toggleActivate(false);
+            }
+            if (!journeyPlannerToolActive) {
+                toolbar.getTool(ToolType.ROUTES).toggleActivate(true);
+                if (type == ToolbarType.LARGE)
+                    MainWindowController.getInstance().activateLargeJourneyPlannerInformationBar();
+                else if (type == ToolbarType.SMALL)
+                    MainWindowController.getInstance().activateSmallJourneyPlannerInformationBar();
+                journeyPlannerToolActive = true;
+
+            } else {
+                toolbar.getTool(ToolType.ROUTES).toggleActivate(false);
+                if (type == ToolbarType.LARGE)
+                    MainWindowController.getInstance().deactivateLargeJourneyPlannerInformationBar();
+                else if (type == ToolbarType.SMALL)
+                    MainWindowController.getInstance().deactivateSmallJourneyPlannerInformationBar();
+                journeyPlannerToolActive = false;
+            }
         }
     }
 
