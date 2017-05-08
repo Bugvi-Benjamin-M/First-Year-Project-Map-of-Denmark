@@ -48,16 +48,20 @@ public final class JourneyPlannerBarController extends Controller {
     private SpringLayout informationBarLayout;
     private JourneyPlannerTransportTypeButtons journeyPlannerTransportTypeButtons;
     private JourneyPlannerBar journeyPlannerBar;
-    private SearchTool fromBar;
-    private SearchTool toBar;
+    //private SearchTool fromBar;
+    //private SearchTool toBar;
     private JourneyPlannerSearchClearButtons journeyPlannerSearchClearButtons;
     private JourneyDescriptionField travelDescription;
+    private ToFromController fromSearcher;
+    private ToFromController toSearcher;
 
     private boolean isLargeJourneyPlannerVisible;
     private boolean isSmallJourneyPlannerVisible;
 
     private JourneyPlannerBarController() {
         super();
+        fromSearcher = new ToFromController();
+        toSearcher = new ToFromController();
     }
 
     public static JourneyPlannerBarController getInstance() {
@@ -73,6 +77,10 @@ public final class JourneyPlannerBarController extends Controller {
         informationBarLayout = (SpringLayout) informationBar.getLayout();
         InformationBarInteractionHandler handler = new InformationBarInteractionHandler();
         informationBar.addMouseListener(handler);
+        fromSearcher.specifyWindow(window);
+        toSearcher.specifyWindow(window);
+        fromSearcher.setupSearchTool();
+        toSearcher.setupSearchTool();
         isLargeJourneyPlannerVisible = false;
         isSmallJourneyPlannerVisible = false;
     }
@@ -83,10 +91,12 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerBar = new JourneyPlannerBar();
         journeyPlannerBar.setOpaque(true);
         journeyPlannerBarLayout = (SpringLayout) journeyPlannerBar.getLayout();
-        fromBar = new SearchTool();
-        fromBar.setOpaque(true);
-        toBar = new SearchTool();
-        toBar.setOpaque(true);
+        //fromBar = fromSearcher.getSearchTool();
+        fromSearcher.setToolTip("Type Departure Destination");
+        fromSearcher.setTitle("From:");
+        //toBar = toSearcher.getSearchTool();
+        toSearcher.setToolTip("Type End Destination");
+        toSearcher.setTitle("To:");
         journeyPlannerSearchClearButtons = new JourneyPlannerSearchClearButtons();
         journeyPlannerSearchClearButtons.setOpaque(true);
         travelDescription = new JourneyDescriptionField();
@@ -103,28 +113,30 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerTransportTypeButtons.setPreferredSize(new Dimension(TRANSPORT_BUTTONS_WIDTH, TRANSPORT_BUTTONS_HEIGHT));
         journeyPlannerTransportTypeButtons.applyLargeState();
         journeyPlannerSearchClearButtons.setPreferredSize(new Dimension(CLEAR_SEARCH_BUTTONS_WIDTH, CLEAR_SEARCH_BUTTONS_HEIGHT));
-        fromBar.getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH,SEARCHBAR_HEIGHT));
-        fromBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "From:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(fromBar.getFont().getName(), fromBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
-        toBar.getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH, SEARCHBAR_HEIGHT));
-        toBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "To:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(toBar.getFont().getName(), toBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
+        fromSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH,SEARCHBAR_HEIGHT));
+        fromSearcher.setBarBorder();
+        //fromSearcher.getSearchTool().setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "From:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(fromBar.getFont().getName(), fromBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
+        toSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH, SEARCHBAR_HEIGHT));
+        toSearcher.setBarBorder();
+        //toSearcher.getSearchTool().setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "To:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(toBar.getFont().getName(), toBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
         int journeyPlannerDescriptionFieldHeight = journeyPlannerBarHeight - JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT_DECREASE;
         travelDescription.setPreferredSize(new Dimension(JOURNEY_PLANNER_DESCRIPTION_FIELD_WIDTH, journeyPlannerDescriptionFieldHeight));
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
         informationBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerBar, DISTANCE_BETWEEN_TOOLBAR_AND_LARGE_JOURNEYPLANNERBAR, SpringLayout.NORTH, informationBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, journeyPlannerTransportTypeButtons, 0, SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerTransportTypeButtons, 0, SpringLayout.NORTH, journeyPlannerBar);
-        journeyPlannerBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, fromBar, 0, SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar);
-        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, fromBar, DISTANCE_BETWEEN_BUTTONS_AND_FROMBAR, SpringLayout.SOUTH, journeyPlannerTransportTypeButtons);
-        journeyPlannerBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, toBar, 0, SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar);
-        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, toBar, DISTANCE_BETWEEN_SEARCHBARS, SpringLayout.SOUTH, fromBar);
+        journeyPlannerBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, fromSearcher.getSearchTool(), 0, SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar);
+        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, fromSearcher.getSearchTool(), DISTANCE_BETWEEN_BUTTONS_AND_FROMBAR, SpringLayout.SOUTH, journeyPlannerTransportTypeButtons);
+        journeyPlannerBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, toSearcher.getSearchTool(), 0, SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar);
+        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, toSearcher.getSearchTool(), DISTANCE_BETWEEN_SEARCHBARS, SpringLayout.SOUTH, fromSearcher.getSearchTool());
         journeyPlannerBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, journeyPlannerSearchClearButtons, 0, SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar);
-        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerSearchClearButtons, DISTANCE_BETWEEN_TOBAR_TO_CLEARSEARCH_BUTTONS, SpringLayout.SOUTH, toBar);
+        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerSearchClearButtons, DISTANCE_BETWEEN_TOBAR_TO_CLEARSEARCH_BUTTONS, SpringLayout.SOUTH, toSearcher.getSearchTool());
         journeyPlannerBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, travelDescription, 0, SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, travelDescription, DISTANCE_BETWEEN_SEARCHCLEAR_BUTTONS_AND_DESCRIPTION_FIELD, SpringLayout.SOUTH, journeyPlannerSearchClearButtons);
         themeHasChanged();
         journeyPlannerBar.add(journeyPlannerTransportTypeButtons);
-        journeyPlannerBar.add(fromBar);
-        journeyPlannerBar.add(toBar);
+        journeyPlannerBar.add(fromSearcher.getSearchTool());
+        journeyPlannerBar.add(toSearcher.getSearchTool());
         journeyPlannerBar.add(journeyPlannerSearchClearButtons);
         journeyPlannerBar.add(travelDescription);
         informationBar.add(journeyPlannerBar);
@@ -152,13 +164,13 @@ public final class JourneyPlannerBarController extends Controller {
     public void themeHasChanged() {
         informationBar.applyTheme();
         journeyPlannerTransportTypeButtons.applyTheme();
-        fromBar.applyTheme();
-        toBar.applyTheme();
+        //fromBar.applyTheme();
+        //toBar.applyTheme();
         journeyPlannerBar.applyTheme();
-        fromBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "From:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(fromBar.getFont().getName(), fromBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
-        fromBar.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
-        toBar.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
-        toBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "To:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(fromBar.getFont().getName(), fromBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
+        //fromBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "From:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(fromBar.getFont().getName(), fromBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
+        //fromBar.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
+        //toBar.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
+        //toBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "To:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(fromBar.getFont().getName(), fromBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
         journeyPlannerSearchClearButtons.applyTheme();
         travelDescription.applyTheme();
     }
@@ -263,8 +275,8 @@ public final class JourneyPlannerBarController extends Controller {
         isLargeJourneyPlannerVisible = false;
         isSmallJourneyPlannerVisible = false;
         journeyPlannerBarLayout.removeLayoutComponent(journeyPlannerTransportTypeButtons);
-        journeyPlannerBarLayout.removeLayoutComponent(fromBar);
-        journeyPlannerBarLayout.removeLayoutComponent(toBar);
+        journeyPlannerBarLayout.removeLayoutComponent(fromSearcher.getSearchTool());
+        journeyPlannerBarLayout.removeLayoutComponent(toSearcher.getSearchTool());
         journeyPlannerBar.removeAll();
         informationBar.removeAll();
     }
@@ -275,6 +287,46 @@ public final class JourneyPlannerBarController extends Controller {
         public void mouseClicked(MouseEvent e) {
             if(MainWindowController.getInstance().isMenuToolPopupVisible()) MainWindowController.getInstance().requestMenuToolHidePopup();
             MainWindowController.getInstance().requestSearchToolCloseList();
+        }
+    }
+
+    private class ToFromController extends SearchController {
+
+        private String title;
+
+        @Override
+        protected void setupSearchTool() {
+            searchTool = new SearchTool();
+            searchTool.setOpaque(true);
+        }
+
+        @Override
+        protected void themeHasChanged() {
+            searchTool.applyTheme();
+            searchTool.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
+            searchTool.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), title, TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(searchTool.getFont().getName(), searchTool.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
+        }
+
+        @Override
+        public void closeSearchToolList() {
+
+        }
+
+        @Override
+        protected void specifyKeyBindings() {
+
+        }
+
+        public SearchTool getSearchTool() {
+            return searchTool;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public void setBarBorder() {
+            searchTool.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), title, TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(searchTool.getFont().getName(), searchTool.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
         }
     }
 }

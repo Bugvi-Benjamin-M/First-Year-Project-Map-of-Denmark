@@ -26,8 +26,8 @@ public final class MainWindowController extends WindowController {
     private static MainWindowController instance;
     private JLayeredPane layeredPane;
     private Timer inSlideTimer;
-    private final int SLIDE_DELAY = 16;
-    private final int PIXELS_TO_MOVE = 14;
+    private final int SLIDE_DELAY = 10;
+    private final int PIXELS_TO_MOVE = 10;
 
     private boolean isSliding;
 
@@ -146,35 +146,39 @@ public final class MainWindowController extends WindowController {
                     inSlideTimer.stop();
                     inSlideTimer = null;
                     isSliding = false;
+                    window.getFrame().setResizable(true);
                 }
             });
             inSlideTimer.start();
             PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
+            window.getFrame().setResizable(false);
         }
-        /*if(inSlideTimer == null) {
+    }
+
+    public void activateSmallPointsOfInterestInformationBar() {
+        if(inSlideTimer == null) {
             PointsOfInterestController.getInstance().clearPointsOfInterestBar();
-            int boundsTo = GlobalValue.getLargeInformationBarWidth();
+            int boundsTo = GlobalValue.getSmallInformationBarHeight();
             final int[] boundsNow = {0};
             isSliding = true;
             inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
                 if (boundsTo > boundsNow[0]) {
                     boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
-                    PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, boundsNow[0], window.getFrame().getHeight());
+                    PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight() - boundsNow[0], window.getFrame().getWidth(), window.getFrame().getHeight());
                     PointsOfInterestController.getInstance().getInformationBar().revalidate();
                     PointsOfInterestController.getInstance().getInformationBar().repaint();
                 } else {
                     inSlideTimer.stop();
                     inSlideTimer = null;
                     isSliding = false;
+                    window.getFrame().setResizable(true);
                 }
             });
             inSlideTimer.start();
-            PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();*/
-        //}
-    }
-
-    public void activateSmallPointsOfInterestInformationBar() {
-        PointsOfInterestController.getInstance().clearPointsOfInterestBar();
+            PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
+            window.getFrame().setResizable(false);
+        }
+        /*PointsOfInterestController.getInstance().clearPointsOfInterestBar();
         int boundsTo = GlobalValue.getSmallInformationBarHeight();
         final int[] boundsNow = {0};
         inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
@@ -189,7 +193,7 @@ public final class MainWindowController extends WindowController {
             }
         });
         inSlideTimer.start();
-        PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
+        PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();*/
     }
 
     public void deactivateLargePointsOfInterestInformationBar() {
@@ -201,9 +205,11 @@ public final class MainWindowController extends WindowController {
     }
 
     public void deactivateSmallPointsOfInterestInformationBar() {
-        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
-        PointsOfInterestController.getInstance().clearPointsOfInterestBar();
-        CanvasController.repaintCanvas();
+        if(!isSliding) {
+            PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
+            PointsOfInterestController.getInstance().clearPointsOfInterestBar();
+            CanvasController.repaintCanvas();
+        }
     }
 
     public void activateLargeJourneyPlannerInformationBar() {
@@ -222,30 +228,38 @@ public final class MainWindowController extends WindowController {
                     inSlideTimer.stop();
                     inSlideTimer = null;
                     isSliding = false;
+                    window.getFrame().setResizable(true);
                 }
             });
             inSlideTimer.start();
             JourneyPlannerBarController.getInstance().setupLargeJourneyPlannerBar();
+            window.getFrame().setResizable(false);
         }
     }
 
     public void activateSmallJourneyPlannerInformationBar() {
-        JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
-        int boundsTo = GlobalValue.getSmallInformationBarHeight();
-        final int[] boundsNow = {0};
-        inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
-            if (boundsTo > boundsNow[0]){
-                boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
-                JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight() - boundsNow[0], window.getFrame().getWidth(), window.getFrame().getHeight());
-                JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
-                JourneyPlannerBarController.getInstance().getInformationBar().repaint();
-            } else {
-                inSlideTimer.stop();
-                inSlideTimer = null;
-            }
-        });
-        inSlideTimer.start();
-        JourneyPlannerBarController.getInstance().setupSmallJourneyPlannerBar();
+        if (!isSliding) {
+            JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
+            int boundsTo = GlobalValue.getSmallInformationBarHeight();
+            final int[] boundsNow = {0};
+            isSliding = true;
+            inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
+                if (boundsTo > boundsNow[0]) {
+                    boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
+                    JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight() - boundsNow[0], window.getFrame().getWidth(), window.getFrame().getHeight());
+                    JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
+                    JourneyPlannerBarController.getInstance().getInformationBar().repaint();
+                } else {
+                    inSlideTimer.stop();
+                    inSlideTimer = null;
+                    isSliding = false;
+                    window.getFrame().setResizable(true);
+                }
+            });
+            inSlideTimer.start();
+            JourneyPlannerBarController.getInstance().setupSmallJourneyPlannerBar();
+            window.getFrame().setResizable(false);
+        }
     }
 
     public void deactivateLargeJourneyPlannerInformationBar() {
@@ -258,9 +272,11 @@ public final class MainWindowController extends WindowController {
 
 
     public void deactivateSmallJourneyPlannerInformationBar() {
-        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0,0,0,window.getFrame().getHeight());
-        JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
-        CanvasController.repaintCanvas();
+        if(!isSliding) {
+            JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, 0, window.getFrame().getHeight());
+            JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
+            CanvasController.repaintCanvas();
+        }
     }
 
     public void transferFocusToMapCanvas()

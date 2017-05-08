@@ -169,7 +169,7 @@ public final class ToolbarController extends Controller {
                     "Save the current state of the map");
                 break;
             case SEARCHBAR:
-                SearchToolController.getInstance().setToolTip();
+                SearchToolController.getInstance().setToolTip("Search");
                 break;
             case SEARCHBUTTON:
                 toolbar.getTool(tool).setToolTipText("Initialise search");
@@ -496,7 +496,7 @@ public final class ToolbarController extends Controller {
         if(!MainWindowController.getInstance().isSliding()) {
             if (poiToolActive) {
                 if(type == ToolbarType.LARGE) MainWindowController.getInstance().deactivateLargePointsOfInterestInformationBar();
-                else MainWindowController.getInstance().deactivateSmallJourneyPlannerInformationBar();
+                else MainWindowController.getInstance().deactivateSmallPointsOfInterestInformationBar();
                 poiToolActive = false;
                 toolbar.getTool(ToolType.POI).toggleActivate(false);
             }

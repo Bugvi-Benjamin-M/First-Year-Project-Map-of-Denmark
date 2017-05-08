@@ -1,13 +1,9 @@
 package Controller.ToolbarControllers;
 
-import Controller.CanvasController;
-import Controller.Controller;
+import Controller.SearchController;
 import Enums.ToolType;
 import Helpers.OSDetector;
 import Helpers.ThemeHelper;
-import Model.Addresses.Value;
-import Model.Model;
-import View.PopupWindow;
 import View.SearchTool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -23,26 +19,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 /**
  * Created by Búgvi Magnussen on 02-04-2017.
  */
-public final class SearchToolController extends Controller {
+public final class SearchToolController extends SearchController {
 
     private static final String defaultText = "Type an address, point of interest...";
 
     private static SearchToolController instance;
-    private SearchTool searchTool;
-    private boolean allowSearch;
     private JSONParser parser = new JSONParser();
     private JSONArray searchHistory;
-
-    private String currentQuery;
-    private final int[] prohibitedKeys = new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_ALT, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
-              KeyEvent.VK_META, KeyEvent.VK_DOWN, KeyEvent.VK_UP, KeyEvent.VK_WINDOWS, KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_UNDEFINED};
 
     private SearchToolController() {
         super();
@@ -115,94 +103,12 @@ public final class SearchToolController extends Controller {
         searchTool.getField().getEditor().getEditorComponent().addFocusListener(new SearchToolFocusHandler());
     }
 
-    protected void setToolTip() {
-        searchTool.getField().setToolTipText("Search");
-    }
-
     protected void searchActivatedEvent() {
-        if(!allowSearch) {
-            searchTool.getField().requestFocus();
-        }
-        else if(allowSearch && searchTool.getText().isEmpty()) {
-            searchTool.getField().requestFocus();
-        }
-        else if(allowSearch) {
-            ArrayList<Value> list = Model.getInstance().getTst().get(searchTool.getText());
-            if(list != null) {
-                this.saveHistory(searchTool.getText());
-                if (list.size() > 1) {
-                    String[] cities = new String[list.size()];
-                    for (int i = 0; i < list.size(); i++) {
-                        if (list.get(i).getCitynameindex() != 0) {
-                            cities[i] = Model.getInstance().getIndexToCity(list.get(i).getCitynameindex());
-                        } else {
-                            cities[i] = currentQuery + " " + i;
-                        }
-                    }
-                    JComboBox jcb = new JComboBox(cities);
-                    jcb.setEditable(true);
-                    JOptionPane.showMessageDialog(null, jcb, "Select a City: ", JOptionPane.QUESTION_MESSAGE);
-
-                    System.out.println(searchTool.getText() + " " + list.get(jcb.getSelectedIndex()).getX() + " " + list.get(jcb.getSelectedIndex()).getY());
-                    CanvasController.getInstance().markLocation(list.get(jcb.getSelectedIndex()).getX(), list.get(jcb.getSelectedIndex()).getY());
-                } else {
-                    System.out.println(searchTool.getText() + " " + list.get(0).getX() + " " + list.get(0).getY());
-                    CanvasController.getInstance().markLocation(list.get(0).getX(), list.get(0).getY());
-                }
-            }else{
-                ArrayList<String> matches = manageSearchResults();
-                if(matches.size() > 0){
-                    JComboBox jcb = new JComboBox(matches.toArray());
-                    jcb.setEditable(true);
-                    JOptionPane.showMessageDialog(null, jcb, "Select an Address: ", JOptionPane.QUESTION_MESSAGE);
-                    currentQuery = (String) jcb.getSelectedItem();
-                    searchTool.setText(currentQuery);
-
-                    ArrayList<Value> selectedStrings = Model.getInstance().getTst().get(currentQuery);
-                    CanvasController.getInstance().markLocation(selectedStrings.get(0).getX(), selectedStrings.get(0).getY());
-                }else {
-                    PopupWindow.warningBox(null, "Invalid Address");
-                }
-            }
-
+        super.searchActivatedEvent();
+        if(isValidSearch()) {
+            saveHistory(currentQuery);
             ToolbarController.getInstance().transferFocusToCanvas();
-            allowSearch = true;
         }
-    }
-
-    private void showMatchingResults(){
-        if(searchTool.getField().isPopupVisible() && searchTool.getField().getItemCount() == 0) searchTool.getField().hidePopup();
-        searchTool.getField().removeAllItems();
-        if(currentQuery != null) {
-            ArrayList<String> listToShow = manageSearchResults();
-            for (String s : listToShow) {
-                searchTool.getField().addItem(s);
-            }
-        }
-            searchTool.getField().hidePopup();
-            searchTool.getField().showPopup();
-
-    }
-
-    private ArrayList<String> manageSearchResults(){
-        HashMap<Boolean, ArrayList<String>> map = Model.getInstance().getTst().keysThatMatch(currentQuery.toLowerCase());
-        ArrayList<String> listToShow = new ArrayList<>();
-        for (String s : map.get(true)) {
-                listToShow.add(s);
-        }
-        int i = 0;
-        if(currentQuery.length() < 4) {
-            while (listToShow.size() <= 10 && i < map.get(false).size()) {
-                listToShow.add(map.get(false).get(i));
-                i++;
-            }
-        }else{
-            while (i < map.get(false).size()) {
-                listToShow.add(map.get(false).get(i));
-                i++;
-            }
-        }
-    return listToShow;
     }
 
     private void showHistory(){
@@ -241,22 +147,7 @@ public final class SearchToolController extends Controller {
         }
     }
 
-    protected boolean doesSearchbarHaveFocus() {
-        return searchTool.getField().getEditor().getEditorComponent().hasFocus();
-    }
-
-    private boolean checkForProhibitedKey(KeyEvent e) {
-        /*if(searchTool.getField().isPopupVisible()) {
-            if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) return false;
-        } else {*/
-            for (int key : prohibitedKeys) {
-                if (e.getKeyCode() == key) return true;
-            }
-        //}
-        return false;
-    }
-    //Todo, make sure that the up and down arrows can be used when history is not empty
-    private void specifyKeyBindings() {
+    protected void specifyKeyBindings() {
         searchTool.getField().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {

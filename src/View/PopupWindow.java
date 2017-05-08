@@ -92,6 +92,10 @@ public class PopupWindow {
                 JOptionPane.QUESTION_MESSAGE, null, options, initialValue);
     }
 
+    public static String confirmBox(JFrame relativeTo, String message, String title, String[] options) {
+        return (String) JOptionPane.showInputDialog(relativeTo, message,title, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+    }
+
     public static String textInputBox(JFrame relativeTo, String title, String message){
         return JOptionPane.showInputDialog(relativeTo, message, title, JOptionPane.QUESTION_MESSAGE);
     }
