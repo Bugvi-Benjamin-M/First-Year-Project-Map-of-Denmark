@@ -337,6 +337,7 @@ public final class OSMHandler implements ContentHandler {
             isWalkingAllowed = false;
             isCycleAllowed = false;
             maxSpeed = 0;
+            isOneWay = false;
 
             if (loadedWays % 1000 == 0) System.out.println("NumWays: "+loadedWays);
             loadedWays++;
