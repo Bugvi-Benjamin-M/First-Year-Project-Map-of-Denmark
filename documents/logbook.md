@@ -502,4 +502,8 @@ Nikolaj has to go at 10 am.
 Next scrum meeting:
 - 5/5 10 am.
 
+##Logbook 5/5 (Scribe Nikolaj)
+
+- We move the scrum meeting to 8/5.
+
 ## Next logbook...
