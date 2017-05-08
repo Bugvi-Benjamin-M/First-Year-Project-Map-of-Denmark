@@ -1,11 +1,13 @@
 package Model.Elements;
 
+import Helpers.HelperFunctions;
 import Helpers.Shapes.MultiPolygonApprox;
 import Helpers.Shapes.PolygonApprox;
 import OSM.OSMRelation;
 import OSM.OSMWay;
 import OSM.OSMWayRef;
 
+import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
 
@@ -160,5 +162,23 @@ public class Road extends Element {
 
     public void setOneWay(boolean oneWay) {
         this.oneWay = oneWay;
+    }
+
+    public Point2D getNearestPoint(Point2D point) {
+        Point2D closest = null; float minDistance = 0.0f;
+        for (OSMWay way : relation) {
+            for (Point2D nd : way) {
+                float distance = (float) HelperFunctions.distanceBetweenTwoPoints(nd,point);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closest = nd;
+                }
+            }
+        }
+        if (closest != null) {
+            return closest;
+        } else {
+            return null;
+        }
     }
 }
