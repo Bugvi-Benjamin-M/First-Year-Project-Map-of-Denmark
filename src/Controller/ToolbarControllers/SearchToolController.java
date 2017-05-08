@@ -206,7 +206,6 @@ public final class SearchToolController extends Controller {
     }
 
     private void showHistory(){
-        //Todo does not work as intended
         if(searchHistory.isEmpty()) return;
         searchTool.getField().removeAllItems();
         Iterator<String> iterator = searchHistory.iterator();
