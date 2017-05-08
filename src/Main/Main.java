@@ -87,8 +87,8 @@ public class Main {
 
         RoadGraphFactory factory = model.getGraphFactory();
         System.out.println("starting route search...");
-        RoadEdge start = factory.getRoad("Hvamvej"); //Tæt ved Holstebro
-        RoadEdge end = factory.getRoad("Regner Lodbrogs Vej"); //Odense
+        RoadEdge start = factory.getRoad("Eratosvej"); //Skagn
+        RoadEdge end = factory.getRoad("Rønsdamvej"); //Paaaaadbov
         new Thread() {
             public void run() {
                 RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
