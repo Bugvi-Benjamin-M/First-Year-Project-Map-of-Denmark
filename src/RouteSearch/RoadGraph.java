@@ -32,7 +32,10 @@ public class RoadGraph implements Serializable {
     public void addEdges(RoadEdge road) {
         if (road != null) {
             addEdge(road,road.getEither(),road.getOther(road.getEither()));
-            addEdge(road,road.getOther(road.getEither()),road.getEither());
+            if (!road.isOneWay()){
+                road = road.createReverse();
+                addEdge(road,road.getEither(),road.getOther(road.getEither()));
+            }
         } else {
             throw new NullPointerException("Road not initialized...");
         }

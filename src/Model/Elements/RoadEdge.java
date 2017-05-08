@@ -43,6 +43,27 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
         this.time = length / speed;
     }
 
+    public RoadEdge(OSMWay way, String name, float speed, float time) {
+        this(way);
+        this.name = name;
+        this.speed = speed;
+        this.time = time;
+    }
+
+    public RoadEdge createReverse() {
+        OSMWay way = new OSMWay();
+        for (int i = this.way.size()-1; i >= 0; i--) {
+            way.add(this.way.get(i));
+        }
+        RoadEdge reverse = new RoadEdge(way,this.name,this.speed,this.time);
+        reverse.setOneWay(this.isOneWay);
+        reverse.setTravelByCarAllowed(this.isTravelByCarAllowed);
+        reverse.setTravelByBikeAllowed(this.isTravelByBikeAllowed);
+        reverse.setTravelByWalkAllowed(this.isTravelByWalkAllowed);
+        reverse.setType();
+        return reverse;
+    }
+
     public Point2D getEither() {
         return way.get(0);
     }
@@ -95,6 +116,10 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
     public String toString() {
         return "Road:'"+name+"' ("+length+" m; "+time+
                 " s) type:"+getTravelTypeName(getType());
+    }
+
+    public boolean isOneWay() {
+        return isOneWay;
     }
 
     public float getLength() {
