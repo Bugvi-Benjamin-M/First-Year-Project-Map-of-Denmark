@@ -51,7 +51,7 @@ public class RouteDijkstra {
         while ((next = pQ.poll()) != null) {
             Point2D v = next.point;
             for (RoadEdge e : graph.adjacent(v)) {
-                relax(e, next);
+                relax(e);
             }
             if (v.equals(end)) {
                 System.out.println("Found route!");
@@ -61,14 +61,16 @@ public class RouteDijkstra {
     }
 
     // relax edge e and update pq if changed
-    private void relax(RoadEdge e, Node n) {
+    private void relax(RoadEdge e) {
         Point2D v = e.getEither(), w = e.getOther(v);
         if (distTo.get(w) > distTo.get(v) + e.getWeight(type, start, end)) {
             distTo.put(w, distTo.get(v) + e.getWeight(type, start, end));
             edgeTo.put(w, e);
 
             //FIXME: Optimization if we have time
-            pQ.remove(new Node(w, 0));      //The weight does not matter ..
+            if(w == end){
+                pQ.remove(new Node(w, 0));      //The weight does not matter ..
+            }
             pQ.add(new Node(w, distTo.get(w)));
         }
     }
