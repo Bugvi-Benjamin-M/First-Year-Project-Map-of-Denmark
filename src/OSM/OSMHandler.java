@@ -143,14 +143,12 @@ public final class OSMHandler implements ContentHandler {
         nodeGenerator = new NodeGenerator();
         RoadGraph graph = new RoadGraph();
         List<RoadEdge> roadEdges = new LinkedList<>();
-        Set<Point2D> points = new HashSet<>();
         int counter = 0;
         for (Road road : roads) {
             for (OSMWay way: road.getRelation()) {
                 for (int i = 1; i < way.size(); i++) {
                     OSMWay shape = new OSMWay();
                     shape.add(way.get(i-1));
-                    points.add(way.get(i-1));
                     shape.add(way.get(i));
                     RoadEdge edge = new RoadEdge(shape,road.getName(),road.getMaxSpeed());
                     edge.setOneWay(road.isOneWay());
@@ -163,10 +161,9 @@ public final class OSMHandler implements ContentHandler {
                     if (counter % 1000 == 0) System.out.println("... added edges: "+counter);
                     counter++;
                 }
-                points.add(way.get(way.size()-1));
             }
         }
-        model.setGraph(graph,roadEdges,points);
+        model.setGraph(graph,roadEdges);
     }
 
     @Override

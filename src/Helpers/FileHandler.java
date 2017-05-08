@@ -156,8 +156,7 @@ public class FileHandler {
             Model.getInstance().setIndexToCityMap((HashMap<Integer, String>) in.readObject());
             Model.getInstance().setPointsOfInterest((ArrayList<POI>) in.readObject());
             List<RoadEdge> edges = (List<RoadEdge>) in.readObject();
-            List<Point2D> points = (List<Point2D>) in.readObject();
-            Model.getInstance().setGraph((RoadGraph) in.readObject(),edges,points);
+            Model.getInstance().setGraph((RoadGraph) in.readObject(),edges);
             time += System.nanoTime();
             System.out.printf("Object deserialization: %f s\n",
                 time / 1000000 / 1000d);
@@ -182,7 +181,6 @@ public class FileHandler {
             out.writeObject(Model.getInstance().getIndexToCityMap());
             out.writeObject(Model.getInstance().getPointsOfInterest());
             out.writeObject(Model.getInstance().getGraphFactory().getEdges());
-            out.writeObject(Model.getInstance().getGraphFactory().getPoints());
             out.writeObject(Model.getInstance().getGraph());
             System.out.println("DONE SERIALIZING");
             System.out.println("Save time: "+((System.nanoTime() - time)/1.0e-6)+" ms");

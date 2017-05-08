@@ -7,7 +7,6 @@ import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
 import Model.Elements.Road;
 import Model.Elements.RoadEdge;
-import RouteSearch.GraphFactory;
 import Model.Elements.POI;
 import RouteSearch.RoadGraph;
 import RouteSearch.RoadGraphFactory;
@@ -75,10 +74,10 @@ public final class Model extends Observable {
         else return graphFactory.getGraph();
     }
 
-    public void setGraph(RoadGraph graph, List<RoadEdge> roads, Collection<Point2D> points) {
+    public void setGraph(RoadGraph graph, List<RoadEdge> roads) {
         if (graph == null) throw new IllegalArgumentException("Graph object must not be null");
         if (graphFactory == null) {
-            graphFactory = new RoadGraphFactory(graph,roads, points);
+            graphFactory = new RoadGraphFactory(graph,roads);
         } else {
             graphFactory.setGraph(graph);
         }

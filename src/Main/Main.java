@@ -12,9 +12,10 @@ import Model.Elements.Road;
 import Model.Elements.RoadEdge;
 import Model.Model;
 import KDtree.KDTree;
-import RouteSearch.GraphFactory;
 import RouteSearch.RoadGraphFactory;
 import View.PopupWindow;
+import Model.Addresses.Value;
+
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
@@ -79,7 +80,7 @@ public class Main {
             DebugWindow.getInstance().setLoadtimeLabel();
 
             try {
-                dijkstra(model);
+                //dijkstra(model);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -91,8 +92,16 @@ public class Main {
 
         RoadGraphFactory factory = model.getGraphFactory();
         System.out.println("starting route search...");
-        RoadEdge start = factory.getRoad("Eratosvej"); //Skagn
-        RoadEdge end = factory.getRoad("Rønsdamvej"); //Paaaaadbov
+
+        ArrayList<Value> list = Model.getInstance().getTst().get("Rued Langgaards Vej 7");
+
+        for(Value val : list){
+            System.out.println("X: " + val.getX() + "; Y: " + val.getY());
+        }
+
+
+        RoadEdge start = factory.getRoad("Eratosvej");
+        RoadEdge end = factory.getRoad("Vester Oddevej");
         new Thread() {
             public void run() {
                 RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
