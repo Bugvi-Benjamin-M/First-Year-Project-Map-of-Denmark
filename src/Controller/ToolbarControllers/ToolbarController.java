@@ -466,11 +466,11 @@ public final class ToolbarController extends Controller {
     }
 
     private void poiToolActivatedEvent() {
+        if(journeyPlannerToolActive) routesToolActivatedEvent();
         if(!poiToolActive) {
             toolbar.getTool(ToolType.POI).toggleActivate(true);
             if(type == ToolbarType.LARGE) MainWindowController.getInstance().activateLargePointsOfInterestInformationBar();
             else if(type == ToolbarType.SMALL) MainWindowController.getInstance().activateSmallPointsOfInterestInformationBar();
-            //MainWindowController.getInstance().transferFocusToInformationBar();
             poiToolActive = true;
         } else {
             toolbar.getTool(ToolType.POI).toggleActivate(false);
@@ -483,6 +483,7 @@ public final class ToolbarController extends Controller {
     }
     //Todo need to deal with the case when one is active and the other is activated
     private void routesToolActivatedEvent() {
+        if (poiToolActive) poiToolActivatedEvent();
         if(!journeyPlannerToolActive) {
             toolbar.getTool(ToolType.ROUTES).toggleActivate(true);
             if(type == ToolbarType.LARGE) MainWindowController.getInstance().activateLargeJourneyPlannerInformationBar();
@@ -709,6 +710,14 @@ public final class ToolbarController extends Controller {
 
     public void requestHideMenuToolPopup() {
         MenuToolController.getInstance().hidePopupMenu();
+    }
+
+    public boolean isJourneyPlannerToolActive() {
+        return journeyPlannerToolActive;
+    }
+
+    public void setIsJourneyPlannerToolActive(boolean status) {
+        journeyPlannerToolActive = status;
     }
 
     private class ToolInteractionHandler extends MouseAdapter {

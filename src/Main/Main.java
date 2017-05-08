@@ -122,6 +122,7 @@ public class Main {
         ToolbarController.getInstance();
         CanvasController.getInstance();
         SettingsWindowController.getInstance();
+        JourneyPlannerBarController.getInstance();
     }
 
     public static void splashScreenDestruct()

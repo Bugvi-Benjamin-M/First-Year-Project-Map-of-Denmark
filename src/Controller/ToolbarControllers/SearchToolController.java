@@ -41,7 +41,6 @@ public final class SearchToolController extends Controller {
     private JSONArray searchHistory;
 
     private String currentQuery;
-    //Todo accept down and up key when the list is not empty
     private final int[] prohibitedKeys = new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_ALT, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
               KeyEvent.VK_META, KeyEvent.VK_DOWN, KeyEvent.VK_UP, KeyEvent.VK_WINDOWS, KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_UNDEFINED};
 

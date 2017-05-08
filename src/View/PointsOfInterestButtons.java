@@ -4,6 +4,7 @@ import Helpers.FontAwesome;
 import Helpers.ThemeHelper;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
 /**
@@ -42,6 +43,7 @@ public class PointsOfInterestButtons extends View {
         add(Box.createHorizontalStrut(SPACE_BETWEEN_BUTTONS));
         add(deleteAllButton);
         applyTheme();
+        setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
     }
 
 
