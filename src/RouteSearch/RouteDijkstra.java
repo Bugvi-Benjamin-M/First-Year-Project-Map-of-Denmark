@@ -42,7 +42,7 @@ public class RouteDijkstra {
             distTo.put(v, Float.POSITIVE_INFINITY);
         }
         distTo.put(start, 0.0f);
-        
+
         // relax vertices in order of distance from s
         pQ = new PriorityQueue<Node>(graph.getNumberOfVertices(), new WeightComperator());
         pQ.add(new Node(start, distTo.get(start)));
@@ -66,12 +66,10 @@ public class RouteDijkstra {
         if (distTo.get(w) > distTo.get(v) + e.getWeight(type, start, end)) {
             distTo.put(w, distTo.get(v) + e.getWeight(type, start, end));
             edgeTo.put(w, e);
-            if (pQ.contains(new Node(w, 0))) {  //The weight does not matter ..
-                pQ.remove(new Node(w, 0));      //The weight does not matter ..
-                pQ.add(new Node(w, distTo.get(w)));
-            } else {
-                pQ.add(new Node(w, distTo.get(w)));
-            }
+
+            //FIXME: Optimization if we have time
+            pQ.remove(new Node(w, 0));      //The weight does not matter ..
+            pQ.add(new Node(w, distTo.get(w)));
         }
     }
 
