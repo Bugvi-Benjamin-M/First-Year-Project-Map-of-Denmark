@@ -31,25 +31,21 @@ public class RoadGraph implements Serializable {
 
     public void addEdges(RoadEdge road) {
         if (road != null) {
-            addEdge(road,road.getEither(),road.getOther(road.getEither()));
+            addEdge(road,road.getEither());
             if (!road.isOneWay()){
                 road = road.createReverse();
-                addEdge(road,road.getEither(),road.getOther(road.getEither()));
+                addEdge(road,road.getEither());
             }
         } else {
             throw new NullPointerException("Road not initialized...");
         }
     }
 
-    public void addEdge(RoadEdge road, Point2D from, Point2D to) {
+    public void addEdge(RoadEdge road, Point2D from) {
         LinkedList<RoadEdge> listFrom = adjacencyList.get(from);
-        LinkedList<RoadEdge> listTo = adjacencyList.get(to);
         if (listFrom == null) listFrom = new LinkedList<>();
-        if (listTo == null) listTo = new LinkedList<>();
-        listTo.add(road);
         listFrom.add(road);
         adjacencyList.put(from, listFrom);
-        adjacencyList.put(to, listTo);
         nEdges++;
     }
 
