@@ -155,7 +155,6 @@ public final class OSMHandler implements ContentHandler {
                     edge.setTravelByBikeAllowed(road.isTravelByBikeAllowed());
                     edge.setTravelByWalkAllowed(road.isTravelByFootAllowed());
                     edge.setTravelByCarAllowed(road.isTravelByCarAllowed());
-                    edge.setType();
                     graph.addEdges(edge);
                     roadEdges.add(edge);
                     if (counter % 1000 == 0) System.out.println("... added edges: "+counter);

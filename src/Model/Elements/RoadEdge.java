@@ -25,10 +25,8 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
     private boolean isTravelByCarAllowed;
     private boolean isTravelByWalkAllowed;
     private float length;
-    private float time;
     private float speed;
     private String name;
-    private byte type;
 
     public RoadEdge(OSMWay way) {
         super(new PolygonApprox(way));
@@ -40,14 +38,12 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
         this(way);
         this.name = name.intern();
         this.speed = speed * SPEED_TO_METERS_PER_SECOND;
-        this.time = length / speed;
     }
 
-    public RoadEdge(OSMWay way, String name, float speed, float time) {
+    public RoadEdge(OSMWay way, String name, float speed) {
         this(way);
         this.name = name;
         this.speed = speed;
-        this.time = time;
     }
 
     public RoadEdge createReverse() {
@@ -55,12 +51,11 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
         for (int i = this.way.size()-1; i >= 0; i--) {
             way.add(this.way.get(i));
         }
-        RoadEdge reverse = new RoadEdge(way,this.name,this.speed,this.time);
+        RoadEdge reverse = new RoadEdge(way,this.name,this.speed);
         reverse.setOneWay(this.isOneWay);
         reverse.setTravelByCarAllowed(this.isTravelByCarAllowed);
         reverse.setTravelByBikeAllowed(this.isTravelByBikeAllowed);
         reverse.setTravelByWalkAllowed(this.isTravelByWalkAllowed);
-        reverse.setType();
         return reverse;
     }
 
@@ -84,19 +79,21 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
     public float getWeight(TravelType type, Point2D start, Point2D end) {
         boolean fast = GlobalValue.isFastestRouteSet();
         boolean ok = false;
+
+        //FIXME: clean this
         switch (type) {
             case VEHICLE:
-                if (getType() == 4 || getType() == 5 || getType() == 6 || getType() == 7 || getType() == 12 || getType() == 13 || getType() == 14 || getType() == 15) {
+                if (isTravelByCarAllowed) {
                     ok = true;
                 }
                 break;
             case BICYCLE:
-                if (getType() == 2 || getType() == 3 || getType() == 6 || getType() == 7 || getType() == 10 || getType() == 11 || getType() == 14 || getType() == 15) {
+                if (isTravelByBikeAllowed) {
                     ok = true;
                 }
                 break;
             case WALK:
-                if (getType() == 1 || getType() == 3 || getType() == 5 || getType() == 7 || getType() == 9 || getType() == 11 || getType() == 13 || getType() == 15) {
+                if (isTravelByWalkAllowed) {
                     ok = true;
                 }
                 break;
@@ -105,7 +102,7 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
             return Float.POSITIVE_INFINITY;
         } else {
             if (fast) {
-                return time + ((float)way.getFromNode().distance(end) / speed);
+                return (length/speed) + ((float)way.getFromNode().distance(end) / speed);
             } else {
                 return length +  (float)way.getFromNode().distance(end);
             }
@@ -114,8 +111,7 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
 
     @Override
     public String toString() {
-        return "Road:'"+name+"' ("+length+" m; "+time+
-                " s) type:"+getTravelTypeName(getType());
+        return "Road:'"+name+"'; "+length+" m;";
     }
 
     public boolean isOneWay() {
@@ -126,9 +122,6 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
         return length;
     }
 
-    public float getTime() {
-        return time;
-    }
 
     public float getSpeed() {
         return speed;
@@ -138,9 +131,6 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
         return name;
     }
 
-    public byte getType() {
-        return type;
-    }
 
     public void setOneWay(boolean oneWay) {
         isOneWay = oneWay;
@@ -158,54 +148,5 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
         isTravelByWalkAllowed = travelByWalkAllowed;
     }
 
-    public void setType() {
-        this.type = getTravelTypeValue(isTravelByWalkAllowed, isTravelByBikeAllowed,
-                isTravelByCarAllowed, isOneWay);
-    }
 
-    public static byte getTravelTypeValue(boolean canWalk, boolean canCycle, boolean canDrive, boolean isOneway) {
-        byte travel = 0;
-        if (canWalk) travel += 1;
-        if (canCycle) travel += 2;
-        if (canDrive) travel += 4;
-        if (isOneway) travel += 8;
-        return travel;
-    }
-
-    public static String getTravelTypeName(byte type) {
-        switch (type) {
-            case 1:
-                return "WALK_ONLY";
-            case 2:
-                return "CYCLE_ONLY";
-            case 3:
-                return "WALK&CYCLE";
-            case 4:
-                return "DRIVE";
-            case 5:
-                return "DRIVE&WALK";
-            case 6:
-                return "DRIVE&CYCLE";
-            case 7:
-                return "ALL_ALLOWED";
-            case 8:
-                return "ONEWAY N/A";
-            case 9:
-                return "ONEWAYWALK";
-            case 10:
-                return "ONEWAYCYCLE";
-            case 11:
-                return "ONEWALKCYCLE";
-            case 12:
-                return "ONEWAYDRIVE";
-            case 13:
-                return "ONEDRIVEWALK";
-            case 14:
-                return "ONEDRIVECYCLE";
-            case 15:
-                return "ONEWAY_ALLALLOWED";
-            default:
-                return "N/A";
-        }
-    }
 }
