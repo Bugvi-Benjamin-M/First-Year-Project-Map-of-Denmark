@@ -358,7 +358,7 @@ public final class OSMHandler implements ContentHandler {
                     determineRailway(v);
                     break;
                 case "name":
-                    name = v;
+                    name = v.intern();
                     break;
                 case "natural":
                     determineNatural(v);
@@ -832,10 +832,10 @@ public final class OSMHandler implements ContentHandler {
                     String key = roadName + " " + roadNumber;
                     if(model.cityEntryExists(cityName + " " + zipCode)){
                         int indexOfCity = model.getCityToIndex(cityName + " " + zipCode);
-                        model.getTst().put(key, new Value(indexOfCity,longitude * longitudeFactor, -latitude, false));
+                        model.getTst().put(key.intern(), new Value(indexOfCity,longitude * longitudeFactor, -latitude, false));
                     }else{
                         model.putCityToIndex(cityName + " " + zipCode, indexCounter);
-                        model.getTst().put(key, new Value(indexCounter,longitude * longitudeFactor, -latitude, false));
+                        model.getTst().put(key.intern(), new Value(indexCounter,longitude * longitudeFactor, -latitude, false));
                         indexCounter ++;
                     }
                 }
@@ -1055,7 +1055,7 @@ public final class OSMHandler implements ContentHandler {
     }
 
     private void addName(ElementType type) {
-        PlaceName placeName = new PlaceName(longitude * longitudeFactor, -latitude, name);
+        PlaceName placeName = new PlaceName(longitude * longitudeFactor, -latitude, name.intern());
         Pointer p = new Pointer(longitude * longitudeFactor, -latitude, placeName);
         switch (type) {
             case CITY_NAME:
@@ -1114,9 +1114,9 @@ public final class OSMHandler implements ContentHandler {
         if (!isRelation) {
             //PolygonApprox polygonApprox = new PolygonApprox(way);
             if (!area) {
-                road = new Road(name);
+                road = new Road(name.intern());
             } else {
-                road = new Road(name, area);
+                road = new Road(name.intern(), area);
             }
             road.setTravelByBikeAllowed(isCycleAllowed);
             road.setTravelByCarAllowed(isVehicleAllowed);
@@ -1132,9 +1132,9 @@ public final class OSMHandler implements ContentHandler {
         } else {
             //MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
             if (!area) {
-                road = new Road(name);
+                road = new Road(name.intern());
             } else {
-                road = new Road(name, true);
+                road = new Road(name.intern(), true);
             }
             road.setTravelByBikeAllowed(isCycleAllowed);
             road.setTravelByCarAllowed(isVehicleAllowed);
@@ -1194,30 +1194,30 @@ public final class OSMHandler implements ContentHandler {
         PolygonApprox polygonApprox;
         switch (type) {
             case BAR:
-                amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                amenity = new Amenity(longitude * longitudeFactor, -latitude, name.intern());
                 p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
                 bars.add(p);
                 break;
             case NIGHT_CLUB:
-                amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                amenity = new Amenity(longitude * longitudeFactor, -latitude, name.intern());
                 p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
                 nightClubs.add(p);
                 break;
             case FAST_FOOD:
-                amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                amenity = new Amenity(longitude * longitudeFactor, -latitude, name.intern());
                 p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
                 fastFoods.add(p);
                 break;
             case HOSPITAL:
                 polygonApprox = new PolygonApprox(way);
-                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
                 p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                 model.getElements().get(ElementType.HOSPITAL).putPointer(p);
                 break;
             case UNIVERSITY:
                 if (!isRelation){
                     polygonApprox = new PolygonApprox(way);
-                    amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                    amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
                     if(!checkForNearbyAmenity(ElementType.UNIVERSITY, amenity, 0.001f) && isWikiDataAvalible){
                         p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                         model.getElements().get(ElementType.UNIVERSITY).putPointer(p);
@@ -1226,7 +1226,7 @@ public final class OSMHandler implements ContentHandler {
                 else {
                     if(relation.size() > 3){
                         polygonApprox = new PolygonApprox(relation.get(3));
-                        amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                        amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
                         if(!checkForNearbyAmenity(ElementType.UNIVERSITY, amenity, 0.001f) && isWikiDataAvalible){
                             p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                             model.getElements().get(ElementType.UNIVERSITY).putPointer(p);
@@ -1236,24 +1236,24 @@ public final class OSMHandler implements ContentHandler {
                 break;
             case PLACE_OF_WORSHIP:
                 polygonApprox = new PolygonApprox(way);
-                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
                 p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                 model.getElements().get(ElementType.PLACE_OF_WORSHIP).putPointer(p);
                 break;
             case PARKING_AMENITY:
                 polygonApprox = new PolygonApprox(way);
-                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
                 p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                 model.getElements().get(ElementType.PARKING_AMENITY).putPointer(p);
                 break;
             case SPORT_AMENITY:
                 polygonApprox = new PolygonApprox(way);
-                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
                 p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                 model.getElements().get(ElementType.SPORT_AMENITY).putPointer(p);
                 break;
             case RAILWAY_STATION:
-                amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                amenity = new Amenity(longitude * longitudeFactor, -latitude, name.intern());
                 if(!checkForNearByTrainStation(amenity, 0.001f)){
                     p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
                     railwayStations.add(p);
@@ -1262,7 +1262,7 @@ public final class OSMHandler implements ContentHandler {
             case RAILWAY_STATION_AREA:
                 polygonApprox = new PolygonApprox(way);
                 boolean isAdded;
-                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
                 if(!checkForNearbyAmenity(ElementType.RAILWAY_STATION, amenity, 0.001f)){
                     p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                     model.getElements().get(ElementType.RAILWAY_STATION_AREA).putPointer(p);
@@ -1278,13 +1278,13 @@ public final class OSMHandler implements ContentHandler {
                 break;
             case AIRPORT_AMENITY:
                 if(way == null){
-                    amenity = new Amenity(longitude * longitudeFactor, -latitude, name);
+                    amenity = new Amenity(longitude * longitudeFactor, -latitude, name.intern());
                     p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
                     airports.add(p);
                 }
                 else{
                     polygonApprox = new PolygonApprox(way);
-                    amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
+                    amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
                     p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                     model.getElements().get(ElementType.AIRPORT_AMENITY).putPointer(p);
                 }
