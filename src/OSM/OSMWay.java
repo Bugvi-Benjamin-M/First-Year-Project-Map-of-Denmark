@@ -2,12 +2,13 @@ package OSM;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Jakob on 06-03-2017.
  */
-public class OSMWay extends ArrayList<Point2D> {
+public class OSMWay extends ArrayList<Point2D> implements Serializable {
 
     public Path2D toPath2D()
     {

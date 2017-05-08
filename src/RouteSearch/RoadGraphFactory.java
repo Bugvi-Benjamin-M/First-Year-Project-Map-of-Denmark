@@ -52,6 +52,7 @@ public class RoadGraphFactory {
     }
 
     public List<RoadEdge> getEdges() {
+        if (roads == null) throw new NullPointerException("Edges not initialized");
         return roads;
     }
 

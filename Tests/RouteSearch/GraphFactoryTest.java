@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
  */
 public class GraphFactoryTest {
 
-    private GraphFactory factory;
+    //private GraphFactory factory;
 
     @Before
     public void setUp() throws Exception {

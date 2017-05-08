@@ -66,6 +66,7 @@ public final class Model extends Observable {
     }
 
     public RoadGraphFactory getGraphFactory(){
+        if (graphFactory == null) throw new NullPointerException("Factory has not been created");
         return this.graphFactory;
     }
 
