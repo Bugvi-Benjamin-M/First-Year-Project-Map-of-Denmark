@@ -21,11 +21,13 @@ import java.awt.event.*;
  */
 public final class MainWindowController extends WindowController {
 
-    private static final String MAIN_TITLE = "OSM Map Viewer v0.4";
+    private static final String MAIN_TITLE = "OSM Map Viewer v0.5";
     private final int FROM_RESIZE_EVENT_TO_MINIMUMWIDTH = 70;
     private static MainWindowController instance;
     private JLayeredPane layeredPane;
     private Timer inSlideTimer;
+    private final int SLIDE_DELAY = 16;
+    private final int PIXELS_TO_MOVE = 14;
 
     private MainWindowController() { super(); }
 
@@ -127,9 +129,9 @@ public final class MainWindowController extends WindowController {
     public void activateLargePointsOfInterestInformationBar() {
         int boundsTo = GlobalValue.getLargeInformationBarWidth();
         final int[] boundsNow = {0};
-        inSlideTimer = new Timer(1, ae -> {
+        inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
             if (boundsTo > boundsNow[0]){
-                boundsNow[0] = boundsNow[0] + 3;
+                boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
                 PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, boundsNow[0], window.getFrame().getHeight());
                 PointsOfInterestController.getInstance().getInformationBar().revalidate();
                 PointsOfInterestController.getInstance().getInformationBar().repaint();
@@ -145,9 +147,9 @@ public final class MainWindowController extends WindowController {
     public void activateSmallPointsOfInterestInformationBar() {
         int boundsTo = GlobalValue.getSmallInformationBarHeight();
         final int[] boundsNow = {0};
-        inSlideTimer = new Timer(1, ae -> {
+        inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
             if (boundsTo > boundsNow[0]){
-                boundsNow[0] = boundsNow[0] + 3;
+                boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
                 PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight() - boundsNow[0], window.getFrame().getWidth(), window.getFrame().getHeight());
                 PointsOfInterestController.getInstance().getInformationBar().revalidate();
                 PointsOfInterestController.getInstance().getInformationBar().repaint();
@@ -175,9 +177,9 @@ public final class MainWindowController extends WindowController {
     public void activateLargeJourneyPlannerInformationBar() {
         int boundsTo = GlobalValue.getLargeInformationBarWidth();
         final int[] boundsNow = {0};
-        inSlideTimer = new Timer(1, ae -> {
+        inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
             if (boundsTo > boundsNow[0]){
-                boundsNow[0] = boundsNow[0] + 3;
+                boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
                 JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, boundsNow[0], window.getFrame().getHeight());
                 JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
                 JourneyPlannerBarController.getInstance().getInformationBar().repaint();
@@ -195,7 +197,7 @@ public final class MainWindowController extends WindowController {
         final int[] boundsNow = {0};
         inSlideTimer = new Timer(1, ae -> {
             if (boundsTo > boundsNow[0]){
-                boundsNow[0] = boundsNow[0] + 3;
+                boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
                 JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight() - boundsNow[0], window.getFrame().getWidth(), window.getFrame().getHeight());
                 JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
                 JourneyPlannerBarController.getInstance().getInformationBar().repaint();
