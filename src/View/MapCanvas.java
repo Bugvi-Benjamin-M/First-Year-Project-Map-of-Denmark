@@ -536,6 +536,7 @@ public class MapCanvas extends View {
 
     private void drawBoundaries(Graphics2D g2D) {
         g2D.setColor(ThemeHelper.color("boundary"));
+        g2D.setStroke(new BasicStroke(Float.MIN_VALUE));
         Path2D boundary = new Path2D.Float();
         boundary.moveTo(dynMinLon, dynMinLat);
         boundary.lineTo(dynMaxLon, dynMinLat);
