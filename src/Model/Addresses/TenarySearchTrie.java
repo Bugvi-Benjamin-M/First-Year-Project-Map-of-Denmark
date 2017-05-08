@@ -39,7 +39,7 @@ public class TenarySearchTrie implements Serializable {
      * @return
      */
     private Node get(Node x, String key, int d) {
-        if (x == null || key.equals("")) return null;
+        if (x == null || key.equals("") || key.equals(" ")) return null;
         char c = key.charAt(d);
         if (c < x.c) return get(x.left, key, d);
         else if (c > x.c) return get(x.right, key, d);
@@ -84,17 +84,20 @@ public class TenarySearchTrie implements Serializable {
      */
     public void collect(Node x, String pre, String pat, String address, HashMap<Boolean, ArrayList<String>> map) {
         //More than 10 cities are not needed.
-        if(map.get(true).size() > 10) return;
+        //if(map.get(true).size() > 10) return;
         //Current position in the pattern.
         int d = pre.length();
         if (x == null) return;
         //If a node directly at the end of the pattern contains a value it is added to the list to return.
         if(d == pat.length() - 1 && x.values != null && pat.charAt(pat.length() - 1) == x.c){
-            for(Value v : x.values)
-            if(v.isSignificant()){
+            Value v = x.values.get(0);
+            if (v.isSignificant()) {
+                // It is a City
                 map.get(true).add(address + x.c);
-            }else
+            } else {
+                // It is a Street
                 map.get(false).add(address + x.c);
+            }
         }
         //Switch to standard prefix collect method
         if (d == pat.length()){
@@ -131,16 +134,15 @@ public class TenarySearchTrie implements Serializable {
     private void collect(Node x, String pre, HashMap<Boolean, ArrayList<String>> map){
         if(x == null) return;
         // More than 10 cities are not needed.
-        if(map.get(true).size() > 10) return;
+        //if(map.get(true).size() > 10) return;
         if(x.values != null){
-            for(Value v : x.values) {
-                if (v.isSignificant()) {
-                    // It is a City
-                    map.get(true).add(pre + x.c);
-                } else
-                    // It is a Street
-                    map.get(false).add(pre + x.c);
-            }
+            Value v = x.values.get(0);
+            if (v.isSignificant()) {
+                // It is a City
+                map.get(true).add(pre + x.c);
+            } else
+                // It is a Street
+                map.get(false).add(pre + x.c);
         }
         // The pre string grows when moving down the middle node because we know that every string beyond contains
         // the character of the node.

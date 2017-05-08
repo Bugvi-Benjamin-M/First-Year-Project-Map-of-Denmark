@@ -150,7 +150,19 @@ public final class SearchToolController extends Controller {
                     CanvasController.getInstance().markLocation(list.get(0).getX(), list.get(0).getY());
                 }
             }else{
-                PopupWindow.warningBox(null, "Invalid Address");
+                ArrayList<String> matches = manageSearchResults();
+                if(matches.size() > 0){
+                    JComboBox jcb = new JComboBox(matches.toArray());
+                    jcb.setEditable(true);
+                    JOptionPane.showMessageDialog(null, jcb, "Select an Address: ", JOptionPane.QUESTION_MESSAGE);
+                    currentQuery = (String) jcb.getSelectedItem();
+                    searchTool.setText(currentQuery);
+
+                    ArrayList<Value> selectedStrings = Model.getInstance().getTst().get(currentQuery);
+                    CanvasController.getInstance().markLocation(selectedStrings.get(0).getX(), selectedStrings.get(0).getY());
+                }else {
+                    PopupWindow.warningBox(null, "Invalid Address");
+                }
             }
 
             ToolbarController.getInstance().transferFocusToCanvas();
@@ -161,21 +173,36 @@ public final class SearchToolController extends Controller {
     private void showMatchingResults(){
         if(searchTool.getField().isPopupVisible() && searchTool.getField().getItemCount() == 0) searchTool.getField().hidePopup();
         searchTool.getField().removeAllItems();
-        HashMap<Boolean , ArrayList<String>> map = Model.getInstance().getTst().keysThatMatch(currentQuery.toLowerCase());
+        if(currentQuery != null) {
+            ArrayList<String> listToShow = manageSearchResults();
+            for (String s : listToShow) {
+                searchTool.getField().addItem(s);
+            }
+        }
+            searchTool.getField().hidePopup();
+            searchTool.getField().showPopup();
+
+    }
+
+    private ArrayList<String> manageSearchResults(){
+        HashMap<Boolean, ArrayList<String>> map = Model.getInstance().getTst().keysThatMatch(currentQuery.toLowerCase());
         ArrayList<String> listToShow = new ArrayList<>();
-        for(String s : map.get(true)){
-            listToShow.add(s);
+        for (String s : map.get(true)) {
+                listToShow.add(s);
         }
         int i = 0;
-        while(listToShow.size() <= 10 && i < map.get(false).size()){
-            listToShow.add(map.get(false).get(i));
-            i++;
+        if(currentQuery.length() < 4) {
+            while (listToShow.size() <= 10 && i < map.get(false).size()) {
+                listToShow.add(map.get(false).get(i));
+                i++;
+            }
+        }else{
+            while (i < map.get(false).size()) {
+                listToShow.add(map.get(false).get(i));
+                i++;
+            }
         }
-        for(String s : listToShow) {
-            searchTool.getField().addItem(s);
-        }
-        searchTool.getField().hidePopup();
-        searchTool.getField().showPopup();
+    return listToShow;
     }
 
     private void showHistory(){
@@ -308,6 +335,7 @@ public final class SearchToolController extends Controller {
         @Override
         public void focusLost(FocusEvent e) {
             super.focusLost(e);
+            currentQuery = searchTool.getText();
             setToDefaultText();
             allowSearch = false;
             searchTool.getField().hidePopup();
