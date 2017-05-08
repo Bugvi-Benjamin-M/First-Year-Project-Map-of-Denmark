@@ -11,16 +11,14 @@ import Model.Addresses.TenarySearchTrie;
 import Model.Addresses.Value;
 import Model.Elements.*;
 import Model.Model;
+import RouteSearch.RoadGraph;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -31,9 +29,12 @@ public final class OSMHandler implements ContentHandler {
 
     private LongToPointMap idToNode;
     private Map<Long, OSMWay> idToWay;
+    //private Map<Long,OSMWayRef> idToRefWay;
     private OSMWay way;
+    //private OSMWayRef refWay;
+    // private List<OSMWayRef> refRelation;
     private OSMRelation relation;
-    private OSMNode node;
+    // private OSMNode node;
     private ElementType elementType;
     private String name;
     private ElementType place;
@@ -54,12 +55,19 @@ public final class OSMHandler implements ContentHandler {
     private ArrayList<Pointer> bars;
     private ArrayList<Pointer> nightClubs;
     private ArrayList<Pointer> fastFoods;
+    private boolean specialRelationCase = false;
+    private boolean isArea = false;
+    private boolean isOneWay = false;
+    private boolean isWalkingAllowed = false;
+    private boolean isCycleAllowed = false;
+    private boolean isVehicleAllowed = false;
+    private int maxSpeed;
+
     private ArrayList<Pointer> railwayStations;
     private ArrayList<Pointer> airports;
-    private boolean specialRelationCase;
-    private boolean isArea;
     private boolean isWikiDataAvalible;
     private boolean isInTunnel;
+    private ArrayList<Road> roads;
 
     private String roadName;
     private String roadNumber;
@@ -70,10 +78,10 @@ public final class OSMHandler implements ContentHandler {
     private int indexCounter = 1;
     private static final int precision = 3;
 
-
     private OSMHandler() {
         idToNode = new LongToPointMap(22);
         idToWay = new HashMap<>();
+        //idToRefWay = new HashMap<>();
         model = Model.getInstance();
         model.setTst(new TenarySearchTrie());
         nodeGenerator = new NodeGenerator();
@@ -89,6 +97,7 @@ public final class OSMHandler implements ContentHandler {
         fastFoods = new ArrayList<>();
         railwayStations = new ArrayList<>();
         airports = new ArrayList<>();
+        roads = new ArrayList<>();
     }
 
     public void parseDefault(Boolean mode){
@@ -124,7 +133,41 @@ public final class OSMHandler implements ContentHandler {
     public void startDocument() throws SAXException {}
 
     @Override
-    public void endDocument() throws SAXException {}
+    public void endDocument() throws SAXException {
+        // idToRefWay = new HashMap<>();
+        // refWay = null;
+        idToWay = new HashMap<>();
+        idToNode = new LongToPointMap(22);
+        relation = null;
+        //refRelation = null;
+        nodeGenerator = new NodeGenerator();
+        RoadGraph graph = new RoadGraph();
+        List<RoadEdge> roadEdges = new LinkedList<>();
+        Set<Point2D> points = new HashSet<>();
+        int counter = 0;
+        for (Road road : roads) {
+            for (OSMWay way: road.getRelation()) {
+                for (int i = 1; i < way.size(); i++) {
+                    OSMWay shape = new OSMWay();
+                    shape.add(way.get(i-1));
+                    points.add(way.get(i-1));
+                    shape.add(way.get(i));
+                    RoadEdge edge = new RoadEdge(shape,road.getName(),road.getMaxSpeed());
+                    edge.setOneWay(road.isOneWay());
+                    edge.setTravelByBikeAllowed(road.isTravelByBikeAllowed());
+                    edge.setTravelByWalkAllowed(road.isTravelByFootAllowed());
+                    edge.setTravelByCarAllowed(road.isTravelByCarAllowed());
+                    edge.setType();
+                    graph.addEdges(edge);
+                    roadEdges.add(edge);
+                    if (counter % 1000 == 0) System.out.println("... added edges: "+counter);
+                    counter++;
+                }
+                points.add(way.get(way.size()-1));
+            }
+        }
+        model.setGraph(graph,roadEdges,points);
+    }
 
     @Override
     public void startPrefixMapping(String prefix, String uri)
@@ -186,10 +229,8 @@ public final class OSMHandler implements ContentHandler {
             isAddress = false;
             place = ElementType.UNKNOWN;
 
+            if (loadednodes % 1000 == 0) System.out.println("NumNodes: "+loadednodes);
             loadednodes++;
-            if ((loadednodes & 0xFFFF) == 0) {
-                System.out.println("Numnodes: " + loadednodes);
-            }
             break;
         case "relation":
             long relationID = Long.parseLong(atts.getValue("id"));
@@ -200,12 +241,16 @@ public final class OSMHandler implements ContentHandler {
             isArea = false;
             isInTunnel = false;
             place = ElementType.UNKNOWN;
-            relation = new OSMRelation();
+            isVehicleAllowed = false;
+            isWalkingAllowed = false;
+            isCycleAllowed = false;
+            maxSpeed = 0;
+            relation = new OSMRelation(relationID);
+            // refRelation = new ArrayList<>();
             elementType = ElementType.UNKNOWN;
+
+            if (loadedRelations % 100 == 0) System.out.println("NumRelations: "+loadedRelations);
             loadedRelations++;
-            if ((loadedRelations & 0xFF) == 0) {
-                System.out.println("Numrelations: " + loadedRelations);
-            }
             break;
         case "way":
             if (!isInitialized && isDefaultMode) {
@@ -219,81 +264,87 @@ public final class OSMHandler implements ContentHandler {
                 for (Pointer p : cityNames) {
                     model.getElements().get(ElementType.CITY_NAME).putPointer(p);
                 }
-                cityNames.clear();
+                cityNames = new ArrayList<>();
 
                 for (Pointer p : townNames) {
                     model.getElements().get(ElementType.TOWN_NAME).putPointer(p);
                 }
-                townNames.clear();
+                townNames = new ArrayList<>();
 
                 for (Pointer p : villageNames) {
                     model.getElements().get(ElementType.VILLAGE_NAME).putPointer(p);
                 }
-                villageNames.clear();
+                villageNames = new ArrayList<>();
 
                 for (Pointer p : hamletNames) {
                     model.getElements().get(ElementType.HAMLET_NAME).putPointer(p);
                 }
-                hamletNames.clear();
+                hamletNames = new ArrayList<>();
 
                 for (Pointer p : suburbNames) {
                     model.getElements().get(ElementType.SUBURB_NAME).putPointer(p);
                 }
-                suburbNames.clear();
+                suburbNames = new ArrayList<>();
 
                 for (Pointer p : quarterNames) {
                     model.getElements().get(ElementType.QUARTER_NAME).putPointer(p);
                 }
-                quarterNames.clear();
+                quarterNames = new ArrayList<>();
 
                 for (Pointer p : neighbourhoodNames) {
                     model.getElements().get(ElementType.NEIGHBOURHOOD_NAME).putPointer(p);
                 }
-                neighbourhoodNames.clear();
+                neighbourhoodNames = new ArrayList<>();
 
                 for (Pointer p : bars) {
                     model.getElements().get(ElementType.BAR).putPointer(p);
                 }
-                bars.clear();
+                bars = new ArrayList<>();
 
                 for (Pointer p : nightClubs) {
                     model.getElements().get(ElementType.NIGHT_CLUB).putPointer(p);
                 }
-                nightClubs.clear();
+                nightClubs = new ArrayList<>();
 
                 for (Pointer p : fastFoods) {
                     model.getElements().get(ElementType.FAST_FOOD).putPointer(p);
                 }
-                fastFoods.clear();
+                fastFoods = new ArrayList<>();
 
                 for (Pointer p : railwayStations){
                     model.getElements().get(ElementType.RAILWAY_STATION).putPointer(p);
                 }
-                railwayStations.clear();
+                railwayStations = new ArrayList<>();
 
                 for (Pointer p : airports){
                     model.getElements().get(ElementType.AIRPORT_AMENITY).putPointer(p);
                 }
-                airports.clear();
+                airports = new ArrayList<>();
             }
 
             way = new OSMWay();
+            // refWay = new OSMWayRef();
             id = Long.parseLong(atts.getValue("id"));
             elementType = ElementType.UNKNOWN;
             place = ElementType.UNKNOWN;
             idToWay.put(id, way);
+            // idToRefWay.put(id,refWay);
             name = "";
             isInTunnel = false;
             isWikiDataAvalible = false;
             isArea = false;
+            isVehicleAllowed = false;
+            isWalkingAllowed = false;
+            isCycleAllowed = false;
+            maxSpeed = 0;
+
+            if (loadedWays % 1000 == 0) System.out.println("NumWays: "+loadedWays);
             loadedWays++;
-            if ((loadedWays & 0xFF) == 0) {
-                System.out.println("Numways: " + loadedWays);
-            }
             break;
         case "nd":
             long ref = Long.parseLong(atts.getValue("ref"));
             way.add(idToNode.get(ref));
+            //refWay.add(idToNode.get(ref),ref);
             break;
         case "tag":
             String k = atts.getValue("k");
@@ -370,11 +421,38 @@ public final class OSMHandler implements ContentHandler {
                 case "tunnel":
                     if(v.equals("yes")) isInTunnel = true;
                     break;
+                case "bicycle":
+                    isCycleAllowed = !v.equals("no");
+                    break;
+                case "foot":
+                    isWalkingAllowed = !v.equals("no");
+                    break;
+                case "vehicle":
+                    isVehicleAllowed = !v.equals("no");
+                    break;
+                case "cycleway":
+                    isCycleAllowed = !v.equals("no");
+                    break;
+                case "maxspeed":
+                    try {
+                        int i = Integer.parseInt(v);
+                        maxSpeed = i;
+                    } catch (NumberFormatException e) {
+                        // e.printStackTrace();
+                    }
+                    break;
+                case "oneway":
+                    isOneWay = v.equals("yes");
+                    break;
             }
             break;
         case "member":
             ref = Long.parseLong(atts.getValue("ref"));
-            relation.add(idToWay.get(ref));
+            OSMWay way = idToWay.get(ref);
+            if (way != null) {
+                relation.add(way);
+                //relation.add(way);
+            }
             break;
         }
     }
@@ -585,78 +663,141 @@ public final class OSMHandler implements ContentHandler {
         switch (value) {
             case "motorway":
                 elementType = ElementType.MOTORWAY;
+                isVehicleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 130;
                 break;
             case "motorway_link":
                 elementType = ElementType.MOTORWAY_LINK;
+                isVehicleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 130;
                 break;
             case "trunk":
                 elementType = ElementType.TRUNK_ROAD;
+                isVehicleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 90;
                 break;
             case "trunk_link":
                 elementType = ElementType.TRUNK_ROAD_LINK;
+                isVehicleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 90;
                 break;
             case "primary":
                 elementType = ElementType.PRIMARY_ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "primary_link":
                 elementType = ElementType.PRIMARY_ROAD_LINK;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "secondary":
                 elementType = ElementType.SECONDARY_ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "seconday_link":
                 elementType = ElementType.SECONDARY_ROAD_LINK;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "tertiary":
                 elementType = ElementType.TERTIARY_ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "tertiary_link":
                 elementType = ElementType.TERTIARY_ROAD_LINK;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "unclassified":
                 elementType = ElementType.UNCLASSIFIED_ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "residential":
                 elementType = ElementType.RESIDENTIAL_ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "living_street":
                 elementType = ElementType.LIVING_STREET;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "service":
                 elementType = ElementType.SERVICE_ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "bus_guideway":
                 elementType = ElementType.BUS_GUIDEWAY;
                 break;
             case "escape":
                 elementType = ElementType.ESCAPE;
+                isVehicleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "raceway":
                 elementType = ElementType.RACEWAY;
                 break;
             case "pedestrian":
                 elementType = ElementType.PEDESTRIAN_STREET;
+                isWalkingAllowed = true;
                 break;
             case "track":
                 elementType = ElementType.TRACK;
+                isVehicleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "steps":
                 elementType = ElementType.STEPS;
+                isWalkingAllowed = true;
                 break;
             case "footway":
                 elementType = ElementType.FOOTWAY;
+                isWalkingAllowed = true;
                 break;
             case "bridleway":
                 elementType = ElementType.BRIDLEWAY;
+                isWalkingAllowed = true;
                 break;
             case "cycleway":
                 elementType = ElementType.CYCLEWAY;
+                isCycleAllowed = true;
                 break;
             case "path":
                 elementType = ElementType.PATH;
+                isCycleAllowed = true;
+                isWalkingAllowed = true;
                 break;
             case "road":
                 elementType = ElementType.ROAD;
+                isVehicleAllowed = true;
+                isWalkingAllowed = true;
+                isCycleAllowed = true;
+                if (maxSpeed == 0) maxSpeed = 50;
                 break;
         }
     }
@@ -726,7 +867,7 @@ public final class OSMHandler implements ContentHandler {
                 case CYCLEWAY:
                 case PATH:
                 case ROAD:
-                    if (isArea == false) {
+                    if (!isArea) {
                         addRoad(elementType, false, false);
                     } else {
                         addRoad(elementType, false, true);
@@ -890,7 +1031,8 @@ public final class OSMHandler implements ContentHandler {
         if (!isRelation) {
             Building building = new Building(polygonApprox);
             for (int i = 0; i < way.size(); i += precision) {
-                Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), building);
+                Pointer p = new Pointer((float)way.get(i).getX(),
+                        (float)way.get(i).getY(), building);
                 model.getElements().get(type).putPointer(p);
             }
         } else {
@@ -965,23 +1107,41 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    private void addRoad(ElementType type, boolean isRelation, boolean area) {
+    private void addRoad(ElementType type, boolean isRelation, boolean area)
+    {
+        Road road;
         if (!isRelation) {
-            PolygonApprox polygonApprox = new PolygonApprox(way);
-            Road road;
-            if (!area) road = new Road(polygonApprox, name);
-            else road = new Road(polygonApprox, name, area);
+            //PolygonApprox polygonApprox = new PolygonApprox(way);
+            if (!area) {
+                road = new Road(name);
+            } else {
+                road = new Road(name, area);
+            }
+            road.setTravelByBikeAllowed(isCycleAllowed);
+            road.setTravelByCarAllowed(isVehicleAllowed);
+            road.setTravelByFootAllowed(isWalkingAllowed);
+            road.setMaxSpeed(maxSpeed);
+            road.setOneWay(isOneWay);
+            road.setWay(way);
+            roads.add(road);
             for (int i = 0; i < way.size(); i += precision) {
                 Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
             }
         } else {
-            MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
-            Road road;
-            if (!area)
-                road = new Road(multiPolygonApprox, name);
-            else
-                road = new Road(multiPolygonApprox, name, true);
+            //MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
+            if (!area) {
+                road = new Road(name);
+            } else {
+                road = new Road(name, true);
+            }
+            road.setTravelByBikeAllowed(isCycleAllowed);
+            road.setTravelByCarAllowed(isVehicleAllowed);
+            road.setTravelByFootAllowed(isWalkingAllowed);
+            road.setMaxSpeed(maxSpeed);
+            road.setOneWay(isOneWay);
+            road.setRelation(relation);
+            roads.add(road);
             for (int i = 0; i < relation.size(); i++) {
                 if (relation.get(i) != null) {
                     for (int j = 0; j < relation.get(i).size(); j += precision) {
@@ -997,7 +1157,7 @@ public final class OSMHandler implements ContentHandler {
     }
 
     private void addBiome(ElementType type, boolean isRelation) {
-        if(specialRelationCase == true){
+        if(specialRelationCase){
             specialRelationCase = false;
         }else {
             if (!isRelation) {
@@ -1099,8 +1259,8 @@ public final class OSMHandler implements ContentHandler {
                 }
                 break;
             case RAILWAY_STATION_AREA:
-                boolean isAdded;
                 polygonApprox = new PolygonApprox(way);
+                boolean isAdded;
                 amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name);
                 if(!checkForNearbyAmenity(ElementType.RAILWAY_STATION, amenity, 0.001f)){
                     p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);

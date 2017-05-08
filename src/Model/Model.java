@@ -5,7 +5,12 @@ import Helpers.Utilities.DebugWindow;
 import KDtree.*;
 import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
+import Model.Elements.Road;
+import Model.Elements.RoadEdge;
+import RouteSearch.GraphFactory;
 import Model.Elements.POI;
+import RouteSearch.RoadGraph;
+import RouteSearch.RoadGraphFactory;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -24,6 +29,7 @@ public final class Model extends Observable {
     private ArrayList<Point2D> medianpoints = new ArrayList<>();
 
     private CoastlineFactory coastlineFactory;
+    private RoadGraphFactory graphFactory;
 
     private EnumMap<BoundType, Float> bounds;
     private EnumMap<BoundType, Float> dynamicBounds;
@@ -60,6 +66,24 @@ public final class Model extends Observable {
         return instance;
     }
 
+    public RoadGraphFactory getGraphFactory(){
+        return this.graphFactory;
+    }
+
+    public RoadGraph getGraph() {
+        if (graphFactory == null) throw new NullPointerException("The graph has not been initialized");
+        else return graphFactory.getGraph();
+    }
+
+    public void setGraph(RoadGraph graph, List<RoadEdge> roads, Collection<Point2D> points) {
+        if (graph == null) throw new IllegalArgumentException("Graph object must not be null");
+        if (graphFactory == null) {
+            graphFactory = new RoadGraphFactory(graph,roads, points);
+        } else {
+            graphFactory.setGraph(graph);
+        }
+    }
+
     public String getIndexToCity(int index){
         return indexToCity.get(index);
     }
@@ -94,6 +118,8 @@ public final class Model extends Observable {
     }
 
     public EnumMap<ElementType, KDTree> getElements() { return elements; }
+
+    public KDTree getElements(ElementType type) {return elements.get(type);}
 
     public void setElements(EnumMap<ElementType, KDTree> elements)
     {

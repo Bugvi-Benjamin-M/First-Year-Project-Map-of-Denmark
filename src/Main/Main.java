@@ -3,15 +3,23 @@ package Main;
 import Controller.*;
 import Controller.ToolbarControllers.ToolbarController;
 import Exceptions.FileWasNotFoundException;
+import Enums.OSMEnums.ElementType;
 import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
+import Model.Elements.Road;
+import Model.Elements.RoadEdge;
 import Model.Model;
+import KDtree.KDTree;
+import RouteSearch.GraphFactory;
+import RouteSearch.RoadGraphFactory;
 import View.PopupWindow;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jakob on 06-03-2017.
@@ -19,14 +27,10 @@ import java.io.FileNotFoundException;
 public class Main {
 
     public static final FPSCounter FPS_COUNTER = new FPSCounter();
-    private static final String DEFAULT_RESOURCE = "/denmark-latest.zip";
-
-    private static final boolean DEBUG_MODE_ACTIVE = false; // CHANGE ME TO PREVENT LOADING DEFAULT
-    private static final boolean SAVE_AFTER_LOAD = true; // CHANGE ME TO PREVENT SAVING BIN
-    private static boolean loadDefaultFile;
 
     public static long LOAD_TIME;
     private static SplashScreen screen;
+    private static boolean loadDefaultFile;
 
     public static void main(String[] args)
     {
@@ -35,6 +39,7 @@ public class Main {
         PreferencesController.getInstance().setupPreferences();
         MainWindowController.getInstance().setProgressBarTheme();
         splashScreenInit();
+
         Model model = Model.getInstance();
         CanvasController.getInstance().setupAsObserver();
         try {
@@ -65,14 +70,49 @@ public class Main {
             SettingsWindowController.getInstance().setupSettingsWindow();
             model.modelHasChanged();
             MainWindowController.getInstance().showWindow();
-            if(loadDefaultFile) CanvasController.adjustToBounds();
+            if (loadDefaultFile) CanvasController.adjustToBounds();
             else CanvasController.adjustToDynamicBounds();
             CanvasController.getInstance().updateCanvasPOI();
             CanvasController.repaintCanvas();
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();
+
+            dijkstra(model);
         });
+    }
+
+    private static void dijkstra(Model model){
+        long time = System.currentTimeMillis();
+
+        RoadGraphFactory factory = model.getGraphFactory();
+        System.out.println("starting route search...");
+        RoadEdge start = factory.getRoad("Hvamvej"); //Tæt ved Holstebro
+        RoadEdge end = factory.getRoad("Regner Lodbrogs Vej"); //Odense
+        new Thread() {
+            public void run() {
+                RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
+                        factory.getGraph(), start.getEither(),
+                        end.getEither(), Enums.TravelType.VEHICLE);
+                Iterable<RoadEdge> iterator = dijk.path();
+                if (iterator != null) {
+                    factory.setRoute(iterator);
+                    List<RoadEdge> route = factory.getRoute();
+                    if (route != null && route.size() != 0) {
+                        for (int i = 0; i < route.size(); i++) {
+                            System.out.println(route.get(i).getName() +
+                                ": "+route.get(i).getLength()+" m");
+                        }
+                        CanvasController.getInstance().getMapCanvas().setRoute(route);
+                    } else {
+                        System.out.println("No route found...");
+                    }
+                } else {
+                    System.out.println("No path found...");
+                }
+                System.out.println("Route time: "+(System.currentTimeMillis() - time) + " ms");
+            }
+        }.start();
     }
 
     private static void createControllers()
@@ -81,7 +121,6 @@ public class Main {
         MainWindowController.getInstance();
         ToolbarController.getInstance();
         CanvasController.getInstance();
-        PointsOfInterestController.getInstance();
         SettingsWindowController.getInstance();
         JourneyPlannerBarController.getInstance();
     }

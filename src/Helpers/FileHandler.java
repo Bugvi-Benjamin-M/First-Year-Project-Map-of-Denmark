@@ -9,18 +9,22 @@ import Model.Addresses.TenarySearchTrie;
 import Model.Coastlines.CoastlineFactory;
 import Model.Coastlines.CoastlineHandler;
 import Model.Elements.POI;
+import Model.Elements.RoadEdge;
 import Model.Model;
 import OSM.OSMHandler;
+import RouteSearch.RoadGraph;
 import View.PopupWindow;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import java.awt.geom.Point2D;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.zip.ZipInputStream;
 
 import static Helpers.GlobalValue.DEBUG_MODE_ACTIVE;
@@ -151,6 +155,9 @@ public class FileHandler {
             Model.getInstance().setCityToIndexMap((HashMap<String, Integer>) in.readObject());
             Model.getInstance().setIndexToCityMap((HashMap<Integer, String>) in.readObject());
             Model.getInstance().setPointsOfInterest((ArrayList<POI>) in.readObject());
+            List<RoadEdge> edges = (List<RoadEdge>) in.readObject();
+            List<Point2D> points = (List<Point2D>) in.readObject();
+            Model.getInstance().setGraph((RoadGraph) in.readObject(),edges,points);
             time += System.nanoTime();
             System.out.printf("Object deserialization: %f s\n",
                 time / 1000000 / 1000d);
@@ -163,8 +170,7 @@ public class FileHandler {
 
     public static void saveBin(String fileName, boolean dynamic)
     {
-        // File f = new File(fileName);
-        // if(f.exists()) f.delete();
+        long time = System.nanoTime();
         try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)))) {
             out.writeObject(Model.getInstance().getElements());
             out.writeFloat(Model.getInstance().getMinLongitude(dynamic));
@@ -175,7 +181,11 @@ public class FileHandler {
             out.writeObject(Model.getInstance().getCityToIndexMap());
             out.writeObject(Model.getInstance().getIndexToCityMap());
             out.writeObject(Model.getInstance().getPointsOfInterest());
-            System.out.println("DONE");
+            out.writeObject(Model.getInstance().getGraphFactory().getEdges());
+            out.writeObject(Model.getInstance().getGraphFactory().getPoints());
+            out.writeObject(Model.getInstance().getGraph());
+            System.out.println("DONE SERIALIZING");
+            System.out.println("Save time: "+((System.nanoTime() - time)/1.0e-6)+" ms");
         } catch (IOException e) {
             e.printStackTrace();
         }

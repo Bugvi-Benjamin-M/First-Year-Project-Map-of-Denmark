@@ -134,6 +134,7 @@ public class NightTheme implements Theme {
     public Color sportstrack(){ return new Color(0x044512); }
 
     // Roads
+    public Color route() {return new Color(0x9E00FF);}
     public Color motorway() { return new Color(0xD47487); }
     public Color trunkRoad() { return new Color(0xC06678); }
     public Color primaryRoad() { return new Color(0xAE6202); }
