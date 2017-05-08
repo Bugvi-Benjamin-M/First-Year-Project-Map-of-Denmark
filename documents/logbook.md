@@ -506,4 +506,25 @@ Next scrum meeting:
 
 - We moved the scrum meeting to 8/5.
 
+## Logbook 08/05 (Scribe Blanke)
+What we did since last time:
+- Almost finished route search and graph building
+- Almost finished work on GUI for route search
+- Testing, testing, testing
+- Finished ameneties
+- Model has been optimized
+
+What we will do until next time:
+- Create release for current version
+- Fix bugs with graph
+- Fix bugs with dijekstra
+- Fix zooming and panning on smaller and more rectangular maps
+- Fix nullpointer exception when searching
+- Show Zoom Level
+
+Impediments:
+- None at the moment...
+
+Next meeting: Wednesday 10/05 at 10
+
 ## Next logbook...
