@@ -504,6 +504,6 @@ Next scrum meeting:
 
 ##Logbook 5/5 (Scribe Nikolaj)
 
-- We move the scrum meeting to 8/5.
+- We moved the scrum meeting to 8/5.
 
 ## Next logbook...
