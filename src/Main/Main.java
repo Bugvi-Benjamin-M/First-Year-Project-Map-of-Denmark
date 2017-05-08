@@ -78,7 +78,11 @@ public class Main {
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();
 
-            dijkstra(model);
+            try {
+                dijkstra(model);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 
