@@ -4,6 +4,9 @@ import Model.Elements.Element;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /**
  * Created by Jakob on 30-03-2017.

@@ -10,6 +10,22 @@ import java.util.Random;
  */
 public class OSMRelation extends ArrayList<OSMWay> {
 
+    private long ref;
+
+    public OSMRelation(long ref) {
+        super();
+        this.ref = ref;
+    }
+
+    @Override
+    public String toString() {
+        int size = 0;
+        for (OSMWay way: this) {
+            size++;
+        }
+        return "ref "+ref + " with size "+size;
+    }
+
     public Path2D toPath2D(boolean connected)
     {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
