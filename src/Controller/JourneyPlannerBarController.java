@@ -414,6 +414,12 @@ public final class JourneyPlannerBarController extends Controller {
                         allowSearch = true;
                     }
                 }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    currentQuery = searchTool.getText();
+                    searchTool.getField().hidePopup();
+                }
             });
         }
 
