@@ -23,6 +23,7 @@ public interface Theme {
 
     public abstract Color canvasPopupBackground();
     public abstract Color canvasPopupForeground();
+    public abstract Color canvasExtra();
 
     public abstract Color toolActivated();
     public abstract Color toolHover();

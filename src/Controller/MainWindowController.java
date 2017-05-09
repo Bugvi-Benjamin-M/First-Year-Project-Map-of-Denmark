@@ -9,6 +9,7 @@ import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
 import Model.Elements.POI;
 import Model.Model;
+import View.DistanceScallerView;
 import View.PopupWindow;
 import View.Window;
 
@@ -55,6 +56,7 @@ public final class MainWindowController extends WindowController {
         window.setMinimumWindowSize(new Dimension(ToolbarController.getSmallLargeEventWidth()-FROM_RESIZE_EVENT_TO_MINIMUMWIDTH,(int) ((Toolkit.getDefaultToolkit().getScreenSize().getHeight()) /1.3)));
         setupToolbar();
         setupCanvas();
+        setupCanvasExtras();
         setupPointsOfInterestBar();
         setupJourneyPlannerBar();
         setupLayeredPane();
@@ -81,14 +83,17 @@ public final class MainWindowController extends WindowController {
         CanvasController.getInstance().getMapCanvas().setOpaque(true);
         PointsOfInterestController.getInstance().getInformationBar().setOpaque(true);
         JourneyPlannerBarController.getInstance().getInformationBar().setOpaque(true);
-        layeredPane.add(PointsOfInterestController.getInstance().getInformationBar(),
-                new Integer(2));
+        CanvasExtrasController.getInstance().getDistanceScaller().setOpaque(true);
         layeredPane.add(CanvasController.getInstance().getMapCanvas(),
-            new Integer(1));
-        layeredPane.add(JourneyPlannerBarController.getInstance().getInformationBar(),
+                new Integer(1));
+        layeredPane.add(CanvasExtrasController.getInstance().getDistanceScaller(),
+                new Integer(6));
+        layeredPane.add(PointsOfInterestController.getInstance().getInformationBar(),
                 new Integer(3));
+        layeredPane.add(JourneyPlannerBarController.getInstance().getInformationBar(),
+                new Integer(4));
         layeredPane.add(ToolbarController.getInstance().getToolbar(),
-            new Integer(4));
+            new Integer(5));
     }
 
     private void adjustBounds()
@@ -103,6 +108,11 @@ public final class MainWindowController extends WindowController {
             0, 0, 0, window.getFrame().getHeight());
         JourneyPlannerBarController.getInstance().getInformationBar().setBounds(
                 0, 0, 0, window.getFrame().getHeight());
+        DistanceScallerView distance = CanvasExtrasController.getInstance()
+                .getDistanceScaller();
+        distance.setBounds(window.getFrame().getWidth()-300,
+                window.getFrame().getHeight()-150, 140,
+                40);
     }
 
     private void setupToolbar()
@@ -115,6 +125,11 @@ public final class MainWindowController extends WindowController {
     {
         CanvasController.getInstance().specifyWindow(window);
         CanvasController.getInstance().setupCanvas();
+    }
+
+    private void setupCanvasExtras(){
+        CanvasExtrasController.getInstance().specifyWindow(window);
+        CanvasExtrasController.getInstance().setupExtras();
     }
 
     private void setupPointsOfInterestBar()
@@ -272,6 +287,7 @@ public final class MainWindowController extends WindowController {
     {
         ToolbarController.getInstance().themeHasChanged();
         CanvasController.getInstance().themeHasChanged();
+        CanvasExtrasController.getInstance().themeHasChanged();
         PointsOfInterestController.getInstance().themeHasChanged();
         JourneyPlannerBarController.getInstance().themeHasChanged();
         setToolTipTheme();
