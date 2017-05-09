@@ -2,6 +2,7 @@ package Model.Coastlines;
 
 import Enums.BoundType;
 import Enums.ZoomLevel;
+import Helpers.GlobalValue;
 import Helpers.HelperFunctions;
 import Model.Model;
 import OSM.OSMWay;
@@ -46,24 +47,29 @@ public class Coastline extends OSMWay {
         Point2D node = this.getFromNode();
         path.moveTo(node.getX(), node.getY());
 
-        // Go through the collection of points and create a path
-        int lastI = 0;
-        int increase = ZoomLevel.getNodesAtMaxLevel();
-        for (int i = 0; i < size() - 1;) {
-            i += increase;
-            if (i >= size())
-                i = size() - 1;
-            node = get(lastI);
-            boolean isFromNear = isNodeNearCamera(node);
-            path.lineTo(node.getX(), node.getY());
-            node = get(i);
-            boolean isToNear = isNodeNearCamera(node);
-            if (isToNear || isFromNear) {
-                path.append(qualityGeneratePath(lastI, i, ZoomLevel.LEVEL_6), true);
-            } else {
-                path.append(quickGeneratePath(lastI, i), true);
+        if (GlobalValue.getZoomLevel() != ZoomLevel.LEVEL_6) {
+            // Go through the collection of points and create a path
+            int lastI = 0;
+            int increase = ZoomLevel.getNodesAtMaxLevel();
+            for (int i = 0; i < size() - 1; ) {
+                i += increase;
+                if (i >= size())
+                    i = size() - 1;
+                node = get(lastI);
+                boolean isFromNear = isNodeNearCamera(node);
+                path.lineTo(node.getX(), node.getY());
+                node = get(i);
+                boolean isToNear = isNodeNearCamera(node);
+                if (isToNear || isFromNear) {
+                    path.append(qualityGeneratePath(lastI, i, ZoomLevel.LEVEL_6), true);
+                } else {
+                    path.append(quickGeneratePath(lastI, i,
+                            ZoomLevel.getNodesAtMaxLevel()), true);
+                }
+                lastI = i;
             }
-            lastI = i;
+        } else {
+            path.append(quickGeneratePath(0,this.size()-1,21),true);
         }
 
         // Finish path (loop back)
@@ -112,7 +118,7 @@ public class Coastline extends OSMWay {
      * @param start The start point, including
      * @param end The end point, including
      */
-    private Path2D quickGeneratePath(int start, int end)
+    private Path2D quickGeneratePath(int start, int end, int increase)
     {
         Path2D path = new Path2D.Float();
         // Add start point
@@ -121,7 +127,7 @@ public class Coastline extends OSMWay {
 
         // Add points
         for (int i = start; i < end;
-             i += ZoomLevel.getNodesAtMaxLevel()) {
+             i += increase) {
             Point2D point = this.get(i);
             path.lineTo(point.getX(), point.getY());
         }

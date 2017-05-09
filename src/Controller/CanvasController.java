@@ -654,6 +654,7 @@ public final class CanvasController extends Controller implements Observer {
             mapCanvas.pan(-dx, -dy);
             mapCanvas.zoom(zoomFactor);
             changeZoomLevel(increase);
+            CanvasExtrasController.getInstance().updateDistance();
             mapCanvas.pan(dx, dy);
             repaintCanvas();
         }

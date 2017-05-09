@@ -74,6 +74,7 @@ public class Main {
             LOAD_TIME = System.nanoTime() - startTime;
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();
+            CanvasExtrasController.getInstance().updateDistance();
 
             try {
                 // dijkstra(model);
@@ -132,6 +133,7 @@ public class Main {
         CanvasController.getInstance();
         SettingsWindowController.getInstance();
         JourneyPlannerBarController.getInstance();
+        CanvasExtrasController.getInstance();
     }
 
     public static void splashScreenDestruct()
