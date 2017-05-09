@@ -32,6 +32,7 @@ public final class SettingsWindowController extends WindowController {
     private Toggle keyboardKeysToggle;
     private Toggle antiAliasingToggle;
     private Toggle canvasRealTimeInformationToggle;
+    private Toggle useFastestRouteToggle;
     private FileLoadSetting fileLoadSetting;
     private Settings settings;
     private String chosenFilePath;
@@ -98,6 +99,7 @@ public final class SettingsWindowController extends WindowController {
         southButtons = new SettingsButtons();
         antiAliasingToggle = new AntiAliasingToggle();
         canvasRealTimeInformationToggle = new CanvasRealTimeInformationToggle();
+        useFastestRouteToggle = new FastestRouteToggle();
         fileLoadSetting = new FileLoadSetting();
         setToCurrentSettings();
     }
@@ -111,6 +113,8 @@ public final class SettingsWindowController extends WindowController {
                 .getCanvasRealTimeInformationSetting());
         keyboardKeysToggle.setSelectedStatus(
             PreferencesController.getInstance().getKeyBindingsSetting());
+        useFastestRouteToggle.setSelectedStatus(
+                PreferencesController.getInstance().getUseFastestRouteSetting());
         themeSettings.setSelectedTheme(
             PreferencesController.getInstance().getThemeSetting());
         fileLoadSetting.setTextField(PreferencesController.getInstance().getStartupFileNameSetting());
@@ -129,6 +133,8 @@ public final class SettingsWindowController extends WindowController {
         settings.addSetting(antiAliasingToggle);
         settings.createSpace(new Dimension(0, 20));
         settings.addSetting(canvasRealTimeInformationToggle);
+        settings.createSpace(new Dimension(0,20));
+        settings.addSetting(useFastestRouteToggle);
         settings.createSpace(new Dimension(0, 20));
         settings.addSetting(fileLoadSetting);
         settings.createSpace(new Dimension(0, 400));
@@ -214,6 +220,8 @@ public final class SettingsWindowController extends WindowController {
             keyboardKeysToggle.isToggleSelected());
         PreferencesController.getInstance().setAntiAliasingSetting(
             antiAliasingToggle.isToggleSelected());
+        PreferencesController.getInstance().setUseFastestRouteSetting(
+                useFastestRouteToggle.isToggleSelected());
         ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
         MainWindowController.getInstance().themeHasChanged();
         MainWindowController.getInstance().setKeyToggle();

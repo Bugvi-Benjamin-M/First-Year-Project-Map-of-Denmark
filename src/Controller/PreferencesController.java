@@ -64,6 +64,10 @@ public final class PreferencesController {
             DefaultSettings.CANVAS_REALTIME_INFORMATION);
     }
 
+    public boolean getUseFastestRouteSetting() {
+        return preferences.getBoolean("UseFastestRoute",DefaultSettings.USE_FASTEST_ROUTE);
+    }
+
     public String getThemeSetting()
     {
         return preferences.get("Theme", DefaultSettings.THEME);
@@ -92,6 +96,10 @@ public final class PreferencesController {
         preferences.putBoolean("CanvasRealTimeInformation", setting);
     }
 
+    public void setUseFastestRouteSetting(boolean setting) {
+        preferences.putBoolean("UseFastestRoute",setting);
+    }
+
     public void setThemeSetting(String setting)
     {
         preferences.put("Theme", setting);
@@ -110,6 +118,7 @@ public final class PreferencesController {
         preferences.putBoolean("AntiAliasing", DefaultSettings.ANTI_ALIASING);
         preferences.putBoolean("CanvasRealTimeInformation", DefaultSettings.CANVAS_REALTIME_INFORMATION);
         preferences.putBoolean("KeyBindings", DefaultSettings.TOGGLE_KEY_BINDINGS);
+        preferences.putBoolean("UseFastestRoute",GlobalValue.isFastestRouteSet());
         preferences.put("Theme", DefaultSettings.THEME);
         preferences.put("StartupFileName", DefaultSettings.DEFAULT_FILE_NAME);
         preferences.put("StartupFilePath", GlobalValue.DEFAULT_BIN_RESOURCE);
