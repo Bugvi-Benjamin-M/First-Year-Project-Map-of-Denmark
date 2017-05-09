@@ -142,28 +142,7 @@ public final class OSMHandler implements ContentHandler {
         //refRelation = null;
         nodeGenerator = new NodeGenerator();
         /*
-        RoadGraph graph = new RoadGraph();
-        List<RoadEdge> roadEdges = new LinkedList<>();
-        int counter = 0;
-        for (Road road : roads) {
-            for (OSMWay way: road.getRelation()) {
-                for (int i = 1; i < way.size(); i++) {
-                    OSMWay shape = new OSMWay();
-                    shape.add(way.get(i-1));
-                    shape.add(way.get(i));
-                    RoadEdge edge = new RoadEdge(shape,road.getName(),road.getMaxSpeed());
-                    edge.setOneWay(road.isOneWay());
-                    edge.setTravelByBikeAllowed(road.isTravelByBikeAllowed());
-                    edge.setTravelByWalkAllowed(road.isTravelByFootAllowed());
-                    edge.setTravelByCarAllowed(road.isTravelByCarAllowed());
-                    graph.addEdges(edge);
-                    roadEdges.add(edge);
-                    if (counter % 1000 == 0) System.out.println("... added edges: "+counter);
-                    counter++;
-                }
-            }
-        }
-        model.setGraph(graph,roadEdges);
+        model.createGraph(roads);
         */
     }
 

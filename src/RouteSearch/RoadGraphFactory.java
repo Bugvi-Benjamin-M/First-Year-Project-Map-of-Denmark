@@ -1,6 +1,8 @@
 package RouteSearch;
 
+import Model.Elements.Road;
 import Model.Elements.RoadEdge;
+import OSM.OSMWay;
 
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -19,9 +21,35 @@ public class RoadGraphFactory {
 
     public RoadGraphFactory(RoadGraph graph, List<RoadEdge> roads) {
         this.graph = graph;
-        System.out.println("Building factory...");
         this.roads = roads;
-        System.out.println("Finished building factory...");
+    }
+
+    public RoadGraphFactory(Iterable<Road> roads) {
+        graph = new RoadGraph();
+        this.roads = new ArrayList<>();
+        constructGraph(roads);
+    }
+
+    private void constructGraph(Iterable<Road> roads) {
+        int counter = 0;
+        for (Road road : roads) {
+            for (OSMWay way: road.getRelation()) {
+                for (int i = 1; i < way.size(); i++) {
+                    OSMWay shape = new OSMWay();
+                    shape.add(way.get(i-1));
+                    shape.add(way.get(i));
+                    RoadEdge edge = new RoadEdge(shape,road.getName(),road.getMaxSpeed());
+                    edge.setOneWay(road.isOneWay());
+                    edge.setTravelByBikeAllowed(road.isTravelByBikeAllowed());
+                    edge.setTravelByWalkAllowed(road.isTravelByFootAllowed());
+                    edge.setTravelByCarAllowed(road.isTravelByCarAllowed());
+                    graph.addEdges(edge);
+                    this.roads.add(edge);
+                    if (counter % 1000 == 0) System.out.println("... added edges: "+counter);
+                    counter++;
+                }
+            }
+        }
     }
 
     public RoadGraph getGraph() {

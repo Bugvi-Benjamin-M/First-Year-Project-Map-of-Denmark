@@ -84,6 +84,11 @@ public final class Model extends Observable {
         }
     }
 
+    public void createGraph(List<Road> roads) {
+        if (roads == null) throw new IllegalArgumentException("Collection is not initialized, must not be null");
+        graphFactory = new RoadGraphFactory(roads);
+    }
+
     public String getIndexToCity(int index){
         return indexToCity.get(index);
     }
