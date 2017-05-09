@@ -190,7 +190,6 @@ public final class SearchToolController extends SearchController {
                     } else queryTimer.restart();
                     //showMatchingResults();
                     //searchTool.setText(currentQuery);
-
                 }
 
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {
