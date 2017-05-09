@@ -23,6 +23,7 @@ public class DistanceScallerView extends View {
     public DistanceScallerView() {
         super();
         distance = new JLabel();
+        distance.setHorizontalAlignment(SwingConstants.CENTER);
         distance.setFont(new Font(getFont().getName(),getFont().getStyle(),22));
         distance.setOpaque(false);
         distance.setMinimumSize(new Dimension(TEXT_WIDTH,TEXT_HEIGHT));

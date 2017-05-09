@@ -552,6 +552,7 @@ public final class ToolbarController extends Controller {
         SwingWorker worker = new SwingWorker() {
             @Override
             protected Object doInBackground() throws Exception {
+                GlobalValue.setIsLoading(true);
                 loadWindow = PopupWindow.LoadingScreen("Loading Default File!");
                 calculateLoadingScreenPosition();
 
@@ -578,6 +579,7 @@ public final class ToolbarController extends Controller {
                 MainWindowController.getInstance().requestCanvasRepaint();
                 loadWindow.setVisible(false);
                 loadWindow = null;
+                GlobalValue.setIsLoading(false);
             }
         };
 
@@ -596,6 +598,7 @@ public final class ToolbarController extends Controller {
             SwingWorker worker = new SwingWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
+                    GlobalValue.setIsLoading(true);
                     loadWindow = PopupWindow.LoadingScreen("Loading: " + chooser.getSelectedFile().getName());
                     calculateLoadingScreenPosition();
                     try {
@@ -614,6 +617,7 @@ public final class ToolbarController extends Controller {
                     MainWindowController.getInstance().requestCanvasRepaint();
                     loadWindow.setVisible(false);
                     loadWindow = null;
+                    GlobalValue.setIsLoading(false);
                 }
             };
             worker.execute();

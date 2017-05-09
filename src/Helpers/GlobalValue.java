@@ -25,6 +25,8 @@ public class GlobalValue {
 
     private static boolean getFastestRoute = false;
 
+    private static boolean isLoading = false;
+
     public static void setDidProgramLoadDefault(boolean truth_value)
     {
         didProgramLoadDefault = truth_value;
@@ -107,5 +109,13 @@ public class GlobalValue {
 
     public static void setFastestRoute(boolean useFastestRoute) {
         GlobalValue.getFastestRoute = useFastestRoute;
+    }
+
+    public static boolean isLoading() {
+        return isLoading;
+    }
+
+    public static void setIsLoading(boolean status) {
+        isLoading = status;
     }
 }

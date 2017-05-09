@@ -174,6 +174,8 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerBar.applyTheme();
         journeyPlannerSearchClearButtons.applyTheme();
         travelDescription.applyTheme();
+        fromSearcher.getSearchTool().applyTheme();
+        toSearcher.getSearchTool().applyTheme();
     }
 
     public void printRouteDescription() {

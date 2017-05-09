@@ -567,6 +567,10 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void popupActivation(MouseEvent e) {
+        if(GlobalValue.isLoading()) {
+            disablePopup();
+            return;
+        }
         if (PreferencesController.getInstance()
                 .getCanvasRealTimeInformationSetting()) {
             if (mapCanvas.hasFocus()) {

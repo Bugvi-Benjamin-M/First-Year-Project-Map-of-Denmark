@@ -192,6 +192,7 @@ public final class MainWindowController extends WindowController {
             inSlideTimer.start();
             PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
             window.getFrame().setResizable(false);
+            CanvasExtrasController.getInstance().getDistanceScaller().setLocation(CanvasExtrasController.getInstance().getDistanceScaller().getX(), CanvasExtrasController.getInstance().getDistanceScaller().getY() - GlobalValue.getSmallInformationBarHeight() + 15);
         }
     }
 
@@ -207,6 +208,8 @@ public final class MainWindowController extends WindowController {
         if(!isSliding) {
             PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
             PointsOfInterestController.getInstance().clearPointsOfInterestBar();
+            CanvasExtrasController.getInstance().getDistanceScaller().setLocation(CanvasExtrasController.getInstance().getDistanceScaller().getX(),
+                    CanvasExtrasController.getInstance().getDistanceScaller().getY() + GlobalValue.getSmallInformationBarHeight() - 15);
             CanvasController.repaintCanvas();
         }
     }
@@ -258,6 +261,7 @@ public final class MainWindowController extends WindowController {
             inSlideTimer.start();
             JourneyPlannerBarController.getInstance().setupSmallJourneyPlannerBar();
             window.getFrame().setResizable(false);
+            CanvasExtrasController.getInstance().getDistanceScaller().setLocation(CanvasExtrasController.getInstance().getDistanceScaller().getX(), CanvasExtrasController.getInstance().getDistanceScaller().getY() - GlobalValue.getSmallInformationBarHeight() + 15);
         }
     }
 
@@ -274,6 +278,8 @@ public final class MainWindowController extends WindowController {
         if(!isSliding) {
             JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, 0, window.getFrame().getHeight());
             JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
+            CanvasExtrasController.getInstance().getDistanceScaller().setLocation(CanvasExtrasController.getInstance().getDistanceScaller().getX(),
+                    CanvasExtrasController.getInstance().getDistanceScaller().getY() + GlobalValue.getSmallInformationBarHeight() - 15);
             CanvasController.repaintCanvas();
         }
     }
