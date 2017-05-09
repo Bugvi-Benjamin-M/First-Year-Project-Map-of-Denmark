@@ -1,20 +1,13 @@
 package RouteSearch;
 
-import KDtree.KDTree;
-import KDtree.Pointer;
 import Model.Elements.Element;
 import Model.Elements.Road;
 import OSM.OSMWay;
-import OSM.OSMWayRef;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.geom.Point2D;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Class details:

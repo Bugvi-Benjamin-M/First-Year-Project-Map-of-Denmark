@@ -185,6 +185,12 @@ public final class SearchToolController extends SearchController {
                         allowSearch = true;
                     }
                 }
+                /* if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
+
+                    BasicComboPopup list = (BasicComboPopup) searchTool.getField().getAccessibleContext().getAccessibleChild(0);
+                    list.getComponentPopupMenu().
+
+                }*/
                 if (searchTool.getText().isEmpty()) {
                     ToolbarController.getInstance().requestCanvasRepaint();
                     searchTool.getField().hidePopup();

@@ -358,7 +358,7 @@ public final class PointsOfInterestController extends Controller {
         @Override
         public void mouseEntered(MouseEvent e) {
             pointsOfInterestBar.applyTheme();
-            informationBar.grabFocus();
+            if(!MainWindowController.getInstance().doesSearchToolHaveFocus()) informationBar.grabFocus();
         }
 
         @Override

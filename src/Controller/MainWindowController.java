@@ -178,22 +178,6 @@ public final class MainWindowController extends WindowController {
             PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
             window.getFrame().setResizable(false);
         }
-        /*PointsOfInterestController.getInstance().clearPointsOfInterestBar();
-        int boundsTo = GlobalValue.getSmallInformationBarHeight();
-        final int[] boundsNow = {0};
-        inSlideTimer = new Timer(SLIDE_DELAY, ae -> {
-            if (boundsTo > boundsNow[0]){
-                boundsNow[0] = boundsNow[0] + PIXELS_TO_MOVE;
-                PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight() - boundsNow[0], window.getFrame().getWidth(), window.getFrame().getHeight());
-                PointsOfInterestController.getInstance().getInformationBar().revalidate();
-                PointsOfInterestController.getInstance().getInformationBar().repaint();
-            } else {
-                inSlideTimer.stop();
-                inSlideTimer = null;
-            }
-        });
-        inSlideTimer.start();
-        PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();*/
     }
 
     public void deactivateLargePointsOfInterestInformationBar() {

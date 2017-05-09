@@ -10,6 +10,7 @@ import View.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -98,9 +99,11 @@ public final class JourneyPlannerBarController extends Controller {
         //fromBar = fromSearcher.getSearchTool();
         fromSearcher.setToolTip("Type Departure Destination");
         fromSearcher.setTitle("From:");
+        fromSearcher.specifyKeyBindings();
         //toBar = toSearcher.getSearchTool();
         toSearcher.setToolTip("Type End Destination");
         toSearcher.setTitle("To:");
+        toSearcher.specifyKeyBindings();
         journeyPlannerSearchClearButtons = new JourneyPlannerSearchClearButtons();
         journeyPlannerSearchClearButtons.setOpaque(true);
         travelDescription = new JourneyDescriptionField();
@@ -168,13 +171,7 @@ public final class JourneyPlannerBarController extends Controller {
     public void themeHasChanged() {
         informationBar.applyTheme();
         journeyPlannerTransportTypeButtons.applyTheme();
-        //fromBar.applyTheme();
-        //toBar.applyTheme();
         journeyPlannerBar.applyTheme();
-        //fromBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "From:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(fromBar.getFont().getName(), fromBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
-        //fromBar.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
-        //toBar.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
-        //toBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "To:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(fromBar.getFont().getName(), fromBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
         journeyPlannerSearchClearButtons.applyTheme();
         travelDescription.applyTheme();
     }
@@ -229,6 +226,9 @@ public final class JourneyPlannerBarController extends Controller {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                fromSearcher.getSearchTool().getField().getEditor().setItem("");
+                toSearcher.getSearchTool().getField().getEditor().setItem("");
+                travelDescription.getField().setText("");
             }
 
             @Override
@@ -242,11 +242,23 @@ public final class JourneyPlannerBarController extends Controller {
                 super.mouseExited(e);
                 journeyPlannerSearchClearButtons.getClearButton().setForeground(ThemeHelper.color("icon"));
             }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                journeyPlannerSearchClearButtons.getClearButton().setForeground(ThemeHelper.color("toolActivated"));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                journeyPlannerSearchClearButtons.getClearButton().setForeground(ThemeHelper.color("icon"));
+            }
         });
         journeyPlannerSearchClearButtons.getSearchButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                searchActivatedEvent();
+                informationBar.grabFocus();
             }
 
             @Override
@@ -259,6 +271,16 @@ public final class JourneyPlannerBarController extends Controller {
             public void mouseEntered(MouseEvent e) {
                 super.mouseMoved(e);
                 journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("toolHover"));
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("toolActivated"));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
             }
         });
     }
@@ -330,12 +352,37 @@ public final class JourneyPlannerBarController extends Controller {
         informationBar.removeAll();
     }
 
+    private void searchActivatedEvent() {
+        if(fromSearcher.getSearchTool().getText().equals("")) {
+            PopupWindow.infoBox(null, "Please Specify Departure Location!", "No Departure Location Selected!");
+            return;
+        }
+        fromSearcher.searchActivatedEvent();
+        if(toSearcher.getSearchTool().getText().equals("")) {
+            PopupWindow.infoBox(null, "Please Specify End Destination!", "No End Destination Selected");
+            return;
+        }
+        toSearcher.searchActivatedEvent();
+    }
+
     private class InformationBarInteractionHandler extends MouseAdapter {
 
         @Override
         public void mouseClicked(MouseEvent e) {
             if(MainWindowController.getInstance().isMenuToolPopupVisible()) MainWindowController.getInstance().requestMenuToolHidePopup();
             MainWindowController.getInstance().requestSearchToolCloseList();
+            fromSearcher.closeSearchToolList();
+            toSearcher.closeSearchToolList();
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            if(!fromSearcher.doesSearchbarHaveFocus() && !toSearcher.doesSearchbarHaveFocus()) informationBar.grabFocus();
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            //Maybe set theme
         }
     }
 
@@ -347,6 +394,27 @@ public final class JourneyPlannerBarController extends Controller {
         protected void setupSearchTool() {
             searchTool = new SearchTool();
             searchTool.setOpaque(true);
+            searchTool.getField().getEditor().getEditorComponent().addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    if(MainWindowController.getInstance().isMenuToolPopupVisible()) MainWindowController.getInstance().requestMenuToolHidePopup();
+                    MainWindowController.getInstance().requestSearchToolCloseList();
+                }
+            });
+            searchTool.getField().getEditor().getEditorComponent().addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    super.focusGained(e);
+                    if(searchTool.getText().equals("")) return;
+                    else {
+                        showMatchingResults();
+                        searchTool.getField().getEditor().selectAll();
+                        searchTool.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
+                        allowSearch = true;
+                    }
+                }
+            });
         }
 
         @Override
@@ -358,12 +426,33 @@ public final class JourneyPlannerBarController extends Controller {
 
         @Override
         public void closeSearchToolList() {
-
+            if(searchTool.getField().isPopupVisible()) {
+                allowSearch = false;
+                searchTool.getField().hidePopup();
+            }
         }
 
         @Override
         protected void specifyKeyBindings() {
+            searchTool.getField().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    super.keyReleased(e);
+                    if (checkForProhibitedKey(e)) {
+                        return;
+                    }
+                    if (e.getKeyChar() != KeyEvent.VK_BACK_SPACE && e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE) {
+                        currentQuery = searchTool.getText();
+                        showMatchingResults();
+                        searchTool.getField().showPopup();
+                        searchTool.setText(currentQuery);
+                    }
 
+                    if (searchTool.getText().isEmpty()) {
+                        searchTool.getField().hidePopup();
+                    }
+                }
+            });
         }
 
         public SearchTool getSearchTool() {

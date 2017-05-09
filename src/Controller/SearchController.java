@@ -24,8 +24,8 @@ public abstract class SearchController extends Controller {
         protected String currentQuery;
         protected final int[] prohibitedKeys = new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_ALT, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
                 KeyEvent.VK_META, KeyEvent.VK_DOWN, KeyEvent.VK_UP, KeyEvent.VK_WINDOWS, KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_UNDEFINED};
-        private javax.swing.Timer queryTimer;
-        private final int QUERY_DELAY = 100;
+        protected javax.swing.Timer queryTimer;
+        protected final int QUERY_DELAY = 1000;
 
         protected SearchController() {
             super();
@@ -50,6 +50,7 @@ public abstract class SearchController extends Controller {
                 searchTool.getField().requestFocus();
             }
             else if(allowSearch) {
+                System.out.println("Jeg Virker");
                 ArrayList<Value> list = Model.getInstance().getTst().get(searchTool.getText());
                 if(list != null) {
                     validSearch = true;
@@ -62,11 +63,9 @@ public abstract class SearchController extends Controller {
                                 cities[i] = currentQuery + " " + i;
                             }
                         }
-                        //JComboBox jcb = new JComboBox(cities);
-                        //jcb.setEditable(true);
+
                         String result = PopupWindow.confirmBox(null, "Select a City:", "Multiple Search Results!", cities);
                         if(result != null) {
-                            //JOptionPane.showMessageDialog(null, jcb, "Select a City: ", JOptionPane.QUESTION_MESSAGE);
                             int resultIndex = 0;
                             for (int i = 0; i < cities.length; i++) {
                                 if (cities[i].equals(result)) {
@@ -82,12 +81,10 @@ public abstract class SearchController extends Controller {
                         CanvasController.getInstance().markLocation(list.get(0).getX(), list.get(0).getY());
                     }
                 }else{
-                    ArrayList<String> matches = manageSearchResults();
-                    if(matches.size() > 0){
-                        //JComboBox jcb = new JComboBox(matches.toArray());
-                        //jcb.setEditable(true);
-                        //JOptionPane.showMessageDialog(null, jcb, "Select an Address: ", JOptionPane.QUESTION_MESSAGE);
-                        String result = PopupWindow.confirmBox(null, "Select an Address:", "Multiple Search Results!", (String[]) matches.toArray());
+                    String[] matches = manageSearchResults();
+                    if(matches.length > 0){
+
+                        String result = PopupWindow.confirmBox(null, "Select an Address:", "Multiple Search Results!", matches);
                         if(result != null) {
                             validSearch = true;
                             currentQuery = result;
@@ -104,20 +101,21 @@ public abstract class SearchController extends Controller {
             }
         }
 
-        protected void showMatchingResults(){
-            if(searchTool.getField().isPopupVisible() && searchTool.getField().getItemCount() == 0) searchTool.getField().hidePopup();
+        protected void showMatchingResults() {
+            if (searchTool.getField().isPopupVisible() && searchTool.getField().getItemCount() == 0)
+            searchTool.getField().hidePopup();
             searchTool.getField().removeAllItems();
-            if(currentQuery != null) {
-                ArrayList<String> listToShow = manageSearchResults();
+            if (currentQuery != null) {
+            String[] listToShow = manageSearchResults();
                 for (String s : listToShow) {
-                    searchTool.getField().addItem(s);
+                searchTool.getField().addItem(s);
                 }
             }
             searchTool.getField().hidePopup();
             searchTool.getField().showPopup();
         }
 
-        private ArrayList<String> manageSearchResults(){
+        private String[] manageSearchResults(){
             HashMap<Boolean, ArrayList<String>> map = Model.getInstance().getTst().keysThatMatch(currentQuery.toLowerCase());
             ArrayList<String> listToShow = new ArrayList<>();
             for (String s : map.get(true)) {
@@ -135,7 +133,11 @@ public abstract class SearchController extends Controller {
                     i++;
                 }
             }
-            return listToShow;
+            String[] matchesArray = new String[listToShow.size()];
+            for (int j = 0; j < matchesArray.length ; j++) {
+                matchesArray[j] = listToShow.get(j);
+            }
+            return matchesArray;
         }
 
 
@@ -154,6 +156,10 @@ public abstract class SearchController extends Controller {
 
     protected boolean isValidSearch() {
         return validSearch;
+    }
+
+    protected void setCurrentQuery(String query) {
+        currentQuery = query;
     }
 
 }
