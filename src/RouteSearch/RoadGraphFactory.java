@@ -15,6 +15,10 @@ import java.util.*;
  */
 public class RoadGraphFactory {
 
+    public enum LoadType {
+        ROADS, ROADEDGES
+    }
+
     private List<RoadEdge> route;
     private List<RoadEdge> roads;
     private RoadGraph graph;
@@ -24,10 +28,20 @@ public class RoadGraphFactory {
         this.roads = roads;
     }
 
-    public RoadGraphFactory(Iterable<Road> roads) {
-        graph = new RoadGraph();
+    public RoadGraphFactory(Iterable roads, LoadType type) {
+        if (roads == null) throw new NullPointerException("Roads not initialized");
         this.roads = new ArrayList<>();
-        constructGraph(roads);
+        if (type == LoadType.ROADS) {
+            graph = new RoadGraph();
+            constructGraph((Iterable<Road>) roads);
+        } else if (type == LoadType.ROADEDGES) {
+            graph = new RoadGraph();
+            for (Object road : roads) {
+                graph.addEdges((RoadEdge) road);
+            }
+        } else {
+            throw new IllegalArgumentException("Type not defined");
+        }
     }
 
     private void constructGraph(Iterable<Road> roads) {
