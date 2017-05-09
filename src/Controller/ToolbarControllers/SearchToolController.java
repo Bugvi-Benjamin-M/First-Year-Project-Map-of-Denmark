@@ -166,6 +166,7 @@ public final class SearchToolController extends SearchController {
                             ToolbarController.getInstance().transferFocusToCanvas();
                         break;
                 }
+
             }
 
             @Override
@@ -174,10 +175,22 @@ public final class SearchToolController extends SearchController {
                 if (checkForProhibitedKey(e)) {
                     return;
                 }
-                if (e.getKeyChar() != KeyEvent.VK_BACK_SPACE && e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE) {
-                    currentQuery = searchTool.getText();
-                    showMatchingResults();
-                    searchTool.setText(currentQuery);
+                if (/*e.getKeyChar() != KeyEvent.VK_BACK_SPACE &&*/ e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE) {
+                    //currentQuery = searchTool.getText();
+                    if(queryTimer == null) {
+                        queryTimer = new Timer(QUERY_DELAY, ae -> {
+                            queryTimer.stop();
+                            queryTimer = null;
+                            currentQuery = searchTool.getText();
+                            if(!currentQuery.equals("")) showMatchingResults();
+                            else showHistory();
+                            searchTool.setText(currentQuery);
+                        });
+                        queryTimer.start();
+                    } else queryTimer.restart();
+                    //showMatchingResults();
+                    //searchTool.setText(currentQuery);
+
                 }
 
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {
@@ -185,12 +198,6 @@ public final class SearchToolController extends SearchController {
                         allowSearch = true;
                     }
                 }
-                /* if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
-
-                    BasicComboPopup list = (BasicComboPopup) searchTool.getField().getAccessibleContext().getAccessibleChild(0);
-                    list.getComponentPopupMenu().
-
-                }*/
                 if (searchTool.getText().isEmpty()) {
                     ToolbarController.getInstance().requestCanvasRepaint();
                     searchTool.getField().hidePopup();
