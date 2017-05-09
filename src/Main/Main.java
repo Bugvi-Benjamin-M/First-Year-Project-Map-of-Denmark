@@ -80,7 +80,7 @@ public class Main {
             DebugWindow.getInstance().setLoadtimeLabel();
 
             try {
-                //dijkstra(model);
+                // dijkstra(model);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -98,7 +98,6 @@ public class Main {
         for(Value val : list){
             System.out.println("X: " + val.getX() + "; Y: " + val.getY());
         }
-
 
         RoadEdge start = factory.getRoad("Eratosvej");
         RoadEdge end = factory.getRoad("Vester Oddevej");
@@ -124,6 +123,7 @@ public class Main {
                     System.out.println("No path found...");
                 }
                 System.out.println("Route time: "+(System.currentTimeMillis() - time) + " ms");
+                JourneyPlannerBarController.printRouteDescription();
             }
         }.start();
     }

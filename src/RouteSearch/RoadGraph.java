@@ -53,6 +53,8 @@ public class RoadGraph implements Serializable {
         return adjacencyList.get(point);
     }
 
+
+
     public int degree(Point2D point) {
         return adjacencyList.get(point).size();
     }

@@ -6,13 +6,10 @@ import java.awt.geom.Point2D;
 import java.util.*;
 
 /**
- * DESCRIPTION
- * <p>
- * CLASS Created by
+ * TODO: write javadoc
  *
  * @author Andreas Blanke
  * @version 05-05-2017
- * @project BFST
  */
 public class RoadGraphFactory {
 

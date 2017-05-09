@@ -2,6 +2,9 @@ package Controller;
 
 import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
+import Model.Elements.RoadEdge;
+import Model.Model;
+import RouteSearch.RoadGraphFactory;
 import View.*;
 
 import javax.swing.*;
@@ -9,6 +12,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 /**
  * Created by  on .
@@ -173,6 +177,48 @@ public final class JourneyPlannerBarController extends Controller {
         //toBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "To:", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(fromBar.getFont().getName(), fromBar.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
         journeyPlannerSearchClearButtons.applyTheme();
         travelDescription.applyTheme();
+    }
+
+    public static void printRouteDescription() {
+        java.util.List<String> route = JourneyPlannerBarController.getInstance().getRouteDescription();
+        for (String string : route) {
+            System.out.println(string);
+        }
+    }
+
+    private java.util.List<String> getRouteDescription() {
+        RoadGraphFactory factory = Model.getInstance().getGraphFactory();
+        java.util.List<String> description = new ArrayList<>();
+        java.util.List<RoadEdge> route = factory.getRoute();
+        if (route != null ) {
+            if (route.size() != 0) {
+                RoadEdge last = route.get(0), next;
+                float distance = last.getLength();
+                for (int i = 1; i < route.size(); i++) {
+                    next = route.get(i);
+                    int compare = last.compareToRoad(next);
+                    if (compare != 0){
+                        description.add(last.describe(distance));
+                        distance = 0;
+                        if (compare == -1) {
+                            description.add("Turn to the left unto "+next.getName());
+                        } else if (compare == 1) {
+                            description.add("Turn to the right unto "+next.getName());
+                        }
+                    } else {
+                        distance += next.getLength();
+                        if (i == route.size()-1) {
+                            description.add(last.describe(distance));
+                        }
+                    }
+                    last = next;
+                }
+            } else {
+                description.add("No route was found...");
+            }
+            return description;
+        }
+        return null;
     }
 
     private void addInteractionHandlerToClearSearchButtons() {

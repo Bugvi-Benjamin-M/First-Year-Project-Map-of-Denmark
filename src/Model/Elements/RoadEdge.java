@@ -11,6 +11,9 @@ import java.awt.geom.Point2D;
 import java.io.Serializable;
 
 /**
+ * A RoadEdge object represent both an segment of an actual road
+ * and an weighted directed edge in graph theory.
+ * TODO: write javadoc
  *
  * @author Andreas Blanke
  * @version 05-05-2017
@@ -114,23 +117,42 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
         return "Road:'"+name+"'; "+length+" m;";
     }
 
+    public String describe(float length) {
+        return "Travel via "+name+" for " + (length) + " meters";
+    }
+
+    public int compareToRoad(RoadEdge other) {
+        if (other == null) throw new NullPointerException("RoadEdge not initialized!");
+        if (other.getName().equals(name)) return 0;
+        double angle = HelperFunctions.angle(this.getWay(),other.getWay());
+        if (angle < 0) return -1;       // to the left
+        else if (angle > 0) return 1;   // to the right
+        else return 0;                  // same angle
+    }
+
     public boolean isOneWay() {
         return isOneWay;
+    }
+
+    public OSMWay getWay() {
+        return way;
     }
 
     public float getLength() {
         return length;
     }
 
-
     public float getSpeed() {
         return speed;
+    }
+
+    public float getTime() {
+        return length / speed;
     }
 
     public String getName() {
         return name;
     }
-
 
     public void setOneWay(boolean oneWay) {
         isOneWay = oneWay;
@@ -147,6 +169,5 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
     public void setTravelByWalkAllowed(boolean travelByWalkAllowed) {
         isTravelByWalkAllowed = travelByWalkAllowed;
     }
-
 
 }

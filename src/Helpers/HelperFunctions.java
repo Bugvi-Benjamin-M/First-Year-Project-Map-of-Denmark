@@ -1,6 +1,7 @@
 package Helpers;
 
 import Controller.CanvasController;
+import OSM.OSMWay;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -177,5 +178,44 @@ public class HelperFunctions {
         Point2D start = CanvasController.getInstance().getMapCanvas().toModelCoords(new Point2D.Float(0,0));
         Point2D end = CanvasController.getInstance().getMapCanvas().toModelCoords(new Point2D.Float(distance,0));
         return (float) (end.getX() - start.getX());
+    }
+
+    private static double dotProduct(Vector a, Vector b) {
+        if (a == null || b == null) {
+            throw new NullPointerException("Arguments must not be null");
+        }
+        return (a.x * b.y) + (a.y * b.x);
+    }
+
+    public static double angle(OSMWay one, OSMWay other) {
+        if (one == null || other == null) {
+            throw new NullPointerException("Arguments must not be null");
+        } else if (one.size() < 2 || other.size() < 2) {
+            throw new IllegalArgumentException("Angle between points is not possible");
+        }
+        Vector a = new Vector(one.getFromNode(),one.getToNode());
+        Vector b = new Vector(other.getFromNode(),other.getToNode());
+        System.out.println("a "+a.toString()+" - b "+b.toString());
+        double distances = a.length() * b.length();
+        return (dotProduct(a,b) / distances);
+    }
+
+    private static class Vector {
+        private double x;
+        private double y;
+
+        Vector(Point2D a, Point2D b) {
+            x = a.getX()-b.getX();
+            y = a.getY()-b.getY();
+        }
+
+        double length() {
+            return Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
+        }
+
+        @Override
+        public String toString() {
+            return "("+x+";"+y+")";
+        }
     }
 }
