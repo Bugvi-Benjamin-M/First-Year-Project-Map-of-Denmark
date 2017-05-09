@@ -49,27 +49,23 @@ public class DistanceScallerView extends View {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(ThemeHelper.color("icon"));
-        g.drawLine(10,PANEL_HEIGHT-15,110,PANEL_HEIGHT-15);
-        g.drawLine(10,15,10,PANEL_HEIGHT-5);
-        g.drawLine(110,15,110,PANEL_HEIGHT-5);
+        Graphics2D g2D = (Graphics2D) g;
+        g2D.setColor(ThemeHelper.color("icon"));
+        g2D.drawLine(10,PANEL_HEIGHT-15,110,PANEL_HEIGHT-15);
+        g2D.drawLine(10,15,10,PANEL_HEIGHT-5);
+        g2D.drawLine(110,15,110,PANEL_HEIGHT-5);
     }
 
     public void setDistance(double distance) {
+        String text, ending;
         if (distance < 1000) {
-            String text = String.valueOf(distance);
-            int indexOfDot = text.indexOf('.');
-            if (indexOfDot != -1) {
-                if (3 < (text.length() - indexOfDot)) {
-                    text = text.substring(0, indexOfDot) +
-                            text.substring(indexOfDot, indexOfDot + 3);
-                }
-            }
-            this.distance.setText("<html><div style='text-align: center;'>"+
-                    text + " m"+"</div></html>");
+            text = String.valueOf((int) Math.round(distance));
+            ending = " m";
         } else {
-            this.distance.setText("<html><div style='text-align: center;'>"+
-                    String.valueOf((int) Math.round(distance/1000))+" km"+"</div></html>");
+            text = String.valueOf((int) Math.round(distance/1000));
+            ending = " km";
         }
+        this.distance.setText("<html><body style='text-align: center;'>"+
+                text+ending+"</body></html>");
     }
 }
