@@ -3,19 +3,15 @@ package Main;
 import Controller.*;
 import Controller.ToolbarControllers.ToolbarController;
 import Exceptions.FileWasNotFoundException;
-import Enums.OSMEnums.ElementType;
 import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
-import Model.Elements.Road;
+import Model.Addresses.Value;
 import Model.Elements.RoadEdge;
 import Model.Model;
-import KDtree.KDTree;
 import RouteSearch.RoadGraphFactory;
 import View.PopupWindow;
-import Model.Addresses.Value;
-
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
@@ -123,7 +119,7 @@ public class Main {
                     System.out.println("No path found...");
                 }
                 System.out.println("Route time: "+(System.currentTimeMillis() - time) + " ms");
-                JourneyPlannerBarController.printRouteDescription();
+               // JourneyPlannerBarController.printRouteDescription();
             }
         }.start();
     }

@@ -468,6 +468,7 @@ public final class CanvasController extends Controller implements Observer {
                 MainWindowController.getInstance().requestPoiModeOff();
             }
         }
+        popupActivation(event);
     }
 
     private void mouseDraggedEvent(MouseEvent event)
@@ -517,24 +518,30 @@ public final class CanvasController extends Controller implements Observer {
     {
         if(GlobalValue.isAddNewPointActive()) changeCanvasMouseCursorToPoint();
         else changeCanvasMouseCursorToNormal();
-        if (PreferencesController.getInstance()
+        popupActivation(e);
+        /*if (PreferencesController.getInstance()
                 .getCanvasRealTimeInformationSetting()) {
             if (mapCanvas.hasFocus()) {
                 disablePopup();
                 popup = new CanvasPopup();
                 popup.setLocation((int)e.getLocationOnScreen().getX() + POPUP_XOFFSET,
-                    (int)e.getLocationOnScreen().getY() + POPUP_YOFFSET);
-                setPopupContent(e);
+                        (int)e.getLocationOnScreen().getY() + POPUP_YOFFSET);
+                /*setPopupContent(e);
                 if (popup.getPopupMenu().getComponentCount() == 0) {
                     disablePopup();
                     return;
-                }
-                if (toolTipTimer == null) {
+                }*/
+                /*if (toolTipTimer == null) {
                     toolTipTimer = new Timer(POPUP_DELAY, a -> {
                         if (a.getSource() == toolTipTimer) {
                             toolTipTimer.stop();
                             toolTipTimer = null;
                             if (popup != null) {
+                                setPopupContent(e);
+                                if (popup.getPopupMenu().getComponentCount() == 0) {
+                                    disablePopup();
+                                    return;
+                                }
                                 popup.showPopupMenu();
                                 popup.startDismissTimer();
                             }
@@ -546,7 +553,7 @@ public final class CanvasController extends Controller implements Observer {
                     popup.stopDismissTimer();
                 }
             }
-        }
+        }*/
     }
 
     private void mouseReleasedEvent(MouseEvent e) {
@@ -554,6 +561,46 @@ public final class CanvasController extends Controller implements Observer {
             if (PreferencesController.getInstance().getAntiAliasingSetting()) {
                 mapCanvas.toggleAntiAliasing(true);
                 repaintCanvas();
+            }
+            popupActivation(e);
+        }
+    }
+
+    private void popupActivation(MouseEvent e) {
+
+        if (PreferencesController.getInstance()
+                .getCanvasRealTimeInformationSetting()) {
+            if (mapCanvas.hasFocus()) {
+                disablePopup();
+                popup = new CanvasPopup();
+                popup.setLocation((int)e.getLocationOnScreen().getX() + POPUP_XOFFSET,
+                        (int)e.getLocationOnScreen().getY() + POPUP_YOFFSET);
+                /*setPopupContent(e);
+                if (popup.getPopupMenu().getComponentCount() == 0) {
+                    disablePopup();
+                    return;
+                }*/
+                if (toolTipTimer == null) {
+                    toolTipTimer = new Timer(POPUP_DELAY, a -> {
+                        if (a.getSource() == toolTipTimer) {
+                            toolTipTimer.stop();
+                            toolTipTimer = null;
+                            if (popup != null) {
+                                setPopupContent(e);
+                                if (popup.getPopupMenu().getComponentCount() == 0) {
+                                    disablePopup();
+                                    return;
+                                }
+                                popup.showPopupMenu();
+                                popup.startDismissTimer();
+                            }
+                        }
+                    });
+                    toolTipTimer.start();
+                } else {
+                    toolTipTimer.restart();
+                    popup.stopDismissTimer();
+                }
             }
         }
     }
