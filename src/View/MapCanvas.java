@@ -30,7 +30,7 @@ import java.util.List;
 public class MapCanvas extends View {
 
     private AffineTransform transform  = new AffineTransform();
-    private HashSet<Element> currentSection;
+    private HashSet<SuperElement> currentSection;
     private Point2D currentPoint;
     private Rectangle2D currentRectangle;
     private EnumMap<ElementType, KDTree> elements;
@@ -583,7 +583,7 @@ public class MapCanvas extends View {
 
     public void setElements(EnumMap<ElementType, KDTree> map) { elements = map; }
 
-    public void setCurrentSection(HashSet<Element> currentSection) {
+    public void setCurrentSection(HashSet<SuperElement> currentSection) {
         this.currentSection = currentSection;
     }
 
@@ -596,175 +596,194 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.MOTORWAY);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawMotorwayLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.MOTORWAY_LINK);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawTrunkRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TRUNK_ROAD);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawTrunkRoadLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TRUNK_ROAD_LINK);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawPrimaryRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PRIMARY_ROAD);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawPrimaryRoadLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PRIMARY_ROAD_LINK);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawSecondaryRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.SECONDARY_ROAD);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawSecondaryRoadLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.SECONDARY_ROAD_LINK);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawTertiaryRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TERTIARY_ROAD);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawTertiaryRoadLinks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TERTIARY_ROAD_LINK);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawUnclassifiedRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.UNCLASSIFIED_ROAD);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawResidentialRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.RESIDENTIAL_ROAD);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawLivingStreets(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.LIVING_STREET);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawServiceRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.SERVICE_ROAD);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawBusGuideways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.BUS_GUIDEWAY);
         g.setColor(color);
         g.setStroke(new BasicStroke(width));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawEscapes(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.ESCAPE);
         g.setColor(color);
         g.setStroke(new BasicStroke(width));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawRaceways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.RACEWAY);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawPedestrianStreets(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PEDESTRIAN_STREET);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
+        for (SuperElement element : currentSection) {
             Road road = (Road)element;
-            if (road.isArea()) g.fill(element.getShape());
-            else g.draw(element.getShape());
+            if (road.isArea()) g.fill(road.getShape());
+            else g.draw(road.getShape());
         }
     }
     private void drawTracks(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.TRACK);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawSteps(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.STEPS);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 0.00001f }, 0.0f));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawFootways(Graphics2D g, Color color, Color areaColor, float width) {
         setCurrentSection(ElementType.FOOTWAY);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 0.00001f }, 0.0f));
-        for (Element element : currentSection) {
-            Road r = (Road)element;
-            if (r.isArea()) {
+        for (SuperElement element : currentSection) {
+            Road road = (Road)element;
+            if (road.isArea()) {
                 g.setColor(areaColor);
-                g.fill(element.getShape());
+                g.fill(road.getShape());
             } else {
                 g.setColor(color);
-                g.draw(element.getShape());
+                g.draw(road.getShape());
             }
         }
     }
@@ -772,50 +791,55 @@ public class MapCanvas extends View {
         setCurrentSection(ElementType.BRIDGE);
         g.setColor(color);
         g.setStroke(new BasicStroke(width));
-        for (Element element : currentSection) {
+        for (SuperElement element : currentSection) {
             ManMade manMade = (ManMade)element;
-            if (manMade.isArea()) g.fill(element.getShape());
-            else g.draw(element.getShape());
+            if (manMade.isArea()) g.fill(manMade.getShape());
+            else g.draw(manMade.getShape());
         }
     }
     private void drawPier(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PIER);
         g.setColor(color);
         g.setStroke(new BasicStroke(width));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            ManMade manMade = (ManMade)element;
+            g.draw(manMade.getShape());
         }
     }
     private void drawBridleways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.BRIDLEWAY);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 0.00001f }, 0.0f));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawCycleways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.CYCLEWAY);
         g.setColor(color);
         g.setStroke(new BasicStroke(width));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawPaths(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PATH);
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 0.00001f }, 0.0f));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
     private void drawRoads(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.ROAD);
         g.setColor(color);
         g.setStroke(new BasicStroke(width));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            Road road = (Road) element;
+            g.draw(road.getShape());
         }
     }
 
@@ -828,7 +852,7 @@ public class MapCanvas extends View {
         setCurrentSection(elementType);
         g.setColor(color);
         g.setStroke(new BasicStroke(0.00001f));
-        for (Element element : currentSection){
+        for (SuperElement element : currentSection){
             Biome biome = (Biome)element;
             float size = biome.getShape().getSize();
             if (size > minSizeToBeSignificant) g.fill(biome.getShape());
@@ -846,7 +870,7 @@ public class MapCanvas extends View {
         setCurrentSection(elementType);
         g.setColor(color);
         g.setStroke(new BasicStroke(strokeSize, lineEnd, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection){
+        for (SuperElement element : currentSection){
             Biome biome = (Biome)element;
             float size = biome.getShape().getSize();
             if (size > minSizeToBeSignificant) g.draw(biome.getShape());
@@ -858,13 +882,13 @@ public class MapCanvas extends View {
         g.setColor(color);
         g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
 
-        for (Element element : currentSection){
+        for (SuperElement element : currentSection){
             Rail rail = (Rail) element;
             if(rail.isInTunnel()){
                 Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f);
                 g.setComposite(c);
             }
-            g.draw(element.getShape());
+            g.draw(rail.getShape());
             Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
             g.setComposite(c);
         }
@@ -876,8 +900,9 @@ public class MapCanvas extends View {
         g.setComposite(c);
         g.setColor(color);
         g.setStroke(new BasicStroke(0.00001f));
-        for (Element element : currentSection) {
-            g.fill(element.getShape());
+        for (SuperElement element : currentSection) {
+            Building building = (Building)element;
+            g.fill(building.getShape());
         }
         c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         g.setComposite(c);
@@ -899,7 +924,7 @@ public class MapCanvas extends View {
         // Color
         g.setColor(ThemeHelper.color("roadName"));
 
-        for (Element element : currentSection) {
+        for (SuperElement element : currentSection) {
             Road road = (Road)element;
             g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
             PolygonApprox polygon = road.getShape();
@@ -1025,7 +1050,7 @@ public class MapCanvas extends View {
 
             // Color
             g.setColor(ThemeHelper.color("cityName"));
-            for (Element element : currentSection) {
+            for (SuperElement element : currentSection) {
                 PlaceName placeName = (PlaceName)element;
                 g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
                 drawString(placeName.getName(), g, placeName.getX(), placeName.getY(), font, scaleFactor, true);
@@ -1060,19 +1085,19 @@ public class MapCanvas extends View {
                 Font font = Helpers.FontAwesome.getFontAwesome();
                 g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
                 setCurrentSection(ElementType.BAR);
-                for (Element element : currentSection) {
+                for (SuperElement element : currentSection) {
                     Amenity amenity = (Amenity)element;
                     g.setColor(ThemeHelper.color("barName"));
                     drawString("\uf000" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
                 }
                 setCurrentSection(ElementType.NIGHT_CLUB);
-                for (Element element : currentSection) {
+                for (SuperElement element : currentSection) {
                     Amenity amenity = (Amenity)element;
                     g.setColor(ThemeHelper.color("nightClubName"));
                     drawString("\uf001" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
                 }
                 setCurrentSection(ElementType.FAST_FOOD);
-                for (Element element : currentSection) {
+                for (SuperElement element : currentSection) {
                     Amenity amenity = (Amenity)element;
                     g.setColor(ThemeHelper.color("fastFoodName"));
                     drawString("\uf0f5" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
@@ -1085,7 +1110,7 @@ public class MapCanvas extends View {
                 g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
 
                 setCurrentSection(ElementType.BAR);
-                for (Element element : currentSection){
+                for (SuperElement element : currentSection){
                     Amenity amenity = (Amenity)element;
 
                     String name = amenity.getName();
@@ -1107,7 +1132,7 @@ public class MapCanvas extends View {
         Font font = Helpers.FontAwesome.getFontAwesome();
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
 
-        for (Element element : currentSection) {
+        for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
             drawString("\uf0fe" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
         }
@@ -1117,7 +1142,7 @@ public class MapCanvas extends View {
         //Font for drawing name
         font = new Font("Arial", Font.ITALIC, 18);
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-        for (Element element : currentSection){
+        for (SuperElement element : currentSection){
             Amenity amenity = (Amenity)element;
 
             String name = amenity.getName();
@@ -1137,7 +1162,7 @@ public class MapCanvas extends View {
         Font font = Helpers.FontAwesome.getFontAwesome();
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
 
-        for (Element element : currentSection) {
+        for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
             drawString("\uf19c" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
         }
@@ -1147,7 +1172,7 @@ public class MapCanvas extends View {
         //Font for drawing name
         font = new Font("Arial", Font.ITALIC, 18);
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-        for (Element element : currentSection){
+        for (SuperElement element : currentSection){
             Amenity amenity = (Amenity)element;
 
             String name = amenity.getName();
@@ -1167,12 +1192,12 @@ public class MapCanvas extends View {
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
 
         setCurrentSection(ElementType.RAILWAY_STATION);
-        for (Element element : currentSection) {
+        for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
             drawString("\uf238" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
         }
         setCurrentSection(ElementType.RAILWAY_STATION_AREA);
-        for (Element element : currentSection) {
+        for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
             drawString("\uf238" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
         }
@@ -1182,7 +1207,7 @@ public class MapCanvas extends View {
         font = new Font("Arial", Font.BOLD, 14);
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
         setCurrentSection(ElementType.RAILWAY_STATION);
-        for (Element element : currentSection){
+        for (SuperElement element : currentSection){
             Amenity amenity = (Amenity)element;
 
             String name = amenity.getName();
@@ -1191,7 +1216,7 @@ public class MapCanvas extends View {
             drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
         }
         setCurrentSection(ElementType.RAILWAY_STATION_AREA);
-        for (Element element : currentSection){
+        for (SuperElement element : currentSection){
             Amenity amenity = (Amenity)element;
 
             String name = amenity.getName();
@@ -1210,7 +1235,7 @@ public class MapCanvas extends View {
         Font font = new Font("Wingdings", Font.PLAIN, 36);
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
 
-        for (Element element : currentSection) {
+        for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
             float y = amenity.getY();
             y += ((getFontMetrics(font).charWidth('\uf055')) / 2) * scaleFactor;
@@ -1231,7 +1256,7 @@ public class MapCanvas extends View {
         Font font = new Font("Arial", Font.BOLD, 18);
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
 
-        for (Element element : currentSection) {
+        for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
             float y = amenity.getY();
             y += ((getFontMetrics(font).charWidth('P')) / 2) * scaleFactor;
@@ -1256,7 +1281,7 @@ public class MapCanvas extends View {
         Font font = Helpers.FontAwesome.getFontAwesome();
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
 
-        for (Element element : currentSection) {
+        for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
             float y = amenity.getY();
             y += ((getFontMetrics(font).charWidth('\uf1e3')) / 2) * scaleFactor;
@@ -1277,7 +1302,7 @@ public class MapCanvas extends View {
         Font font = Helpers.FontAwesome.getFontAwesome();
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
 
-        for (Element element : currentSection) {
+        for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
             drawString("\uf072" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
         }
@@ -1287,7 +1312,7 @@ public class MapCanvas extends View {
         //Font for drawing name
         font = new Font("Arial", Font.ITALIC, 20);
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-        for (Element element : currentSection){
+        for (SuperElement element : currentSection){
             Amenity amenity = (Amenity)element;
 
             String name = amenity.getName();

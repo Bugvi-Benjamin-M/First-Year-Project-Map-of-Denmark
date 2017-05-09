@@ -44,7 +44,7 @@ public class TestKD {
     @Test
     public void testGetManyElementsLittleSquare()
     {
-        HashSet<Element> set = tree.getManySections(-1, -1, 3, 3);
+        HashSet<SuperElement> set = tree.getManySections(-1, -1, 3, 3);
 
         assertEquals(5, set.size());
 
@@ -57,7 +57,7 @@ public class TestKD {
     @Test
     public void testGetManyElementsBigSquare()
     {
-        HashSet<Element> set = tree.getManySections(-1, -1, 10, 20);
+        HashSet<SuperElement> set = tree.getManySections(-1, -1, 10, 20);
 
         assertEquals(10, set.size());
 
@@ -70,7 +70,7 @@ public class TestKD {
     @Test
     public void testGetManyElementsOutOfRangeSquare()
     {
-        HashSet<Element> set = tree.getManySections(-1, -1, -2, -2);
+        HashSet<SuperElement> set = tree.getManySections(-1, -1, -2, -2);
 
         assertEquals(2, set.size());
 
@@ -83,7 +83,7 @@ public class TestKD {
     @Test
     public void testGetManyElementsMiddleSquare()
     {
-        HashSet<Element> set = tree.getManySections(5, 5, 7, 7);
+        HashSet<SuperElement> set = tree.getManySections(5, 5, 7, 7);
 
         assertEquals(3, set.size());
 
@@ -96,7 +96,7 @@ public class TestKD {
     @Test
     public void testGetManyElementsCornerTopLeft()
     {
-        HashSet<Element> set = tree.getManySections(0, 30, -1, 31);
+        HashSet<SuperElement> set = tree.getManySections(0, 30, -1, 31);
 
         assertEquals(3, set.size());
 
@@ -109,7 +109,7 @@ public class TestKD {
     @Test
     public void testGetManyElementsCornerTopRight()
     {
-        HashSet<Element> set = tree.getManySections(30, 30, 30, 30);
+        HashSet<SuperElement> set = tree.getManySections(30, 30, 30, 30);
 
         assertEquals(2, set.size());
 
@@ -122,7 +122,7 @@ public class TestKD {
     @Test
     public void testGetManyElementsCornerBottomRight()
     {
-        HashSet<Element> set = tree.getManySections(30, 0, 31, -1);
+        HashSet<SuperElement> set = tree.getManySections(30, 0, 31, -1);
 
         assertEquals(3, set.size());
 
@@ -136,7 +136,7 @@ public class TestKD {
     public void testClear()
     {
         tree.clear();
-        HashSet<Element> set = tree.getManySections(-1, -1, 10, 20);
+        HashSet<SuperElement> set = tree.getManySections(-1, -1, 10, 20);
 
         assertEquals(0, set.size());
 
@@ -159,20 +159,22 @@ public class TestKD {
     public void testPointer()
     {
         Path2D rectangle = new Path2D.Double();
-        Element el = new UnknownWay(rectangle);
+        SuperElement el = new UnknownWay(rectangle);
         Pointer p = new Pointer(1, 2, el);
         assertEquals(p.getElement(), el);
-        assertEquals(p.getElement().getShape(), rectangle);
+        Element ele = (Element) p.getElement();
+        assertEquals(ele.getShape(), rectangle);
     }
 
-    private void assertHashSetEqualsToPoints(HashSet<Element> set,
+    private void assertHashSetEqualsToPoints(HashSet<SuperElement> set,
         double[] correctX,
         double[] correctY)
     {
         double[] x = new double[correctX.length];
         double[] y = new double[correctY.length];
         int i = 0;
-        for (Element el : set) {
+        for (SuperElement ele : set) {
+            Element el = (Element) ele;
             Rectangle2D bounds = el.getShape().getBounds2D();
             x[i] = bounds.getWidth();
             y[i] = bounds.getHeight();

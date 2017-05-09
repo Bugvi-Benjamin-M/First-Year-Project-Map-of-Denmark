@@ -1,6 +1,7 @@
 package KDtree;
 
 import Model.Elements.Element;
+import Model.Elements.SuperElement;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -13,8 +14,8 @@ import java.util.function.Consumer;
  */
 public class KDTree implements Serializable {
     private Node root;
-    private HashSet<Element> elementsToReturn;
-    private HashSet<Element> sectionToReturn;
+    private HashSet<SuperElement> elementsToReturn;
+    private HashSet<SuperElement> sectionToReturn;
 
     public void clear()
     {
@@ -32,22 +33,21 @@ public class KDTree implements Serializable {
         }
     }
 
-    public HashSet<Element> getManySections(float minX, float minY, float maxX,
-        float maxY)
-    {
+    public HashSet<SuperElement> getAllSections(){
+        return getManySections(-1000f, -1000, 1000, 1000);
+    }
+
+    public HashSet<SuperElement> getManySections(float minX, float minY, float maxX, float maxY) {
         elementsToReturn = new HashSet<>();
 
         if (root != null) {
             getManySections(root, minX, minY, maxX, maxY);
             return elementsToReturn;
         }
-        // TODO ?make null return value to an exception?
         return null;
     }
 
-    private void getManySections(Node currentNode, float minX, float minY,
-        float maxX, float maxY)
-    {
+    private void getManySections(Node currentNode, float minX, float minY, float maxX, float maxY) {
         if (currentNode.getPointers() == null) {
             if (currentNode.getDepth() % 2 == 0) {
                 if (currentNode.getX() > minX && currentNode.getX() > maxX) {
@@ -79,7 +79,7 @@ public class KDTree implements Serializable {
         }
     }
 
-    public HashSet<Element> getSection(float x, float y)
+    public HashSet<SuperElement> getSection(float x, float y)
     {
         sectionToReturn = new HashSet<>();
         if (root != null) {

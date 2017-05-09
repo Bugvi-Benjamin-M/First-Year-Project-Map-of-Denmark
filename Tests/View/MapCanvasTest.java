@@ -8,6 +8,7 @@ import KDtree.Pointer;
 import Model.Elements.Building;
 import Model.Elements.Element;
 import Model.Elements.POI;
+import Model.Elements.SuperElement;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -343,7 +344,7 @@ public class MapCanvasTest {
         assertNull(field.get(mapCanvas));
 
         //Setting up data for the test
-        HashSet<Element> hashSet = new HashSet<>();
+        HashSet<SuperElement> hashSet = new HashSet<>();
         for(int i = 0 ; i < 10 ; i++){
             Building building = new Building(null, i + "");
             hashSet.add(building);

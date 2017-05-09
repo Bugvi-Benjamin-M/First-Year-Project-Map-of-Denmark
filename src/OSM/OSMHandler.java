@@ -1271,14 +1271,14 @@ public final class OSMHandler implements ContentHandler {
 
     private boolean checkForNearbyAmenity(ElementType type, Amenity amenity, float bufferDistance){
         boolean isAmenityNear = false;
-        HashSet<Element> nearbyAmenities;
+        HashSet<SuperElement> nearbyAmenities;
         float maxX = amenity.getX() + bufferDistance;
         float minX = amenity.getX() - bufferDistance;
         float maxY = amenity.getY() + bufferDistance;
         float minY = amenity.getY() - bufferDistance;
 
         nearbyAmenities = model.getElements().get(type).getManySections(minX, minY, maxX, maxY);
-        for(Element element : nearbyAmenities){
+        for(SuperElement element : nearbyAmenities){
             Amenity amenityInModel = (Amenity) element;
             double dist = Math.sqrt((Math.pow((amenity.getX()-amenityInModel.getX()),2))+(Math.pow((amenity.getY()-amenityInModel.getY()),2)));
             if(dist < bufferDistance){

@@ -8,6 +8,7 @@ import Helpers.ThemeHelper;
 import Model.Elements.Element;
 import Model.Elements.POI;
 import Model.Elements.Road;
+import Model.Elements.SuperElement;
 import Model.Model;
 import View.CanvasPopup;
 import View.MapCanvas;
@@ -620,12 +621,12 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     public static Road calculateNearestNeighbour(float x, float y) {
-        ArrayList<HashSet<Element>> roads = getNearestNeighbourOfAllRoads(x, y);
+        ArrayList<HashSet<SuperElement>> roads = getNearestNeighbourOfAllRoads(x, y);
 
         float minDist = 1000;
         Road e = null;
-        for(HashSet<Element> set : roads){
-            for (Element element : set) {
+        for(HashSet<SuperElement> set : roads){
+            for (SuperElement element : set) {
             Road r = (Road) element;
             if (r.getShape() != null && r.getShape().distTo(new Point2D.Float(x, y)) < minDist) {
                 if (!r.getName().equals("")) {
@@ -644,8 +645,8 @@ public final class CanvasController extends Controller implements Observer {
             return null;
     }
 
-    private static ArrayList<HashSet<Element>> getNearestNeighbourOfAllRoads(float x, float y){
-        ArrayList<HashSet<Element>> roads = new ArrayList<>();
+    private static ArrayList<HashSet<SuperElement>> getNearestNeighbourOfAllRoads(float x, float y){
+        ArrayList<HashSet<SuperElement>> roads = new ArrayList<>();
         roads.add(getNearestNeighbour(ElementType.PRIMARY_ROAD, x, y));
         roads.add(getNearestNeighbour(ElementType.SECONDARY_ROAD, x, y));
         roads.add(getNearestNeighbour(ElementType.MOTORWAY, x, y));
@@ -673,7 +674,7 @@ public final class CanvasController extends Controller implements Observer {
         return roads;
     }
 
-    private static HashSet<Element> getNearestNeighbour(ElementType type, float x, float y){
+    private static HashSet<SuperElement> getNearestNeighbour(ElementType type, float x, float y){
         return model.getElements()
                 .get(type)
                 .getManySections(x - 1f, y - 1f, x + 1f, y + 1f);
