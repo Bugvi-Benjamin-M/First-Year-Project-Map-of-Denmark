@@ -176,10 +176,10 @@ public final class JourneyPlannerBarController extends Controller {
         travelDescription.applyTheme();
     }
 
-    public static void printRouteDescription() {
+    public void printRouteDescription() {
         java.util.List<String> route = JourneyPlannerBarController.getInstance().getRouteDescription();
         for (String string : route) {
-            System.out.println(string);
+            travelDescription.addLine(string);
         }
     }
 
@@ -419,6 +419,7 @@ public final class JourneyPlannerBarController extends Controller {
                 public void focusLost(FocusEvent e) {
                     currentQuery = searchTool.getText();
                     searchTool.getField().hidePopup();
+                    allowSearch = false;
                 }
             });
         }

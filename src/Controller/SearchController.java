@@ -50,7 +50,6 @@ public abstract class SearchController extends Controller {
                 searchTool.getField().requestFocus();
             }
             else if(allowSearch) {
-                System.out.println("Jeg Virker");
                 ArrayList<Value> list = Model.getInstance().getTst().get(searchTool.getText());
                 if(list != null) {
                     validSearch = true;
