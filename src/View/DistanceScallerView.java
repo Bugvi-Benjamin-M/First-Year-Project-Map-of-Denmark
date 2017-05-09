@@ -25,7 +25,6 @@ public class DistanceScallerView extends View {
         distance = new JLabel();
         distance.setFont(new Font(getFont().getName(),getFont().getStyle(),22));
         distance.setOpaque(false);
-        distance.setForeground(ThemeHelper.color("icon"));
         distance.setMinimumSize(new Dimension(TEXT_WIDTH,TEXT_HEIGHT));
         distance.setPreferredSize(new Dimension(TEXT_WIDTH,TEXT_HEIGHT));
         layout = new SpringLayout();
@@ -38,12 +37,13 @@ public class DistanceScallerView extends View {
         layout.putConstraint(SpringLayout.NORTH, distance,
                 0, SpringLayout.NORTH,this);
         this.add(distance);
-        this.setBackground(ThemeHelper.color("toolbar"));
+        themeChanged();
+        setBorder(BorderFactory.createLineBorder(ThemeHelper.color("border")));
     }
 
     public void themeChanged() {
         distance.setForeground(ThemeHelper.color("icon"));
-        this.setBackground(ThemeHelper.color("toolbar"));
+        this.setBackground(ThemeHelper.color("canvasPopupBackground"));
     }
 
     @Override

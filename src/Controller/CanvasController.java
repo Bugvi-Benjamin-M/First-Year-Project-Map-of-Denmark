@@ -567,14 +567,14 @@ public final class CanvasController extends Controller implements Observer {
     }
 
     private void popupActivation(MouseEvent e) {
-
         if (PreferencesController.getInstance()
                 .getCanvasRealTimeInformationSetting()) {
             if (mapCanvas.hasFocus()) {
                 disablePopup();
                 popup = new CanvasPopup();
-                popup.setLocation((int)e.getLocationOnScreen().getX() + POPUP_XOFFSET,
-                        (int)e.getLocationOnScreen().getY() + POPUP_YOFFSET);
+                popup.setLocation((int) e.getLocationOnScreen().getX() + POPUP_XOFFSET,
+                        (int) e.getLocationOnScreen().getY() + POPUP_YOFFSET);
+
                 /*setPopupContent(e);
                 if (popup.getPopupMenu().getComponentCount() == 0) {
                     disablePopup();
@@ -608,6 +608,7 @@ public final class CanvasController extends Controller implements Observer {
     private void setPopupContent(MouseEvent event)
     {
         Point2D point2D = mapCanvas.toModelCoords(event.getPoint());
+
         Road road = calculateNearestNeighbour((float)point2D.getX(), (float)point2D.getY());
         if (road == null)
             return;

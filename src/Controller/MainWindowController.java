@@ -110,8 +110,8 @@ public final class MainWindowController extends WindowController {
                 0, 0, 0, window.getFrame().getHeight());
         DistanceScallerView distance = CanvasExtrasController.getInstance()
                 .getDistanceScaller();
-        distance.setBounds(window.getFrame().getWidth()-300,
-                window.getFrame().getHeight()-150, 140,
+        distance.setBounds(window.getFrame().getWidth()-180,
+                window.getFrame().getHeight()-120, 120,
                 40);
     }
 
