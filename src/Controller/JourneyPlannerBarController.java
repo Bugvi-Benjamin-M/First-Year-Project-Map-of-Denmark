@@ -193,6 +193,7 @@ public final class JourneyPlannerBarController extends Controller {
         if (route != null ) {
             if (route.size() != 0) {
                 RoadEdge last = route.get(0), next;
+                float time = last.getTime();
                 float distance = last.getLength();
                 for (int i = 1; i < route.size(); i++) {
                     next = route.get(i);
@@ -211,8 +212,10 @@ public final class JourneyPlannerBarController extends Controller {
                             description.add(last.describe(distance));
                         }
                     }
+                    time += last.getTime();
                     last = next;
                 }
+                description.add("Total travel time: "+time+" secs");
             } else {
                 description.add("No route was found...");
             }
