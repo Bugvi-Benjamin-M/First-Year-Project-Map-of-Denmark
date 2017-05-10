@@ -77,7 +77,7 @@ public class Main {
             CanvasExtrasController.getInstance().updateDistance();
 
             try {
-                // dijkstra(model);
+                dijkstra(model);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -98,31 +98,35 @@ public class Main {
 
         RoadEdge start = factory.getRoad("Eratosvej");
         RoadEdge end = factory.getRoad("Vester Oddevej");
-        new Thread() {
-            public void run() {
-                RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
-                        factory.getGraph(), start.getEither(),
-                        end.getEither(), Enums.TravelType.VEHICLE);
-                Iterable<RoadEdge> iterator = dijk.path();
-                if (iterator != null) {
-                    factory.setRoute(iterator);
-                    List<RoadEdge> route = factory.getRoute();
-                    if (route != null && route.size() != 0) {
-                        for (int i = 0; i < route.size(); i++) {
-                            System.out.println(route.get(i).getName() +
-                                ": "+route.get(i).getLength()+" m");
+        if (start != null || end != null) {
+            new Thread() {
+                public void run() {
+                    RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
+                            factory.getGraph(), start.getEither(),
+                            end.getEither(), Enums.TravelType.VEHICLE);
+                    Iterable<RoadEdge> iterator = dijk.path();
+                    if (iterator != null) {
+                        factory.setRoute(iterator);
+                        List<RoadEdge> route = factory.getRoute();
+                        if (route != null && route.size() != 0) {
+                            for (int i = 0; i < route.size(); i++) {
+                                System.out.println(route.get(i).getName() +
+                                        ": " + route.get(i).getLength() + " m");
+                            }
+                            CanvasController.getInstance().getMapCanvas().setRoute(route);
+                        } else {
+                            System.out.println("No route found...");
                         }
-                        CanvasController.getInstance().getMapCanvas().setRoute(route);
                     } else {
-                        System.out.println("No route found...");
+                        System.out.println("No path found...");
                     }
-                } else {
-                    System.out.println("No path found...");
+                    System.out.println("Route time: " + (System.currentTimeMillis() - time) + " ms");
+                    // JourneyPlannerBarController.printRouteDescription();
                 }
-                System.out.println("Route time: "+(System.currentTimeMillis() - time) + " ms");
-               // JourneyPlannerBarController.printRouteDescription();
-            }
-        }.start();
+            }.start();
+        } else {
+            System.out.println("Roads not found...");
+        }
     }
 
     private static void createControllers()
@@ -144,7 +148,7 @@ public class Main {
 
     public static void splashScreenInit()
     {
-        ImageIcon myImage = new ImageIcon(Main.class.getResource("/middelfart.jpg")); // denmark.gif
+        ImageIcon myImage = new ImageIcon(Main.class.getResource("/vejle.jpg")); // denmark.gif
         screen = new SplashScreen(myImage);
         screen.setLocationRelativeTo(null);
         screen.setScreenVisible(true);

@@ -44,6 +44,7 @@ public final class PreferencesController {
     {
         preferences = Preferences.userNodeForPackage(this.getClass());
         ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
+        GlobalValue.setFastestRoute(PreferencesController.getInstance().getUseFastestRouteSetting());
     }
 
     public boolean getAntiAliasingSetting()

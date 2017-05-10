@@ -37,11 +37,13 @@ public class RoadGraphFactory {
         } else if (type == LoadType.ROADEDGES) {
             graph = new RoadGraph();
             for (Object road : roads) {
-                graph.addEdges((RoadEdge) road);
+                graph.addEdge((RoadEdge) road,((RoadEdge) road).getEither());
+                this.roads.add((RoadEdge) road);
             }
         } else {
             throw new IllegalArgumentException("Type not defined");
         }
+        System.out.println("Done building graph");
     }
 
     private void constructGraph(Iterable<Road> roads) {
@@ -49,18 +51,19 @@ public class RoadGraphFactory {
         for (Road road : roads) {
             for (OSMWay way: road.getRelation()) {
                 for (int i = 1; i < way.size(); i++) {
-                    OSMWay shape = new OSMWay();
-                    shape.add(way.get(i-1));
-                    shape.add(way.get(i));
-                    RoadEdge edge = new RoadEdge(shape,road.getName(),road.getMaxSpeed());
-                    edge.setOneWay(road.isOneWay());
-                    edge.setTravelByBikeAllowed(road.isTravelByBikeAllowed());
-                    edge.setTravelByWalkAllowed(road.isTravelByFootAllowed());
-                    edge.setTravelByCarAllowed(road.isTravelByCarAllowed());
-                    graph.addEdges(edge);
+                    Point2D from = way.get(i-1);
+                    Point2D to = way.get(i);
+                    RoadEdge edge = new RoadEdge(from,to,road);
+                    graph.addEdge(edge,from);
                     this.roads.add(edge);
-                    if (counter % 1000 == 0) System.out.println("... added edges: "+counter);
+                    if(!road.isOneWay()) {
+                        RoadEdge reverse = edge.createReverse();
+                        graph.addEdge(reverse,to);
+                        this.roads.add(reverse);
+                        counter++;
+                    }
                     counter++;
+                    if (counter % 1000 == 0) System.out.println("... added edges: "+counter);
                 }
             }
         }

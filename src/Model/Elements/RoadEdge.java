@@ -4,6 +4,7 @@ import Enums.TravelType;
 import Helpers.GlobalValue;
 import Helpers.HelperFunctions;
 import Helpers.Shapes.PolygonApprox;
+import KDtree.*;
 import OSM.OSMWay;
 
 import java.awt.*;
@@ -18,57 +19,35 @@ import java.io.Serializable;
  * @author Andreas Blanke
  * @version 05-05-2017
  */
-public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializable {
+public class RoadEdge implements Comparable<RoadEdge>, Serializable {
 
     private static float SPEED_TO_METERS_PER_SECOND = 0.277777777778f;
 
-    private OSMWay way;
-    private boolean isOneWay;
-    private boolean isTravelByBikeAllowed;
-    private boolean isTravelByCarAllowed;
-    private boolean isTravelByWalkAllowed;
-    private float length;
-    private float speed;
-    private String name;
+    private Road road;
+    private Point2D from;
+    private Point2D to;
 
-    public RoadEdge(OSMWay way) {
-        super(new PolygonApprox(way));
-        this.way = way;
-        length = (float) HelperFunctions.distanceInMeters(way);
+    public RoadEdge(Point2D from, Point2D to) {
+        this.from = from;
+        this.to = to;
     }
 
-    public RoadEdge(OSMWay way, String name, int speed) {
-        this(way);
-        this.name = name.intern();
-        this.speed = speed * SPEED_TO_METERS_PER_SECOND;
-    }
-
-    public RoadEdge(OSMWay way, String name, float speed) {
-        this(way);
-        this.name = name;
-        this.speed = speed;
+    public RoadEdge(Point2D from, Point2D to, Road road) {
+        this(from,to);
+        this.road = road;
     }
 
     public RoadEdge createReverse() {
-        OSMWay way = new OSMWay();
-        for (int i = this.way.size()-1; i >= 0; i--) {
-            way.add(this.way.get(i));
-        }
-        RoadEdge reverse = new RoadEdge(way,this.name,this.speed);
-        reverse.setOneWay(this.isOneWay);
-        reverse.setTravelByCarAllowed(this.isTravelByCarAllowed);
-        reverse.setTravelByBikeAllowed(this.isTravelByBikeAllowed);
-        reverse.setTravelByWalkAllowed(this.isTravelByWalkAllowed);
-        return reverse;
+        return new RoadEdge(this.to,this.from,this.road);
     }
 
     public Point2D getEither() {
-        return way.get(0);
+        return from;
     }
 
     public Point2D getOther(Point2D point) {
-        if (way.get(0).equals(point)) return way.get(way.size()-1);
-        else if (way.get(way.size()-1).equals(point)) return way.get(0);
+        if (from.equals(point)) return to;
+        else if (to.equals(point)) return from;
         else {
             throw new IllegalArgumentException("Not an endpoint");
         }
@@ -76,7 +55,8 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
 
     @Override
     public int compareTo(RoadEdge other) {
-        return Double.compare(length,other.length);
+        return Double.compare((float) HelperFunctions.distanceInMeters(from,to),
+                (float) HelperFunctions.distanceInMeters(other.from,other.to));
     }
 
     public float getWeight(TravelType type, Point2D start, Point2D end) {
@@ -86,17 +66,17 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
         //FIXME: clean this
         switch (type) {
             case VEHICLE:
-                if (isTravelByCarAllowed) {
+                if (road.isTravelByCarAllowed()) {
                     ok = true;
                 }
                 break;
             case BICYCLE:
-                if (isTravelByBikeAllowed) {
+                if (road.isTravelByBikeAllowed()) {
                     ok = true;
                 }
                 break;
             case WALK:
-                if (isTravelByWalkAllowed) {
+                if (road.isTravelByFootAllowed()) {
                     ok = true;
                 }
                 break;
@@ -105,69 +85,46 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
             return Float.POSITIVE_INFINITY;
         } else {
             if (fast) {
-                return (length/speed) + ((float)way.getFromNode().distance(end) / speed);
+                return (getLength()/getSpeed()) + ((float)from.distance(end) / getSpeed());
             } else {
-                return length +  (float)way.getFromNode().distance(end);
+                return getLength() +  (float)from.distance(end);
             }
         }
     }
 
     @Override
     public String toString() {
-        return "Road:'"+name+"'; "+length+" m;";
+        return "Road:'"+getName()+"'; "+getLength()+" m;";
     }
 
     public String describe(float length) {
-        return "Travel via "+name+" for " + (length) + " meters";
+        return "Travel via "+getName()+" for " + (length) + " meters";
     }
 
     public int compareToRoad(RoadEdge other) {
         if (other == null) throw new NullPointerException("RoadEdge not initialized!");
-        if (other.getName().equals(name)) return 0;
-        double angle = HelperFunctions.angle(this.getWay(),other.getWay());
+        if (other.getName().equals(getName())) return 0;
+        double angle = HelperFunctions.angle(this.from,this.to,
+                other.from,other.to);
         if (angle < 0) return -1;       // to the left
         else if (angle > 0) return 1;   // to the right
         else return 0;                  // same angle
     }
 
-    public boolean isOneWay() {
-        return isOneWay;
-    }
-
-    public OSMWay getWay() {
-        return way;
-    }
-
     public float getLength() {
-        return length;
+        return (float) HelperFunctions.distanceInMeters(from,to);
     }
 
     public float getSpeed() {
-        return speed;
+        return road.getMaxSpeed()*SPEED_TO_METERS_PER_SECOND;
     }
 
     public float getTime() {
-        return length / speed;
+        return getLength() / getSpeed();
     }
 
     public String getName() {
-        return name;
-    }
-
-    public void setOneWay(boolean oneWay) {
-        isOneWay = oneWay;
-    }
-
-    public void setTravelByBikeAllowed(boolean travelByBikeAllowed) {
-        isTravelByBikeAllowed = travelByBikeAllowed;
-    }
-
-    public void setTravelByCarAllowed(boolean travelByCarAllowed) {
-        isTravelByCarAllowed = travelByCarAllowed;
-    }
-
-    public void setTravelByWalkAllowed(boolean travelByWalkAllowed) {
-        isTravelByWalkAllowed = travelByWalkAllowed;
+        return road.getName();
     }
 
 }
