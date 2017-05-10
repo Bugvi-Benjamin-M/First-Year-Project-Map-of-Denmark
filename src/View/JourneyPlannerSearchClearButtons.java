@@ -28,22 +28,45 @@ public class JourneyPlannerSearchClearButtons extends View {
 
     public JourneyPlannerSearchClearButtons() {
         clearButton = new JLabel("\uf01e");
-        clearButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
+        //clearButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
         clearButton.setOpaque(true);
-        clearButton.setPreferredSize(new Dimension(CLEAR_BUTTON_WIDTH, CLEAR_BUTTON_HEIGHT));
+        //clearButton.setPreferredSize(new Dimension(CLEAR_BUTTON_WIDTH, CLEAR_BUTTON_HEIGHT));
         clearButton.setBorder(BorderFactory.createEmptyBorder());
         clearButton.setToolTipText(CLEAR_BUTTON_TOOLTIP);
         searchButton = new JLabel("\uf002");
-        searchButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
+        //searchButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
         searchButton.setOpaque(true);
-        searchButton.setPreferredSize(new Dimension(SEARCH_BUTTON_WIDTH, SEARCH_BUTTON_HEIGHT));
+        //searchButton.setPreferredSize(new Dimension(SEARCH_BUTTON_WIDTH, SEARCH_BUTTON_HEIGHT));
         searchButton.setBorder(BorderFactory.createEmptyBorder());
         searchButton.setToolTipText(SEARCH_BUTTON_TOOLTIP);
         applyTheme();
+        applyLargeState();
+        //add(clearButton);
+        //add(Box.createHorizontalStrut(DISTANCE_BETWEEN_BUTTONS));
+        //add(searchButton);
+        setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+    }
+
+    public void applyLargeState() {
+        removeAll();
+        clearButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
+        clearButton.setPreferredSize(new Dimension(CLEAR_BUTTON_WIDTH, CLEAR_BUTTON_HEIGHT));
+        searchButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
+        searchButton.setPreferredSize(new Dimension(SEARCH_BUTTON_WIDTH, SEARCH_BUTTON_HEIGHT));
         add(clearButton);
         add(Box.createHorizontalStrut(DISTANCE_BETWEEN_BUTTONS));
         add(searchButton);
-        setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+    }
+
+    public void applySmallState() {
+        removeAll();
+        clearButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE-15));
+        clearButton.setPreferredSize(new Dimension(CLEAR_BUTTON_WIDTH-15, CLEAR_BUTTON_HEIGHT-15));
+        searchButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE-15));
+        searchButton.setPreferredSize(new Dimension(SEARCH_BUTTON_WIDTH-15, SEARCH_BUTTON_HEIGHT-15));
+        add(clearButton);
+        add(Box.createHorizontalStrut(DISTANCE_BETWEEN_BUTTONS-30));
+        add(searchButton);
     }
 
     public void applyTheme() {
