@@ -119,7 +119,7 @@ public final class PreferencesController {
         preferences.putBoolean("AntiAliasing", DefaultSettings.ANTI_ALIASING);
         preferences.putBoolean("CanvasRealTimeInformation", DefaultSettings.CANVAS_REALTIME_INFORMATION);
         preferences.putBoolean("KeyBindings", DefaultSettings.TOGGLE_KEY_BINDINGS);
-        preferences.putBoolean("UseFastestRoute",GlobalValue.isFastestRouteSet());
+        preferences.putBoolean("UseFastestRoute",DefaultSettings.USE_FASTEST_ROUTE);
         preferences.put("Theme", DefaultSettings.THEME);
         preferences.put("StartupFileName", DefaultSettings.DEFAULT_FILE_NAME);
         preferences.put("StartupFilePath", GlobalValue.DEFAULT_BIN_RESOURCE);

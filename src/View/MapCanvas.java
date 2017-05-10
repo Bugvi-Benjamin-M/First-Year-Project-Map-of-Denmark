@@ -43,7 +43,7 @@ public class MapCanvas extends View {
     private ArrayList<POI> poiList;
 
     private List<Path2D> coastlines;
-    private List<Shape> route;
+    private Shape route;
     private boolean drawRoute;
 
     private float cameraMaxLon;
@@ -261,23 +261,32 @@ public class MapCanvas extends View {
     }
 
     private void drawRoute(Graphics2D g) {
-        g.setColor(ThemeHelper.color("route"));
-        g.setStroke(new BasicStroke(0.00020f));
         if (route != null) {
-            for (Shape road: route) {
-                g.draw(road);
+            g.setColor(ThemeHelper.color("route"));
+            if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_6) {
+                g.setStroke(new BasicStroke(0.004f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_5) {
+                g.setStroke(new BasicStroke(0.001f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_4) {
+                g.setStroke(new BasicStroke(0.0005f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_3) {
+                g.setStroke(new BasicStroke(0.0003f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_2) {
+                g.setStroke(new BasicStroke(0.0001f));
+            } else {
+                g.setStroke(new BasicStroke(0.0001f));
             }
+            g.draw(route);
         }
     }
 
     public void setRoute(List<RoadEdge> route) {
-        this.route = new LinkedList<>();
+        OSMWay way = new OSMWay();
         for (RoadEdge edge : route) {
-            OSMWay way = new OSMWay();
             way.add(edge.getEither());
             way.add(edge.getOther(edge.getEither()));
-            this.route.add(new PolygonApprox(way));
         }
+        this.route = new PolygonApprox(way);
     }
 
     private void drawElements(Graphics2D g) {
