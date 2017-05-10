@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -74,7 +75,9 @@ public abstract class SearchController extends Controller {
                     if(matches.length > 0) {
                         selectAddress(matches);
                         ArrayList<Value> selectedStrings = Model.getInstance().getTst().get(currentQuery);
-                        point = new Point2D.Float(selectedStrings.get(0).getX(), selectedStrings.get(0).getY());
+                        if(selectedStrings != null) {
+                            point = new Point2D.Float(selectedStrings.get(0).getX(), selectedStrings.get(0).getY());
+                        }
                     }
                 }
                 allowSearch = true;
@@ -96,6 +99,7 @@ public abstract class SearchController extends Controller {
         }
 
         protected int selectCity(String[] cities){
+            Arrays.sort(cities);
             String result = PopupWindow.confirmBox(null, "Select a City:", "Multiple Search Results!", cities);
             if(result != null) {
                 int resultIndex = 0;
@@ -110,6 +114,7 @@ public abstract class SearchController extends Controller {
         }
 
         protected void selectAddress(String[] matches){
+            Arrays.sort(matches);
             String result = PopupWindow.confirmBox(null, "Select an Address:", "Multiple Search Results!", matches);
             if(result != null) {
                 validSearch = true;
