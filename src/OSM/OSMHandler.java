@@ -1,6 +1,7 @@
 package OSM;
 
 import Enums.BoundType;
+import Enums.OSMEnums.AmenityType;
 import Enums.OSMEnums.ElementType;
 import Helpers.LongToPointMap;
 import Helpers.Shapes.MultiPolygonApprox;
@@ -18,6 +19,7 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import java.awt.geom.Point2D;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -37,7 +39,7 @@ public final class OSMHandler implements ContentHandler {
     // private OSMNode node;
     private ElementType elementType;
     private String name;
-    private ElementType place;
+    private AmenityType place;
     private float longitudeFactor;
     private Model model;
     private int loadednodes, loadedRelations, loadedWays;
@@ -45,16 +47,7 @@ public final class OSMHandler implements ContentHandler {
     private boolean isInitialized;
     private float latitude;
     private float longitude;
-    private ArrayList<Pointer> cityNames;
-    private ArrayList<Pointer> townNames;
-    private ArrayList<Pointer> villageNames;
-    private ArrayList<Pointer> hamletNames;
-    private ArrayList<Pointer> suburbNames;
-    private ArrayList<Pointer> quarterNames;
-    private ArrayList<Pointer> neighbourhoodNames;
-    private ArrayList<Pointer> bars;
-    private ArrayList<Pointer> nightClubs;
-    private ArrayList<Pointer> fastFoods;
+    private ArrayList<Pointer> amenities;
     private boolean specialRelationCase = false;
     private boolean isArea = false;
     private boolean isOneWay = false;
@@ -62,9 +55,6 @@ public final class OSMHandler implements ContentHandler {
     private boolean isCycleAllowed = false;
     private boolean isVehicleAllowed = false;
     private int maxSpeed;
-
-    private ArrayList<Pointer> railwayStations;
-    private ArrayList<Pointer> airports;
     private boolean isWikiDataAvalible;
     private boolean isInTunnel;
     private ArrayList<Road> roads;
@@ -85,18 +75,7 @@ public final class OSMHandler implements ContentHandler {
         model = Model.getInstance();
         model.setTst(new TenarySearchTrie());
         nodeGenerator = new NodeGenerator();
-        cityNames = new ArrayList<>();
-        townNames  = new ArrayList<>();
-        villageNames = new ArrayList<>();
-        hamletNames = new ArrayList<>();
-        suburbNames = new ArrayList<>();
-        quarterNames = new ArrayList<>();
-        neighbourhoodNames = new ArrayList<>();
-        bars = new ArrayList<>();
-        nightClubs = new ArrayList<>();
-        fastFoods = new ArrayList<>();
-        railwayStations = new ArrayList<>();
-        airports = new ArrayList<>();
+        amenities = new ArrayList<>();
         roads = new ArrayList<>();
     }
 
@@ -144,6 +123,18 @@ public final class OSMHandler implements ContentHandler {
         /*
         model.createGraph(roads);
         */
+
+        //Test to see how many elements we have
+        int amount = 0;
+        HashSet<SuperElement> hashset;
+        ArrayList<SuperElement> arrayList;
+
+        for (ElementType type : ElementType.values()){
+            hashset = model.getElements(type).getAllSections();
+            System.out.println("HashSet with " + type + " has " + hashset.size() + " elements.");
+            arrayList = model.getElements(type).getAllSectionsList();
+            System.out.println("ArrayList with " + type + " has " + arrayList.size() + " elements.");
+        }
     }
 
     @Override
@@ -204,9 +195,9 @@ public final class OSMHandler implements ContentHandler {
             cityName = "";
             zipCode = "";
             isAddress = false;
-            place = ElementType.UNKNOWN;
+            place = AmenityType.UNKNOWN;
 
-            if (loadednodes % 1000 == 0) System.out.println("NumNodes: "+loadednodes);
+            if (loadednodes % 100000 == 0) System.out.println("NumNodes: "+loadednodes);
             loadednodes++;
             break;
         case "relation":
@@ -217,7 +208,7 @@ public final class OSMHandler implements ContentHandler {
             name = "";
             isArea = false;
             isInTunnel = false;
-            place = ElementType.UNKNOWN;
+            place = AmenityType.UNKNOWN;
             isVehicleAllowed = false;
             isWalkingAllowed = false;
             isCycleAllowed = false;
@@ -238,72 +229,17 @@ public final class OSMHandler implements ContentHandler {
             }
             if(!isInitialized){
                 isInitialized = true;
-                for (Pointer p : cityNames) {
-                    model.getElements().get(ElementType.CITY_NAME).putPointer(p);
+                for(Pointer p : amenities){
+                    model.getElements().get(ElementType.AMENITY).putPointer(p);
                 }
-                cityNames = new ArrayList<>();
-
-                for (Pointer p : townNames) {
-                    model.getElements().get(ElementType.TOWN_NAME).putPointer(p);
-                }
-                townNames = new ArrayList<>();
-
-                for (Pointer p : villageNames) {
-                    model.getElements().get(ElementType.VILLAGE_NAME).putPointer(p);
-                }
-                villageNames = new ArrayList<>();
-
-                for (Pointer p : hamletNames) {
-                    model.getElements().get(ElementType.HAMLET_NAME).putPointer(p);
-                }
-                hamletNames = new ArrayList<>();
-
-                for (Pointer p : suburbNames) {
-                    model.getElements().get(ElementType.SUBURB_NAME).putPointer(p);
-                }
-                suburbNames = new ArrayList<>();
-
-                for (Pointer p : quarterNames) {
-                    model.getElements().get(ElementType.QUARTER_NAME).putPointer(p);
-                }
-                quarterNames = new ArrayList<>();
-
-                for (Pointer p : neighbourhoodNames) {
-                    model.getElements().get(ElementType.NEIGHBOURHOOD_NAME).putPointer(p);
-                }
-                neighbourhoodNames = new ArrayList<>();
-
-                for (Pointer p : bars) {
-                    model.getElements().get(ElementType.BAR).putPointer(p);
-                }
-                bars = new ArrayList<>();
-
-                for (Pointer p : nightClubs) {
-                    model.getElements().get(ElementType.NIGHT_CLUB).putPointer(p);
-                }
-                nightClubs = new ArrayList<>();
-
-                for (Pointer p : fastFoods) {
-                    model.getElements().get(ElementType.FAST_FOOD).putPointer(p);
-                }
-                fastFoods = new ArrayList<>();
-
-                for (Pointer p : railwayStations){
-                    model.getElements().get(ElementType.RAILWAY_STATION).putPointer(p);
-                }
-                railwayStations = new ArrayList<>();
-
-                for (Pointer p : airports){
-                    model.getElements().get(ElementType.AIRPORT_AMENITY).putPointer(p);
-                }
-                airports = new ArrayList<>();
+                amenities = new ArrayList<>();
             }
 
             way = new OSMWay();
             // refWay = new OSMWayRef();
             id = Long.parseLong(atts.getValue("id"));
             elementType = ElementType.UNKNOWN;
-            place = ElementType.UNKNOWN;
+            place = AmenityType.UNKNOWN;
             idToWay.put(id, way);
             // idToRefWay.put(id,refWay);
             name = "";
@@ -494,7 +430,7 @@ public final class OSMHandler implements ContentHandler {
                 break;
             case "pitch":
                 elementType = ElementType.SPORTSPITCH;
-                place = ElementType.SPORT_AMENITY;
+                place = AmenityType.SPORT_AMENITY;
                 break;
             case "playground":
                 elementType = ElementType.PLAYGROUND;
@@ -517,7 +453,7 @@ public final class OSMHandler implements ContentHandler {
                 elementType = ElementType.RAIL;
                 break;
             case "station":
-                place = ElementType.RAILWAY_STATION;
+                place = AmenityType.RAILWAY_STATION;
                 break;
         }
     }
@@ -527,26 +463,26 @@ public final class OSMHandler implements ContentHandler {
             case "bar":
             case "biergarten":
             case "pub":
-                place = ElementType.BAR;
+                place = AmenityType.BAR;
                 break;
             case "nightclub":
-                place = ElementType.NIGHT_CLUB;
+                place = AmenityType.NIGHT_CLUB;
                 break;
             case "fast_food":
-                place = ElementType.FAST_FOOD;
+                place = AmenityType.FAST_FOOD;
                 break;
             case "hospital":
-                place = ElementType.HOSPITAL;
+                place = AmenityType.HOSPITAL;
                 break;
             case "place_of_worship":
-                place = ElementType.PLACE_OF_WORSHIP;
+                place = AmenityType.PLACE_OF_WORSHIP;
                 break;
             case "parking":
-                place = ElementType.PARKING_AMENITY;
+                place = AmenityType.PARKING_AMENITY;
                 elementType = ElementType.PARKING;
                 break;
             case "university":
-                place = ElementType.UNIVERSITY;
+                place = AmenityType.UNIVERSITY;
                 break;
         }
     }
@@ -554,25 +490,25 @@ public final class OSMHandler implements ContentHandler {
     private void determinePlace(String value) {
         switch (value) {
             case "city":
-                place = ElementType.CITY_NAME;
+                place = AmenityType.CITY_NAME;
                 break;
             case "town":
-                place = ElementType.TOWN_NAME;
+                place = AmenityType.TOWN_NAME;
                 break;
             case "village":
-                place = ElementType.VILLAGE_NAME;
+                place = AmenityType.VILLAGE_NAME;
                 break;
             case "hamlet":
-                place = ElementType.HAMLET_NAME;
+                place = AmenityType.HAMLET_NAME;
                 break;
             case "suburb":
-                place = ElementType.SUBURB_NAME;
+                place = AmenityType.SUBURB_NAME;
                 break;
             case "quarter":
-                place = ElementType.QUARTER_NAME;
+                place = AmenityType.QUARTER_NAME;
                 break;
             case "neighbourhood":
-                place = ElementType.NEIGHBOURHOOD_NAME;
+                place = AmenityType.NEIGHBOURHOOD_NAME;
                 break;
         }
     }
@@ -631,7 +567,7 @@ public final class OSMHandler implements ContentHandler {
                 elementType = ElementType.AIRPORT_TAXIWAY;
                 break;
             case "aerodrome":
-                place = ElementType.AIRPORT_AMENITY;
+                place = AmenityType.AIRPORT_AMENITY;
                 break;
         }
     }
@@ -857,7 +793,7 @@ public final class OSMHandler implements ContentHandler {
                     break;
                 case BUILDING:
                     addBuilding(elementType, false);
-                    if(place == ElementType.RAILWAY_STATION)addAmenity(ElementType.RAILWAY_STATION_AREA, false);
+                    if(place == AmenityType.RAILWAY_STATION)addAmenity(AmenityType.RAILWAY_STATION_AREA, false);
                     break;
                 case WATER:
                 case WETLAND:
@@ -1031,30 +967,18 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    private void addName(ElementType type) {
-        PlaceName placeName = new PlaceName(longitude * longitudeFactor, -latitude, name.intern());
-        Pointer p = new Pointer(longitude * longitudeFactor, -latitude, placeName);
+    private void addName(AmenityType type) {
+        Amenity name = new Amenity(type, longitude * longitudeFactor, -latitude, this.name.intern());
+        Pointer p = new Pointer(longitude * longitudeFactor, -latitude, name);
         switch (type) {
             case CITY_NAME:
-                cityNames.add(p);
-                break;
             case TOWN_NAME:
-                townNames.add(p);
-                break;
             case VILLAGE_NAME:
-                villageNames.add(p);
-                break;
             case HAMLET_NAME:
-                hamletNames.add(p);
-                break;
             case SUBURB_NAME:
-                suburbNames.add(p);
-                break;
             case QUARTER_NAME:
-                quarterNames.add(p);
-                break;
             case NEIGHBOURHOOD_NAME:
-                neighbourhoodNames.add(p);
+                amenities.add(p);
                 break;
         }
     }
@@ -1166,110 +1090,81 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    private void addAmenity(ElementType type, boolean isRelation) {
+    private void addAmenity(AmenityType type, boolean isRelation) {
         Amenity amenity;
         Pointer p;
         PolygonApprox polygonApprox;
         switch (type) {
             case BAR:
-                amenity = new Amenity(longitude * longitudeFactor, -latitude, name.intern());
-                p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
-                bars.add(p);
-                break;
             case NIGHT_CLUB:
-                amenity = new Amenity(longitude * longitudeFactor, -latitude, name.intern());
-                p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
-                nightClubs.add(p);
-                break;
             case FAST_FOOD:
-                amenity = new Amenity(longitude * longitudeFactor, -latitude, name.intern());
-                p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
-                fastFoods.add(p);
+            case RAILWAY_STATION:
+                amenity = new Amenity(type,longitude * longitudeFactor, -latitude, name.intern());
+                if(!checkForNearbyAmenity(amenity, 0.0001f)){
+                    p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
+                    amenities.add(p);
+                }
                 break;
+
+            case PLACE_OF_WORSHIP:
+            case PARKING_AMENITY:
+            case SPORT_AMENITY:
             case HOSPITAL:
                 polygonApprox = new PolygonApprox(way);
-                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
+                amenity = new Amenity(type, polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
                 p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
-                model.getElements().get(ElementType.HOSPITAL).putPointer(p);
+                model.getElements().get(ElementType.AMENITY).putPointer(p);
                 break;
+
+            case RAILWAY_STATION_AREA:
+                polygonApprox = new PolygonApprox(way);
+                amenity = new Amenity(type, polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
+                if(!checkForNearbyAmenity(ElementType.AMENITY, amenity, 0.001f)){
+                    p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                    model.getElements().get(ElementType.AMENITY).putPointer(p);
+                }
+                break;
+
             case UNIVERSITY:
                 if (!isRelation){
                     polygonApprox = new PolygonApprox(way);
-                    amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
-                    if(!checkForNearbyAmenity(ElementType.UNIVERSITY, amenity, 0.001f) && isWikiDataAvalible){
+                    amenity = new Amenity(type, polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
+                    if(!checkForNearbyAmenity(ElementType.AMENITY, amenity, 0.0001f) && isWikiDataAvalible){
                         p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
-                        model.getElements().get(ElementType.UNIVERSITY).putPointer(p);
+                        model.getElements().get(ElementType.AMENITY).putPointer(p);
                     }
                 }
                 else {
                     if(relation.size() > 3){
                         polygonApprox = new PolygonApprox(relation.get(3));
-                        amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
-                        if(!checkForNearbyAmenity(ElementType.UNIVERSITY, amenity, 0.001f) && isWikiDataAvalible){
+                        amenity = new Amenity(type, polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
+                        if(!checkForNearbyAmenity(ElementType.AMENITY, amenity, 0.001f) && isWikiDataAvalible){
                             p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
-                            model.getElements().get(ElementType.UNIVERSITY).putPointer(p);
+                            model.getElements().get(ElementType.AMENITY).putPointer(p);
                         }
                     }
                 }
                 break;
-            case PLACE_OF_WORSHIP:
-                polygonApprox = new PolygonApprox(way);
-                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
-                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
-                model.getElements().get(ElementType.PLACE_OF_WORSHIP).putPointer(p);
-                break;
-            case PARKING_AMENITY:
-                polygonApprox = new PolygonApprox(way);
-                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
-                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
-                model.getElements().get(ElementType.PARKING_AMENITY).putPointer(p);
-                break;
-            case SPORT_AMENITY:
-                polygonApprox = new PolygonApprox(way);
-                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
-                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
-                model.getElements().get(ElementType.SPORT_AMENITY).putPointer(p);
-                break;
-            case RAILWAY_STATION:
-                amenity = new Amenity(longitude * longitudeFactor, -latitude, name.intern());
-                if(!checkForNearByTrainStation(amenity, 0.001f)){
-                    p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
-                    railwayStations.add(p);
-                }
-                break;
-            case RAILWAY_STATION_AREA:
-                polygonApprox = new PolygonApprox(way);
-                boolean isAdded;
-                amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
-                if(!checkForNearbyAmenity(ElementType.RAILWAY_STATION, amenity, 0.001f)){
-                    p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
-                    model.getElements().get(ElementType.RAILWAY_STATION_AREA).putPointer(p);
-                    isAdded = true;
-                }
-                else{
-                    isAdded = true;
-                }
-                if(!checkForNearbyAmenity(ElementType.RAILWAY_STATION_AREA, amenity, 0.001f) && !isAdded){
-                    p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
-                    model.getElements().get(ElementType.RAILWAY_STATION_AREA).putPointer(p);
-                }
-                break;
+
             case AIRPORT_AMENITY:
                 if(way == null){
-                    amenity = new Amenity(longitude * longitudeFactor, -latitude, name.intern());
+                    amenity = new Amenity(type, longitude * longitudeFactor, -latitude, name.intern());
                     p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
-                    airports.add(p);
+                    amenities.add(p);
                 }
                 else{
                     polygonApprox = new PolygonApprox(way);
-                    amenity = new Amenity(polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
+                    amenity = new Amenity(type, polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
                     p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
-                    model.getElements().get(ElementType.AIRPORT_AMENITY).putPointer(p);
+                    model.getElements().get(ElementType.AMENITY).putPointer(p);
                 }
                 break;
         }
     }
 
+    /*
+     * Check for nearby amenities in the KDTree with amenities.
+     */
     private boolean checkForNearbyAmenity(ElementType type, Amenity amenity, float bufferDistance){
         boolean isAmenityNear = false;
         HashSet<SuperElement> nearbyAmenities;
@@ -1289,10 +1184,13 @@ public final class OSMHandler implements ContentHandler {
         }
         return isAmenityNear;
     }
-
-    private boolean checkForNearByTrainStation(Amenity amenity, float bufferDistance){
+    /*
+     * Check for nearby amenity in the ArrayList. This have to be done while parsing OSMNode,
+     * as the ArrayList is emptied when OSMWays start to be parsed.
+     */
+    private boolean checkForNearbyAmenity(Amenity amenity, float bufferDistance){
         boolean isAmenityNear = false;
-        for(Pointer pointer : railwayStations){
+        for(Pointer pointer : amenities){
             float amenityX = amenity.getX();
             float amenityY = amenity.getY();
             Amenity pointerAmenity = (Amenity) pointer.getElement();

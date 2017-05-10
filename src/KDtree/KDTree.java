@@ -4,6 +4,7 @@ import Model.Elements.Element;
 import Model.Elements.SuperElement;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Spliterator;
@@ -34,7 +35,7 @@ public class KDTree implements Serializable {
     }
 
     public HashSet<SuperElement> getAllSections(){
-        return getManySections(-1000f, -1000, 1000, 1000);
+        return getManySections(-1000f, -1000f, 1000f, 1000f);
     }
 
     public HashSet<SuperElement> getManySections(float minX, float minY, float maxX, float maxY) {
@@ -157,6 +158,55 @@ public class KDTree implements Serializable {
             }
         } else {
             currentNode.addPointer(pointer);
+        }
+    }
+
+    //FOR TESTING
+    ArrayList<SuperElement> elementsToReturnList = new ArrayList<>();
+
+    public ArrayList<SuperElement> getAllSectionsList(){
+        return getManySectionsList(-1000f, -1000f, 1000f, 1000f);
+    }
+
+    public ArrayList<SuperElement> getManySectionsList(float minX, float minY, float maxX, float maxY) {
+        elementsToReturn = new HashSet<>();
+
+        if (root != null) {
+            getManySectionsList(root, minX, minY, maxX, maxY);
+            return elementsToReturnList;
+        }
+        return null;
+    }
+
+    private void getManySectionsList(Node currentNode, float minX, float minY, float maxX, float maxY) {
+        if (currentNode.getPointers() == null) {
+            if (currentNode.getDepth() % 2 == 0) {
+                if (currentNode.getX() > minX && currentNode.getX() > maxX) {
+                    getManySectionsList(currentNode.getLeft(), minX, minY, maxX, maxY);
+                } else if (currentNode.getX() < minX && currentNode.getX() < maxX) {
+                    getManySectionsList(currentNode.getRight(), minX, minY, maxX, maxY);
+                } else {
+                    getManySectionsList(currentNode.getLeft(), minX, minY, currentNode.getX(),
+                            maxY);
+                    getManySectionsList(currentNode.getRight(), currentNode.getX(), minY,
+                            maxX, maxY);
+                }
+            } else {
+                if (currentNode.getY() > minY && currentNode.getY() > maxY) {
+                    getManySectionsList(currentNode.getLeft(), minX, minY, maxX, maxY);
+                } else if (currentNode.getY() < minY && currentNode.getY() < maxY) {
+                    getManySectionsList(currentNode.getRight(), minX, minY, maxX, maxY);
+                } else {
+                    getManySectionsList(currentNode.getLeft(), minX, minY, maxX,
+                            currentNode.getY());
+                    getManySectionsList(currentNode.getRight(), minX, currentNode.getY(),
+                            maxX, maxY);
+                }
+            }
+        } else {
+            for (Pointer pointer : currentNode.getPointers()) {
+                elementsToReturnList.add(pointer.getElement());
+            }
         }
     }
 }

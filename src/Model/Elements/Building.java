@@ -7,11 +7,7 @@ import Helpers.Shapes.PolygonApprox;
  */
 public class Building extends Element {
 
-    public Building(PolygonApprox polygon, String name)
-    {
+    public Building(PolygonApprox polygon) {
         super(polygon);
     }
-
-    public Building(PolygonApprox polygon) { this(polygon, ""); }
-
 }
