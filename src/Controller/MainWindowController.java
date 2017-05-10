@@ -9,7 +9,7 @@ import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
 import Model.Elements.POI;
 import Model.Model;
-import View.DistanceScallerView;
+import View.DistanceScalerView;
 import View.PopupWindow;
 import View.Window;
 
@@ -108,7 +108,7 @@ public final class MainWindowController extends WindowController {
             0, 0, 0, window.getFrame().getHeight());
         JourneyPlannerBarController.getInstance().getInformationBar().setBounds(
                 0, 0, 0, window.getFrame().getHeight());
-        DistanceScallerView distance = CanvasExtrasController.getInstance()
+        DistanceScalerView distance = CanvasExtrasController.getInstance()
                 .getDistanceScaller();
         distance.setBounds(window.getFrame().getWidth()-180,
                 window.getFrame().getHeight()-120, 120,
