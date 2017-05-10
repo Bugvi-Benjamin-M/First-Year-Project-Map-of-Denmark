@@ -53,10 +53,7 @@ public class RoadGraphFactory {
                 for (int i = 1; i < way.size(); i++) {
                     Point2D from = way.get(i-1);
                     Point2D to = way.get(i);
-                    RoadEdge edge = new RoadEdge(from,to,road.getName(),road.getMaxSpeed());
-                    edge.setTravelByBikeAllowed(road.isTravelByBikeAllowed());
-                    edge.setTravelByWalkAllowed(road.isTravelByFootAllowed());
-                    edge.setTravelByCarAllowed(road.isTravelByCarAllowed());
+                    RoadEdge edge = new RoadEdge(from,to,road);
                     graph.addEdge(edge,from);
                     this.roads.add(edge);
                     if(!road.isOneWay()) {

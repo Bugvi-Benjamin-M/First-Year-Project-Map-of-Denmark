@@ -23,12 +23,8 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
 
     private static float SPEED_TO_METERS_PER_SECOND = 0.277777777778f;
 
-    private boolean isTravelByBikeAllowed;
-    private boolean isTravelByCarAllowed;
-    private boolean isTravelByWalkAllowed;
+    private Road road;
     private float length;
-    private float speed;
-    private String name;
     private Point2D from;
     private Point2D to;
 
@@ -38,24 +34,13 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
         length = (float) HelperFunctions.distanceInMeters(from,to);
     }
 
-    public RoadEdge(Point2D from, Point2D to, String name, int speed) {
+    public RoadEdge(Point2D from, Point2D to, Road road) {
         this(from,to);
-        this.name = name.intern();
-        this.speed = speed * SPEED_TO_METERS_PER_SECOND;
-    }
-
-    public RoadEdge(Point2D from, Point2D to, String name, float speed) {
-        this(from,to);
-        this.name = name;
-        this.speed = speed;
+        this.road = road;
     }
 
     public RoadEdge createReverse() {
-        RoadEdge reverse = new RoadEdge(this.to,this.from,this.name,this.speed);
-        reverse.setTravelByCarAllowed(this.isTravelByCarAllowed);
-        reverse.setTravelByBikeAllowed(this.isTravelByBikeAllowed);
-        reverse.setTravelByWalkAllowed(this.isTravelByWalkAllowed);
-        return reverse;
+        return new RoadEdge(this.to,this.from,this.road);
     }
 
     public Point2D getEither() {
@@ -82,17 +67,17 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
         //FIXME: clean this
         switch (type) {
             case VEHICLE:
-                if (isTravelByCarAllowed) {
+                if (road.isTravelByCarAllowed()) {
                     ok = true;
                 }
                 break;
             case BICYCLE:
-                if (isTravelByBikeAllowed) {
+                if (road.isTravelByBikeAllowed()) {
                     ok = true;
                 }
                 break;
             case WALK:
-                if (isTravelByWalkAllowed) {
+                if (road.isTravelByFootAllowed()) {
                     ok = true;
                 }
                 break;
@@ -101,7 +86,7 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
             return Float.POSITIVE_INFINITY;
         } else {
             if (fast) {
-                return (length/speed) + ((float)from.distance(end) / speed);
+                return (length/getSpeed()) + ((float)from.distance(end) / getSpeed());
             } else {
                 return length +  (float)from.distance(end);
             }
@@ -110,16 +95,16 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
 
     @Override
     public String toString() {
-        return "Road:'"+name+"'; "+length+" m;";
+        return "Road:'"+getName()+"'; "+length+" m;";
     }
 
     public String describe(float length) {
-        return "Travel via "+name+" for " + (length) + " meters";
+        return "Travel via "+getName()+" for " + (length) + " meters";
     }
 
     public int compareToRoad(RoadEdge other) {
         if (other == null) throw new NullPointerException("RoadEdge not initialized!");
-        if (other.getName().equals(name)) return 0;
+        if (other.getName().equals(getName())) return 0;
         double angle = HelperFunctions.angle(this.from,this.to,
                 other.from,other.to);
         if (angle < 0) return -1;       // to the left
@@ -132,27 +117,15 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
     }
 
     public float getSpeed() {
-        return speed;
+        return road.getMaxSpeed()*SPEED_TO_METERS_PER_SECOND;
     }
 
     public float getTime() {
-        return length / speed;
+        return length / getSpeed();
     }
 
     public String getName() {
-        return name;
-    }
-
-    public void setTravelByBikeAllowed(boolean travelByBikeAllowed) {
-        isTravelByBikeAllowed = travelByBikeAllowed;
-    }
-
-    public void setTravelByCarAllowed(boolean travelByCarAllowed) {
-        isTravelByCarAllowed = travelByCarAllowed;
-    }
-
-    public void setTravelByWalkAllowed(boolean travelByWalkAllowed) {
-        isTravelByWalkAllowed = travelByWalkAllowed;
+        return road.getName();
     }
 
 }
