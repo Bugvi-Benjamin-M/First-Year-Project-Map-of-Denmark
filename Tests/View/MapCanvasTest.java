@@ -6,14 +6,12 @@ import KDtree.KDTree;
 import KDtree.NodeGenerator;
 import KDtree.Pointer;
 import Model.Elements.Building;
-import Model.Elements.Element;
 import Model.Elements.POI;
 import Model.Elements.SuperElement;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;

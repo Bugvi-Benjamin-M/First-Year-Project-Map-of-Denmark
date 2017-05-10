@@ -34,6 +34,8 @@ public interface Theme {
 
     public abstract Color poiButtonsForeground();
 
+    public abstract Color inactiveButton();
+
     public abstract Color progressBarBackground();
     public abstract Color progressBarForeground();
 
