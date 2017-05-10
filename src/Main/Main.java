@@ -148,7 +148,7 @@ public class Main {
 
     public static void splashScreenInit()
     {
-        ImageIcon myImage = new ImageIcon(Main.class.getResource("/middelfart.jpg")); // denmark.gif
+        ImageIcon myImage = new ImageIcon(Main.class.getResource("/vejle.jpg")); // denmark.gif
         screen = new SplashScreen(myImage);
         screen.setLocationRelativeTo(null);
         screen.setScreenVisible(true);
