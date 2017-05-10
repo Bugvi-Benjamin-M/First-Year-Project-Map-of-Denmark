@@ -2,6 +2,7 @@ package View;
 
 import Enums.OSMEnums.AmenityType;
 import Enums.OSMEnums.ElementType;
+import Enums.OSMEnums.RoadType;
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
 import Helpers.Shapes.PolygonApprox;
@@ -313,6 +314,16 @@ public class MapCanvas extends View {
             drawPier(g, ThemeHelper.color("bridge"), 0.000008f);
             drawBiomeArea(ElementType.PARKING, g, ThemeHelper.color("parking"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
 
+            drawRoad(g, RoadType.FOOTWAY, ThemeHelper.color("footway"), ThemeHelper.color("footwayArea"), 0.000004f, 1);
+            drawRoad(g, RoadType.BRIDLEWAY, ThemeHelper.color("bridleway"), Color.PINK, 0.000004f, 1);
+            drawRoad(g, RoadType.CYCLEWAY, ThemeHelper.color("cycleway"), Color.PINK, 0.000004f, 1);
+            drawRoad(g, RoadType.PATH, ThemeHelper.color("path"), Color.PINK, 0.000004f, 1);
+            drawRoad(g, RoadType.ROAD, ThemeHelper.color("road"), Color.PINK, 0.000004f, 1);
+            drawRoad(g, RoadType.STEPS, ThemeHelper.color("steps"), Color.PINK, 0.000004f, 1);
+            drawRoad(g, RoadType.TRACK, ThemeHelper.color("track"), Color.PINK, 0.000004f, 1);
+            drawRoad(g, RoadType.RACEWAY, ThemeHelper.color("raceway"), Color.PINK, 0.00007f, 1);
+
+            /*
             drawFootways(g, ThemeHelper.color("footway"), ThemeHelper.color("footwayArea"), 0.000004f);
             drawBridleways(g, ThemeHelper.color("bridleway"), 0.000004f);
             drawCycleways(g, ThemeHelper.color("cycleway"), 0.000004f);
@@ -323,7 +334,25 @@ public class MapCanvas extends View {
             drawRaceways(g, ThemeHelper.color("raceway"), 0.00007f);
             drawEscapes(g, ThemeHelper.color("escape"), 0.00002f);
             drawBusGuideways(g, ThemeHelper.color("busGuideway"), 0.00006f);
+            */
 
+            drawRoad(g, RoadType.PEDESTRIAN_STREET, ThemeHelper.color("pedestrianStreet"), ThemeHelper.color("pedestrianStreet"), 0.00004f, 1);
+            drawRoad(g, RoadType.SERVICE_ROAD, ThemeHelper.color("serviceRoad"), Color.PINK, 0.00004f, 1);
+            drawRoad(g, RoadType.LIVING_STREET, ThemeHelper.color("livingStreet"), Color.PINK, 0.00005f, 1);
+            drawRoad(g, RoadType.RESIDENTIAL_ROAD, ThemeHelper.color("residentialRoad"), Color.PINK, 0.00005f, 1);
+            drawRoad(g, RoadType.UNCLASSIFIED_ROAD, ThemeHelper.color("unclassifiedRoad"), Color.PINK, 0.00005f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.00006f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD_LINK, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.00006f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD, ThemeHelper.color("secondaryRoad"), Color.PINK, 0.00008f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD_LINK, ThemeHelper.color("secondaryRoad"), Color.PINK, 0.00008f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), Color.PINK, 0.00008f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), Color.PINK, 0.00008f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00013f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), Color.PINK, 0.00016f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), Color.PINK, 0.00012f, 1);
+
+            /*
             // roads
             drawPedestrianStreets(g, ThemeHelper.color("pedestrianStreet"), 0.00004f);
             drawServiceRoads(g, ThemeHelper.color("serviceRoad"), 0.00004f);
@@ -340,12 +369,26 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.0001f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00016f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00012f);
+            */
+
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
             drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00018f, BasicStroke.CAP_BUTT);
             drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00006f, BasicStroke.CAP_BUTT);
 
             drawBuilding(g, ThemeHelper.color("building"));
 
+            drawRoadNames(RoadType.PEDESTRIAN_STREET, g);
+            drawRoadNames(RoadType.SERVICE_ROAD, g);
+            drawRoadNames(RoadType.LIVING_STREET, g);
+            drawRoadNames(RoadType.RESIDENTIAL_ROAD, g);
+            drawRoadNames(RoadType.UNCLASSIFIED_ROAD, g);
+            drawRoadNames(RoadType.TERTIARY_ROAD, g);
+            drawRoadNames(RoadType.SECONDARY_ROAD, g);
+            drawRoadNames(RoadType.PRIMARY_ROAD, g);
+            drawRoadNames(RoadType.TRUNK_ROAD, g);
+            drawRoadNames(RoadType.MOTORWAY, g);
+
+            /*
             drawRoadNames(g, ElementType.PEDESTRIAN_STREET);
             drawRoadNames(g, ElementType.SERVICE_ROAD);
             drawRoadNames(g, ElementType.LIVING_STREET);
@@ -356,6 +399,7 @@ public class MapCanvas extends View {
             drawRoadNames(g, ElementType.PRIMARY_ROAD);
             drawRoadNames(g, ElementType.TRUNK_ROAD);
             drawRoadNames(g, ElementType.MOTORWAY);
+            */
 
             // Amenities
             drawAmenity(AmenityType.BAR, g);
@@ -390,6 +434,24 @@ public class MapCanvas extends View {
             drawPier(g, ThemeHelper.color("bridge"), 0.000008f);
             drawBiomeArea(ElementType.PARKING, g, ThemeHelper.color("parking"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
 
+            drawRoad(g, RoadType.RACEWAY, ThemeHelper.color("raceway"), Color.PINK, 0.00007f, 1);
+            drawRoad(g, RoadType.PEDESTRIAN_STREET, ThemeHelper.color("pedestrianStreet"), ThemeHelper.color("pedestrianStreet"), 0.00006f, 1);
+            drawRoad(g, RoadType.SERVICE_ROAD, ThemeHelper.color("serviceRoad"), Color.PINK, 0.00006f, 1);
+            drawRoad(g, RoadType.LIVING_STREET, ThemeHelper.color("livingStreet"), Color.PINK, 0.00007f, 1);
+            drawRoad(g, RoadType.RESIDENTIAL_ROAD, ThemeHelper.color("residentialRoad"), Color.PINK, 0.00007f, 1);
+            drawRoad(g, RoadType.UNCLASSIFIED_ROAD, ThemeHelper.color("unclassifiedRoad"), Color.PINK, 0.00007f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD_LINK, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD, ThemeHelper.color("secondaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD_LINK, ThemeHelper.color("secondaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00014f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00012f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), Color.PINK, 0.00018f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), Color.PINK, 0.00014f, 1);
+
+            /*
             drawRaceways(g, ThemeHelper.color("raceway"), 0.00007f);
             drawEscapes(g, ThemeHelper.color("escape"), 0.00002f);
             drawBusGuideways(g, ThemeHelper.color("busGuideway"), 0.00006f);
@@ -408,13 +470,21 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+            */
+
             drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00020f, BasicStroke.CAP_BUTT);
             drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00007f, BasicStroke.CAP_BUTT);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
+            drawRoadNames(RoadType.PRIMARY_ROAD, g);
+            drawRoadNames(RoadType.TRUNK_ROAD, g);
+            drawRoadNames(RoadType.MOTORWAY, g);
+
+            /*
             drawRoadNames(g, ElementType.PRIMARY_ROAD);
             drawRoadNames(g, ElementType.TRUNK_ROAD);
             drawRoadNames(g, ElementType.MOTORWAY);
+            */
 
             drawCityNames(g, AmenityType.HAMLET_NAME, 0.35f);
             drawCityNames(g, AmenityType.SUBURB_NAME, 0.35f);
@@ -445,6 +515,20 @@ public class MapCanvas extends View {
             drawBiomeWay(ElementType.RIVER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.00005f, BasicStroke.CAP_ROUND);
             drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
 
+            drawRoad(g, RoadType.RESIDENTIAL_ROAD, ThemeHelper.color("residentialRoad"), Color.PINK, 0.00007f, 1);
+            drawRoad(g, RoadType.UNCLASSIFIED_ROAD, ThemeHelper.color("unclassifiedRoad"), Color.PINK, 0.00007f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD_LINK, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD, ThemeHelper.color("secondaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD_LINK, ThemeHelper.color("secondaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00014f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00012f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), Color.PINK, 0.00018f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), Color.PINK, 0.00014f, 1);
+
+            /*
             drawResidentialRoads(g, ThemeHelper.color("residentialRoad"), 0.00007f);
             drawUnclassifiedRoads(g, ThemeHelper.color("unclassifiedRoad"), 0.00007f);
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
@@ -457,6 +541,8 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+            */
+
             drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00024f, BasicStroke.CAP_BUTT);
             drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00008f, BasicStroke.CAP_BUTT);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
@@ -482,6 +568,20 @@ public class MapCanvas extends View {
             drawBiomeWay(ElementType.RIVER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.00005f, BasicStroke.CAP_ROUND);
             drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
 
+            drawRoad(g, RoadType.RESIDENTIAL_ROAD, ThemeHelper.color("residentialRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.UNCLASSIFIED_ROAD, ThemeHelper.color("unclassifiedRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD_LINK, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD, ThemeHelper.color("secondaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD_LINK, ThemeHelper.color("secondaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00014f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00012f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), Color.PINK, 0.00018f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), Color.PINK, 0.00014f, 1);
+
+            /*
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
@@ -492,6 +592,8 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+            */
+
             drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00028f, BasicStroke.CAP_BUTT);
             drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00009f, BasicStroke.CAP_BUTT);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
@@ -515,6 +617,18 @@ public class MapCanvas extends View {
             drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
             drawBiomeArea(ElementType.WETLAND, g, ThemeHelper.color("wetland"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
 
+            drawRoad(g, RoadType.TERTIARY_ROAD, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD_LINK, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD, ThemeHelper.color("secondaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD_LINK, ThemeHelper.color("secondaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00014f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00012f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), Color.PINK, 0.00018f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), Color.PINK, 0.00014f, 1);
+
+            /*
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
@@ -525,6 +639,8 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+            */
+
             drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00030f, BasicStroke.CAP_BUTT);
             drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00010f, BasicStroke.CAP_BUTT);
 
@@ -540,6 +656,18 @@ public class MapCanvas extends View {
             drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
             drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
 
+            drawRoad(g, RoadType.TERTIARY_ROAD, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD_LINK, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD, ThemeHelper.color("secondaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD_LINK, ThemeHelper.color("secondaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00014f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00012f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), Color.PINK, 0.00018f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), Color.PINK, 0.00014f, 1);
+
+            /*
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
             drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
@@ -550,6 +678,8 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+            */
+
             drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00036f, BasicStroke.CAP_BUTT);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
@@ -562,12 +692,21 @@ public class MapCanvas extends View {
             drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
             drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
 
+            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00014f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00012f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), Color.PINK, 0.00018f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), Color.PINK, 0.00014f, 1);
+
+            /*
             drawPrimaryRoads(g, ThemeHelper.color("primaryRoad"), 0.0001f);
             drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
             drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+            */
             drawCityNames(g, AmenityType.CITY_NAME, 1f);
             break;
         }
@@ -638,6 +777,24 @@ public class MapCanvas extends View {
         this.currentPoint = currentPoint;
     }
 
+    private void drawRoad(Graphics2D g, RoadType roadType, Color color, Color areaColor, float strokeWidth, int lineEnd){
+        setCurrentSection(ElementType.HIGHWAY);
+        g.setStroke(new BasicStroke(strokeWidth, lineEnd, BasicStroke.JOIN_BEVEL));
+        for (SuperElement element : currentSection){
+            Road road = (Road) element;
+            if(road.getRoadType() == roadType){
+                if (road.isArea()) {
+                    g.setColor(areaColor);
+                    g.fill(road.getShape());
+                } else {
+                    g.setColor(color);
+                    g.draw(road.getShape());
+                }
+            }
+        }
+    }
+
+    /*
     // Draw Roads Methods
     private void drawMotorways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.MOTORWAY);
@@ -834,25 +991,6 @@ public class MapCanvas extends View {
             }
         }
     }
-    private void drawBridge(Graphics2D g, Color color, float width) {
-        setCurrentSection(ElementType.BRIDGE);
-        g.setColor(color);
-        g.setStroke(new BasicStroke(width));
-        for (SuperElement element : currentSection) {
-            ManMade manMade = (ManMade)element;
-            if (manMade.isArea()) g.fill(manMade.getShape());
-            else g.draw(manMade.getShape());
-        }
-    }
-    private void drawPier(Graphics2D g, Color color, float width) {
-        setCurrentSection(ElementType.PIER);
-        g.setColor(color);
-        g.setStroke(new BasicStroke(width));
-        for (SuperElement element : currentSection) {
-            ManMade manMade = (ManMade)element;
-            g.draw(manMade.getShape());
-        }
-    }
     private void drawBridleways(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.BRIDLEWAY);
         g.setColor(color);
@@ -887,6 +1025,27 @@ public class MapCanvas extends View {
         for (SuperElement element : currentSection) {
             Road road = (Road) element;
             g.draw(road.getShape());
+        }
+    }
+    */
+
+    private void drawBridge(Graphics2D g, Color color, float width) {
+        setCurrentSection(ElementType.BRIDGE);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width));
+        for (SuperElement element : currentSection) {
+            ManMade manMade = (ManMade)element;
+            if (manMade.isArea()) g.fill(manMade.getShape());
+            else g.draw(manMade.getShape());
+        }
+    }
+    private void drawPier(Graphics2D g, Color color, float width) {
+        setCurrentSection(ElementType.PIER);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width));
+        for (SuperElement element : currentSection) {
+            ManMade manMade = (ManMade)element;
+            g.draw(manMade.getShape());
         }
     }
 
@@ -955,8 +1114,8 @@ public class MapCanvas extends View {
         g.setComposite(c);
     }
 
-    private void drawRoadNames(Graphics2D g, ElementType type) {
-        setCurrentSection(type);
+    private void drawRoadNames(RoadType roadType, Graphics2D g) {
+        setCurrentSection(ElementType.HIGHWAY);
 
         // Scalefactor
         float scaleFactor = 0.1f * 397.522f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
@@ -973,82 +1132,84 @@ public class MapCanvas extends View {
 
         for (SuperElement element : currentSection) {
             Road road = (Road)element;
-            g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-            PolygonApprox polygon = road.getShape();
+            if(road.getRoadType() == roadType){
+                g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+                PolygonApprox polygon = road.getShape();
 
-            // The polygon coords
-            float[] coords = polygon.getCoords();
-            if (coords.length < 4) break;
-            float longestVectorX1 = coords[0];
-            float longestVectorY1 = coords[1];
-            float longestVectorX2 = coords[2];
-            float longestVectorY2 = coords[3];
+                // The polygon coords
+                float[] coords = polygon.getCoords();
+                if (coords.length < 4) break;
+                float longestVectorX1 = coords[0];
+                float longestVectorY1 = coords[1];
+                float longestVectorX2 = coords[2];
+                float longestVectorY2 = coords[3];
 
-            // Coords to help finding the longest vector
-            float x1;
-            float y1;
-            float x2;
-            float y2;
+                // Coords to help finding the longest vector
+                float x1;
+                float y1;
+                float x2;
+                float y2;
 
-            // Find the longest vector in the path
-            for (int i = 2; i < coords.length; i += 2) {
-                x1 = coords[i - 2];
-                y1 = coords[i - 1];
-                x2 = coords[i];
-                y2 = coords[i + 1];
+                // Find the longest vector in the path
+                for (int i = 2; i < coords.length; i += 2) {
+                    x1 = coords[i - 2];
+                    y1 = coords[i - 1];
+                    x2 = coords[i];
+                    y2 = coords[i + 1];
 
-                //If longest vector update
-                if ((vectorLength(longestVectorX2 - longestVectorX1,longestVectorY2 - longestVectorY1)) < (vectorLength(x2 - x1, y2 - y1))) {
-                    longestVectorX1 = x1;
-                    longestVectorY1 = y1;
-                    longestVectorX2 = x2;
-                    longestVectorY2 = y2;
+                    //If longest vector update
+                    if ((vectorLength(longestVectorX2 - longestVectorX1,longestVectorY2 - longestVectorY1)) < (vectorLength(x2 - x1, y2 - y1))) {
+                        longestVectorX1 = x1;
+                        longestVectorY1 = y1;
+                        longestVectorX2 = x2;
+                        longestVectorY2 = y2;
+                    }
                 }
-            }
 
-            // Find the angle of the longest vector in the path
-            double angle = vectorAngle(longestVectorX1, longestVectorY1,
-                longestVectorX2, longestVectorY2);
+                // Find the angle of the longest vector in the path
+                double angle = vectorAngle(longestVectorX1, longestVectorY1,
+                        longestVectorX2, longestVectorY2);
 
-            // The center of the longest vector
-            float centerX = (longestVectorX2 + longestVectorX1) / 2;
-            float centerY = (longestVectorY2 + longestVectorY1) / 2;
+                // The center of the longest vector
+                float centerX = (longestVectorX2 + longestVectorX1) / 2;
+                float centerY = (longestVectorY2 + longestVectorY1) / 2;
 
-            // The length of the string (name)
-            float stringLength = 0;
-            for (int i = 0; i < road.getName().length(); i++) {
-                char ch = road.getName().charAt(i);
-                stringLength += getFontMetrics(font).charWidth(ch) * scaleFactor;
-            }
+                // The length of the string (name)
+                float stringLength = 0;
+                for (int i = 0; i < road.getName().length(); i++) {
+                    char ch = road.getName().charAt(i);
+                    stringLength += getFontMetrics(font).charWidth(ch) * scaleFactor;
+                }
 
-            // Using trigonometry to find the appropiate start for the string
-            float hyp = stringLength / 2;
-            float hos = (float)Math.cos(angle) * hyp;
-            float mod = (float)Math.sin(angle) * hyp;
+                // Using trigonometry to find the appropiate start for the string
+                float hyp = stringLength / 2;
+                float hos = (float)Math.cos(angle) * hyp;
+                float mod = (float)Math.sin(angle) * hyp;
 
-            float drawFromX = centerX - hos;
-            float drawFromY = centerY - mod;
+                float drawFromX = centerX - hos;
+                float drawFromY = centerY - mod;
 
-            //Using teachings about triangles
-            hyp = (float)0.0001 / 4;
-            hos = (float)Math.cos(90 - angle) * hyp;
-            mod = (float)Math.sin(90 - angle) * hyp;
+                //Using teachings about triangles
+                hyp = (float)0.0001 / 4;
+                hos = (float)Math.cos(90 - angle) * hyp;
+                mod = (float)Math.sin(90 - angle) * hyp;
 
-            drawFromX = drawFromX - hos;
-            drawFromY = drawFromY + mod;
+                drawFromX = drawFromX - hos;
+                drawFromY = drawFromY + mod;
 
             /*
              Safe Affine transform, rotate, shift etc. draw the name
              and set Affine Transform back to the state before
              drawing the name.
              */
-            if (vectorLength(longestVectorX2 - longestVectorX1,longestVectorY2 - longestVectorY1) > stringLength) {
-                AffineTransform old = g.getTransform();
-                g.rotate(angle, drawFromX, drawFromY);
-                if(!road.isArea())drawString(road.getName(), g, drawFromX, drawFromY, font, scaleFactor,false);
-                g.setTransform(old);
+                if (vectorLength(longestVectorX2 - longestVectorX1,longestVectorY2 - longestVectorY1) > stringLength) {
+                    AffineTransform old = g.getTransform();
+                    g.rotate(angle, drawFromX, drawFromY);
+                    if(!road.isArea())drawString(road.getName(), g, drawFromX, drawFromY, font, scaleFactor,false);
+                    g.setTransform(old);
+                }
+                if(road.isArea())drawString(road.getName(), g, road.getShape().getCenterX(), road.getShape().getCenterY(), font, scaleFactor,true);
             }
-            if(road.isArea())drawString(road.getName(), g, road.getShape().getCenterX(), road.getShape().getCenterY(), font, scaleFactor,true);
         }
         // Transparency off
         c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);

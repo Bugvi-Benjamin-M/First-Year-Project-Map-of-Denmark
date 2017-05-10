@@ -714,6 +714,9 @@ public final class CanvasController extends Controller implements Observer {
 
     private static ArrayList<HashSet<SuperElement>> getNearestNeighbourOfAllRoads(float x, float y){
         ArrayList<HashSet<SuperElement>> roads = new ArrayList<>();
+
+        roads.add(getNearestNeighbour(ElementType.HIGHWAY, x, y));
+        /*
         roads.add(getNearestNeighbour(ElementType.PRIMARY_ROAD, x, y));
         roads.add(getNearestNeighbour(ElementType.SECONDARY_ROAD, x, y));
         roads.add(getNearestNeighbour(ElementType.MOTORWAY, x, y));
@@ -737,6 +740,7 @@ public final class CanvasController extends Controller implements Observer {
         roads.add(getNearestNeighbour(ElementType.CYCLEWAY, x, y));
         roads.add(getNearestNeighbour(ElementType.PATH, x, y));
         roads.add(getNearestNeighbour(ElementType.ROAD, x, y));
+        */
 
         return roads;
     }
