@@ -390,11 +390,13 @@ public final class OSMHandler implements ContentHandler {
             case "cemetery":
             case "greenhouse_horticulture":
             case "orchard":
-            case "village_green":
                 elementType = ElementType.GRASS;
                 break;
             case "basin":
                 elementType = ElementType.WATER;
+                break;
+            case "village_green":
+                elementType = ElementType.COMMON_LAND;
                 break;
         }
     }
