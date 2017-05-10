@@ -5,6 +5,7 @@ import Controller.ToolbarControllers.ToolbarController;
 import Exceptions.FileWasNotFoundException;
 import Helpers.DefaultSettings;
 import Helpers.FileHandler;
+import Helpers.GlobalValue;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Addresses.Value;
@@ -24,6 +25,8 @@ import java.util.List;
 public class Main {
 
     public static final FPSCounter FPS_COUNTER = new FPSCounter();
+
+    public static final boolean DEBUG_MODE = false;
 
     public static long LOAD_TIME;
     private static SplashScreen screen;
@@ -76,10 +79,12 @@ public class Main {
             DebugWindow.getInstance().setLoadtimeLabel();
             CanvasExtrasController.getInstance().updateDistance();
 
-            try {
-                dijkstra(model);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (DEBUG_MODE) {
+                try {
+                    dijkstra(model);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
