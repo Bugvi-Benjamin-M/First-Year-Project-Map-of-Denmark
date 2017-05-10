@@ -6,7 +6,6 @@ import Model.Model;
 import View.PopupWindow;
 import View.SearchTool;
 
-import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -55,7 +54,6 @@ public abstract class SearchController extends Controller {
                 searchTool.getField().requestFocus();
             }
            // else if(allowSearch) {
-                System.out.println("it kinda works");
                 Point2D.Float point = null;
                 ArrayList<Value> list = Model.getInstance().getTst().get(searchTool.getText());
                 //if there exists a value
@@ -127,17 +125,22 @@ public abstract class SearchController extends Controller {
             if (searchTool.getField().isPopupVisible() && searchTool.getField().getItemCount() == 0)
             searchTool.getField().hidePopup();
             searchTool.getField().removeAllItems();
-            if (currentQuery != null) {
+            if(currentQuery == null || currentQuery.equals("")) {
+                searchTool.getField().removeAllItems();
+                return;
+            } else {
             String[] listToShow = manageSearchResults();
+                if(listToShow == null) return;
                 for (String s : listToShow) {
                 searchTool.getField().addItem(s);
                 }
             }
-            searchTool.getField().hidePopup();
+            //searchTool.getField().hidePopup();
             searchTool.getField().showPopup();
         }
 
         private String[] manageSearchResults(){
+            if(currentQuery == null) return null;
             HashMap<Boolean, ArrayList<String>> map = Model.getInstance().getTst().keysThatMatch(currentQuery.toLowerCase());
             ArrayList<String> listToShow = new ArrayList<>();
             for (String s : map.get(true)) {

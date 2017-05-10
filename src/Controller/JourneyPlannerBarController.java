@@ -273,6 +273,17 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerBar.removeAll();
     }
 
+    private void searchInitialised() {
+        isSearch = true;
+        descriptionButton.setForeground(ThemeHelper.color("icon"));
+    }
+
+    private void noSearchInitialised() {
+        isSearch = false;
+        descriptionButton.setForeground(ThemeHelper.color("inactiveButton"));
+    }
+
+
     public void printRouteDescription() {
         java.util.List<String> route = JourneyPlannerBarController.getInstance().getRouteDescription();
         for (String string : route) {
@@ -331,7 +342,7 @@ public final class JourneyPlannerBarController extends Controller {
                 MainWindowController.getInstance().requestCanvasResetToAndFrom();
                 MainWindowController.getInstance().requestCanvasRepaint();
                 descriptionButton.setForeground(ThemeHelper.color("inactiveButton"));
-                isSearch = false;
+                noSearchInitialised();
             }
 
             @Override
@@ -472,6 +483,7 @@ public final class JourneyPlannerBarController extends Controller {
         }
         toPoint = toSearcher.searchActivatedEvent();
         if(toPoint != null && fromPoint != null) {
+            searchInitialised();
             MainWindowController.getInstance().requestCanvasUpateToAndFrom(toPoint, fromPoint);
         }else PopupWindow.infoBox(null, "Could not find a the address", "Mismatch");
     }
@@ -560,11 +572,22 @@ public final class JourneyPlannerBarController extends Controller {
                     if (checkForProhibitedKey(e)) {
                         return;
                     }
-                    if (e.getKeyChar() != KeyEvent.VK_BACK_SPACE && e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE && searchTool.getText().length() > 0) {
-                        currentQuery = searchTool.getText();
+                    if (/*e.getKeyChar() != KeyEvent.VK_BACK_SPACE &&*/ e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE && searchTool.getText().length() > 0) {
+                        if(queryTimer == null) {
+                            queryTimer = new Timer(QUERY_DELAY, ae -> {
+                                queryTimer.stop();
+                                queryTimer = null;
+                                currentQuery = searchTool.getText();
+                                if(!currentQuery.equals("")) showMatchingResults();
+                                if(currentQuery != null) searchTool.setText(currentQuery);
+                            });
+                            queryTimer.start();
+                        } else queryTimer.restart();
+
+                        /*currentQuery = searchTool.getText();
                         showMatchingResults();
                         searchTool.getField().showPopup();
-                        searchTool.setText(currentQuery);
+                        searchTool.setText(currentQuery);*/
                     }
 
                     /*if(e.getKeyChar() == KeyEvent.VK_ENTER){

@@ -23,7 +23,7 @@ import java.awt.geom.Point2D;
  */
 public final class MainWindowController extends WindowController {
 
-    private static final String MAIN_TITLE = "OSM Map Viewer v0.5";
+    private static final String MAIN_TITLE = "OSM Map Viewer v1.0";
     private final int FROM_RESIZE_EVENT_TO_MINIMUMWIDTH = 70;
     private static MainWindowController instance;
     private JLayeredPane layeredPane;

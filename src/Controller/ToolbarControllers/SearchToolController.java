@@ -122,7 +122,7 @@ public final class SearchToolController extends SearchController {
             searchTool.getField().addItem(iterator.next());
         }
         searchTool.getField().setSelectedIndex(-1);
-        searchTool.getField().hidePopup();
+        //searchTool.getField().hidePopup();
         searchTool.getField().showPopup();
     }
 
