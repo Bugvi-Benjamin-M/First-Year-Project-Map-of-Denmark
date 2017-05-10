@@ -9,6 +9,7 @@ import Helpers.Utilities.DebugWindow;
 import KDtree.KDTree;
 import Main.Main;
 import Model.Elements.*;
+import OSM.OSMWay;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -281,7 +282,10 @@ public class MapCanvas extends View {
     public void setRoute(List<RoadEdge> route) {
         this.route = new LinkedList<>();
         for (RoadEdge edge : route) {
-            this.route.add(edge.getShape());
+            OSMWay way = new OSMWay();
+            way.add(edge.getEither());
+            way.add(edge.getOther(edge.getEither()));
+            this.route.add(new PolygonApprox(way));
         }
     }
 
