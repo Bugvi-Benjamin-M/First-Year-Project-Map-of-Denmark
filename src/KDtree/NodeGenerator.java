@@ -34,7 +34,7 @@ public class NodeGenerator {
         for (int i = 0; i < medians.size(); i++) {
             Node median = medians.get(i);
             Node node = new Node(median.getX(), median.getY(), median.getDepth());
-            if (median.getPointers() != null)
+            if (median.getElements() != null)
                 node.makeLeaf();
             tree.putNode(node);
         }

@@ -67,8 +67,5 @@ public enum ElementType {
 
     PARKING,
 
-
-    POI, //Point of interest
-
     AMENITY,
 }

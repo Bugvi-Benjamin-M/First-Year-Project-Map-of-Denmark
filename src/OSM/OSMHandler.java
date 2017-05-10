@@ -48,7 +48,6 @@ public final class OSMHandler implements ContentHandler {
     private float latitude;
     private float longitude;
     private ArrayList<Pointer> amenities;
-    private boolean specialRelationCase = false;
     private boolean isArea = false;
     private boolean isOneWay = false;
     private boolean isWalkingAllowed = false;
@@ -202,9 +201,6 @@ public final class OSMHandler implements ContentHandler {
             break;
         case "relation":
             long relationID = Long.parseLong(atts.getValue("id"));
-            /*if (relationID == 2365410) { // Dont draw Sydhavnen (Only works with coastlines)
-                specialRelationCase = true;
-            }*/
             name = "";
             isArea = false;
             isInTunnel = false;
@@ -1061,9 +1057,6 @@ public final class OSMHandler implements ContentHandler {
     }
 
     private void addBiome(ElementType type, boolean isRelation) {
-        if(specialRelationCase){
-            specialRelationCase = false;
-        }else {
             if (!isRelation) {
                 PolygonApprox polygonApprox;
                 polygonApprox = new PolygonApprox(way);
@@ -1089,7 +1082,6 @@ public final class OSMHandler implements ContentHandler {
                         continue;
                 }
             }
-        }
     }
 
     private void addAmenity(AmenityType type, boolean isRelation) {
