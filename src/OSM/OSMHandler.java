@@ -141,9 +141,7 @@ public final class OSMHandler implements ContentHandler {
         relation = null;
         //refRelation = null;
         nodeGenerator = new NodeGenerator();
-        /*
         model.createGraph(roads);
-        */
     }
 
     @Override
@@ -1101,7 +1099,7 @@ public final class OSMHandler implements ContentHandler {
             road.setMaxSpeed(maxSpeed);
             road.setOneWay(isOneWay);
             road.setWay(way);
-            //roads.add(road);
+            roads.add(road);
             for (int i = 0; i < way.size(); i += precision) {
                 Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);

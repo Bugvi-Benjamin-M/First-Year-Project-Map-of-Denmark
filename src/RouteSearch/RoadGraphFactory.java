@@ -38,10 +38,12 @@ public class RoadGraphFactory {
             graph = new RoadGraph();
             for (Object road : roads) {
                 graph.addEdge((RoadEdge) road,((RoadEdge) road).getEither());
+                this.roads.add((RoadEdge) road);
             }
         } else {
             throw new IllegalArgumentException("Type not defined");
         }
+        System.out.println("Done building graph");
     }
 
     private void constructGraph(Iterable<Road> roads) {
