@@ -70,6 +70,10 @@ public class PointsOfInterestBar extends View {
 
     public void applyTheme() {
         setBackground(ThemeHelper.color("toolbar"));
+        if(NO_POI_SAVED != null) {
+            NO_POI_SAVED.setBackground(ThemeHelper.color("toolbar"));
+            NO_POI_SAVED.setForeground(ThemeHelper.color("icon"));
+        }
     }
 
     public void addNoPoiPanel() {
