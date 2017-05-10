@@ -211,9 +211,9 @@ public final class OSMHandler implements ContentHandler {
             break;
         case "relation":
             long relationID = Long.parseLong(atts.getValue("id"));
-            if (relationID == 2365410) { // Dont draw Sydhavnen (Only works with coastlines)
+            /*if (relationID == 2365410) { // Dont draw Sydhavnen (Only works with coastlines)
                 specialRelationCase = true;
-            }
+            }*/
             name = "";
             isArea = false;
             isInTunnel = false;
@@ -1149,6 +1149,7 @@ public final class OSMHandler implements ContentHandler {
                 }
             } else {
                 MultiPolygonApprox multiPolygonApprox;
+                relation = OSMRelation.sortWays(relation);
                 multiPolygonApprox = new MultiPolygonApprox(relation);
                 Biome biome = new Biome(multiPolygonApprox);
                 for (int i = 0; i < relation.size() - 1; i++) {

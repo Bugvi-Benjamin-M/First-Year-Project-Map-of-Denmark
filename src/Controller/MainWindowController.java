@@ -16,6 +16,7 @@ import View.Window;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Point2D;
 
 /**
  * Created by Búgvi Magnussen on 14-03-2017.
@@ -430,6 +431,22 @@ public final class MainWindowController extends WindowController {
 
     public void requestCanvasUpdatePOI() {
         CanvasController.getInstance().updateCanvasPOI();
+    }
+
+    public void requestCanvasToggleRouteVisualization(boolean isActive){
+        CanvasController.getInstance().toggleRouteVisualization(isActive);
+    }
+
+    public void requestCanvasUpateToAndFrom(Point2D.Float to, Point2D.Float from){
+        CanvasController.getInstance().updateToAndFrom(to, from);
+    }
+
+    public void requestCanvasResetToAndFrom(){
+        CanvasController.getInstance().resetToAndFrom();
+    }
+
+    public void requestCanvasUpdateAddressMarker(Point2D.Float address){
+        CanvasController.getInstance().markLocation(address);
     }
 
     public void requestCanvasPanToPoint(Point.Float aFloat) {

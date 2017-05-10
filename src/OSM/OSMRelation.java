@@ -79,7 +79,7 @@ public class OSMRelation extends ArrayList<OSMWay> {
         return relation;
     }
 
-    @Override
+    /*@Override
     public boolean add(OSMWay way){
         if(way == null) return true;
         if(size() == 0){
@@ -124,5 +124,5 @@ public class OSMRelation extends ArrayList<OSMWay> {
         }
         super.add(way);
         return true;
-    }
+    }*/
 }

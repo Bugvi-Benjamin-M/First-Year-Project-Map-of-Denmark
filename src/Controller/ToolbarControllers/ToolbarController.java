@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.io.FileNotFoundException;
 
 import static javax.swing.SpringLayout.*;
@@ -462,7 +463,8 @@ public final class ToolbarController extends Controller {
 
     private void searchButtonEvent()
     {
-        SearchToolController.getInstance().searchActivatedEvent();
+       Point2D.Float point = SearchToolController.getInstance().searchActivatedEvent();
+       MainWindowController.getInstance().requestCanvasUpdateAddressMarker(point);
     }
 
     private void poiToolActivatedEvent() {

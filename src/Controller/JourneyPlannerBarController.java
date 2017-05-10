@@ -1,7 +1,10 @@
 package Controller;
 
+import Controller.ToolbarControllers.ToolbarController;
+import Enums.ToolType;
 import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
+import KDtree.*;
 import Model.Elements.RoadEdge;
 import Model.Model;
 import RouteSearch.RoadGraphFactory;
@@ -13,6 +16,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 /**
@@ -64,6 +68,8 @@ public final class JourneyPlannerBarController extends Controller {
     private JourneyDescriptionField travelDescription;
     private ToFromController fromSearcher;
     private ToFromController toSearcher;
+    private Point2D.Float fromPoint;
+    private Point2D.Float toPoint;
 
     private boolean isLargeJourneyPlannerVisible;
     private boolean isSmallJourneyPlannerVisible;
@@ -119,6 +125,8 @@ public final class JourneyPlannerBarController extends Controller {
 
     public void setupLargeJourneyPlannerBar() {
         isLargeJourneyPlannerVisible = true;
+        MainWindowController.getInstance().requestCanvasToggleRouteVisualization(true);
+        MainWindowController.getInstance().requestCanvasRepaint();
         informationBar.setPreferredSize(new Dimension(GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight()));
         int journeyPlannerBarHeight = window.getFrame().getHeight() - JOURNEY_PLANNERBAR_HEIGHT_DECREASE;
         journeyPlannerBar.setPreferredSize(new Dimension(JOURNEY_PLANNERBAR_WIDTH, journeyPlannerBarHeight));
@@ -156,6 +164,8 @@ public final class JourneyPlannerBarController extends Controller {
 
     public void setupSmallJourneyPlannerBar() {
         isSmallJourneyPlannerVisible = true;
+        MainWindowController.getInstance().requestCanvasToggleRouteVisualization(true);
+        MainWindowController.getInstance().requestCanvasRepaint();
         informationBar.setPreferredSize(new Dimension(window.getFrame().getWidth(), GlobalValue.getSmallInformationBarHeight()));
         journeyPlannerBar.setPreferredSize(new Dimension(window.getFrame().getWidth() - SMALL_JOURNEY_PLANNERBAR_WIDTH_DECREASE, GlobalValue.getSmallInformationBarHeight() - SMALL_JOURNEY_PLANNERBAR_HEIGHT_DECREASE));
         journeyPlannerTransportTypeButtons.setPreferredSize(new Dimension(SMALL_TRANSPORT_BUTTONS_WIDTH, SMALL_TRANSPORT_BUTTONS_HEIGHT));
@@ -255,7 +265,11 @@ public final class JourneyPlannerBarController extends Controller {
                 super.mouseClicked(e);
                 fromSearcher.getSearchTool().getField().getEditor().setItem("");
                 toSearcher.getSearchTool().getField().getEditor().setItem("");
+                fromSearcher.setCurrentQuery("");
+                toSearcher.setCurrentQuery("");
                 travelDescription.getField().setText("");
+                MainWindowController.getInstance().requestCanvasResetToAndFrom();
+                MainWindowController.getInstance().requestCanvasRepaint();
             }
 
             @Override
@@ -372,6 +386,7 @@ public final class JourneyPlannerBarController extends Controller {
     public void clearJourneyPlannerBar() {
         isLargeJourneyPlannerVisible = false;
         isSmallJourneyPlannerVisible = false;
+        MainWindowController.getInstance().requestCanvasToggleRouteVisualization(false);
         journeyPlannerBarLayout.removeLayoutComponent(journeyPlannerTransportTypeButtons);
         journeyPlannerBarLayout.removeLayoutComponent(fromSearcher.getSearchTool());
         journeyPlannerBarLayout.removeLayoutComponent(toSearcher.getSearchTool());
@@ -386,12 +401,15 @@ public final class JourneyPlannerBarController extends Controller {
             PopupWindow.infoBox(null, "Please Specify Departure Location!", "No Departure Location Selected!");
             return;
         }
-        fromSearcher.searchActivatedEvent();
+        fromPoint = fromSearcher.searchActivatedEvent();
         if(toSearcher.getSearchTool().getText().equals("")) {
             PopupWindow.infoBox(null, "Please Specify End Destination!", "No End Destination Selected");
             return;
         }
-        toSearcher.searchActivatedEvent();
+        toPoint = toSearcher.searchActivatedEvent();
+        if(toPoint != null && fromPoint != null) {
+            MainWindowController.getInstance().requestCanvasUpateToAndFrom(toPoint, fromPoint);
+        }else PopupWindow.infoBox(null, "Could not find a the address", "Mismatch");
     }
 
     private class InformationBarInteractionHandler extends MouseAdapter {
@@ -427,7 +445,8 @@ public final class JourneyPlannerBarController extends Controller {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     super.mouseClicked(e);
-                    if(MainWindowController.getInstance().isMenuToolPopupVisible()) MainWindowController.getInstance().requestMenuToolHidePopup();
+                    if (MainWindowController.getInstance().isMenuToolPopupVisible())
+                        MainWindowController.getInstance().requestMenuToolHidePopup();
                     MainWindowController.getInstance().requestSearchToolCloseList();
                 }
             });
@@ -435,20 +454,20 @@ public final class JourneyPlannerBarController extends Controller {
                 @Override
                 public void focusGained(FocusEvent e) {
                     super.focusGained(e);
-                    if(searchTool.getText().equals("")) return;
-                    else {
-                        showMatchingResults();
-                        searchTool.getField().getEditor().selectAll();
-                        searchTool.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
-                        allowSearch = true;
-                    }
+                    showMatchingResults();
+                    searchTool.setText(currentQuery);
+                    allowSearch = true;
+                    ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBUTTON).toggleActivate(true);
                 }
 
                 @Override
                 public void focusLost(FocusEvent e) {
+                    super.focusLost(e);
                     currentQuery = searchTool.getText();
-                    searchTool.getField().hidePopup();
                     allowSearch = false;
+                    searchTool.getField().hidePopup();
+                    ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBUTTON).toggleActivate(false);
+                    ToolbarController.getInstance().requestCanvasRepaint();
                 }
             });
         }
@@ -477,12 +496,17 @@ public final class JourneyPlannerBarController extends Controller {
                     if (checkForProhibitedKey(e)) {
                         return;
                     }
-                    if (e.getKeyChar() != KeyEvent.VK_BACK_SPACE && e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE) {
+                    if (e.getKeyChar() != KeyEvent.VK_BACK_SPACE && e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE && searchTool.getText().length() > 0) {
                         currentQuery = searchTool.getText();
                         showMatchingResults();
                         searchTool.getField().showPopup();
                         searchTool.setText(currentQuery);
                     }
+
+                    /*if(e.getKeyChar() == KeyEvent.VK_ENTER){
+                        currentQuery = searchTool.getText();
+                        searchActivatedEvent();
+                    }*/
 
                     if (searchTool.getText().isEmpty()) {
                         searchTool.getField().hidePopup();
