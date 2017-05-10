@@ -36,10 +36,13 @@ public class MapCanvas extends View {
     private EnumMap<ElementType, KDTree> elements;
     private boolean antiAliasing;
     private Point2D.Float locationMarker;
+    private Point2D.Float toMarker;
+    private Point2D.Float fromMarker;
     private ArrayList<POI> poiList;
 
     private List<Path2D> coastlines;
     private List<Shape> route;
+    private boolean drawRoute;
 
     private float cameraMaxLon;
     private float cameraMinLon;
@@ -161,7 +164,7 @@ public class MapCanvas extends View {
         drawCoastlines(g2D);
         if (GlobalValue.getDidProgramLoadDefault()) drawElements(g2D);
 
-        drawLocationMarker(g2D);
+        drawMarkers(g2D);
         drawPOI(g2D);
         drawBoundaries(g2D);
         drawRoute(g2D);
@@ -169,20 +172,56 @@ public class MapCanvas extends View {
         DebugWindow.getInstance().setFPSLabel();
     }
 
-    private void drawLocationMarker(Graphics2D g){
+    private void drawMarkers(Graphics2D g){
+        Point2D start = toModelCoords(new Point2D.Float(0f, 0f));
+        Point2D inner = toModelCoords(new Point2D.Float(16f, 0f));
+        Point2D outer = toModelCoords(new Point2D.Float(20f, 0f));
+        float boundsblue = (float)inner.getX() - (float) start.getX();
+        float boundswhite = (float)outer.getX() - (float) start.getX();
+
         if(locationMarker != null) {
-            Point2D start = toModelCoords(new Point2D.Float(0f, 0f));
-            Point2D blue = toModelCoords(new Point2D.Float(16f, 0f));
-            Point2D white = toModelCoords(new Point2D.Float(20f, 0f));
-            float boundsblue = (float)blue.getX() - (float) start.getX();
-            float boundswhite = (float)white.getX() - (float) start.getX();
-
-
             g.setColor(Color.white);
             g.fill(getEllipseFromCenter(locationMarker.getX(), locationMarker.getY(), boundswhite, boundswhite));
-            g.setColor(Color.blue);
+            g.setColor(Color.black);
             g.fill(getEllipseFromCenter(locationMarker.getX(), locationMarker.getY(), boundsblue, boundsblue));
         }
+        //Only draw the route if the journey planner window is open.
+        if(drawRoute) {
+            if (toMarker != null) {
+                g.setColor(Color.white);
+                g.fill(getEllipseFromCenter(toMarker.getX(), toMarker.getY(), boundswhite, boundswhite));
+                g.setColor(Color.red);
+                g.fill(getEllipseFromCenter(toMarker.getX(), toMarker.getY(), boundsblue, boundsblue));
+            }
+
+            if (fromMarker != null) {
+                g.setColor(Color.white);
+                g.fill(getEllipseFromCenter(fromMarker.getX(), fromMarker.getY(), boundswhite, boundswhite));
+                g.setColor(Color.red);
+                g.fill(getEllipseFromCenter(fromMarker.getX(), fromMarker.getY(), boundsblue, boundsblue));
+            }
+        }
+    }
+
+    public void toggleRouteVisualization(boolean isActive){
+        this.drawRoute = isActive;
+    }
+
+    public void resetToAndFrom(){
+        toMarker = null;
+        fromMarker = null;
+    }
+
+    public void setLocationMarker(Point2D.Float locationMarker) {
+        this.locationMarker = locationMarker;
+    }
+
+    public void setToMarker(Point2D.Float toMarker){
+        this.toMarker = toMarker;
+    }
+
+    public void setFromMarker(Point2D.Float fromMarker){
+        this.fromMarker = fromMarker;
     }
 
     private Ellipse2D getEllipseFromCenter(double x, double y, double width, double height) {
@@ -1322,9 +1361,6 @@ public class MapCanvas extends View {
         }
     }
 
-    public void setLocationMarker(Point2D.Float locationMarker) {
-        this.locationMarker = locationMarker;
-    }
 
     public void panToPoint(Point2D point){
         Rectangle2D rectangle = getVisibleRect();

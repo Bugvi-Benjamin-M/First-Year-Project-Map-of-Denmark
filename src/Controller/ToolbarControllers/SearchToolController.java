@@ -1,5 +1,6 @@
 package Controller.ToolbarControllers;
 
+import Controller.MainWindowController;
 import Controller.SearchController;
 import Enums.ToolType;
 import Helpers.OSDetector;
@@ -15,6 +16,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -103,12 +105,13 @@ public final class SearchToolController extends SearchController {
         searchTool.getField().getEditor().getEditorComponent().addFocusListener(new SearchToolFocusHandler());
     }
 
-    protected void searchActivatedEvent() {
-        super.searchActivatedEvent();
+    protected Point2D.Float searchActivatedEvent() {
+        Point2D.Float point = super.searchActivatedEvent();
         if(isValidSearch()) {
             saveHistory(currentQuery);
             ToolbarController.getInstance().transferFocusToCanvas();
         }
+        return point;
     }
 
     private void showHistory(){
@@ -159,7 +162,8 @@ public final class SearchToolController extends SearchController {
                 switch (e.getKeyChar()) {
                     case KeyEvent.VK_ENTER:
                         currentQuery = searchTool.getText();
-                        searchActivatedEvent();
+                            Point2D.Float selectedAddress = searchActivatedEvent();
+                            MainWindowController.getInstance().requestCanvasUpdateAddressMarker(selectedAddress);
                         break;
                     case KeyEvent.VK_ESCAPE:
                         if (searchTool.getField().getEditor().getEditorComponent().hasFocus())

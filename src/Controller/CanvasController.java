@@ -79,9 +79,17 @@ public final class CanvasController extends Controller implements Observer {
         return instance;
     }
 
-    public void markLocation(float x, float y){
-        mapCanvas.setLocationMarker(new Point2D.Float(x, y));
-        mapCanvas.panToPoint(new Point2D.Float(x, y));
+    public void markLocation(Point2D.Float address){
+        mapCanvas.setLocationMarker(address);
+        mapCanvas.panToPoint(address);
+    }
+
+    public void toggleRouteVisualization(boolean isActive){
+        mapCanvas.toggleRouteVisualization(isActive);
+    }
+
+    public void resetToAndFrom(){
+        mapCanvas.resetToAndFrom();
     }
 
     public void resizeEvent()
@@ -149,6 +157,11 @@ public final class CanvasController extends Controller implements Observer {
 
     public void updateCanvasPOI(){
         mapCanvas.setPOIs(model.getPointsOfInterest());
+    }
+
+    public void updateToAndFrom(Point2D.Float to, Point2D.Float from){
+        mapCanvas.setToMarker(to);
+        mapCanvas.setFromMarker(from);
     }
 
     private void addInteractionHandlerToCanvas()

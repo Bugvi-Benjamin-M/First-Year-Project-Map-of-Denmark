@@ -11,7 +11,7 @@ import java.awt.*;
  * @author Andreas Blanke, blan@itu.dk
  * @version 09-05-2017
  */
-public class DistanceScallerView extends View {
+public class DistanceScalerView extends View {
 
     private final int PANEL_WIDTH = 120;
     private final int PANEL_HEIGHT = 40;
@@ -20,7 +20,7 @@ public class DistanceScallerView extends View {
     private JLabel distance;
     private SpringLayout layout;
 
-    public DistanceScallerView() {
+    public DistanceScalerView() {
         super();
         distance = new JLabel();
         distance.setHorizontalAlignment(SwingConstants.CENTER);

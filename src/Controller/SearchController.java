@@ -6,7 +6,9 @@ import Model.Model;
 import View.PopupWindow;
 import View.SearchTool;
 
+import javax.swing.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -41,62 +43,78 @@ public abstract class SearchController extends Controller {
             searchTool.getField().setToolTipText(tip);
         }
 
-        protected void searchActivatedEvent() {
+        protected Point2D.Float searchActivatedEvent() {
             validSearch = false;
             if(!allowSearch) {
+                System.out.println("Allow search is false");
                 searchTool.getField().requestFocus();
             }
             else if(allowSearch && searchTool.getText().isEmpty()) {
+                System.out.println("textbox is empty");
                 searchTool.getField().requestFocus();
             }
-            else if(allowSearch) {
+           // else if(allowSearch) {
+                System.out.println("it kinda works");
+                Point2D.Float point = null;
                 ArrayList<Value> list = Model.getInstance().getTst().get(searchTool.getText());
+                //if there exists a value
                 if(list != null) {
                     validSearch = true;
                     if (list.size() > 1) {
-                        String[] cities = new String[list.size()];
-                        for (int i = 0; i < list.size(); i++) {
-                            if (list.get(i).getCitynameindex() != 0) {
-                                cities[i] = Model.getInstance().getIndexToCity(list.get(i).getCitynameindex());
-                            } else {
-                                cities[i] = currentQuery + " " + i;
-                            }
-                        }
-
-                        String result = PopupWindow.confirmBox(null, "Select a City:", "Multiple Search Results!", cities);
-                        if(result != null) {
-                            int resultIndex = 0;
-                            for (int i = 0; i < cities.length; i++) {
-                                if (cities[i].equals(result)) {
-                                    resultIndex = i;
-                                    break;
-                                }
-                            }
-                            System.out.println(searchTool.getText() + " " + list.get(resultIndex).getX() + " " + list.get(resultIndex).getY());
-                            CanvasController.getInstance().markLocation(list.get(resultIndex).getX(), list.get(resultIndex).getY());
+                        String[] cities = buildCityNameList(list);
+                        int resultIndex = selectCity(cities);
+                        if(resultIndex >= 0) {
+                            point = new Point2D.Float(list.get(resultIndex).getX(), list.get(resultIndex).getY());
                         }
                     } else {
-                        System.out.println(searchTool.getText() + " " + list.get(0).getX() + " " + list.get(0).getY());
-                        CanvasController.getInstance().markLocation(list.get(0).getX(), list.get(0).getY());
+                        point = new Point2D.Float(list.get(0).getX(), list.get(0).getY());
                     }
                 }else{
                     String[] matches = manageSearchResults();
-                    if(matches.length > 0){
-
-                        String result = PopupWindow.confirmBox(null, "Select an Address:", "Multiple Search Results!", matches);
-                        if(result != null) {
-                            validSearch = true;
-                            currentQuery = result;
-                            searchTool.setText(currentQuery);
-
-                            ArrayList<Value> selectedStrings = Model.getInstance().getTst().get(currentQuery);
-                            CanvasController.getInstance().markLocation(selectedStrings.get(0).getX(), selectedStrings.get(0).getY());
-                        }
-                    }else {
-                        PopupWindow.warningBox(null, "Invalid Address");
+                    if(matches.length > 0) {
+                        selectAddress(matches);
+                        ArrayList<Value> selectedStrings = Model.getInstance().getTst().get(currentQuery);
+                        point = new Point2D.Float(selectedStrings.get(0).getX(), selectedStrings.get(0).getY());
                     }
                 }
                 allowSearch = true;
+                return point;
+            //}
+            //return null;
+        }
+
+        protected String[] buildCityNameList(ArrayList<Value> list){
+            String[] cities = new String[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getCitynameindex() != 0) {
+                    cities[i] = Model.getInstance().getIndexToCity(list.get(i).getCitynameindex());
+                } else {
+                    cities[i] = searchTool.getText() + " " + i;
+                }
+            }
+            return cities;
+        }
+
+        protected int selectCity(String[] cities){
+            String result = PopupWindow.confirmBox(null, "Select a City:", "Multiple Search Results!", cities);
+            if(result != null) {
+                int resultIndex = 0;
+                for (int i = 0; i < cities.length; i++) {
+                    if (cities[i].equals(result)) {
+                        resultIndex = i;
+                        break;
+                    }
+                }
+                return resultIndex;
+            }else return -1;
+        }
+
+        protected void selectAddress(String[] matches){
+            String result = PopupWindow.confirmBox(null, "Select an Address:", "Multiple Search Results!", matches);
+            if(result != null) {
+                validSearch = true;
+                currentQuery = result;
+                searchTool.setText(currentQuery);
             }
         }
 
