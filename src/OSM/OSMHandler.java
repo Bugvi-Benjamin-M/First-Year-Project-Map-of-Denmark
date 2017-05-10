@@ -1043,7 +1043,6 @@ public final class OSMHandler implements ContentHandler {
             road.setMaxSpeed(maxSpeed);
             road.setOneWay(isOneWay);
             road.setRelation(relation);
-            //roads.add(road);
             for (int i = 0; i < relation.size(); i++) {
                 if (relation.get(i) != null) {
                     for (int j = 0; j < relation.get(i).size(); j += precision) {
