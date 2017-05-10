@@ -455,13 +455,12 @@ public final class CanvasController extends Controller implements Observer {
 
     private void mousePressedEvent(MouseEvent event)
     {
-        if(mapCanvas.hasFocus()) {
+        mapCanvas.grabFocus();
             lastMousePosition = event.getPoint();
             if (PreferencesController.getInstance().getAntiAliasingSetting()) {
                 mapCanvas.toggleAntiAliasing(false);
                 repaintCanvas();
             }
-        }
     }
 
     private void mouseClickedEvent(MouseEvent event)

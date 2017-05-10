@@ -323,7 +323,7 @@ public class MapCanvasTest {
         for (ElementType type : ElementType.values()) {
             nodeGenerator.setupTree(elements.get(type));
         }
-        Building building = new Building(null, "Some random name");
+        Building building = new Building(null);
         Pointer p = new Pointer(11,11, building);
         elements.get(ElementType.BUILDING).putPointer(p);
         mapCanvas.setElements(elements);
@@ -346,7 +346,7 @@ public class MapCanvasTest {
         //Setting up data for the test
         HashSet<SuperElement> hashSet = new HashSet<>();
         for(int i = 0 ; i < 10 ; i++){
-            Building building = new Building(null, i + "");
+            Building building = new Building(null);
             hashSet.add(building);
         }
 

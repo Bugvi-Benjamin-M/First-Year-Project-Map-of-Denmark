@@ -1,5 +1,6 @@
 package View;
 
+import Enums.OSMEnums.AmenityType;
 import Enums.OSMEnums.ElementType;
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
@@ -358,14 +359,16 @@ public class MapCanvas extends View {
             drawRoadNames(g, ElementType.MOTORWAY);
 
             // Amenities
-            drawNight(g);
-            drawRailwayStation(g);
-            drawHospital(g);
-            drawUniversity(g);
-            drawAirportAmenity(g);
-            drawParkingAmenity(g);
-            drawPlaceOfWorship(g);
-            drawSportAmenity(g);
+            drawAmenity(AmenityType.BAR, g);
+            drawAmenity(AmenityType.NIGHT_CLUB, g);
+            drawAmenity(AmenityType.FAST_FOOD, g);
+            drawAmenity(AmenityType.RAILWAY_STATION, g);
+            drawAmenity(AmenityType.HOSPITAL, g);
+            drawAmenity(AmenityType.UNIVERSITY, g);
+            drawAmenity(AmenityType.AIRPORT_AMENITY, g);
+            drawAmenity(AmenityType.PARKING_AMENITY, g);
+            drawAmenity(AmenityType.PLACE_OF_WORSHIP, g);
+            drawAmenity(AmenityType.SPORT_AMENITY, g);
             break;
         case LEVEL_1:
             drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
@@ -410,21 +413,23 @@ public class MapCanvas extends View {
             drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00007f, BasicStroke.CAP_BUTT);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
-            drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
-            drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
-            drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
-            drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
-
             drawRoadNames(g, ElementType.PRIMARY_ROAD);
             drawRoadNames(g, ElementType.TRUNK_ROAD);
             drawRoadNames(g, ElementType.MOTORWAY);
 
+            drawCityNames(g, AmenityType.HAMLET_NAME, 0.35f);
+            drawCityNames(g, AmenityType.SUBURB_NAME, 0.35f);
+            drawCityNames(g, AmenityType.QUARTER_NAME, 0.35f);
+            drawCityNames(g, AmenityType.NEIGHBOURHOOD_NAME, 0.35f);
+
             // Amenities
-            drawHospital(g);
-            drawUniversity(g);
-            drawAirportAmenity(g);
-            drawRailwayStation(g);
-            drawParkingAmenity(g);
+            drawAmenity(AmenityType.RAILWAY_STATION, g);
+            drawAmenity(AmenityType.HOSPITAL, g);
+            drawAmenity(AmenityType.UNIVERSITY, g);
+            drawAmenity(AmenityType.AIRPORT_AMENITY, g);
+            drawAmenity(AmenityType.PARKING_AMENITY, g);
+            drawAmenity(AmenityType.PLACE_OF_WORSHIP, g);
+            drawAmenity(AmenityType.SPORT_AMENITY, g);
             break;
         case LEVEL_2:
             drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
@@ -457,11 +462,11 @@ public class MapCanvas extends View {
             drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00008f, BasicStroke.CAP_BUTT);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
-            drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
-            drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
-            drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
-            drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
-            drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
+            drawCityNames(g, AmenityType.VILLAGE_NAME, 0.35f);
+            drawCityNames(g, AmenityType.HAMLET_NAME, 0.35f);
+            drawCityNames(g, AmenityType.SUBURB_NAME, 0.35f);
+            drawCityNames(g, AmenityType.QUARTER_NAME, 0.35f);
+            drawCityNames(g, AmenityType.NEIGHBOURHOOD_NAME, 0.35f);
             break;
         case LEVEL_3:
             drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
@@ -492,11 +497,11 @@ public class MapCanvas extends View {
             drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00009f, BasicStroke.CAP_BUTT);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
-            drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
-            drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
-            drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
-            drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
-            drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
+            drawCityNames(g, AmenityType.VILLAGE_NAME, 0.35f);
+            drawCityNames(g, AmenityType.HAMLET_NAME, 0.35f);
+            drawCityNames(g, AmenityType.SUBURB_NAME, 0.35f);
+            drawCityNames(g, AmenityType.QUARTER_NAME, 0.35f);
+            drawCityNames(g, AmenityType.NEIGHBOURHOOD_NAME, 0.35f);
             break;
         case LEVEL_4:
             drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
@@ -526,9 +531,9 @@ public class MapCanvas extends View {
 
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
-            drawCityNames(g, ElementType.CITY_NAME, 0.8f);
-            drawCityNames(g, ElementType.TOWN_NAME, 0.35f);
-            drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
+            drawCityNames(g, AmenityType.CITY_NAME, 0.8f);
+            drawCityNames(g, AmenityType.TOWN_NAME, 0.35f);
+            drawCityNames(g, AmenityType.VILLAGE_NAME, 0.35f);
             break;
         case LEVEL_5:
             drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
@@ -549,8 +554,8 @@ public class MapCanvas extends View {
             drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00036f, BasicStroke.CAP_BUTT);
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
 
-            drawCityNames(g, ElementType.CITY_NAME, 0.8f);
-            drawCityNames(g, ElementType.TOWN_NAME, 0.35f);
+            drawCityNames(g, AmenityType.CITY_NAME, 0.8f);
+            drawCityNames(g, AmenityType.TOWN_NAME, 0.35f);
             break;
         case LEVEL_6:
             drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
@@ -564,7 +569,7 @@ public class MapCanvas extends View {
             drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
             drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
             drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-            drawCityNames(g, ElementType.CITY_NAME, 1f);
+            drawCityNames(g, AmenityType.CITY_NAME, 1f);
             break;
         }
     }
@@ -1075,33 +1080,36 @@ public class MapCanvas extends View {
         return Math.acos(cosAngle);
     }
 
-    private void drawCityNames(Graphics2D g, ElementType type, float scaling) {
-        setCurrentSection(type);
-        if (ZoomLevel.getZoomFactor() > -60) {
-            float scaleFactor;
+    private void drawCityNames(Graphics2D g, AmenityType type, float scaling) {
+        setCurrentSection(ElementType.AMENITY);
+        for (SuperElement element : currentSection){
+            Amenity amenity = (Amenity) element;
+            if(amenity.getAmenityType() == type){
+                if (ZoomLevel.getZoomFactor() > -60){
+                    float scaleFactor;
 
-            //Set the scalefactor such that the citynames have the desired size of the various zoom levels.
-            if (ZoomLevel.getZoomFactor() >= 100) scaleFactor = scaling * 397.522f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
-            else scaleFactor = 0.0054586004f;
+                    //Set the scalefactor such that the citynames have the desired size of the various zoom levels.
+                    if (ZoomLevel.getZoomFactor() >= 100) scaleFactor = scaling * 397.522f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
+                    else scaleFactor = 0.0054586004f;
 
-            // Font
-            Font font = new Font("Arial", Font.BOLD, 12);
+                    // Font
+                    Font font = new Font("Arial", Font.BOLD, 12);
 
-            // Transparency
-            Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f);
-            g.setComposite(c);
+                    // Transparency
+                    Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f);
+                    g.setComposite(c);
 
-            // Color
-            g.setColor(ThemeHelper.color("cityName"));
-            for (SuperElement element : currentSection) {
-                PlaceName placeName = (PlaceName)element;
-                g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-                drawString(placeName.getName(), g, placeName.getX(), placeName.getY(), font, scaleFactor, true);
+                    // Color
+                    g.setColor(ThemeHelper.color("cityName"));
+
+                    g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+                    drawString(amenity.getName(), g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+
+                    // Transparency off
+                    c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+                    g.setComposite(c);
+                }
             }
-
-            // Transparency off
-            c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
-            g.setComposite(c);
         }
     }
 
@@ -1120,46 +1128,81 @@ public class MapCanvas extends View {
         }
     }
 
-    private void drawNight(Graphics2D g) {
-        switch (ThemeHelper.getCurrentTheme()) {
-        case "Night":
+    private void drawAmenity(AmenityType type, Graphics2D g){
+        switch (type){
+            case HOSPITAL:
+                drawHospital(g);
+                break;
+            case BAR:
+            case NIGHT_CLUB:
+            case FAST_FOOD:
+                drawNight(type, g);
+                break;
+            case UNIVERSITY:
+                drawUniversity(g);
+                break;
+            case RAILWAY_STATION:
+                drawRailwayStation(g);
+                break;
+            case PLACE_OF_WORSHIP:
+                drawPlaceOfWorship(g);
+                break;
+            case PARKING_AMENITY:
+                drawParkingAmenity(g);
+                break;
+            case SPORT_AMENITY:
+                drawSportAmenity(g);
+                break;
+            case AIRPORT_AMENITY:
+                drawAirportAmenity(g);
+                break;
+            case CITY_NAME:
+            case TOWN_NAME:
+            case VILLAGE_NAME:
+            case HAMLET_NAME:
+            case SUBURB_NAME:
+            case QUARTER_NAME:
+            case NEIGHBOURHOOD_NAME:
+
+        }
+    }
+
+    private void drawNight(AmenityType type, Graphics2D g) {
+        if (ThemeHelper.getCurrentTheme() == "Night") {
             if (ZoomLevel.getZoomFactor() >= 650) {
-                float scaleFactor = 0.5f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
+                float scaleFactor = 0.5f * (float) (Math.pow(ZoomLevel.getZoomFactor(), -2f));
                 Font font = Helpers.FontAwesome.getFontAwesome();
                 g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-                setCurrentSection(ElementType.BAR);
+                setCurrentSection(ElementType.AMENITY);
                 for (SuperElement element : currentSection) {
-                    Amenity amenity = (Amenity)element;
-                    g.setColor(ThemeHelper.color("barName"));
-                    drawString("\uf000" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
-                }
-                setCurrentSection(ElementType.NIGHT_CLUB);
-                for (SuperElement element : currentSection) {
-                    Amenity amenity = (Amenity)element;
-                    g.setColor(ThemeHelper.color("nightClubName"));
-                    drawString("\uf001" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
-                }
-                setCurrentSection(ElementType.FAST_FOOD);
-                for (SuperElement element : currentSection) {
-                    Amenity amenity = (Amenity)element;
-                    g.setColor(ThemeHelper.color("fastFoodName"));
-                    drawString("\uf0f5" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
+                    Amenity amenity = (Amenity) element;
+                    if (amenity.getAmenityType() == AmenityType.BAR) {
+                        g.setColor(ThemeHelper.color("barName"));
+                        drawString("\uf000" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+                    }
+                    if (amenity.getAmenityType() == AmenityType.NIGHT_CLUB) {
+                        g.setColor(ThemeHelper.color("nightClubName"));
+                        drawString("\uf001" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+                    }
+                    if (amenity.getAmenityType() == AmenityType.FAST_FOOD) {
+                        g.setColor(ThemeHelper.color("fastFoodName"));
+                        drawString("\uf0f5" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+                    }
                 }
                 //Drawing names
-                float deltay = ((getFontMetrics(font).getHeight()* scaleFactor)/2);
+                float deltay = ((getFontMetrics(font).getHeight() * scaleFactor) / 2);
 
                 //Font for drawing name
                 font = new Font("Arial", Font.PLAIN, 20);
                 g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
 
-                setCurrentSection(ElementType.BAR);
-                for (SuperElement element : currentSection){
-                    Amenity amenity = (Amenity)element;
-
-                    String name = amenity.getName();
-                    float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
-
-                    drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+                for (SuperElement element : currentSection) {
+                    Amenity amenity = (Amenity) element;
+                    if (type == AmenityType.BAR) {
+                        String name = amenity.getName();
+                        float x = amenity.getX() - (getFontMetrics(font).stringWidth(name) * scaleFactor / 2);
+                        drawString(name, g, x, amenity.getY() + deltay, font, scaleFactor, false);
+                    }
                 }
             }
         }
@@ -1168,7 +1211,7 @@ public class MapCanvas extends View {
     private void drawHospital(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 1.7f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
-        setCurrentSection(ElementType.HOSPITAL);
+        setCurrentSection(ElementType.AMENITY);
 
         //Color and font
         g.setColor(ThemeHelper.color("hospital"));
@@ -1177,6 +1220,7 @@ public class MapCanvas extends View {
 
         for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
+            if(amenity.getAmenityType() == AmenityType.HOSPITAL)
             drawString("\uf0fe" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
         }
 
@@ -1187,18 +1231,18 @@ public class MapCanvas extends View {
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
         for (SuperElement element : currentSection){
             Amenity amenity = (Amenity)element;
-
-            String name = amenity.getName();
-            float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
-
-            drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+            if(amenity.getAmenityType() == AmenityType.HOSPITAL){
+                String name = amenity.getName();
+                float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
+                drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+            }
         }
     }
 
     private void drawUniversity(Graphics2D g){
         float scaleFactor;
         scaleFactor = 1.7f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
-        setCurrentSection(ElementType.UNIVERSITY);
+        setCurrentSection(ElementType.AMENITY);
 
         //Color and font
         g.setColor(ThemeHelper.color("university"));
@@ -1207,6 +1251,7 @@ public class MapCanvas extends View {
 
         for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
+            if(amenity.getAmenityType() == AmenityType.UNIVERSITY)
             drawString("\uf19c" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
         }
 
@@ -1217,11 +1262,11 @@ public class MapCanvas extends View {
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
         for (SuperElement element : currentSection){
             Amenity amenity = (Amenity)element;
-
-            String name = amenity.getName();
-            float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
-
-            drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+            if(amenity.getAmenityType() == AmenityType.UNIVERSITY){
+                String name = amenity.getName();
+                float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
+                drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+            }
         }
     }
 
@@ -1233,45 +1278,33 @@ public class MapCanvas extends View {
         g.setColor(ThemeHelper.color("railwayStation"));
         Font font = Helpers.FontAwesome.getFontAwesome();
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+        setCurrentSection(ElementType.AMENITY);
+        for (SuperElement element : currentSection){
+            Amenity amenity = (Amenity)element;
+            if(amenity.getAmenityType() == AmenityType.RAILWAY_STATION || amenity.getAmenityType() == AmenityType.RAILWAY_STATION_AREA)
+            drawString("\uf238" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+        }
 
-        setCurrentSection(ElementType.RAILWAY_STATION);
-        for (SuperElement element : currentSection) {
-            Amenity amenity = (Amenity)element;
-            drawString("\uf238" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
-        }
-        setCurrentSection(ElementType.RAILWAY_STATION_AREA);
-        for (SuperElement element : currentSection) {
-            Amenity amenity = (Amenity)element;
-            drawString("\uf238" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
-        }
         float deltay = ((getFontMetrics(font).getHeight()* scaleFactor)/2);
 
         //Font for drawing name
         font = new Font("Arial", Font.BOLD, 14);
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-        setCurrentSection(ElementType.RAILWAY_STATION);
-        for (SuperElement element : currentSection){
-            Amenity amenity = (Amenity)element;
-
-            String name = amenity.getName();
-            float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
-
-            drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
-        }
-        setCurrentSection(ElementType.RAILWAY_STATION_AREA);
-        for (SuperElement element : currentSection){
-            Amenity amenity = (Amenity)element;
-
-            String name = amenity.getName();
-            float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
-
-            drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+        for (SuperElement element : currentSection) {
+            Amenity amenity = (Amenity) element;
+            if (amenity.getAmenityType() == AmenityType.RAILWAY_STATION || amenity.getAmenityType() == AmenityType.RAILWAY_STATION_AREA) {
+                String name = amenity.getName();
+                float x = amenity.getX() - (getFontMetrics(font).stringWidth(name) * scaleFactor / 2);
+                drawString(name, g, x, amenity.getY() + deltay, font, scaleFactor, false);
+            }
         }
     }
+
     private void drawPlaceOfWorship(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 1.5f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
-        setCurrentSection(ElementType.PLACE_OF_WORSHIP);
+
+        setCurrentSection(ElementType.AMENITY);
 
         //Color and font
         g.setColor(ThemeHelper.color("placeOfWorship"));
@@ -1280,15 +1313,17 @@ public class MapCanvas extends View {
 
         for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
-            float y = amenity.getY();
-            y += ((getFontMetrics(font).charWidth('\uf055')) / 2) * scaleFactor;
-            drawString("\uf055" + "", g, amenity.getX(), y, font, scaleFactor, true);
+            if(amenity.getAmenityType() == AmenityType.PLACE_OF_WORSHIP){
+                float y = amenity.getY();
+                y += ((getFontMetrics(font).charWidth('\uf055')) / 2) * scaleFactor;
+                drawString("\uf055" + "", g, amenity.getX(), y, font, scaleFactor, true);
+            }
         }
     }
     private void drawParkingAmenity(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 1.5f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
-        setCurrentSection(ElementType.PARKING_AMENITY);
+        setCurrentSection(ElementType.AMENITY);
 
         // Transparency
         Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f);
@@ -1301,9 +1336,11 @@ public class MapCanvas extends View {
 
         for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
-            float y = amenity.getY();
-            y += ((getFontMetrics(font).charWidth('P')) / 2) * scaleFactor;
-            drawString("P", g, amenity.getX(), y, font, scaleFactor, true);
+            if(amenity.getAmenityType() == AmenityType.PARKING_AMENITY){
+                float y = amenity.getY();
+                y += ((getFontMetrics(font).charWidth('P')) / 2) * scaleFactor;
+                drawString("P", g, amenity.getX(), y, font, scaleFactor, true);
+            }
         }
         // Transparency off
         c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
@@ -1313,7 +1350,7 @@ public class MapCanvas extends View {
     private void drawSportAmenity(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 0.75f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
-        setCurrentSection(ElementType.SPORT_AMENITY);
+        setCurrentSection(ElementType.AMENITY);
 
         // Transparency
         Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f);
@@ -1326,9 +1363,11 @@ public class MapCanvas extends View {
 
         for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
-            float y = amenity.getY();
-            y += ((getFontMetrics(font).charWidth('\uf1e3')) / 2) * scaleFactor;
-            drawString("\uf1e3" + "", g, amenity.getX(), y, font, scaleFactor, true);
+            if(amenity.getAmenityType() == AmenityType.SPORT_AMENITY){
+                float y = amenity.getY();
+                y += ((getFontMetrics(font).charWidth('\uf1e3')) / 2) * scaleFactor;
+                drawString("\uf1e3" + "", g, amenity.getX(), y, font, scaleFactor, true);
+            }
         }
         // Transparency off
         c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
@@ -1338,7 +1377,7 @@ public class MapCanvas extends View {
     private void drawAirportAmenity(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 3f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
-        setCurrentSection(ElementType.AIRPORT_AMENITY);
+        setCurrentSection(ElementType.AMENITY);
 
         //Color and font
         g.setColor(ThemeHelper.color("airportAmenity"));
@@ -1347,6 +1386,7 @@ public class MapCanvas extends View {
 
         for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
+            if(amenity.getAmenityType() == AmenityType.AIRPORT_AMENITY)
             drawString("\uf072" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
         }
 
@@ -1357,11 +1397,11 @@ public class MapCanvas extends View {
         g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
         for (SuperElement element : currentSection){
             Amenity amenity = (Amenity)element;
-
-            String name = amenity.getName();
-            float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
-
-            drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+            if(amenity.getAmenityType() == AmenityType.AIRPORT_AMENITY){
+                String name = amenity.getName();
+                float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
+                drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+            }
         }
     }
 
