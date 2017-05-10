@@ -527,4 +527,27 @@ Impediments:
 
 Next meeting: Wednesday 10/05 at 10
 
+## Logbook 10/05 (Scribe Blanke)
+What we did since last time:
+- Distancescaler has been implemented that shows the distance based on zoom level
+- Worked on the GUI for route planning
+- Worked on making the NodeGenerator flexible to work with smaller maps as well
+- Worked on route planning search and autocomplete
+- Optimized the KD-trees, simplified the trees and removed obsolete references
+- Optimized the graph and dijekstra
+- Optimized CPU usage
+- Optimized Font Awesome
+
+What we will do until next time:
+- Optimazation and rethinking the Roads and Edges
+- LSD string search for autocomplete
+- Completing route search
+- Optimazation of RAM usage
+- Fixing bugs
+
+Impediments:
+- None at the moment...
+
+Next meeting: Friday 12/05 at 10
+
 ## Next logbook...
