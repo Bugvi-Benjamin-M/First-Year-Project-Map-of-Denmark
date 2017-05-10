@@ -270,16 +270,6 @@ public class MapCanvas extends View {
         }
     }
 
-    public void setRoute(List<Road> route, List<Long> routeRefs) {
-        this.route = new LinkedList<>();
-        int counter = 0;
-        for (int i = 1; i < routeRefs.size(); i++) {
-            this.route.add(route.get(counter).getShapeSection(
-                    routeRefs.get(i-1),routeRefs.get(i)));
-            counter++;
-        }
-    }
-
     public void setRoute(List<RoadEdge> route) {
         this.route = new LinkedList<>();
         for (RoadEdge edge : route) {

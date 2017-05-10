@@ -24,14 +24,12 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
     private static float SPEED_TO_METERS_PER_SECOND = 0.277777777778f;
 
     private Road road;
-    private float length;
     private Point2D from;
     private Point2D to;
 
     public RoadEdge(Point2D from, Point2D to) {
         this.from = from;
         this.to = to;
-        length = (float) HelperFunctions.distanceInMeters(from,to);
     }
 
     public RoadEdge(Point2D from, Point2D to, Road road) {
@@ -57,7 +55,8 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
 
     @Override
     public int compareTo(RoadEdge other) {
-        return Double.compare(length,other.length);
+        return Double.compare((float) HelperFunctions.distanceInMeters(from,to),
+                (float) HelperFunctions.distanceInMeters(other.from,other.to));
     }
 
     public float getWeight(TravelType type, Point2D start, Point2D end) {
@@ -86,16 +85,16 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
             return Float.POSITIVE_INFINITY;
         } else {
             if (fast) {
-                return (length/getSpeed()) + ((float)from.distance(end) / getSpeed());
+                return (getLength()/getSpeed()) + ((float)from.distance(end) / getSpeed());
             } else {
-                return length +  (float)from.distance(end);
+                return getLength() +  (float)from.distance(end);
             }
         }
     }
 
     @Override
     public String toString() {
-        return "Road:'"+getName()+"'; "+length+" m;";
+        return "Road:'"+getName()+"'; "+getLength()+" m;";
     }
 
     public String describe(float length) {
@@ -113,7 +112,7 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
     }
 
     public float getLength() {
-        return length;
+        return (float) HelperFunctions.distanceInMeters(from,to);
     }
 
     public float getSpeed() {
@@ -121,7 +120,7 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
     }
 
     public float getTime() {
-        return length / getSpeed();
+        return getLength() / getSpeed();
     }
 
     public String getName() {
