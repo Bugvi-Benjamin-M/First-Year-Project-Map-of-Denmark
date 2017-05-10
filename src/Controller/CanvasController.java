@@ -489,9 +489,11 @@ public final class CanvasController extends Controller implements Observer {
         if(mapCanvas.hasFocus()) {
             disablePopup();
             Point2D currentMousePosition = event.getPoint();
-            double dx = currentMousePosition.getX() - lastMousePosition.getX();
-            double dy = currentMousePosition.getY() - lastMousePosition.getY();
-            panEvent(dx, dy);
+            if(lastMousePosition != null) {
+                double dx = currentMousePosition.getX() - lastMousePosition.getX();
+                double dy = currentMousePosition.getY() - lastMousePosition.getY();
+                panEvent(dx, dy);
+            }
             lastMousePosition = currentMousePosition;
         }
     }

@@ -12,7 +12,6 @@ import RouteSearch.RoadGraphFactory;
 import View.*;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
@@ -78,6 +77,8 @@ public final class JourneyPlannerBarController extends Controller {
     private boolean isLargeJourneyPlannerVisible;
     private boolean isSmallJourneyPlannerVisible;
 
+    private boolean isDescriptionFieldOpen;
+
     private boolean isSearch;
 
     private JourneyPlannerBarController() {
@@ -105,6 +106,7 @@ public final class JourneyPlannerBarController extends Controller {
         toSearcher.setupSearchTool();
         isLargeJourneyPlannerVisible = false;
         isSmallJourneyPlannerVisible = false;
+        isDescriptionFieldOpen = false;
     }
 
     public void setupBaseJourneyPlannerBar() {
@@ -124,9 +126,8 @@ public final class JourneyPlannerBarController extends Controller {
         travelDescription = new JourneyDescriptionField();
         travelDescription.setOpaque(true);
         descriptionButton = new JLabel("\uf15c");
-        descriptionButton.setFont(FontAwesome.getFontAwesome().deriveFont(20));
+        descriptionButton.setFont(FontAwesome.getFontAwesome().deriveFont(40));
         descriptionButton.setOpaque(true);
-        descriptionButton.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         addInteractionHandlersToJourneyPlannerTransportButtons();
         addInteractionHandlerToClearSearchButtons();
         addInteractionHandlerToDescriptionButton();
@@ -190,7 +191,7 @@ public final class JourneyPlannerBarController extends Controller {
         toSearcher.setBarBorder(SMALL_TITLE_FONT_SIZE);
         journeyPlannerSearchClearButtons.setPreferredSize(new Dimension(CLEAR_SEARCH_BUTTONS_WIDTH-85, CLEAR_SEARCH_BUTTONS_HEIGHT-16));
         journeyPlannerSearchClearButtons.applySmallState();
-        descriptionButton.setPreferredSize(new Dimension(35,40));
+        descriptionButton.setPreferredSize(new Dimension(60,60));
         descriptionButton.setToolTipText("View Travel Description");
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
         informationBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerBar, DISTANCE_BETWEEN_JOURNEY_PLANNERBAR_AND_SMALL_INFORMATIONBAR, SpringLayout.NORTH, informationBar);
@@ -204,8 +205,8 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerSearchClearButtons, 33, SpringLayout.NORTH, journeyPlannerBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.WEST, journeyPlannerSearchClearButtons, 5, SpringLayout.EAST, fromSearcher.getSearchTool());
 
-        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, descriptionButton, 35, SpringLayout.NORTH, journeyPlannerBar);
-        journeyPlannerBarLayout.putConstraint(SpringLayout.WEST, descriptionButton, 80, SpringLayout.EAST, journeyPlannerSearchClearButtons);
+        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, descriptionButton, 25, SpringLayout.NORTH, journeyPlannerBar);
+        journeyPlannerBarLayout.putConstraint(SpringLayout.EAST, descriptionButton, -20 , SpringLayout.EAST, journeyPlannerBar);
 
         themeHasChanged();
         journeyPlannerBar.add(journeyPlannerTransportTypeButtons);
@@ -256,7 +257,11 @@ public final class JourneyPlannerBarController extends Controller {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if(isSearch) descriptionBarActivationEvent();
+                if(isSearch) {
+                    if(!isDescriptionFieldOpen) descriptionButton.setForeground(ThemeHelper.color("toolActivated"));
+                    else descriptionButton.setForeground(ThemeHelper.color("icon"));
+                    descriptionActivationEvent();
+                }
             }
 
             @Override
@@ -285,14 +290,17 @@ public final class JourneyPlannerBarController extends Controller {
         });
     }
 
-    private void descriptionBarActivationEvent() {
+    private void descriptionActivationEvent() {
         if(!isSmallJourneyPlannerVisible) return;
-        journeyPlannerBarLayout.removeLayoutComponent(journeyPlannerTransportTypeButtons);
-        journeyPlannerBarLayout.removeLayoutComponent(fromSearcher.getSearchTool());
-        journeyPlannerBarLayout.removeLayoutComponent(toSearcher.getSearchTool());
-        journeyPlannerBarLayout.removeLayoutComponent(journeyPlannerSearchClearButtons);
-        journeyPlannerBarLayout.removeLayoutComponent(descriptionButton);
-        journeyPlannerBar.removeAll();
+            travelDescription.setPreferredSize(new Dimension(300, 400));
+            travelDescription.setBounds(window.getFrame().getWidth() - 300, window.getFrame().getHeight() - GlobalValue.getSmallInformationBarHeight() - 400, 300, 400);
+            window.getFrame().getLayeredPane().add(travelDescription, new Integer(6));
+            isDescriptionFieldOpen = true;
+    }
+
+    private void descriptionDeactivationEvent() {
+        window.getFrame().getLayeredPane().remove(travelDescription);
+        isDescriptionFieldOpen = false;
     }
 
     private void searchInitialised() {
@@ -364,6 +372,7 @@ public final class JourneyPlannerBarController extends Controller {
                 MainWindowController.getInstance().requestCanvasResetToAndFrom();
                 MainWindowController.getInstance().requestCanvasRepaint();
                 descriptionButton.setForeground(ThemeHelper.color("inactiveButton"));
+                if(isDescriptionFieldOpen && isSmallJourneyPlannerVisible) descriptionDeactivationEvent();
                 noSearchInitialised();
             }
 
@@ -395,6 +404,11 @@ public final class JourneyPlannerBarController extends Controller {
                 super.mouseClicked(e);
                 searchActivatedEvent();
                 informationBar.grabFocus();
+                if(isSearch) {
+                    if(isSmallJourneyPlannerVisible) descriptionButton.setForeground(ThemeHelper.color("icon"));
+                    // search for path
+                }
+
 
             }
 
@@ -429,6 +443,8 @@ public final class JourneyPlannerBarController extends Controller {
                 super.mouseClicked(e);
                 type = TravelType.WALK;
                 journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("toolActivated"));
+                journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("icon"));
+                journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("icon"));
             }
 
             @Override
@@ -458,6 +474,8 @@ public final class JourneyPlannerBarController extends Controller {
                 super.mouseClicked(e);
                 type = TravelType.BICYCLE;
                 journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("toolActivated"));
+                journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("icon"));
+                journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("icon"));
             }
 
             @Override
@@ -479,6 +497,8 @@ public final class JourneyPlannerBarController extends Controller {
                 super.mouseClicked(e);
                 type = TravelType.VEHICLE;
                 journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("toolActivated"));
+                journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("icon"));
+                journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("icon"));
             }
 
             @Override
@@ -505,8 +525,9 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerBarLayout.removeLayoutComponent(toSearcher.getSearchTool());
         journeyPlannerBarLayout.removeLayoutComponent(journeyPlannerSearchClearButtons);
         journeyPlannerBarLayout.removeLayoutComponent(travelDescription);
-        if(descriptionButton != null) journeyPlannerBarLayout.removeLayoutComponent(descriptionButton);
+        journeyPlannerBarLayout.removeLayoutComponent(descriptionButton);
         journeyPlannerBar.removeAll();
+        informationBarLayout.removeLayoutComponent(journeyPlannerBar);
         informationBar.removeAll();
     }
 
