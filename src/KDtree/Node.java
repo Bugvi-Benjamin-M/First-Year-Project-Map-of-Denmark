@@ -1,12 +1,15 @@
 package KDtree;
 
+import Model.Elements.Element;
+import Model.Elements.SuperElement;
+
 import java.util.*;
 
 /**
  * Created by Jakob on 30-03-2017.
  */
 public class Node extends Point {
-    private List<Pointer> pointers;
+    private HashSet<SuperElement> elements;
     private int depth;
     private Node left;
     private Node right;
@@ -27,9 +30,11 @@ public class Node extends Point {
 
     protected int getDepth() { return depth; }
 
-    protected void addPointer(Pointer pointer) { pointers.add(pointer); }
+    protected void addElement(Pointer pointer) {
+        elements.add(pointer.getElement());
+    }
 
-    protected void makeLeaf() { pointers = new ArrayList<>(); }
+    protected void makeLeaf() { elements = new HashSet<>(); }
 
-    protected List<Pointer> getPointers() { return pointers; }
+    protected HashSet<SuperElement> getElements() { return elements; }
 }

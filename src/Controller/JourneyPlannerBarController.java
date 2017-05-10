@@ -2,6 +2,7 @@ package Controller;
 
 import Controller.ToolbarControllers.ToolbarController;
 import Enums.ToolType;
+import Helpers.FontAwesome;
 import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
 import Model.Elements.RoadEdge;
@@ -52,6 +53,9 @@ public final class JourneyPlannerBarController extends Controller {
     private final int DISTANCE_BETWEEN_JOURNEY_PLANNERBAR_AND_SMALL_INFORMATIONBAR = 10;
     private final int NORTH_DISTANCE_SMALL_JOURNEY_PLANNERBAR_TRANSPORT_BUTTONS = 20;
     private final int WEST_DISTANCE_SMALL_JOURNEY_PLANNERBAR_TRANSPORT_BUTTONS = 5;
+    private final int SEARCHTOOL_WIDTH = 330;
+    private final int SEARCHTOOL_LARGE_HEIGHT = 65;
+    private final int SEARCHTOOL_SMALL_HEIGHT = 50;
 
 
     private InformationBar informationBar;
@@ -59,17 +63,18 @@ public final class JourneyPlannerBarController extends Controller {
     private SpringLayout informationBarLayout;
     private JourneyPlannerTransportTypeButtons journeyPlannerTransportTypeButtons;
     private JourneyPlannerBar journeyPlannerBar;
-    //private SearchTool fromBar;
-    //private SearchTool toBar;
     private JourneyPlannerSearchClearButtons journeyPlannerSearchClearButtons;
     private JourneyDescriptionField travelDescription;
     private ToFromController fromSearcher;
     private ToFromController toSearcher;
     private Point2D.Float fromPoint;
     private Point2D.Float toPoint;
+    private JLabel descriptionButton;
 
     private boolean isLargeJourneyPlannerVisible;
     private boolean isSmallJourneyPlannerVisible;
+
+    private boolean isSearch;
 
     private JourneyPlannerBarController() {
         super();
@@ -104,11 +109,9 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerBar = new JourneyPlannerBar();
         journeyPlannerBar.setOpaque(true);
         journeyPlannerBarLayout = (SpringLayout) journeyPlannerBar.getLayout();
-        //fromBar = fromSearcher.getSearchTool();
         fromSearcher.setToolTip("Type Departure Destination");
         fromSearcher.setTitle("From:");
         fromSearcher.specifyKeyBindings();
-        //toBar = toSearcher.getSearchTool();
         toSearcher.setToolTip("Type End Destination");
         toSearcher.setTitle("To:");
         toSearcher.specifyKeyBindings();
@@ -116,8 +119,12 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerSearchClearButtons.setOpaque(true);
         travelDescription = new JourneyDescriptionField();
         travelDescription.setOpaque(true);
+        descriptionButton = new JLabel("\uf15c");
+        descriptionButton.setFont(FontAwesome.getFontAwesome().deriveFont(20));
+        descriptionButton.setOpaque(true);
         addInteractionHandlersToJourneyPlannerTransportButtons();
         addInteractionHandlerToClearSearchButtons();
+        addInteractionHandlerToDescriptionButton();
     }
 
     public void setupLargeJourneyPlannerBar() {
@@ -131,10 +138,10 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerTransportTypeButtons.applyLargeState();
         journeyPlannerSearchClearButtons.setPreferredSize(new Dimension(CLEAR_SEARCH_BUTTONS_WIDTH, CLEAR_SEARCH_BUTTONS_HEIGHT));
         journeyPlannerSearchClearButtons.applyLargeState();
-        fromSearcher.getSearchTool().setPreferredSize(new Dimension(330, 65));
+        fromSearcher.getSearchTool().setPreferredSize(new Dimension(SEARCHTOOL_WIDTH, SEARCHTOOL_LARGE_HEIGHT));
         fromSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH,SEARCHBAR_HEIGHT));
         fromSearcher.setBarBorder(TITLE_FONT_SIZE);
-        toSearcher.getSearchTool().setPreferredSize(new Dimension(330, 65));
+        toSearcher.getSearchTool().setPreferredSize(new Dimension(SEARCHTOOL_WIDTH, SEARCHTOOL_LARGE_HEIGHT));
         toSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH, SEARCHBAR_HEIGHT));
         toSearcher.setBarBorder(TITLE_FONT_SIZE);
         int journeyPlannerDescriptionFieldHeight = journeyPlannerBarHeight - JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT_DECREASE;
@@ -168,14 +175,16 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerBar.setPreferredSize(new Dimension(window.getFrame().getWidth() - SMALL_JOURNEY_PLANNERBAR_WIDTH_DECREASE, GlobalValue.getSmallInformationBarHeight() - SMALL_JOURNEY_PLANNERBAR_HEIGHT_DECREASE));
         journeyPlannerTransportTypeButtons.setPreferredSize(new Dimension(SMALL_TRANSPORT_BUTTONS_WIDTH, SMALL_TRANSPORT_BUTTONS_HEIGHT));
         journeyPlannerTransportTypeButtons.applySmallerState();
-        fromSearcher.getSearchTool().setPreferredSize(new Dimension(330, 50));
+        fromSearcher.getSearchTool().setPreferredSize(new Dimension(SEARCHTOOL_WIDTH, SEARCHTOOL_SMALL_HEIGHT));
         fromSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH,SEARCHBAR_HEIGHT));
-        //fromSearcher.setBarBorder(SMALL_TITLE_FONT_SIZE);
-        toSearcher.getSearchTool().setPreferredSize(new Dimension(330, 50));
+        fromSearcher.setBarBorder(SMALL_TITLE_FONT_SIZE);
+        toSearcher.getSearchTool().setPreferredSize(new Dimension(SEARCHTOOL_WIDTH, SEARCHTOOL_SMALL_HEIGHT));
         toSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH,SEARCHBAR_HEIGHT));
-        //toSearcher.setBarBorder(SMALL_TITLE_FONT_SIZE);
-        journeyPlannerSearchClearButtons.setPreferredSize(new Dimension(CLEAR_SEARCH_BUTTONS_WIDTH-50, CLEAR_SEARCH_BUTTONS_HEIGHT-10));
+        toSearcher.setBarBorder(SMALL_TITLE_FONT_SIZE);
+        journeyPlannerSearchClearButtons.setPreferredSize(new Dimension(CLEAR_SEARCH_BUTTONS_WIDTH-85, CLEAR_SEARCH_BUTTONS_HEIGHT-16));
         journeyPlannerSearchClearButtons.applySmallState();
+        descriptionButton.setPreferredSize(new Dimension(40,40));
+        descriptionButton.setToolTipText("View Travel Description");
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
         informationBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerBar, DISTANCE_BETWEEN_JOURNEY_PLANNERBAR_AND_SMALL_INFORMATIONBAR, SpringLayout.NORTH, informationBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerTransportTypeButtons, NORTH_DISTANCE_SMALL_JOURNEY_PLANNERBAR_TRANSPORT_BUTTONS, SpringLayout.NORTH, journeyPlannerBar);
@@ -185,16 +194,18 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, toSearcher.getSearchTool(), 5, SpringLayout.SOUTH, fromSearcher.getSearchTool());
         journeyPlannerBarLayout.putConstraint(SpringLayout.WEST, toSearcher.getSearchTool(), 5, SpringLayout.EAST, journeyPlannerTransportTypeButtons);
 
-        //todo continue work on the small version of JourneyPlanner
-        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerSearchClearButtons, 25, SpringLayout.NORTH, journeyPlannerBar);
+        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerSearchClearButtons, 33, SpringLayout.NORTH, journeyPlannerBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.WEST, journeyPlannerSearchClearButtons, 5, SpringLayout.EAST, fromSearcher.getSearchTool());
 
+        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, descriptionButton, 35, SpringLayout.NORTH, journeyPlannerBar);
+        journeyPlannerBarLayout.putConstraint(SpringLayout.WEST, descriptionButton, 70, SpringLayout.EAST, journeyPlannerSearchClearButtons);
 
         themeHasChanged();
         journeyPlannerBar.add(journeyPlannerTransportTypeButtons);
         journeyPlannerBar.add(fromSearcher.getSearchTool());
         journeyPlannerBar.add(toSearcher.getSearchTool());
         journeyPlannerBar.add(journeyPlannerSearchClearButtons);
+        journeyPlannerBar.add(descriptionButton);
         informationBar.add(journeyPlannerBar);
     }
 
@@ -210,6 +221,56 @@ public final class JourneyPlannerBarController extends Controller {
         travelDescription.applyTheme();
         fromSearcher.themeHasChanged();
         toSearcher.themeHasChanged();
+        if(descriptionButton != null) descriptionButton.setBackground(ThemeHelper.color("toolbar"));
+
+        if(descriptionButton != null) {
+            if(isSearch) descriptionButton.setForeground(ThemeHelper.color("icon"));
+            else descriptionButton.setForeground(ThemeHelper.color("inactiveButton"));
+        }
+    }
+
+    public void addInteractionHandlerToDescriptionButton() {
+        descriptionButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if(isSearch) descriptionBarActivationEvent();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                if(isSearch) descriptionButton.setForeground(ThemeHelper.color("toolHover"));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                if(isSearch) descriptionButton.setForeground(ThemeHelper.color("icon"));
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                if(isSearch) descriptionButton.setForeground(ThemeHelper.color("toolActivated"));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                if(isSearch) descriptionButton.setForeground(ThemeHelper.color("icon"));
+            }
+        });
+    }
+
+    private void descriptionBarActivationEvent() {
+        if(!isSmallJourneyPlannerVisible) return;
+        journeyPlannerBarLayout.removeLayoutComponent(journeyPlannerTransportTypeButtons);
+        journeyPlannerBarLayout.removeLayoutComponent(fromSearcher.getSearchTool());
+        journeyPlannerBarLayout.removeLayoutComponent(toSearcher.getSearchTool());
+        journeyPlannerBarLayout.removeLayoutComponent(journeyPlannerSearchClearButtons);
+        journeyPlannerBarLayout.removeLayoutComponent(descriptionButton);
+        journeyPlannerBar.removeAll();
     }
 
     public void printRouteDescription() {
@@ -269,6 +330,8 @@ public final class JourneyPlannerBarController extends Controller {
                 travelDescription.getField().setText("");
                 MainWindowController.getInstance().requestCanvasResetToAndFrom();
                 MainWindowController.getInstance().requestCanvasRepaint();
+                descriptionButton.setForeground(ThemeHelper.color("inactiveButton"));
+                isSearch = false;
             }
 
             @Override
@@ -299,6 +362,7 @@ public final class JourneyPlannerBarController extends Controller {
                 super.mouseClicked(e);
                 searchActivatedEvent();
                 informationBar.grabFocus();
+
             }
 
             @Override
@@ -391,6 +455,7 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerBarLayout.removeLayoutComponent(toSearcher.getSearchTool());
         journeyPlannerBarLayout.removeLayoutComponent(journeyPlannerSearchClearButtons);
         journeyPlannerBarLayout.removeLayoutComponent(travelDescription);
+        if(descriptionButton != null) journeyPlannerBarLayout.removeLayoutComponent(descriptionButton);
         journeyPlannerBar.removeAll();
         informationBar.removeAll();
     }

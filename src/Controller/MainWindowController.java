@@ -162,12 +162,10 @@ public final class MainWindowController extends WindowController {
                     inSlideTimer.stop();
                     inSlideTimer = null;
                     isSliding = false;
-                    //window.getFrame().setResizable(true);
                 }
             });
             inSlideTimer.start();
             PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
-            //window.getFrame().setResizable(false);
         }
     }
 
@@ -187,12 +185,10 @@ public final class MainWindowController extends WindowController {
                     inSlideTimer.stop();
                     inSlideTimer = null;
                     isSliding = false;
-                   // window.getFrame().setResizable(true);
                 }
             });
             inSlideTimer.start();
             PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
-            //window.getFrame().setResizable(false);
             CanvasExtrasController.getInstance().getDistanceScaller().setLocation(CanvasExtrasController.getInstance().getDistanceScaller().getX(), CanvasExtrasController.getInstance().getDistanceScaller().getY() - GlobalValue.getSmallInformationBarHeight() + 15);
         }
     }
@@ -231,12 +227,10 @@ public final class MainWindowController extends WindowController {
                     inSlideTimer.stop();
                     inSlideTimer = null;
                     isSliding = false;
-                    //window.getFrame().setResizable(true);
                 }
             });
             inSlideTimer.start();
             JourneyPlannerBarController.getInstance().setupLargeJourneyPlannerBar();
-            //window.getFrame().setResizable(false);
         }
     }
 
@@ -256,12 +250,10 @@ public final class MainWindowController extends WindowController {
                     inSlideTimer.stop();
                     inSlideTimer = null;
                     isSliding = false;
-                    //window.getFrame().setResizable(true);
                 }
             });
             inSlideTimer.start();
             JourneyPlannerBarController.getInstance().setupSmallJourneyPlannerBar();
-            //window.getFrame().setResizable(false);
             CanvasExtrasController.getInstance().getDistanceScaller().setLocation(CanvasExtrasController.getInstance().getDistanceScaller().getX(), CanvasExtrasController.getInstance().getDistanceScaller().getY() - GlobalValue.getSmallInformationBarHeight() + 15);
         }
     }

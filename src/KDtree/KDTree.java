@@ -26,11 +26,11 @@ public class KDTree implements Serializable {
 
     private void clear(Node node)
     {
-        if (node.getPointers() == null) {
+        if (node.getElements() == null) {
             clear(node.getLeft());
             clear(node.getRight());
         } else {
-            node.getPointers().clear();
+            node.getElements().clear();
         }
     }
 
@@ -49,7 +49,7 @@ public class KDTree implements Serializable {
     }
 
     private void getManySections(Node currentNode, float minX, float minY, float maxX, float maxY) {
-        if (currentNode.getPointers() == null) {
+        if (currentNode.getElements() == null) {
             if (currentNode.getDepth() % 2 == 0) {
                 if (currentNode.getX() > minX && currentNode.getX() > maxX) {
                     getManySections(currentNode.getLeft(), minX, minY, maxX, maxY);
@@ -74,8 +74,8 @@ public class KDTree implements Serializable {
                 }
             }
         } else {
-            for (Pointer pointer : currentNode.getPointers()) {
-                elementsToReturn.add(pointer.getElement());
+            for (SuperElement element : currentNode.getElements()) {
+                elementsToReturn.add(element);
             }
         }
     }
@@ -92,7 +92,7 @@ public class KDTree implements Serializable {
 
     public void getSection(Node currentNode, float x, float y)
     {
-        if (currentNode.getPointers() == null) {
+        if (currentNode.getElements() == null) {
             if (currentNode.getDepth() % 2 == 0) {
                 if (currentNode.getX() >= x) {
                     getSection(currentNode.getLeft(), x, y);
@@ -108,8 +108,8 @@ public class KDTree implements Serializable {
                 }
             }
         } else {
-            for (Pointer pointer : currentNode.getPointers()) {
-                sectionToReturn.add(pointer.getElement());
+            for (SuperElement element : currentNode.getElements()) {
+                sectionToReturn.add(element);
             }
         }
     }
@@ -142,7 +142,7 @@ public class KDTree implements Serializable {
 
     private void putPointer(Node currentNode, Pointer pointer)
     {
-        if (currentNode.getPointers() == null) {
+        if (currentNode.getElements() == null) {
             if (currentNode.getDepth() % 2 == 0) {
                 int compare = pointer.compareToX(currentNode);
                 if (compare <= 0)
@@ -157,7 +157,7 @@ public class KDTree implements Serializable {
                     putPointer(currentNode.getRight(), pointer);
             }
         } else {
-            currentNode.addPointer(pointer);
+            currentNode.addElement(pointer);
         }
     }
 
@@ -179,7 +179,7 @@ public class KDTree implements Serializable {
     }
 
     private void getManySectionsList(Node currentNode, float minX, float minY, float maxX, float maxY) {
-        if (currentNode.getPointers() == null) {
+        if (currentNode.getElements() == null) {
             if (currentNode.getDepth() % 2 == 0) {
                 if (currentNode.getX() > minX && currentNode.getX() > maxX) {
                     getManySectionsList(currentNode.getLeft(), minX, minY, maxX, maxY);
@@ -204,8 +204,8 @@ public class KDTree implements Serializable {
                 }
             }
         } else {
-            for (Pointer pointer : currentNode.getPointers()) {
-                elementsToReturnList.add(pointer.getElement());
+            for (SuperElement element : currentNode.getElements()) {
+                elementsToReturnList.add(element);
             }
         }
     }

@@ -50,6 +50,8 @@ public class DefaultTheme implements Theme {
     public Color toolActivated() { return new Color(0x4471C2); }
     public Color toolHover() {return new Color(0x83B1F1);}
 
+    public Color inactiveButton() {return new Color(0xA4A6A7);}
+
     public Color scrollBarThumb() {return new Color(0x789AE0);}
 
     public Color pointHover() {return new Color(0xAEA9AF);}
