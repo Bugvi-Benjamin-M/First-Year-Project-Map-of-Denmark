@@ -1,5 +1,6 @@
 package RouteSearch;
 
+import Enums.OSMEnums.RoadType;
 import Model.Elements.Element;
 import Model.Elements.Road;
 import OSM.OSMWay;
@@ -23,7 +24,7 @@ public class GraphFactoryTest {
     @Before
     public void setUp() throws Exception {
         HashSet<Element> roads = new HashSet<>();
-        Road road = new Road(null,"Vej 1");
+        Road road = new Road(null, "Vej 1", RoadType.TERTIARY_ROAD);
         road.setMaxSpeed(60);
         road.setOneWay(false);
         road.setTravelByBikeAllowed(true);

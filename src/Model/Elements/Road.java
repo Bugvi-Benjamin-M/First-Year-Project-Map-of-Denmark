@@ -1,5 +1,6 @@
 package Model.Elements;
 
+import Enums.OSMEnums.RoadType;
 import Helpers.HelperFunctions;
 import Helpers.Shapes.MultiPolygonApprox;
 import Helpers.Shapes.PolygonApprox;
@@ -25,26 +26,28 @@ public class Road extends Element {
     private boolean travelByFootAllowed = false;
     private boolean travelByCarAllowed = false;
     private java.util.List<OSMWay> relation;
+    private RoadType roadType;
 
-    public Road(PolygonApprox polygon, String name)
+    public Road(PolygonApprox polygon, String name, RoadType roadType)
     {
         super(polygon);
         this.name = name.intern();
         relation = new ArrayList<>();
+        this.roadType = roadType;
     }
 
-    public Road(PolygonApprox polygon, String name, boolean area)
+    public Road(PolygonApprox polygon, String name, boolean area, RoadType roadType)
     {
-        this(polygon, name);
+        this(polygon, name, roadType);
         this.area = area;
     }
 
-    public Road(String name) {
-        this(null,name);
+    public Road(String name, RoadType roadType) {
+        this(null, name, roadType);
     }
 
-    public Road(String name, boolean area) {
-        this(null,name);
+    public Road(String name, boolean area, RoadType roadType) {
+        this(null, name, roadType);
         this.area = area;
     }
 
@@ -180,5 +183,9 @@ public class Road extends Element {
         } else {
             return null;
         }
+    }
+
+    public RoadType getRoadType() {
+        return roadType;
     }
 }

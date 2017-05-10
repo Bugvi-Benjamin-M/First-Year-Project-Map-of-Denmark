@@ -34,7 +34,10 @@ public enum ElementType {
     AIRPORT_RUNWAY,
     DRAIN,
 
+    HIGHWAY, //veje
+
     // ROADS
+    /*
     MOTORWAY, // Motorvej
     MOTORWAY_LINK,
     TRUNK_ROAD, // Landevej
@@ -60,6 +63,7 @@ public enum ElementType {
     CYCLEWAY,
     PATH, // Temporary setting
     ROAD, // Temporary setting
+    */
 
     RAIL,
     BRIDGE,

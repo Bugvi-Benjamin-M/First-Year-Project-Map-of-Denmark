@@ -51,6 +51,7 @@ public final class Model extends Observable {
 
         elements = new EnumMap<>(ElementType.class);
         for (ElementType type : ElementType.values()) {
+            if(!(type == ElementType.COASTLINE || type == ElementType.COUNTRY_BOUNDARY_LAND || type == ElementType.UNKNOWN))
             elements.put(type, new KDTree());
         }
         coastlineFactory = Helpers.FileHandler.loadCoastlines();
