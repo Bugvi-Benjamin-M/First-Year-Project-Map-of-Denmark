@@ -4,6 +4,7 @@ import Enums.TravelType;
 import Helpers.GlobalValue;
 import Helpers.HelperFunctions;
 import Helpers.Shapes.PolygonApprox;
+import KDtree.*;
 import OSM.OSMWay;
 
 import java.awt.*;
@@ -18,44 +19,39 @@ import java.io.Serializable;
  * @author Andreas Blanke
  * @version 05-05-2017
  */
-public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializable {
+public class RoadEdge implements Comparable<RoadEdge>, Serializable {
 
     private static float SPEED_TO_METERS_PER_SECOND = 0.277777777778f;
 
-    private OSMWay way;
-    private boolean isOneWay;
     private boolean isTravelByBikeAllowed;
     private boolean isTravelByCarAllowed;
     private boolean isTravelByWalkAllowed;
     private float length;
     private float speed;
     private String name;
+    private Point2D from;
+    private Point2D to;
 
-    public RoadEdge(OSMWay way) {
-        super(new PolygonApprox(way));
-        this.way = way;
-        length = (float) HelperFunctions.distanceInMeters(way);
+    public RoadEdge(Point2D from, Point2D to) {
+        this.from = from;
+        this.to = to;
+        length = (float) HelperFunctions.distanceInMeters(from,to);
     }
 
-    public RoadEdge(OSMWay way, String name, int speed) {
-        this(way);
+    public RoadEdge(Point2D from, Point2D to, String name, int speed) {
+        this(from,to);
         this.name = name.intern();
         this.speed = speed * SPEED_TO_METERS_PER_SECOND;
     }
 
-    public RoadEdge(OSMWay way, String name, float speed) {
-        this(way);
+    public RoadEdge(Point2D from, Point2D to, String name, float speed) {
+        this(from,to);
         this.name = name;
         this.speed = speed;
     }
 
     public RoadEdge createReverse() {
-        OSMWay way = new OSMWay();
-        for (int i = this.way.size()-1; i >= 0; i--) {
-            way.add(this.way.get(i));
-        }
-        RoadEdge reverse = new RoadEdge(way,this.name,this.speed);
-        reverse.setOneWay(this.isOneWay);
+        RoadEdge reverse = new RoadEdge(this.to,this.from,this.name,this.speed);
         reverse.setTravelByCarAllowed(this.isTravelByCarAllowed);
         reverse.setTravelByBikeAllowed(this.isTravelByBikeAllowed);
         reverse.setTravelByWalkAllowed(this.isTravelByWalkAllowed);
@@ -63,12 +59,12 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
     }
 
     public Point2D getEither() {
-        return way.get(0);
+        return from;
     }
 
     public Point2D getOther(Point2D point) {
-        if (way.get(0).equals(point)) return way.get(way.size()-1);
-        else if (way.get(way.size()-1).equals(point)) return way.get(0);
+        if (from.equals(point)) return to;
+        else if (to.equals(point)) return from;
         else {
             throw new IllegalArgumentException("Not an endpoint");
         }
@@ -105,9 +101,9 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
             return Float.POSITIVE_INFINITY;
         } else {
             if (fast) {
-                return (length/speed) + ((float)way.getFromNode().distance(end) / speed);
+                return (length/speed) + ((float)from.distance(end) / speed);
             } else {
-                return length +  (float)way.getFromNode().distance(end);
+                return length +  (float)from.distance(end);
             }
         }
     }
@@ -124,18 +120,11 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
     public int compareToRoad(RoadEdge other) {
         if (other == null) throw new NullPointerException("RoadEdge not initialized!");
         if (other.getName().equals(name)) return 0;
-        double angle = HelperFunctions.angle(this.getWay(),other.getWay());
+        double angle = HelperFunctions.angle(this.from,this.to,
+                other.from,other.to);
         if (angle < 0) return -1;       // to the left
         else if (angle > 0) return 1;   // to the right
         else return 0;                  // same angle
-    }
-
-    public boolean isOneWay() {
-        return isOneWay;
-    }
-
-    public OSMWay getWay() {
-        return way;
     }
 
     public float getLength() {
@@ -152,10 +141,6 @@ public class RoadEdge extends Element implements Comparable<RoadEdge>, Serializa
 
     public String getName() {
         return name;
-    }
-
-    public void setOneWay(boolean oneWay) {
-        isOneWay = oneWay;
     }
 
     public void setTravelByBikeAllowed(boolean travelByBikeAllowed) {

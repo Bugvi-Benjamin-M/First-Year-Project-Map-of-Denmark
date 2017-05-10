@@ -29,19 +29,8 @@ public class RoadGraph implements Serializable {
 
     public int getNumberOfVertices() {return adjacencyList.size();}
 
-    public void addEdges(RoadEdge road) {
-        if (road != null) {
-            addEdge(road,road.getEither());
-            if (!road.isOneWay()){
-                road = road.createReverse();
-                addEdge(road,road.getEither());
-            }
-        } else {
-            throw new NullPointerException("Road not initialized...");
-        }
-    }
-
     public void addEdge(RoadEdge road, Point2D from) {
+        if (road == null || from == null) throw new NullPointerException("RoadEdge or from point has not been initiliazed");
         LinkedList<RoadEdge> listFrom = adjacencyList.get(from);
         if (listFrom == null) listFrom = new LinkedList<>();
         listFrom.add(road);
@@ -52,8 +41,6 @@ public class RoadGraph implements Serializable {
     public List<RoadEdge> adjacent(Point2D point) {
         return adjacencyList.get(point);
     }
-
-
 
     public int degree(Point2D point) {
         return adjacencyList.get(point).size();

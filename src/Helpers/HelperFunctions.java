@@ -195,6 +195,16 @@ public class HelperFunctions {
         }
         Vector a = new Vector(one.getFromNode(),one.getToNode());
         Vector b = new Vector(other.getFromNode(),other.getToNode());
+        return angle(a,b);
+    }
+
+    public static double angle(Point2D from1, Point2D to1,Point2D from2,Point2D to2){
+        Vector a = new Vector(from1,to1);
+        Vector b = new Vector(from2,to2);
+        return angle(a,b);
+    }
+
+    private static double angle(Vector a, Vector b) {
         System.out.println("a "+a.toString()+" - b "+b.toString());
         double distances = a.length() * b.length();
         return (dotProduct(a,b) / distances);
