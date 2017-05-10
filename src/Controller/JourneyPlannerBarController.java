@@ -12,6 +12,7 @@ import RouteSearch.RoadGraphFactory;
 import View.*;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
@@ -125,6 +126,7 @@ public final class JourneyPlannerBarController extends Controller {
         descriptionButton = new JLabel("\uf15c");
         descriptionButton.setFont(FontAwesome.getFontAwesome().deriveFont(20));
         descriptionButton.setOpaque(true);
+        descriptionButton.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         addInteractionHandlersToJourneyPlannerTransportButtons();
         addInteractionHandlerToClearSearchButtons();
         addInteractionHandlerToDescriptionButton();
@@ -188,7 +190,7 @@ public final class JourneyPlannerBarController extends Controller {
         toSearcher.setBarBorder(SMALL_TITLE_FONT_SIZE);
         journeyPlannerSearchClearButtons.setPreferredSize(new Dimension(CLEAR_SEARCH_BUTTONS_WIDTH-85, CLEAR_SEARCH_BUTTONS_HEIGHT-16));
         journeyPlannerSearchClearButtons.applySmallState();
-        descriptionButton.setPreferredSize(new Dimension(40,40));
+        descriptionButton.setPreferredSize(new Dimension(35,40));
         descriptionButton.setToolTipText("View Travel Description");
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
         informationBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerBar, DISTANCE_BETWEEN_JOURNEY_PLANNERBAR_AND_SMALL_INFORMATIONBAR, SpringLayout.NORTH, informationBar);
@@ -203,7 +205,7 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerBarLayout.putConstraint(SpringLayout.WEST, journeyPlannerSearchClearButtons, 5, SpringLayout.EAST, fromSearcher.getSearchTool());
 
         journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, descriptionButton, 35, SpringLayout.NORTH, journeyPlannerBar);
-        journeyPlannerBarLayout.putConstraint(SpringLayout.WEST, descriptionButton, 70, SpringLayout.EAST, journeyPlannerSearchClearButtons);
+        journeyPlannerBarLayout.putConstraint(SpringLayout.WEST, descriptionButton, 80, SpringLayout.EAST, journeyPlannerSearchClearButtons);
 
         themeHasChanged();
         journeyPlannerBar.add(journeyPlannerTransportTypeButtons);
@@ -425,6 +427,8 @@ public final class JourneyPlannerBarController extends Controller {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                type = TravelType.WALK;
+                journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("toolActivated"));
             }
 
             @Override
@@ -436,13 +440,24 @@ public final class JourneyPlannerBarController extends Controller {
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
-                journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("icon"));
+                if(type != TravelType.WALK) journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("icon"));
+                else journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("toolActivated"));
+
             }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("toolActivated"));
+            }
+
         });
         journeyPlannerTransportTypeButtons.getBicycleButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                type = TravelType.BICYCLE;
+                journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("toolActivated"));
             }
 
             @Override
@@ -454,13 +469,16 @@ public final class JourneyPlannerBarController extends Controller {
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
-                journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("icon"));
+                if(type != TravelType.BICYCLE) journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("icon"));
+                else journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("toolActivated"));
             }
         });
         journeyPlannerTransportTypeButtons.getCarButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                type = TravelType.VEHICLE;
+                journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("toolActivated"));
             }
 
             @Override
@@ -472,7 +490,8 @@ public final class JourneyPlannerBarController extends Controller {
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
-                journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("icon"));
+                if(type != TravelType.VEHICLE) journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("icon"));
+                else journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("toolActivated"));
             }
         });
     }
