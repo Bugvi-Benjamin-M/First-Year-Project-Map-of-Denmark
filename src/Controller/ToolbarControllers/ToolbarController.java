@@ -787,6 +787,7 @@ public final class ToolbarController extends Controller {
                     if (toolType != ToolType.MENU) {
                         if (isMenuToolPopupVisible()) requestHideMenuToolPopup();
                         if (toolType != ToolType.POI) tool.setTheme();
+                        if(toolType != ToolType.ROUTES) tool.setTheme();
                     }
                 }
                 toolEvent(toolType);
@@ -799,7 +800,7 @@ public final class ToolbarController extends Controller {
             super.mouseEntered(e);
             if(tool != null) {
                 mouseEnteredTool(toolType, e);
-                if(!doesSearchbarHaveFocus()) tool.grabFocus();
+                if(!doesSearchbarHaveFocus() && !MainWindowController.getInstance().doesJourneyPlannerSearchHaveFocus()) tool.grabFocus();
             }
 
 
@@ -840,6 +841,7 @@ public final class ToolbarController extends Controller {
             if(isMenuToolPopupVisible()) requestHideMenuToolPopup();
             toolbar.grabFocus();
             requestSearchToolHideList();
+            MainWindowController.getInstance().requestJourneyPlannerCloseSearchLists();
         }
 
         @Override
@@ -866,7 +868,7 @@ public final class ToolbarController extends Controller {
         @Override
         public void mouseEntered(MouseEvent e) {
             super.mouseEntered(e);
-            if(!doesSearchbarHaveFocus()) toolbar.grabFocus();
+            if(!doesSearchbarHaveFocus() && !MainWindowController.getInstance().doesJourneyPlannerSearchHaveFocus()) toolbar.grabFocus();
         }
     }
 }

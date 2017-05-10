@@ -2,6 +2,7 @@ package Controller;
 
 import Controller.ToolbarControllers.ToolbarController;
 import Enums.ToolType;
+import Enums.TravelType;
 import Helpers.FontAwesome;
 import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
@@ -71,6 +72,8 @@ public final class JourneyPlannerBarController extends Controller {
     private Point2D.Float toPoint;
     private JLabel descriptionButton;
 
+    private TravelType type;
+
     private boolean isLargeJourneyPlannerVisible;
     private boolean isSmallJourneyPlannerVisible;
 
@@ -125,6 +128,7 @@ public final class JourneyPlannerBarController extends Controller {
         addInteractionHandlersToJourneyPlannerTransportButtons();
         addInteractionHandlerToClearSearchButtons();
         addInteractionHandlerToDescriptionButton();
+        type = TravelType.WALK;
     }
 
     public void setupLargeJourneyPlannerBar() {
@@ -165,6 +169,7 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerBar.add(journeyPlannerSearchClearButtons);
         journeyPlannerBar.add(travelDescription);
         informationBar.add(journeyPlannerBar);
+        setToCurrentTravelType();
     }
 
     public void setupSmallJourneyPlannerBar() {
@@ -207,10 +212,25 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerBar.add(journeyPlannerSearchClearButtons);
         journeyPlannerBar.add(descriptionButton);
         informationBar.add(journeyPlannerBar);
+        setToCurrentTravelType();
     }
 
     public InformationBar getInformationBar() {
         return informationBar;
+    }
+
+    private void setToCurrentTravelType() {
+        switch (type) {
+            case WALK:
+                journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("toolActivated"));
+                break;
+            case BICYCLE:
+                journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("toolActivated"));
+                break;
+            case VEHICLE:
+                journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("toolActivated"));
+                break;
+        }
     }
 
     public void themeHasChanged() {
@@ -507,6 +527,15 @@ public final class JourneyPlannerBarController extends Controller {
         public void mouseExited(MouseEvent e) {
             //Maybe set theme
         }
+    }
+
+    public boolean isASearchListOpen() {
+        return fromSearcher.doesSearchbarHaveFocus() || toSearcher.doesSearchbarHaveFocus();
+    }
+
+    public void closeSearchLists() {
+        fromSearcher.closeSearchToolList();
+        toSearcher.closeSearchToolList();
     }
 
     private class ToFromController extends SearchController {

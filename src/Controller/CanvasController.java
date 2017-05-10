@@ -467,6 +467,7 @@ public final class CanvasController extends Controller implements Observer {
     {
         if(MainWindowController.getInstance().isMenuToolPopupVisible()) MainWindowController.getInstance().requestMenuToolHidePopup();
         MainWindowController.getInstance().requestSearchToolCloseList();
+        MainWindowController.getInstance().requestJourneyPlannerCloseSearchLists();
         mapCanvas.grabFocus();
         Point2D mousePosition = event.getPoint();
         Point2D mouseInModel = mapCanvas.toModelCoords(mousePosition);
@@ -650,7 +651,8 @@ public final class CanvasController extends Controller implements Observer {
     private void mouseEnteredEvent(MouseEvent e) {
         MainWindowController.getInstance().requestPointsOfInterestBarRepaint();
         MainWindowController.getInstance().requestToolbarRepaint();
-        if(!MainWindowController.getInstance().doesSearchToolHaveFocus())mapCanvas.grabFocus();
+        if(!MainWindowController.getInstance().doesSearchToolHaveFocus() && !MainWindowController.getInstance().doesJourneyPlannerSearchHaveFocus()) mapCanvas.grabFocus();
+
         if(GlobalValue.isAddNewPointActive()) changeCanvasMouseCursorToPoint();
     }
 

@@ -403,6 +403,14 @@ public final class MainWindowController extends WindowController {
         ToolbarController.getInstance().requestSearchToolHideList();
     }
 
+    public boolean doesJourneyPlannerSearchHaveFocus() {
+        return JourneyPlannerBarController.getInstance().isASearchListOpen();
+    }
+
+    public void requestJourneyPlannerCloseSearchLists() {
+        JourneyPlannerBarController.getInstance().closeSearchLists();
+    }
+
     public void setProgressBarTheme() {
         UIManager.put("ProgressBar.border", BorderFactory.createLineBorder(ThemeHelper.color("border")));
         UIManager.put("ProgressBar.background", ThemeHelper.color("progressBarBackground"));
