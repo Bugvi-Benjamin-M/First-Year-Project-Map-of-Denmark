@@ -258,9 +258,13 @@ public final class JourneyPlannerBarController extends Controller {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if(isSearch) {
-                    if(!isDescriptionFieldOpen) descriptionButton.setForeground(ThemeHelper.color("toolActivated"));
-                    else descriptionButton.setForeground(ThemeHelper.color("icon"));
-                    descriptionActivationEvent();
+                    if (!isDescriptionFieldOpen) {
+                        descriptionButton.setForeground(ThemeHelper.color("toolActivated"));
+                        descriptionActivationEvent();
+                    } else {
+                        descriptionButton.setForeground(ThemeHelper.color("icon"));
+                        descriptionDeactivationEvent();
+                    }
                 }
             }
 
@@ -301,6 +305,7 @@ public final class JourneyPlannerBarController extends Controller {
     private void descriptionDeactivationEvent() {
         window.getFrame().getLayeredPane().remove(travelDescription);
         isDescriptionFieldOpen = false;
+        MainWindowController.getInstance().requestCanvasRepaint();
     }
 
     private void searchInitialised() {
