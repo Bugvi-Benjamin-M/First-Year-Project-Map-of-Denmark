@@ -231,7 +231,10 @@ public final class PointsOfInterestController extends Controller {
 
         if(largeScroll != null) largeScroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
         if(smallScroll != null) smallScroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
-        if(poiButtons != null) poiButtons.applyTheme();
+        if(poiButtons != null) {
+            poiButtons.applyTheme();
+            if(GlobalValue.isAddNewPointActive()) poiButtons.getNewPointButton().setForeground(ThemeHelper.color("toolActivated"));
+        }
         if(informationBar != null) informationBar.applyTheme();
         if(pointsOfInterestBar != null) pointsOfInterestBar.applyTheme();
         if(POIpanels != null) {
@@ -239,6 +242,7 @@ public final class PointsOfInterestController extends Controller {
                 point.applyTheme();
             }
         }
+
     }
 
     public InformationBar getInformationBar() {
