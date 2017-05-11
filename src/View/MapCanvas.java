@@ -183,24 +183,24 @@ public class MapCanvas extends View {
         float boundswhite = (float)outer.getX() - (float) start.getX();
 
         if(locationMarker != null) {
-            g.setColor(Color.white);
+            g.setColor(ThemeHelper.color("markerBackground"));
             g.fill(getEllipseFromCenter(locationMarker.getX(), locationMarker.getY(), boundswhite, boundswhite));
-            g.setColor(Color.black);
+            g.setColor(ThemeHelper.color("markerForeground"));
             g.fill(getEllipseFromCenter(locationMarker.getX(), locationMarker.getY(), boundsblue, boundsblue));
         }
         //Only draw the route if the journey planner window is open.
         if(drawRoute) {
             if (toMarker != null) {
-                g.setColor(Color.white);
+                g.setColor(ThemeHelper.color("markerBackground"));
                 g.fill(getEllipseFromCenter(toMarker.getX(), toMarker.getY(), boundswhite, boundswhite));
-                g.setColor(Color.red);
+                g.setColor(ThemeHelper.color("markerForeground"));
                 g.fill(getEllipseFromCenter(toMarker.getX(), toMarker.getY(), boundsblue, boundsblue));
             }
 
             if (fromMarker != null) {
-                g.setColor(Color.white);
+                g.setColor(ThemeHelper.color("markerBackground"));
                 g.fill(getEllipseFromCenter(fromMarker.getX(), fromMarker.getY(), boundswhite, boundswhite));
-                g.setColor(Color.red);
+                g.setColor(ThemeHelper.color("markerForeground"));
                 g.fill(getEllipseFromCenter(fromMarker.getX(), fromMarker.getY(), boundsblue, boundsblue));
             }
         }

@@ -43,8 +43,8 @@ public class DefaultTheme implements Theme {
     public Color defaulttext() { return new Color(0xA0A39F); }
     public Color toolTipBackground() { return new Color(0xB9B7B3); }
     public Color toolTipForeground() { return new Color(0x050505); }
-    public Color canvasPopupBackground() { return new Color(0xDED0A9); }
-    public Color canvasPopupForeground() { return new Color(0x000000); }
+    public Color canvasPopupBackground() { return new Color(0xF2F2F2); }
+    public Color canvasPopupForeground() { return new Color(0x5B5B5B); }
     public Color canvasExtra() {return new Color(255, 255, 255, 40);}
 
     public Color toolActivated() { return new Color(0x4471C2); }
@@ -55,6 +55,9 @@ public class DefaultTheme implements Theme {
     public Color scrollBarThumb() {return new Color(0x789AE0);}
 
     public Color pointHover() {return new Color(0xAEA9AF);}
+
+    public Color markerForeground() {return new Color(0xFF8416);}
+    public Color markerBackground() {return new Color(0XFFFFFF);}
 
     public Color poiButtonsForeground() {return new Color(0x000000);}
 

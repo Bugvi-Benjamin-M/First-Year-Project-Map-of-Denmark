@@ -32,6 +32,9 @@ public interface Theme {
 
     public abstract Color pointHover();
 
+    public abstract Color markerForeground();
+    public abstract Color markerBackground();
+
     public abstract Color poiButtonsForeground();
 
     public abstract Color inactiveButton();
