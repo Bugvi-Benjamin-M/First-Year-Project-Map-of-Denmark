@@ -35,6 +35,7 @@ public enum ElementType {
     DRAIN,
 
     HIGHWAY, //veje
+    HIGHWAY_LEVEL_5_6,
 
     // ROADS
     /*

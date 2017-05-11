@@ -1063,6 +1063,9 @@ public final class OSMHandler implements ContentHandler {
             for (int i = 0; i < way.size(); i += precision) {
                 Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), road);
                 model.getElements().get(type).putPointer(p);
+                if(roadType == RoadType.MOTORWAY || roadType == RoadType.TRUNK_ROAD || roadType == RoadType.PRIMARY_ROAD){
+                    model.getElements().get(ElementType.HIGHWAY_LEVEL_5_6).putPointer(p);
+                }
             }
         } else {
             //MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
@@ -1081,9 +1084,11 @@ public final class OSMHandler implements ContentHandler {
                 if (relation.get(i) != null) {
                     for (int j = 0; j < relation.get(i).size(); j += precision) {
                         if (relation.get(i).size() > j) {
-                            Pointer p = new Pointer((float)relation.get(i).get(j).getX(),
-                                (float)relation.get(i).get(j).getY(), road);
+                            Pointer p = new Pointer((float)relation.get(i).get(j).getX(), (float)relation.get(i).get(j).getY(), road);
                             model.getElements().get(type).putPointer(p);
+                            if(roadType == RoadType.MOTORWAY || roadType == RoadType.TRUNK_ROAD || roadType == RoadType.PRIMARY_ROAD){
+                                model.getElements().get(ElementType.HIGHWAY_LEVEL_5_6).putPointer(p);
+                            }
                         }
                     }
                 }
