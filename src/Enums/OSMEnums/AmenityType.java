@@ -10,11 +10,9 @@ public enum AmenityType {
     FAST_FOOD, // Night
 
     HOSPITAL, // Default
-    PLACE_OF_WORSHIP, // Default
     PARKING_AMENITY, //Default
     SPORT_AMENITY, //Default
     RAILWAY_STATION, //Default
-    RAILWAY_STATION_AREA, //Default
     AIRPORT_AMENITY, //Default
     UNIVERSITY, //Default
 

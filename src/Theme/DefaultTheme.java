@@ -75,7 +75,6 @@ public class DefaultTheme implements Theme {
     public Color nightClubName() { return new Color(0x000000); }
     public Color fastFoodName() { return new Color(0x000000); }
     public Color hospital() { return new Color(0xD30408); }
-    public Color placeOfWorship() { return new Color(0x000000); }
     public Color parkingAmenity() { return new Color(0x0A00FF); }
     public Color sportAmenity() { return new Color(0xFF7D00); }
 
@@ -97,7 +96,7 @@ public class DefaultTheme implements Theme {
     }
     public Color grass()
     {
-        return new Color(0xC0E48F);
+        return new Color(0xC3E47A);
     }
     public Color heath()
     {
@@ -149,8 +148,6 @@ public class DefaultTheme implements Theme {
     public Color residentialRoad() { return new Color(0xFFFFFF); }
     public Color livingStreet() { return new Color(0xFFFFFF); }
     public Color serviceRoad() { return new Color(0xFFFFFF); }
-    public Color busGuideway() { return new Color(0xFFFFFF); }
-    public Color escape() { return new Color(0xFFFFFF); }
     public Color raceway() { return new Color(0xFFFFFF); }
     public Color pedestrianStreet() { return new Color(0xF2F2F2); }
     public Color track() { return new Color(0xFFFFFF); }

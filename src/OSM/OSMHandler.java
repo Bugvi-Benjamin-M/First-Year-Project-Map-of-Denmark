@@ -18,9 +18,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-
 import java.awt.geom.Point2D;
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -122,21 +120,6 @@ public final class OSMHandler implements ContentHandler {
         //refRelation = null;
         nodeGenerator = new NodeGenerator();
         model.createGraph(roads);
-
-        //Test to see how many elements we have
-        int amount = 0;
-        HashSet<SuperElement> hashset;
-        ArrayList<SuperElement> arrayList;
-
-        for (ElementType type : ElementType.values()){
-            if(model.getElements().containsKey(type)){
-                hashset = model.getElements(type).getAllSections();
-                System.out.println("HashSet with " + type + " has " + hashset.size() + " elements.");
-                arrayList = model.getElements(type).getAllSectionsList();
-                System.out.println("ArrayList with " + type + " has " + arrayList.size() + " elements.");
-            }
-        }
-        System.out.println("There are " + model.getElements().size() + " KDTrees in total.");
     }
 
     @Override
@@ -368,7 +351,6 @@ public final class OSMHandler implements ContentHandler {
             OSMWay way = idToWay.get(ref);
             if (way != null) {
                 relation.add(way);
-                //relation.add(way);
             }
             break;
         }
@@ -479,9 +461,6 @@ public final class OSMHandler implements ContentHandler {
             case "hospital":
                 place = AmenityType.HOSPITAL;
                 break;
-            case "place_of_worship":
-                place = AmenityType.PLACE_OF_WORSHIP;
-                break;
             case "parking":
                 place = AmenityType.PARKING_AMENITY;
                 elementType = ElementType.PARKING;
@@ -578,34 +557,28 @@ public final class OSMHandler implements ContentHandler {
     }
 
     private void determineHighway(String value) {
-        //elementType = ElementType.UNKNOWN;
         switch (value) {
             case "motorway":
-                //elementType = ElementType.MOTORWAY;
                 roadType = RoadType.MOTORWAY;
                 isVehicleAllowed = true;
                 if (maxSpeed == 0) maxSpeed = 130;
                 break;
             case "motorway_link":
-                //elementType = ElementType.MOTORWAY_LINK;
                 roadType = RoadType.MOTORWAY_LINK;
                 isVehicleAllowed = true;
                 if (maxSpeed == 0) maxSpeed = 130;
                 break;
             case "trunk":
-                //elementType = ElementType.TRUNK_ROAD;
                 roadType = RoadType.TRUNK_ROAD;
                 isVehicleAllowed = true;
                 if (maxSpeed == 0) maxSpeed = 90;
                 break;
             case "trunk_link":
-                //elementType = ElementType.TRUNK_ROAD_LINK;
                 roadType = RoadType.TRUNK_ROAD_LINK;
                 isVehicleAllowed = true;
                 if (maxSpeed == 0) maxSpeed = 90;
                 break;
             case "primary":
-                //elementType = ElementType.PRIMARY_ROAD;
                 roadType = RoadType.PRIMARY_ROAD;
                 isVehicleAllowed = true;
                 isWalkingAllowed = true;
@@ -613,7 +586,6 @@ public final class OSMHandler implements ContentHandler {
                 if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "primary_link":
-                //elementType = ElementType.PRIMARY_ROAD_LINK;
                 roadType = RoadType.PRIMARY_ROAD_LINK;
                 isVehicleAllowed = true;
                 isWalkingAllowed = true;
@@ -621,7 +593,6 @@ public final class OSMHandler implements ContentHandler {
                 if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "secondary":
-                //elementType = ElementType.SECONDARY_ROAD;
                 roadType = RoadType.SECONDARY_ROAD;
                 isVehicleAllowed = true;
                 isWalkingAllowed = true;
@@ -629,7 +600,6 @@ public final class OSMHandler implements ContentHandler {
                 if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "seconday_link":
-                //elementType = ElementType.SECONDARY_ROAD_LINK;
                 roadType = RoadType.SECONDARY_ROAD_LINK;
                 isVehicleAllowed = true;
                 isWalkingAllowed = true;
@@ -637,7 +607,6 @@ public final class OSMHandler implements ContentHandler {
                 if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "tertiary":
-                //elementType = ElementType.TERTIARY_ROAD;
                 roadType = RoadType.TERTIARY_ROAD;
                 isVehicleAllowed = true;
                 isWalkingAllowed = true;
@@ -645,7 +614,6 @@ public final class OSMHandler implements ContentHandler {
                 if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "tertiary_link":
-                //elementType = ElementType.TERTIARY_ROAD_LINK;
                 roadType = RoadType.TERTIARY_ROAD_LINK;
                 isVehicleAllowed = true;
                 isWalkingAllowed = true;
@@ -653,7 +621,6 @@ public final class OSMHandler implements ContentHandler {
                 if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "unclassified":
-                //elementType = ElementType.UNCLASSIFIED_ROAD;
                 roadType = RoadType.UNCLASSIFIED_ROAD;
                 isVehicleAllowed = true;
                 isWalkingAllowed = true;
@@ -661,7 +628,6 @@ public final class OSMHandler implements ContentHandler {
                 if (maxSpeed == 0) maxSpeed = 80;
                 break;
             case "residential":
-                //elementType = ElementType.RESIDENTIAL_ROAD;
                 roadType = RoadType.RESIDENTIAL_ROAD;
                 isVehicleAllowed = true;
                 isWalkingAllowed = true;
@@ -669,7 +635,6 @@ public final class OSMHandler implements ContentHandler {
                 if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "living_street":
-                //elementType = ElementType.LIVING_STREET;
                 roadType = RoadType.LIVING_STREET;
                 isVehicleAllowed = true;
                 isWalkingAllowed = true;
@@ -677,64 +642,46 @@ public final class OSMHandler implements ContentHandler {
                 if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "service":
-                //elementType = ElementType.SERVICE_ROAD;
                 roadType = RoadType.SERVICE_ROAD;
                 isVehicleAllowed = true;
                 isWalkingAllowed = true;
                 isCycleAllowed = true;
                 if (maxSpeed == 0) maxSpeed = 50;
                 break;
-            //case "bus_guideway":
-                //elementType = ElementType.BUS_GUIDEWAY;
-                //break;
-            //case "escape":
-                //elementType = ElementType.ESCAPE;
-                //isVehicleAllowed = true;
-                //if (maxSpeed == 0) maxSpeed = 50;
-                //break;
             case "raceway":
-                //elementType = ElementType.RACEWAY;
                 roadType = RoadType.RACEWAY;
                 break;
             case "pedestrian":
-                //elementType = ElementType.PEDESTRIAN_STREET;
                 roadType = RoadType.PEDESTRIAN_STREET;
                 isWalkingAllowed = true;
                 break;
             case "track":
-                //elementType = ElementType.TRACK;
                 roadType = RoadType.TRACK;
                 isVehicleAllowed = true;
                 if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "steps":
-                //elementType = ElementType.STEPS;
                 roadType = RoadType.STEPS;
                 isWalkingAllowed = true;
                 break;
             case "footway":
-                //elementType = ElementType.FOOTWAY;
                 roadType = RoadType.FOOTWAY;
                 isWalkingAllowed = true;
                 break;
             case "bridleway":
-                //elementType = ElementType.BRIDLEWAY;
                 roadType = RoadType.BRIDLEWAY;
                 isWalkingAllowed = true;
                 break;
             case "cycleway":
-                //elementType = ElementType.CYCLEWAY;
                 roadType = RoadType.CYCLEWAY;
                 isCycleAllowed = true;
                 break;
             case "path":
-                //elementType = ElementType.PATH;
                 roadType = RoadType.PATH;
                 isCycleAllowed = true;
                 isWalkingAllowed = true;
                 break;
             case "road":
-                //elementType = ElementType.ROAD;
                 roadType = RoadType.ROAD;
                 isVehicleAllowed = true;
                 isWalkingAllowed = true;
@@ -766,7 +713,7 @@ public final class OSMHandler implements ContentHandler {
                     case FAST_FOOD:
                     case RAILWAY_STATION:
                     case AIRPORT_AMENITY:
-                        addAmenity(place, false);
+                        addAmenity(place, false, true);
                         break;
                 }
                 if(isAddress) {
@@ -784,33 +731,6 @@ public final class OSMHandler implements ContentHandler {
             break;
         case "way":
             switch (elementType) {
-                /*
-                case MOTORWAY:
-                case MOTORWAY_LINK:
-                case TRUNK_ROAD:
-                case TRUNK_ROAD_LINK:
-                case PRIMARY_ROAD:
-                case PRIMARY_ROAD_LINK:
-                case SECONDARY_ROAD:
-                case SECONDARY_ROAD_LINK:
-                case TERTIARY_ROAD:
-                case TERTIARY_ROAD_LINK:
-                case UNCLASSIFIED_ROAD:
-                case RESIDENTIAL_ROAD:
-                case PEDESTRIAN_STREET:
-                case LIVING_STREET:
-                case SERVICE_ROAD:
-                case BUS_GUIDEWAY:
-                case ESCAPE:
-                case RACEWAY:
-                case TRACK:
-                case STEPS:
-                case FOOTWAY:
-                case BRIDLEWAY:
-                case CYCLEWAY:
-                case PATH:
-                case ROAD:
-                */
                 case HIGHWAY:
                     if (!isArea) {
                         addRoad(elementType, false, false, roadType);
@@ -824,7 +744,7 @@ public final class OSMHandler implements ContentHandler {
                     break;
                 case BUILDING:
                     addBuilding(elementType, false);
-                    if(place == AmenityType.RAILWAY_STATION)addAmenity(AmenityType.RAILWAY_STATION_AREA, false);
+                    //if(place == AmenityType.RAILWAY_STATION)addAmenity(AmenityType.RAILWAY_STATION, false);
                     break;
                 case WATER:
                 case WETLAND:
@@ -855,51 +775,22 @@ public final class OSMHandler implements ContentHandler {
                     addManMade(elementType, false, false);
                     break;
                 case UNKNOWN:
-                    // UnknownWay unknownWay = new UnknownWay(path);
-                    // model.addWayElement(elementType, unknownWay);
+                    // We dont want to add unknown elements to the data model
                     break;
                 }
                 switch (place) {
                     case HOSPITAL:
                     case UNIVERSITY:
-                    case PLACE_OF_WORSHIP:
                     case SPORT_AMENITY:
                     case PARKING_AMENITY:
-                    case RAILWAY_STATION_AREA:
+                    case RAILWAY_STATION:
                     case AIRPORT_AMENITY:
-                        addAmenity(place, false);
+                        addAmenity(place, false, false);
                         break;
                 }
                 break;
             case "relation":
                 switch (elementType) {
-                    /*
-                    case MOTORWAY:
-                    case MOTORWAY_LINK:
-                    case TRUNK_ROAD:
-                    case TRUNK_ROAD_LINK:
-                    case PRIMARY_ROAD:
-                    case PRIMARY_ROAD_LINK:
-                    case SECONDARY_ROAD:
-                    case SECONDARY_ROAD_LINK:
-                    case TERTIARY_ROAD:
-                    case TERTIARY_ROAD_LINK:
-                    case UNCLASSIFIED_ROAD:
-                    case RESIDENTIAL_ROAD:
-                    case PEDESTRIAN_STREET:
-                    case LIVING_STREET:
-                    case SERVICE_ROAD:
-                    case BUS_GUIDEWAY:
-                    case ESCAPE:
-                    case RACEWAY:
-                    case TRACK:
-                    case STEPS:
-                    case FOOTWAY:
-                    case BRIDLEWAY:
-                    case CYCLEWAY:
-                    case PATH:
-                    case ROAD:
-                    */
                     case HIGHWAY:
                         addRoad(elementType, true, true, roadType);
                         isArea = false;
@@ -940,7 +831,7 @@ public final class OSMHandler implements ContentHandler {
                 }
                 switch (place) {
                     case UNIVERSITY:
-                        addAmenity(place, true);
+                        addAmenity(place, true, false);
                         break;
                 }
                 break;
@@ -1118,13 +1009,12 @@ public final class OSMHandler implements ContentHandler {
                                 (float)relation.get(i).get(j).getY(), biome);
                             model.getElements().get(type).putPointer(p);
                         }
-                    } else
-                        continue;
+                    }
                 }
             }
     }
 
-    private void addAmenity(AmenityType type, boolean isRelation) {
+    private void addAmenity(AmenityType type, boolean isRelation, boolean isNode) {
         Amenity amenity;
         Pointer p;
         PolygonApprox polygonApprox;
@@ -1133,53 +1023,55 @@ public final class OSMHandler implements ContentHandler {
             case NIGHT_CLUB:
             case FAST_FOOD:
             case RAILWAY_STATION:
-                amenity = new Amenity(type,longitude * longitudeFactor, -latitude, name.intern());
-                if(!checkForNearbyAmenity(amenity, 0.0001f)){
-                    p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
-                    amenities.add(p);
+                if(isNode){
+                    amenity = new Amenity(type,longitude * longitudeFactor, -latitude, name.intern());
+                    if(!checkForNearbyAmenity(amenity, 0.001f)){
+                        p = new Pointer(longitude * longitudeFactor, -latitude, amenity);
+                        amenities.add(p);
+                    }
+                }
+                else{
+                    polygonApprox = new PolygonApprox(way);
+                    amenity = new Amenity(type, polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
+                    if(!checkForNearbyAmenity(type, amenity, 0.001f)){
+                        p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
+                        model.getElements().get(ElementType.AMENITY).putPointer(p);
+                    }
                 }
                 break;
-
-            case PLACE_OF_WORSHIP:
             case PARKING_AMENITY:
             case SPORT_AMENITY:
             case HOSPITAL:
                 polygonApprox = new PolygonApprox(way);
                 amenity = new Amenity(type, polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
-                p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
-                model.getElements().get(ElementType.AMENITY).putPointer(p);
-                break;
-
-            case RAILWAY_STATION_AREA:
-                polygonApprox = new PolygonApprox(way);
-                amenity = new Amenity(type, polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
-                if(!checkForNearbyAmenity(ElementType.AMENITY, amenity, 0.001f)){
+                if(!checkForNearbyAmenity(type, amenity, 0.0005f)){
                     p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                     model.getElements().get(ElementType.AMENITY).putPointer(p);
                 }
                 break;
-
             case UNIVERSITY:
                 if (!isRelation){
                     polygonApprox = new PolygonApprox(way);
                     amenity = new Amenity(type, polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
-                    if(!checkForNearbyAmenity(ElementType.AMENITY, amenity, 0.0001f) && isWikiDataAvalible){
+                    if(!checkForNearbyAmenity(type, amenity, 0.001f) && isWikiDataAvalible){
                         p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                         model.getElements().get(ElementType.AMENITY).putPointer(p);
                     }
                 }
                 else {
+                    /*
+                     * Some univesities, such as in Aarhus, are relations and spread throughout a wider area.
+                     */
                     if(relation.size() > 3){
                         polygonApprox = new PolygonApprox(relation.get(3));
                         amenity = new Amenity(type, polygonApprox.getCenterX(), polygonApprox.getCenterY(), name.intern());
-                        if(!checkForNearbyAmenity(ElementType.AMENITY, amenity, 0.001f) && isWikiDataAvalible){
+                        if(!checkForNearbyAmenity(type, amenity, 0.001f) && isWikiDataAvalible){
                             p = new Pointer(polygonApprox.getCenterX(), polygonApprox.getCenterY(), amenity);
                             model.getElements().get(ElementType.AMENITY).putPointer(p);
                         }
                     }
                 }
                 break;
-
             case AIRPORT_AMENITY:
                 if(way == null){
                     amenity = new Amenity(type, longitude * longitudeFactor, -latitude, name.intern());
@@ -1198,8 +1090,11 @@ public final class OSMHandler implements ContentHandler {
 
     /*
      * Check for nearby amenities in the KDTree with amenities.
+     * @param AmenityType the kind of amenity which is checked for
+     * @param the new amenity
+     * @float the minimum distance to other amenities of the kind specified as the first parameter
      */
-    private boolean checkForNearbyAmenity(ElementType type, Amenity amenity, float bufferDistance){
+    private boolean checkForNearbyAmenity(AmenityType type, Amenity amenity, float bufferDistance){
         boolean isAmenityNear = false;
         HashSet<SuperElement> nearbyAmenities;
         float maxX = amenity.getX() + bufferDistance;
@@ -1207,33 +1102,38 @@ public final class OSMHandler implements ContentHandler {
         float maxY = amenity.getY() + bufferDistance;
         float minY = amenity.getY() - bufferDistance;
 
-        nearbyAmenities = model.getElements().get(type).getManySections(minX, minY, maxX, maxY);
+        nearbyAmenities = model.getElements().get(ElementType.AMENITY).getManySections(minX, minY, maxX, maxY);
         for(SuperElement element : nearbyAmenities){
             Amenity amenityInModel = (Amenity) element;
-            double dist = Math.sqrt((Math.pow((amenity.getX()-amenityInModel.getX()),2))+(Math.pow((amenity.getY()-amenityInModel.getY()),2)));
-            if(dist < bufferDistance){
-                isAmenityNear = true;
-                break;
+            if(amenityInModel.getAmenityType() == type){
+                double dist = Math.sqrt((Math.pow((amenity.getX()-amenityInModel.getX()),2))+(Math.pow((amenity.getY()-amenityInModel.getY()),2)));
+                if(dist < bufferDistance){
+                    isAmenityNear = true;
+                    break;
+                }
             }
         }
         return isAmenityNear;
     }
+
     /*
-     * Check for nearby amenity in the ArrayList. This have to be done while parsing OSMNode,
+     * Check for nearby amenity in the ArrayList. This have to be done while parsing OSMNodes,
      * as the ArrayList is emptied when OSMWays start to be parsed.
      */
     private boolean checkForNearbyAmenity(Amenity amenity, float bufferDistance){
         boolean isAmenityNear = false;
         for(Pointer pointer : amenities){
-            float amenityX = amenity.getX();
-            float amenityY = amenity.getY();
             Amenity pointerAmenity = (Amenity) pointer.getElement();
-            float pointerX = pointerAmenity.getX();
-            float pointerY = pointerAmenity.getY();
+            if(amenity.getAmenityType() == pointerAmenity.getAmenityType()){
+                float amenityX = amenity.getX();
+                float amenityY = amenity.getY();
+                float pointerX = pointerAmenity.getX();
+                float pointerY = pointerAmenity.getY();
 
-            double dist = Math.sqrt((Math.pow((amenityX-pointerX),2))+(Math.pow((amenityY-pointerY),2)));
-            if(dist < bufferDistance){
-                isAmenityNear = true;
+                double dist = Math.sqrt((Math.pow((amenityX-pointerX),2))+(Math.pow((amenityY-pointerY),2)));
+                if(dist < bufferDistance){
+                    isAmenityNear = true;
+                }
             }
         }
         return isAmenityNear;
@@ -1241,21 +1141,17 @@ public final class OSMHandler implements ContentHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-
     }
 
     @Override
     public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-
     }
 
     @Override
     public void processingInstruction(String target, String data) throws SAXException {
-
     }
 
     @Override
     public void skippedEntity(String name) throws SAXException {
-
     }
 }

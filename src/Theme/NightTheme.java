@@ -74,10 +74,9 @@ public class NightTheme implements Theme {
     public Color cityName() { return new Color(0xCCC9C7); }
     public Color roadName() { return new Color(0x000000); }
     public Color barName() { return new Color(0xF9FF17); }
-    public Color nightClubName() { return new Color(0xF9FF17); }
-    public Color fastFoodName() { return new Color(0xF9FF17); }
+    public Color nightClubName() { return new Color(0x00FFFF); }
+    public Color fastFoodName() { return new Color(0xFF00F6); }
     public Color hospital() { return new Color(0xA80405); }
-    public Color placeOfWorship() { return new Color(0x000000); }
     public Color parkingAmenity() { return new Color(0x000000); }
     public Color sportAmenity() { return new Color(0x000000); }
     public Color railwayStation() { return new Color(0x000000 ); }
@@ -120,7 +119,7 @@ public class NightTheme implements Theme {
         return new Color(0x34445A);
     }
     public Color bridge(){
-        return new Color(0x000000);
+        return new Color(0x6C6C6C);
     }
     public Color sportspitch(){
         return new Color(0x044512);
@@ -150,8 +149,6 @@ public class NightTheme implements Theme {
     public Color residentialRoad() { return new Color(0x787878); }
     public Color livingStreet() { return new Color(0x787878); }
     public Color serviceRoad() { return new Color(0x787878); }
-    public Color busGuideway() { return new Color(0x787878); }
-    public Color escape() { return new Color(0x787878); }
     public Color raceway() { return new Color(0x787878); }
     public Color pedestrianStreet() { return new Color(0x787878); }
     public Color track() { return new Color(0x787878); }

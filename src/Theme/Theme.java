@@ -71,8 +71,6 @@ public interface Theme {
     public abstract Color residentialRoad();
     public abstract Color livingStreet();
     public abstract Color serviceRoad();
-    public abstract Color busGuideway();
-    public abstract Color escape();
     public abstract Color raceway();
     public abstract Color pedestrianStreet();
     public abstract Color track();
@@ -94,7 +92,6 @@ public interface Theme {
     public abstract Color fastFoodName();
 
     public abstract Color hospital();
-    public abstract Color placeOfWorship();
     public abstract Color parkingAmenity();
     public abstract Color sportAmenity();
     public abstract Color railwayStation();
