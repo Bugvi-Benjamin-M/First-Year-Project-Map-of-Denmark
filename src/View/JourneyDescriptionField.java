@@ -38,38 +38,6 @@ public class JourneyDescriptionField extends View {
         scroll.getHorizontalScrollBar().setUnitIncrement(SCROLL_SPEED);
         add(scroll, BorderLayout.CENTER);
         field.setBackground(ThemeHelper.color("searchfield"));
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("hello");
-        addLine("helloejwifjewroigjreogijordtigjortijghoiretjgoijreogijertoigjeprtoihjertpoighjerptogijertbgetr");
 
     }
 

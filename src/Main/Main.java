@@ -78,60 +78,7 @@ public class Main {
             System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
             DebugWindow.getInstance().setLoadtimeLabel();
             CanvasExtrasController.getInstance().updateDistance();
-
-            if (DEBUG_MODE) {
-                try {
-                    dijkstra(model);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         });
-    }
-
-    private static void dijkstra(Model model){
-        long time = System.currentTimeMillis();
-
-        RoadGraphFactory factory = model.getGraphFactory();
-        System.out.println("starting route search...");
-
-        ArrayList<Value> list = Model.getInstance().getTst().get("Rued Langgaards Vej 7");
-
-        for(Value val : list){
-            System.out.println("X: " + val.getX() + "; Y: " + val.getY());
-        }
-
-        RoadEdge start = factory.getRoad("Eratosvej");
-        RoadEdge end = factory.getRoad("Vester Oddevej");
-        if (start != null || end != null) {
-            new Thread() {
-                public void run() {
-                    RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
-                            factory.getGraph(), start.getEither(),
-                            end.getEither(), Enums.TravelType.VEHICLE);
-                    Iterable<RoadEdge> iterator = dijk.path();
-                    if (iterator != null) {
-                        factory.setRoute(iterator);
-                        List<RoadEdge> route = factory.getRoute();
-                        if (route != null && route.size() != 0) {
-                            for (int i = 0; i < route.size(); i++) {
-                                System.out.println(route.get(i).getName() +
-                                        ": " + route.get(i).getLength() + " m");
-                            }
-                            CanvasController.getInstance().getMapCanvas().setRoute(route);
-                        } else {
-                            System.out.println("No route found...");
-                        }
-                    } else {
-                        System.out.println("No path found...");
-                    }
-                    System.out.println("Route time: " + (System.currentTimeMillis() - time) + " ms");
-                    // JourneyPlannerBarController.printRouteDescription();
-                }
-            }.start();
-        } else {
-            System.out.println("Roads not found...");
-        }
     }
 
     private static void createControllers()

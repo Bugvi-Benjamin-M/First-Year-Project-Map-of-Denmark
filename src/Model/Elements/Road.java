@@ -168,13 +168,19 @@ public class Road extends Element {
     }
 
     public Point2D getNearestPoint(Point2D point) {
-        Point2D closest = null; float minDistance = 0.0f;
+        if (point == null ) throw new NullPointerException("Point cannot be null");
+        if (relation == null) throw new NullPointerException("Relation has not been initialized");
+        Point2D closest = null; float minDistance = Float.POSITIVE_INFINITY;
         for (OSMWay way : relation) {
-            for (Point2D nd : way) {
-                float distance = (float) HelperFunctions.distanceBetweenTwoPoints(nd,point);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closest = nd;
+            if (way != null) {
+                for (Point2D nd : way) {
+                    if (nd != null) {
+                        float distance = (float) HelperFunctions.distanceBetweenTwoPoints(nd,point);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closest = nd;
+                        }
+                    }
                 }
             }
         }

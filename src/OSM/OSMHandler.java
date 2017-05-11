@@ -18,7 +18,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import sun.corba.Bridge;
 
 import java.awt.geom.Point2D;
 import java.lang.reflect.Array;

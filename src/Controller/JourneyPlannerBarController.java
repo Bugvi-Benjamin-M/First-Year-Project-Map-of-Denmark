@@ -1,6 +1,7 @@
 package Controller;
 
 import Controller.ToolbarControllers.ToolbarController;
+import Controller.CanvasController;
 import Enums.ToolType;
 import Enums.TravelType;
 import Helpers.FontAwesome;
@@ -18,6 +19,7 @@ import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import Model.Elements.Road;
 /**
  * Created by  on .
  *
@@ -311,6 +313,19 @@ public final class JourneyPlannerBarController extends Controller {
     private void searchInitialised() {
         isSearch = true;
         descriptionButton.setForeground(ThemeHelper.color("icon"));
+
+        RoadGraphFactory factory = Model.getInstance().getGraphFactory();
+
+        Road start = CanvasController.calculateNearestNeighbour((float)fromPoint.getX(), (float)fromPoint.getY());
+        Road end = CanvasController.calculateNearestNeighbour((float)toPoint.getX(), (float)toPoint.getY());
+
+        RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
+                factory.getGraph(), start.getNearestPoint(fromPoint), end.getNearestPoint(toPoint), type);
+        factory.setRoute(dijk.path());
+        CanvasController.getInstance().getMapCanvas().setRoute(dijk.path());
+
+        printRouteDescription();
+
     }
 
     private void noSearchInitialised() {
