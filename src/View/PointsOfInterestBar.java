@@ -32,7 +32,7 @@ public class PointsOfInterestBar extends View {
 
 
     public void setupNoPOIPanel() {
-        NO_POI_SAVED.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
+        NO_POI_SAVED.setBorder(BorderFactory.createEmptyBorder());
         NO_POI_SAVED.remove(NO_POI_SAVED.getDeleteButton());
         for(MouseListener listener : NO_POI_SAVED.getMouseListeners()) {
             NO_POI_SAVED.removeMouseListener(listener);
@@ -70,10 +70,7 @@ public class PointsOfInterestBar extends View {
 
     public void applyTheme() {
         setBackground(ThemeHelper.color("toolbar"));
-        if(NO_POI_SAVED != null) {
-            NO_POI_SAVED.setBackground(ThemeHelper.color("toolbar"));
-            NO_POI_SAVED.setForeground(ThemeHelper.color("icon"));
-        }
+        NO_POI_SAVED.applyTheme();
     }
 
     public void addNoPoiPanel() {

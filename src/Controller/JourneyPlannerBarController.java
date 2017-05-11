@@ -73,6 +73,11 @@ public final class JourneyPlannerBarController extends Controller {
     private final int DESCRIPTION_BUTTON_NORTH_DISTANCE = 25;
     private final int DESCRIPTION_BUTTON_EAST_DISTANCE = -20;
 
+    private final int LARGE_SEARCH_FONT = 13;
+    private final int SMALL_SEARCH_FONT = 11;
+
+    private final int DESCRIPTION_BUTTON_FONT_SIZE = 40;
+
 
     private InformationBar informationBar;
     private SpringLayout journeyPlannerBarLayout;
@@ -141,7 +146,7 @@ public final class JourneyPlannerBarController extends Controller {
         travelDescription = new JourneyDescriptionField();
         travelDescription.setOpaque(true);
         descriptionButton = new JLabel("\uf15c");
-        descriptionButton.setFont(FontAwesome.getFontAwesome().deriveFont(40));
+        descriptionButton.setFont(FontAwesome.getFontAwesome().deriveFont(DESCRIPTION_BUTTON_FONT_SIZE));
         descriptionButton.setOpaque(true);
         descriptionButton.setToolTipText("View Travel Description");
         addInteractionHandlersToJourneyPlannerTransportButtons();
@@ -164,6 +169,7 @@ public final class JourneyPlannerBarController extends Controller {
         fromSearcher.getSearchTool().setPreferredSize(new Dimension(SEARCHTOOL_WIDTH, SEARCHTOOL_LARGE_HEIGHT));
         fromSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH,SEARCHBAR_HEIGHT));
         fromSearcher.setBarBorder(TITLE_FONT_SIZE);
+        fromSearcher.getSearchTool().getField().setFont(new Font("Verdana", Font.PLAIN, LARGE_SEARCH_FONT));
         toSearcher.getSearchTool().setPreferredSize(new Dimension(SEARCHTOOL_WIDTH, SEARCHTOOL_LARGE_HEIGHT));
         toSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH, SEARCHBAR_HEIGHT));
         toSearcher.setBarBorder(TITLE_FONT_SIZE);
@@ -202,6 +208,7 @@ public final class JourneyPlannerBarController extends Controller {
         fromSearcher.getSearchTool().setPreferredSize(new Dimension(SEARCHTOOL_WIDTH, SEARCHTOOL_SMALL_HEIGHT));
         fromSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH,SEARCHBAR_HEIGHT));
         fromSearcher.setBarBorder(SMALL_TITLE_FONT_SIZE);
+        fromSearcher.getSearchTool().getField().setFont(new Font("Verdana", Font.PLAIN, SMALL_SEARCH_FONT));
         toSearcher.getSearchTool().setPreferredSize(new Dimension(SEARCHTOOL_WIDTH, SEARCHTOOL_SMALL_HEIGHT));
         toSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH,SEARCHBAR_HEIGHT));
         toSearcher.setBarBorder(SMALL_TITLE_FONT_SIZE);
@@ -263,6 +270,19 @@ public final class JourneyPlannerBarController extends Controller {
         if(descriptionButton != null) {
             if(isSearch) descriptionButton.setForeground(ThemeHelper.color("icon"));
             else descriptionButton.setForeground(ThemeHelper.color("inactiveButton"));
+
+            if(isDescriptionFieldOpen) descriptionButton.setForeground(ThemeHelper.color("toolActivated"));
+        }
+        switch (type) {
+            case WALK:
+                journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("toolActivated"));
+                break;
+            case BICYCLE:
+                journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("toolActivated"));
+                break;
+            case VEHICLE:
+                journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("toolActivated"));
+                break;
         }
     }
 
@@ -389,10 +409,10 @@ public final class JourneyPlannerBarController extends Controller {
                 toSearcher.setCurrentQuery("");
                 travelDescription.getField().setText("");
                 MainWindowController.getInstance().requestCanvasResetToAndFrom();
-                MainWindowController.getInstance().requestCanvasRepaint();
                 descriptionButton.setForeground(ThemeHelper.color("inactiveButton"));
                 if(isDescriptionFieldOpen && isSmallJourneyPlannerVisible) descriptionDeactivationEvent();
                 noSearchInitialised();
+                MainWindowController.getInstance().requestCanvasRepaint();
             }
 
             @Override
@@ -423,6 +443,7 @@ public final class JourneyPlannerBarController extends Controller {
                 super.mouseClicked(e);
                 searchActivatedEvent();
                 if(isSearch) {
+                    travelDescription.getField().setText("");
                     if(isSmallJourneyPlannerVisible) descriptionButton.setForeground(ThemeHelper.color("icon"));
                     RoadGraphFactory factory = Model.getInstance().getGraphFactory();
 
