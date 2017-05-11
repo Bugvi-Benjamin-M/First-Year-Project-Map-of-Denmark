@@ -656,6 +656,8 @@ public class MapCanvas extends View {
             drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
             drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
 
+            drawRoadsLevel_5_6(g);
+            /*
             drawRoad(g, RoadType.TERTIARY_ROAD, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.0001f, 1);
             drawRoad(g, RoadType.TERTIARY_ROAD_LINK, ThemeHelper.color("tertiaryRoad"), Color.PINK, 0.0001f, 1);
             drawRoad(g, RoadType.SECONDARY_ROAD, ThemeHelper.color("secondaryRoad"), Color.PINK, 0.0001f, 1);
@@ -666,6 +668,7 @@ public class MapCanvas extends View {
             drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00012f, 1);
             drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), Color.PINK, 0.00018f, 1);
             drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), Color.PINK, 0.00014f, 1);
+            */
 
             /*
             drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
@@ -692,12 +695,15 @@ public class MapCanvas extends View {
             drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
             drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
 
-            /*drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            drawRoadsLevel_5_6(g);
+            /*
+            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
             drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00014f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00012f, 1);
             drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), Color.PINK, 0.00018f, 1);
-            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), Color.PINK, 0.00014f, 1);*/
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), Color.PINK, 0.00014f, 1);
+            */
 
             /*
             drawPrimaryRoads(g, ThemeHelper.color("primaryRoad"), 0.0001f);
@@ -775,6 +781,28 @@ public class MapCanvas extends View {
 
     public void setCurrentPoint(Point2D currentPoint) {
         this.currentPoint = currentPoint;
+    }
+
+    private void drawRoadsLevel_5_6(Graphics2D g){
+        setCurrentSection(ElementType.HIGHWAY_LEVEL_5_6);
+        for (SuperElement element : currentSection){
+            Road road = (Road) element;
+            switch(road.getRoadType()){
+                case MOTORWAY:
+                    g.setStroke(new BasicStroke(0.0001f, 1, BasicStroke.JOIN_BEVEL));
+                    g.setColor(ThemeHelper.color("primaryRoad"));
+                    break;
+                case TRUNK_ROAD:
+                    g.setStroke(new BasicStroke(0.00014f, 1, BasicStroke.JOIN_BEVEL));
+                    g.setColor(ThemeHelper.color("trunkRoad"));
+                    break;
+                case PRIMARY_ROAD:
+                    g.setStroke(new BasicStroke(0.00018f, 1, BasicStroke.JOIN_BEVEL));
+                    g.setColor(ThemeHelper.color("motorway"));
+                    break;
+            }
+            g.draw(road.getShape());
+        }
     }
 
     private void drawRoad(Graphics2D g, RoadType roadType, Color color, Color areaColor, float strokeWidth, int lineEnd){
