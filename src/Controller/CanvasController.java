@@ -162,6 +162,7 @@ public final class CanvasController extends Controller implements Observer {
     public void updateToAndFrom(Point2D.Float to, Point2D.Float from){
         mapCanvas.setToMarker(to);
         mapCanvas.setFromMarker(from);
+        panToPoint(from);
     }
 
     private void addInteractionHandlerToCanvas()
