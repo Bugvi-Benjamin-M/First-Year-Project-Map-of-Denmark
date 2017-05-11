@@ -321,6 +321,14 @@ public final class JourneyPlannerBarController extends Controller {
 
         RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
                 factory.getGraph(), start.getNearestPoint(fromPoint), end.getNearestPoint(toPoint), type);
+
+        if(dijk.path() == null)
+        {
+            // No route
+            System.out.println("No route");
+            return;
+        }
+
         factory.setRoute(dijk.path());
         CanvasController.getInstance().getMapCanvas().setRoute(dijk.path());
 
