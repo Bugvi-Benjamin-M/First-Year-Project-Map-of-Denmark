@@ -692,12 +692,12 @@ public class MapCanvas extends View {
             drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
             drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
 
-            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
+            /*drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
             drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), Color.PINK, 0.0001f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00014f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), Color.PINK, 0.00012f, 1);
             drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), Color.PINK, 0.00018f, 1);
-            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), Color.PINK, 0.00014f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), Color.PINK, 0.00014f, 1);*/
 
             /*
             drawPrimaryRoads(g, ThemeHelper.color("primaryRoad"), 0.0001f);

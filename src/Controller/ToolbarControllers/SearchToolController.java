@@ -158,6 +158,10 @@ public final class SearchToolController extends SearchController {
                 if (checkForProhibitedKey(e)) {
                     return;
                 }
+                if (OSDetector.isMac()) {
+                    if (e.getKeyCode() == KeyEvent.VK_UP) return;
+                    if (e.getKeyCode() == KeyEvent.VK_DOWN) return;
+                }
 
                 switch (e.getKeyChar()) {
                     case KeyEvent.VK_ENTER:
@@ -179,6 +183,22 @@ public final class SearchToolController extends SearchController {
                 if (checkForProhibitedKey(e)) {
                     return;
                 }
+                if(OSDetector.isMac()) {
+                    if (searchTool.getField().isPopupVisible()) {
+                        if (e.getKeyCode() == KeyEvent.VK_UP) {
+                            if (searchTool.getField().getSelectedIndex() > 0) {
+                                searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() - 1);
+                                return;
+                            } else return;
+                        }
+                        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                            if (searchTool.getField().getSelectedIndex() < searchTool.getField().getModel().getSize() - 1) {
+                                searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() + 1);
+                                return;
+                            } else return;
+                        }
+                    }
+                }
                 if (/*e.getKeyChar() != KeyEvent.VK_BACK_SPACE &&*/ e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE) {
                     //currentQuery = searchTool.getText();
                     if(queryTimer == null) {
@@ -194,6 +214,7 @@ public final class SearchToolController extends SearchController {
                     } else queryTimer.restart();
                     //showMatchingResults();
                     //searchTool.setText(currentQuery);
+
                 }
 
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {

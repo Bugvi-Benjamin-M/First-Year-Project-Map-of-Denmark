@@ -342,6 +342,10 @@ public final class MainWindowController extends WindowController {
             {
                 CanvasController.getInstance().disablePopup();
                 ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(false);
+                if(ToolbarController.getInstance().isMenuToolPopupVisible()) {
+                    ToolbarController.getInstance().requestHideMenuToolPopup();
+                    ToolbarController.getInstance().getToolbar().getTool(ToolType.MENU).toggleActivate(false);
+                }
 
             }
 
@@ -508,6 +512,10 @@ public final class MainWindowController extends WindowController {
             super.componentHidden(e);
             CanvasController.getInstance().disablePopup();
             ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(false);
+            if(ToolbarController.getInstance().isMenuToolPopupVisible()) {
+                ToolbarController.getInstance().requestHideMenuToolPopup();
+                ToolbarController.getInstance().getToolbar().getTool(ToolType.MENU).toggleActivate(false);
+            }
         }
 
         @Override

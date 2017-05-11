@@ -25,7 +25,7 @@ public abstract class SearchController extends Controller {
         private boolean validSearch;
         protected String currentQuery;
         protected final int[] prohibitedKeys = new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_ALT, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
-                KeyEvent.VK_META, KeyEvent.VK_DOWN, KeyEvent.VK_UP, KeyEvent.VK_WINDOWS, KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_UNDEFINED};
+                KeyEvent.VK_META, /*KeyEvent.VK_DOWN, KeyEvent.VK_UP,*/ KeyEvent.VK_WINDOWS, KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_UNDEFINED};
         protected javax.swing.Timer queryTimer;
         protected final int QUERY_DELAY = 900;
 
