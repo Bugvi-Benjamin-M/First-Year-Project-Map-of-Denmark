@@ -281,7 +281,7 @@ public class MapCanvas extends View {
         }
     }
 
-    public void setRoute(List<RoadEdge> route) {
+    public void setRoute(Iterable<RoadEdge> route) {
         OSMWay way = new OSMWay();
         for (RoadEdge edge : route) {
             way.add(edge.getEither());
