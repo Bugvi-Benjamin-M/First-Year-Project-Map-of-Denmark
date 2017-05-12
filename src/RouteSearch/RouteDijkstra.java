@@ -70,10 +70,9 @@ public class RouteDijkstra {
             distTo.put(w, distTo.get(v) + e.getWeight(type, start, end));
             edgeTo.put(w, e);
 
-            if(w == end){
-                pQ.remove(new Node(w, 0));      //The weight does not matter ..
-            }
-            pQ.add(new Node(w, distTo.get(w)));
+            Node next = new Node(w, distTo.get(w));
+            pQ.remove(next);      //The weight does not matter .. (Takes linear time)
+            pQ.add(next);
         }
     }
 
