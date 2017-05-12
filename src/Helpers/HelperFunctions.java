@@ -9,8 +9,8 @@ import java.util.List;
 
 /**
  * Class details:
- * A collection of different mathematical functions used for different
- * purposes in different parts of the program.
+ * A collection of different mathematical and useful functions
+ * used for different purposes in different parts of the program.
  *
  * @author Andreas Blanke, blan@itu.dk
  * @version 04-04-2017
@@ -199,13 +199,15 @@ public class HelperFunctions {
     }
 
     public static double angle(Point2D from1, Point2D to1,Point2D from2,Point2D to2){
+        if (from1 == null || from2 == null || to1 == null || to2 == null)
+            throw new IllegalArgumentException("No arguments may be null.");
         Vector a = new Vector(from1,to1);
         Vector b = new Vector(from2,to2);
         return angle(a,b);
     }
 
     private static double angle(Vector a, Vector b) {
-        System.out.println("a "+a.toString()+" - b "+b.toString());
+        //System.out.println("a "+a.toString()+" - b "+b.toString());
         double distances = a.length() * b.length();
         return (dotProduct(a,b) / distances);
     }

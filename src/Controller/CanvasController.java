@@ -88,8 +88,8 @@ public final class CanvasController extends Controller implements Observer {
         mapCanvas.toggleRouteVisualization(isActive);
     }
 
-    public void resetToAndFrom(){
-        mapCanvas.resetToAndFrom();
+    public void resetRoute(){
+        mapCanvas.resetRoute();
     }
 
     public void resizeEvent()

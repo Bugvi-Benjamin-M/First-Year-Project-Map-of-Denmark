@@ -46,7 +46,15 @@ public class RouteDijkstra {
 
         Node next;
         while ((next = pQ.poll()) != null) {
-            handleNextNode(next, graph);
+            Point2D v = next.point;
+            List<RoadEdge> adj = graph.adjacent(v);
+            if(adj != null){
+                handleNextNode(adj);
+            }
+
+            if (v.equals(end)) {
+                return; //done
+            }
         }
     }
 
@@ -58,23 +66,16 @@ public class RouteDijkstra {
             edgeTo.put(w, e);
 
             Node next = new Node(w, distTo.get(w));
-            pQ.remove(next); //Takes O(n)
+            if(w == end){
+                pQ.remove(next); //Takes O(n)
+            }
             pQ.add(next); //Takes O(n)
         }
     }
 
-    private void handleNextNode(Node next, RoadGraph graph){
-        Point2D v = next.point;
-        List<RoadEdge> adj = graph.adjacent(v);
-        if(adj != null){
-            for (RoadEdge e : adj) {
-                relax(e);
-            }
-        }
-
-        if (v.equals(end)) {
-            System.out.println("Found route!");
-            return;
+    private void handleNextNode(List<RoadEdge> adj){
+        for (RoadEdge e : adj) {
+            relax(e);
         }
     }
 

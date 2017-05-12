@@ -445,8 +445,8 @@ public final class MainWindowController extends WindowController {
         CanvasController.getInstance().updateToAndFrom(to, from);
     }
 
-    public void requestCanvasResetToAndFrom(){
-        CanvasController.getInstance().resetToAndFrom();
+    public void requestCanvasResetRoute(){
+        CanvasController.getInstance().resetRoute();
     }
 
     public void requestCanvasUpdateAddressMarker(Point2D.Float address){

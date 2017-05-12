@@ -59,16 +59,23 @@ public abstract class SearchController extends Controller {
                 //if there exists a value
                 if(list != null) {
                     validSearch = true;
+                    //if the address exists multiple times
                     if (list.size() > 1) {
-                        String[] cities = buildCityNameList(list);
-                        int resultIndex = selectCity(cities);
-                        if(resultIndex >= 0) {
-                            point = new Point2D.Float(list.get(resultIndex).getX(), list.get(resultIndex).getY());
+                        String result = selectCity(list);
+                        String[] unsortedCities = buildCityNameList(list);
+                        if(result != null) {
+                            for(int i = 0; i < unsortedCities.length; i++){
+                                if(unsortedCities[i].equals(result)){
+                                    point = new Point2D.Float(list.get(i).getX(), list.get(i).getY());
+                                    break;
+                                }
+                            }
                         }
                     } else {
                         point = new Point2D.Float(list.get(0).getX(), list.get(0).getY());
                     }
                 }else{
+                    //finding strings that could match the input
                     String[] matches = manageSearchResults();
                     if(matches.length > 0) {
                         selectAddress(matches);
@@ -84,7 +91,13 @@ public abstract class SearchController extends Controller {
             //return null;
         }
 
-        protected String[] buildCityNameList(ArrayList<Value> list){
+    /**
+     * Converts the values of the match to an array of strings.
+     * @param list the list of values that match the pattern.
+     * @return
+     */
+
+    protected String[] buildCityNameList(ArrayList<Value> list){
             String[] cities = new String[list.size()];
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).getCitynameindex() != 0) {
@@ -96,22 +109,28 @@ public abstract class SearchController extends Controller {
             return cities;
         }
 
-        protected int selectCity(String[] cities){
+    /**
+     * Creates a sorted list of cities to choose from.
+     * @param list The list of values that match the pattern.
+     * @return
+     */
+
+        protected String selectCity(ArrayList<Value> list){
+            String[] cities = buildCityNameList(list);
             Arrays.sort(cities);
             String result = PopupWindow.confirmBox(null, "Select a City:", "Multiple Search Results!", cities);
             if(result != null) {
-                int resultIndex = 0;
-                for (int i = 0; i < cities.length; i++) {
-                    if (cities[i].equals(result)) {
-                        resultIndex = i;
-                        break;
-                    }
-                }
-                return resultIndex;
-            }else return -1;
+                return result;
+            }else return null;
         }
 
-        protected void selectAddress(String[] matches){
+    /**
+     * Sorts the addresses that match the pattern and opens a confirmbox that lets the user choose
+     * between one of the addresses.
+     * @param matches All strings that match the pattern (unsorted)
+     */
+
+    protected void selectAddress(String[] matches){
             Arrays.sort(matches);
             String result = PopupWindow.confirmBox(null, "Select an Address:", "Multiple Search Results!", matches);
             if(result != null) {
@@ -121,48 +140,89 @@ public abstract class SearchController extends Controller {
             }
         }
 
-        protected void showMatchingResults() {
+    /**
+     * Shows all keys in the TST that could match the user input.
+     */
+
+    protected void showMatchingResults() {
             if (searchTool.getField().isPopupVisible() && searchTool.getField().getItemCount() == 0)
-            searchTool.getField().hidePopup();
+                searchTool.getField().hidePopup();
             searchTool.getField().removeAllItems();
-            if(currentQuery == null || currentQuery.equals("")) {
+            if (currentQuery == null || currentQuery.equals("")) {
                 searchTool.getField().removeAllItems();
                 return;
             } else {
-            String[] listToShow = manageSearchResults();
-                if(listToShow == null) return;
+                String[] listToShow = manageSearchResults();
+                if (listToShow == null) return;
+                listToShow = sortByBestMatch(listToShow);
                 for (String s : listToShow) {
-                searchTool.getField().addItem(s);
+                    searchTool.getField().addItem(s);
                 }
             }
             //searchTool.getField().hidePopup();
             searchTool.getField().showPopup();
         }
 
-        private String[] manageSearchResults(){
-            if(currentQuery == null) return null;
-            HashMap<Boolean, ArrayList<String>> map = Model.getInstance().getTst().keysThatMatch(currentQuery.toLowerCase());
-            ArrayList<String> listToShow = new ArrayList<>();
-            for (String s : map.get(true)) {
-                listToShow.add(s);
+    /**
+     * Builds a string array of keys that possibly match the user input.
+     * Sorts the array by significance of keys.
+     * @return
+     */
+
+    private String[] manageSearchResults(){
+        if(currentQuery == null) return null;
+        HashMap<Boolean, ArrayList<String>> map = Model.getInstance().getTst().keysThatMatch(currentQuery.toLowerCase());
+        ArrayList<String> listToShow = new ArrayList<>();
+        for (String s : map.get(true)) {
+            listToShow.add(s);
+        }
+        int i = 0;
+        if(currentQuery.length() < 4) {
+            while (listToShow.size() <= 10 && i < map.get(false).size()) {
+                listToShow.add(map.get(false).get(i));
+                i++;
             }
-            int i = 0;
-            if(currentQuery.length() < 4) {
-                while (listToShow.size() <= 10 && i < map.get(false).size()) {
-                    listToShow.add(map.get(false).get(i));
-                    i++;
-                }
-            }else{
-                while (i < map.get(false).size()) {
-                    listToShow.add(map.get(false).get(i));
-                    i++;
-                }
+        }else{
+            while (i < map.get(false).size()) {
+                listToShow.add(map.get(false).get(i));
+                i++;
             }
-            String[] matchesArray = new String[listToShow.size()];
-            for (int j = 0; j < matchesArray.length ; j++) {
-                matchesArray[j] = listToShow.get(j);
+        }
+        String[] matchesArray = new String[listToShow.size()];
+        for (int j = 0; j < matchesArray.length ; j++) {
+            matchesArray[j] = listToShow.get(j);
+        }
+        return matchesArray;
+    }
+
+    /**
+     * Sorts the string array by giving strings that start with the user input
+     * a higher priority than strings that only contain the user input.
+     * @param matches
+     * @return
+     */
+
+        protected String[] sortByBestMatch(String[] matches){
+            ArrayList<String> goodMatch = new ArrayList<>();
+            ArrayList<String> badMatch = new ArrayList<>();
+            System.out.println(currentQuery);
+            for(String s : matches){
+                if(s.startsWith(currentQuery)){
+                    goodMatch.add(s);
+                }else badMatch.add(s);
             }
-            return matchesArray;
+            String[] sortedMatches = new String[matches.length];
+            int currentIndex = 0;
+            for(int i = 0; i < goodMatch.size(); i++){
+                sortedMatches[currentIndex] = goodMatch.get(i);
+                currentIndex++;
+            }
+            for(int i = 0; i < badMatch.size(); i++){
+                sortedMatches[currentIndex] = badMatch.get(i);
+                currentIndex++;
+            }
+
+            return sortedMatches;
         }
 
 

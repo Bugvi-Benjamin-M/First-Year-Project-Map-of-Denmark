@@ -76,10 +76,10 @@ public final class Model extends Observable {
         else return graphFactory.getGraph();
     }
 
-    public void setGraph(RoadGraph graph, List<RoadEdge> roads) {
+    public void setGraph(RoadGraph graph) {
         if (graph == null) throw new IllegalArgumentException("Graph object must not be null");
         if (graphFactory == null) {
-            graphFactory = new RoadGraphFactory(graph,roads);
+            graphFactory = new RoadGraphFactory(graph);
         } else {
             graphFactory.setGraph(graph);
         }

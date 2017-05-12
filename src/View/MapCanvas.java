@@ -210,9 +210,10 @@ public class MapCanvas extends View {
         this.drawRoute = isActive;
     }
 
-    public void resetToAndFrom(){
+    public void resetRoute(){
         toMarker = null;
         fromMarker = null;
+        route = null;
     }
 
     public void setLocationMarker(Point2D.Float locationMarker) {
@@ -262,7 +263,7 @@ public class MapCanvas extends View {
     }
 
     private void drawRoute(Graphics2D g) {
-        if (route != null) {
+        if (route != null && drawRoute) {
             g.setColor(ThemeHelper.color("route"));
             if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_6) {
                 g.setStroke(new BasicStroke(0.004f));

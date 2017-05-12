@@ -85,7 +85,11 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
     }
 
     public String describe(float length) {
-        return "Travel via "+getName()+" for " + (length) + " meters";
+        String name = getName();
+        if (name.equals("") || name.equals(" ")){
+            name = road.getRoadType().name();
+        }
+        return "Travel via "+name+" for " + (length) + " meters";
     }
 
     public int compareToRoad(RoadEdge other) {

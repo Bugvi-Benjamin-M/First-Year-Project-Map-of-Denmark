@@ -412,7 +412,7 @@ public final class JourneyPlannerBarController extends Controller {
                 fromSearcher.setCurrentQuery("");
                 toSearcher.setCurrentQuery("");
                 travelDescription.getField().setText("");
-                MainWindowController.getInstance().requestCanvasResetToAndFrom();
+                MainWindowController.getInstance().requestCanvasResetRoute();
                 descriptionButton.setForeground(ThemeHelper.color("inactiveButton"));
                 if(isDescriptionFieldOpen && isSmallJourneyPlannerVisible) descriptionDeactivationEvent();
                 noSearchInitialised();
