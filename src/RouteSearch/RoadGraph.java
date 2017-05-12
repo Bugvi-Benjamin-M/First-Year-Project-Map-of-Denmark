@@ -19,6 +19,7 @@ public class RoadGraph implements Serializable {
     private Map<Point2D,List<RoadEdge>> adjacencyList;
 
     public RoadGraph() {
+        // because of .75 loadFactor and approx. 8,5 mil elements
         adjacencyList = new HashMap<>(12000000);
     }
 
