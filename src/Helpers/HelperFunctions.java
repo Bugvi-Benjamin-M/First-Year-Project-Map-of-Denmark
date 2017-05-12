@@ -1,6 +1,7 @@
 package Helpers;
 
 import Controller.CanvasController;
+import OSM.OSMHandler;
 import OSM.OSMWay;
 
 import java.awt.geom.Point2D;
@@ -150,10 +151,12 @@ public class HelperFunctions {
      */
     public static double distanceInMeters(Point2D v, Point2D w) {
         double R = 6371e3;
-        double latitude1 = Math.toRadians(v.getY());
-        double latitude2 = Math.toRadians(w.getY());
+        float longfactor = OSMHandler.getInstance().getLongitudeFactor();
+        double latitude1 = Math.toRadians(-v.getY());
+        double latitude2 = Math.toRadians(-w.getY());
         double dy = Math.toRadians((v.getY()-w.getY()));
-        double dx = Math.toRadians(v.getX()-w.getX());
+        double dx = Math.toRadians((v.getX()/longfactor) -
+                (w.getX()/longfactor));
         double a = Math.sin(dy) * Math.sin(dy/2) +
                 Math.cos(latitude1) * Math.cos(latitude2) *
                         Math.sin(dx/2) * Math.sin(dx/2);
@@ -172,6 +175,40 @@ public class HelperFunctions {
             length += distanceInMeters(way.get(i - 1), way.get(i));
         }
         return length;
+    }
+
+    public static String convertNanotimeToTime(long loadtime) {
+        long loadtimeMilliseconds = loadtime / 1000000;
+        return convertMillitimeToTime(loadtimeMilliseconds);
+        }
+
+    public static String convertMillitimeToTime(long loadtime) {
+        long loadtimeSeconds = loadtime / 1000;
+        long loadtimeMinutes = loadtimeSeconds / 60;
+        String name = "";
+        if (loadtimeMinutes > 0) name += loadtimeMinutes + " m, ";
+        return name + (loadtimeSeconds - (loadtimeMinutes * 60)) + " s, " +
+                (loadtime - (loadtimeSeconds * 1000)) + " ms";
+    }
+
+    public static String simplifyNanoTime(long loadtime) {
+        long loadtimeMilliseconds = loadtime / 1000000;
+        long loadtimeSeconds = loadtimeMilliseconds / 1000;
+        long loadtimeMinutes = loadtimeSeconds / 60;
+        String time = "";
+        if (loadtimeMinutes > 0) {
+            time += loadtimeMinutes + " min";
+            long seconds = (loadtimeSeconds - (loadtimeMinutes * 60));
+            if (seconds > 0) time += ", "+seconds+" sec";
+        } else {
+            time += loadtimeSeconds + " sec";
+            long miliseconds = (loadtimeMilliseconds - (loadtimeSeconds * 1000));
+            if (miliseconds > 0) {
+                time += ", "+miliseconds+" ms";
+            }
+        }
+        if (time.equals("")) return "N/A";
+        return time;
     }
 
     public static float convertDistanceFromScreenCoordsToModelCoords(int distance) {

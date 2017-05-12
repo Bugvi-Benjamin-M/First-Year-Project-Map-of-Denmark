@@ -30,13 +30,9 @@ public class RoadGraph implements Serializable {
     public void addEdge(RoadEdge road, Point2D from, Point2D to) {
         if (road == null || from == null) throw new NullPointerException("RoadEdge or from point has not been initiliazed");
         List<RoadEdge> listFrom = adjacencyList.get(from);
-        //List<RoadEdge> listTo = adjacencyList.get(to);
         if (listFrom == null) listFrom = new ArrayList<>();
-        //if (listTo == null) listTo= new ArrayList<>();
         listFrom.add(road);
-        //listTo.add(road);
         adjacencyList.put(from, listFrom);
-        //adjacencyList.put(to, listTo);
         nEdges++;
     }
 

@@ -88,8 +88,9 @@ public class FileHandler {
                         FileHandler.loadResource(GlobalValue.DEFAULT_RESOURCE, isLoadingFromStart);
                     }
                 }
-                long stopTime = System.currentTimeMillis();
-                System.out.println("Resource load time: " + (stopTime - startTime) + " ms");
+                long loadtime = System.currentTimeMillis() - startTime;
+                System.out.println("Resource load time: " +
+                        HelperFunctions.convertMillitimeToTime(loadtime));
                 if (DEBUG_MODE_ACTIVE)
                     throw new FileWasNotFoundException("");
             } catch (FileWasNotFoundException e) {
@@ -130,10 +131,9 @@ public class FileHandler {
                             FileHandler.class.getResourceAsStream(filename)));
                 }
             }
-            long time = -System.nanoTime();
+            long time = System.nanoTime();
             Model.getInstance().setElements(
                 (EnumMap<ElementType, KDTree>)in.readObject());
-                System.out.println( " Done loading elements ");
 
             if (isLoadingFromStart) {
                 Model.getInstance().setBound(BoundType.MIN_LONGITUDE, in.readFloat());
@@ -156,9 +156,9 @@ public class FileHandler {
             Model.getInstance().setPointsOfInterest((ArrayList<POI>) in.readObject());
             //List<RoadEdge> edges = (List<RoadEdge>) in.readObject();
             Model.getInstance().setGraph((RoadGraph) in.readObject());
-            time += System.nanoTime();
-            System.out.printf("Object deserialization: %f s\n",
-                time / 1000000 / 1000d);
+            time = System.nanoTime() - time;
+            System.out.println("Object deserialization: "+
+                    HelperFunctions.convertNanotimeToTime(time));
             Model.getInstance().modelHasChanged();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -181,8 +181,9 @@ public class FileHandler {
             out.writeObject(Model.getInstance().getPointsOfInterest());
             //out.writeObject(Model.getInstance().getGraphFactory().getEdges());
             out.writeObject(Model.getInstance().getGraph());
-            System.out.println("DONE SERIALIZING");
-            System.out.println("Save time: "+((System.nanoTime() - time)/1.0e-6)+" ms");
+            time = System.nanoTime() - time;
+            System.out.println("Save time: "+
+                    HelperFunctions.convertNanotimeToTime(time));
         } catch (IOException e) {
             e.printStackTrace();
         }

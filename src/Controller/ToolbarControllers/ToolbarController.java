@@ -687,7 +687,8 @@ public final class ToolbarController extends Controller {
         SearchToolController.getInstance().themeHasChanged();
         toolbar.applyTheme();
         for(ToolType toolType : toolbar.getAllTools().keySet()) {
-            if(toolbar.getTool(toolType).getActivatedStatus()) toolbar.getTool(toolType).toggleActivate(true);
+            //if(toolbar.getTool(toolType).getActivatedStatus()) toolbar.getTool(toolType).toggleActivate(true);
+            toolbar.getTool(toolType).toggleActivate(toolbar.getTool(toolType).getActivatedStatus());
         }
     }
 

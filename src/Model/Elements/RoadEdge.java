@@ -1,5 +1,6 @@
 package Model.Elements;
 
+import Enums.OSMEnums.RoadType;
 import Enums.TravelType;
 import Helpers.GlobalValue;
 import Helpers.HelperFunctions;
@@ -10,6 +11,7 @@ import OSM.OSMWay;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
+import java.util.prefs.Preferences;
 
 /**
  * A RoadEdge object represent both an segment of an actual road
@@ -89,7 +91,7 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
         if (name.equals("") || name.equals(" ")){
             name = road.getRoadType().name();
         }
-        return "Travel via "+name+" for " + (length) + " meters";
+        return "Travel via "+name+" for " + (int) Math.floor(length) + " meters";
     }
 
     public int compareToRoad(RoadEdge other) {
@@ -122,4 +124,7 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
         return road.getName();
     }
 
+    public RoadType getRoadType() {
+        return road.getRoadType();
+    }
 }
