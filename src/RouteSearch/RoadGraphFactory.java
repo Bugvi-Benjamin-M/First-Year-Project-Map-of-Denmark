@@ -20,25 +20,26 @@ public class RoadGraphFactory {
     }
 
     private List<RoadEdge> route;
-    private List<RoadEdge> roads;
+    //private List<RoadEdge> roads;
     private RoadGraph graph;
 
-    public RoadGraphFactory(RoadGraph graph, List<RoadEdge> roads) {
+    public RoadGraphFactory(RoadGraph graph) {
         this.graph = graph;
-        this.roads = roads;
+        //this.roads = roads;
     }
 
     public RoadGraphFactory(Iterable roads, LoadType type) {
         if (roads == null) throw new NullPointerException("Roads not initialized");
-        this.roads = new ArrayList<>();
+        //this.roads = new ArrayList<>();
         if (type == LoadType.ROADS) {
             graph = new RoadGraph();
             constructGraph((Iterable<Road>) roads);
         } else if (type == LoadType.ROADEDGES) {
             graph = new RoadGraph();
             for (Object road : roads) {
-                graph.addEdge((RoadEdge) road,((RoadEdge) road).getEither());
-                this.roads.add((RoadEdge) road);
+                graph.addEdge((RoadEdge) road,((RoadEdge) road).getEither(),
+                        ((RoadEdge) road).getOther(((RoadEdge) road).getEither()));
+                //this.roads.add((RoadEdge) road);
             }
         } else {
             throw new IllegalArgumentException("Type not defined");
@@ -54,12 +55,12 @@ public class RoadGraphFactory {
                     Point2D from = way.get(i-1);
                     Point2D to = way.get(i);
                     RoadEdge edge = new RoadEdge(from,to,road);
-                    graph.addEdge(edge,from);
-                    this.roads.add(edge);
+                    graph.addEdge(edge,from,to);
+                    //this.roads.add(edge);
                     if(!road.isOneWay()) {
                         RoadEdge reverse = edge.createReverse();
-                        graph.addEdge(reverse,to);
-                        this.roads.add(reverse);
+                        graph.addEdge(reverse,to,from);
+                        //this.roads.add(reverse);
                         counter++;
                     }
                     counter++;
@@ -93,6 +94,7 @@ public class RoadGraphFactory {
         setRoute(roadEdges);
     }
 
+    /*
     public List<RoadEdge> getEdges() {
         if (roads == null) throw new NullPointerException("Edges not initialized");
         return roads;
@@ -104,4 +106,5 @@ public class RoadGraphFactory {
         }
         return null;
     }
+    */
 }
