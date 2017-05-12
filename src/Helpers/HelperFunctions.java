@@ -174,6 +174,38 @@ public class HelperFunctions {
         return length;
     }
 
+    public static String convertNanotimeToTime(long loadtime) {
+        long loadtimeMilliseconds = loadtime / 1000000;
+        return convertMillitimeToTime(loadtimeMilliseconds);
+        }
+
+    public static String convertMillitimeToTime(long loadtime) {
+        long loadtimeSeconds = loadtime / 1000;
+        long loadtimeMinutes = loadtimeSeconds / 60;
+        return "" + loadtimeMinutes + " m, " + (loadtimeSeconds - (loadtimeMinutes * 60)) + " s, " +
+                (loadtime - (loadtimeSeconds * 1000)) + " ms";
+    }
+
+    public static String simplifyNanoTime(long loadtime) {
+        long loadtimeMilliseconds = loadtime / 1000000;
+        long loadtimeSeconds = loadtimeMilliseconds / 1000;
+        long loadtimeMinutes = loadtimeSeconds / 60;
+        String time = "";
+        if (loadtimeMinutes > 0) {
+            time += loadtimeMinutes + " min";
+            long seconds = (loadtimeSeconds - (loadtimeMinutes * 60));
+            if (seconds > 0) time += ", "+seconds+" sec";
+        } else {
+            time += loadtimeSeconds + " sec";
+            long miliseconds = (loadtimeMilliseconds - (loadtimeSeconds * 1000));
+            if (miliseconds > 0) {
+                time += ", "+miliseconds+" ms";
+            }
+        }
+        if (time.equals("")) return "N/A";
+        return time;
+    }
+
     public static float convertDistanceFromScreenCoordsToModelCoords(int distance) {
         Point2D start = CanvasController.getInstance().getMapCanvas().toModelCoords(new Point2D.Float(0,0));
         Point2D end = CanvasController.getInstance().getMapCanvas().toModelCoords(new Point2D.Float(distance,0));

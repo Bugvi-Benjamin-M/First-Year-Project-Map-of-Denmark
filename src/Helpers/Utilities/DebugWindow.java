@@ -2,6 +2,7 @@ package Helpers.Utilities;
 
 import Enums.BoundType;
 import Enums.ZoomLevel;
+import Helpers.HelperFunctions;
 import Main.Main;
 import Model.Coastlines.CoastlineFactory;
 import Model.Model;
@@ -127,11 +128,8 @@ public class DebugWindow extends WindowAdapter {
     {
         JLabel retrieved = container.getJLabel("loadtime");
         long loadtime = Main.LOAD_TIME;
-        long loadtimeMilliseconds = loadtime / 1000000;
-        long loadtimeSeconds = loadtimeMilliseconds / 1000;
-        long loadtimeMinutes = loadtimeSeconds / 60;
-        String label = "Load time: " + loadtimeMinutes + " m, " + (loadtimeSeconds - (loadtimeMinutes * 60)) + " s, " + (loadtimeMilliseconds - (loadtimeSeconds * 1000)) + " ms";
-        // System.out.println(label);
+        String label = "Load time: "+
+                HelperFunctions.simplifyNanoTime(loadtime);
         if (retrieved != null) {
             retrieved.setText(label);
         } else {

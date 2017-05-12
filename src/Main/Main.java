@@ -6,6 +6,7 @@ import Exceptions.FileWasNotFoundException;
 import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.GlobalValue;
+import Helpers.HelperFunctions;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Addresses.Value;
@@ -75,7 +76,8 @@ public class Main {
             CanvasController.getInstance().updateCanvasPOI();
             CanvasController.repaintCanvas();
             LOAD_TIME = System.nanoTime() - startTime;
-            System.out.println("System loadtime: " + (LOAD_TIME / 1000000) + " ms");
+            System.out.println("System loadtime: " +
+                    HelperFunctions.convertNanotimeToTime(LOAD_TIME));
             DebugWindow.getInstance().setLoadtimeLabel();
             CanvasExtrasController.getInstance().updateDistance();
         });

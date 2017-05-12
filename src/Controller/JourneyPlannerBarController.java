@@ -379,10 +379,12 @@ public final class JourneyPlannerBarController extends Controller {
                     if (compare != 0){
                         description.add(last.describe(distance));
                         distance = 0;
+                        String name = next.getName();
+                        if (name.equals("")) name = next.getRoadType().name();
                         if (compare == -1) {
-                            description.add("Turn to the left unto "+next.getName());
+                            description.add("Turn to the left unto "+name);
                         } else if (compare == 1) {
-                            description.add("Turn to the right unto "+next.getName());
+                            description.add("Turn to the right unto "+name);
                         }
                     } else {
                         distance += next.getLength();
@@ -393,7 +395,9 @@ public final class JourneyPlannerBarController extends Controller {
                     time += last.getTime();
                     last = next;
                 }
-                description.add("Total travel time: "+time+" secs");
+                time /= 60;
+                time = Math.round(time);
+                description.add("Total travel time: "+(int)time+" minutes");
             } else {
                 description.add("No route was found...");
             }
