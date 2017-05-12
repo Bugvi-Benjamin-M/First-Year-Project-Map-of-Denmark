@@ -1,7 +1,5 @@
 package Controller;
 
-import Controller.ToolbarControllers.ToolbarController;
-import Enums.ToolType;
 import Enums.TravelType;
 import Helpers.FontAwesome;
 import Helpers.GlobalValue;
@@ -38,7 +36,6 @@ public final class JourneyPlannerBarController extends Controller {
     private final int SEARCHBAR_WIDTH = 312;
     private final int SEARCHBAR_HEIGHT = 30;
     private final int JOURNEY_PLANNERBAR_WIDTH = 325;
-    //private final int JOURNEY_PLANNERBAR_HEIGHT = 810;
     private final int JOURNEY_PLANNERBAR_HEIGHT_DECREASE = 167;
     private final int TITLE_FONT_SIZE = 15;
     private final int SMALL_TITLE_FONT_SIZE = 10;
@@ -46,7 +43,6 @@ public final class JourneyPlannerBarController extends Controller {
     private final int DISTANCE_BETWEEN_TOBAR_TO_CLEARSEARCH_BUTTONS = 10;
     private final int JOURNEY_PLANNER_DESCRIPTION_FIELD_WIDTH = 328;
     private final int JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT_DECREASE = 333;
-    //private final int JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT = 477;
     private final int DISTANCE_BETWEEN_SEARCHCLEAR_BUTTONS_AND_DESCRIPTION_FIELD = 30;
     private final int SMALL_JOURNEY_PLANNERBAR_WIDTH_DECREASE = 20;
     private final int SMALL_JOURNEY_PLANNERBAR_HEIGHT_DECREASE = 40;
@@ -101,6 +97,11 @@ public final class JourneyPlannerBarController extends Controller {
 
     private boolean isSearch;
 
+    private boolean searchUnderway;
+
+    private RouteSearch.RouteDijkstra dijk;
+    private RoadGraphFactory factory;
+
     private JourneyPlannerBarController() {
         super();
         fromSearcher = new ToFromController();
@@ -127,6 +128,7 @@ public final class JourneyPlannerBarController extends Controller {
         isLargeJourneyPlannerVisible = false;
         isSmallJourneyPlannerVisible = false;
         isDescriptionFieldOpen = false;
+        searchUnderway = false;
     }
 
     public void setupBaseJourneyPlannerBar() {
@@ -448,38 +450,55 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerSearchClearButtons.getSearchButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                searchActivatedEvent();
-                if(isSearch) {
-                    travelDescription.getField().setText("");
-                    if(isSmallJourneyPlannerVisible) descriptionButton.setForeground(ThemeHelper.color("icon"));
+                journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("toolActivated"));
+                if(!searchUnderway) {
+                    super.mouseClicked(e);
+                    searchActivatedEvent();
+                    informationBar.grabFocus();
+                    if (isSearch) {
+                        journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("toolActivated"));
+                        travelDescription.getField().setText("");
+                        if (isSmallJourneyPlannerVisible) descriptionButton.setForeground(ThemeHelper.color("icon"));
+                        SwingWorker worker = new SwingWorker() {
+                            @Override
+                            protected Object doInBackground() throws Exception {
+                                searchUnderway = true;
+                                MainWindowController.getInstance().requestCanvasResetRoute();
+                                MainWindowController.getInstance().requestCanvasRepaint();
+                                factory = Model.getInstance().getGraphFactory();
 
-                    new Thread(new Runnable() {
-                         public void run() {
-                             RoadGraphFactory factory = Model.getInstance().getGraphFactory();
+                                Road start = CanvasController.calculateNearestNeighbour((float) fromPoint.getX(), (float) fromPoint.getY());
+                                Road end = CanvasController.calculateNearestNeighbour((float) toPoint.getX(), (float) toPoint.getY());
 
-                             Road start = CanvasController.calculateNearestNeighbour((float)fromPoint.getX(), (float)fromPoint.getY());
-                             Road end = CanvasController.calculateNearestNeighbour((float)toPoint.getX(), (float)toPoint.getY());
+                                dijk = new RouteSearch.RouteDijkstra(
+                                        factory.getGraph(), start.getNearestPoint(fromPoint), end.getNearestPoint(toPoint), type);
+                                return "Done";
+                            }
 
-                             RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
-                                     factory.getGraph(), start.getNearestPoint(fromPoint), end.getNearestPoint(toPoint), type);
+                            @Override
+                            protected void done() {
+                                if (dijk.path() == null) {
+                                    PopupWindow.infoBox(null, "No Route Found Between " + fromSearcher.getSearchTool().getText() + " and " + toSearcher.getSearchTool().getText() + "!", "No Route Found");
+                                    System.out.println("No route");
+                                    informationBar.grabFocus();
+                                    journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
+                                    return;
+                                }
 
-                             if(dijk.path() == null)
-                             {
-                                 PopupWindow.infoBox(null, "No Route Found Between " + fromSearcher.getSearchTool().getText() +  " and " + toSearcher.getSearchTool().getText() + "!", "No Route Found");
-                                 System.out.println("No route");
-                                 informationBar.grabFocus();
-                                 return;
-                             }
+                                factory.setRoute(dijk.path());
+                                CanvasController.getInstance().getMapCanvas().setRoute(dijk.path());
 
-                             factory.setRoute(dijk.path());
-                             CanvasController.getInstance().getMapCanvas().setRoute(dijk.path());
-
-                             printRouteDescription();
-                         }
-                    }).start();
-                }
-                informationBar.grabFocus();
+                                printRouteDescription();
+                                MainWindowController.getInstance().requestCanvasRepaint();
+                                searchUnderway = false;
+                                informationBar.grabFocus();
+                                journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
+                            }
+                        };
+                        worker.execute();
+                        informationBar.grabFocus();
+                    }
+                } else informationBar.grabFocus();
             }
 
             @Override
@@ -605,18 +624,24 @@ public final class JourneyPlannerBarController extends Controller {
     private void searchActivatedEvent() {
         if(fromSearcher.getSearchTool().getText().equals("")) {
             PopupWindow.infoBox(null, "Please Specify Departure Location!", "No Departure Location Selected!");
+            noSearchInitialised();
             return;
         }
         fromPoint = fromSearcher.searchActivatedEvent();
         if(toSearcher.getSearchTool().getText().equals("")) {
             PopupWindow.infoBox(null, "Please Specify End Destination!", "No End Destination Selected");
+            noSearchInitialised();
             return;
         }
         toPoint = toSearcher.searchActivatedEvent();
         if(toPoint != null && fromPoint != null) {
             searchInitialised();
+            informationBar.grabFocus();
             MainWindowController.getInstance().requestCanvasUpateToAndFrom(toPoint, fromPoint);
-        }else PopupWindow.infoBox(null, "Could not find a the address", "Mismatch");
+        }else {
+            noSearchInitialised();
+            PopupWindow.infoBox(null, "Could not find an address", "Mismatch");
+        }
     }
 
     private class InformationBarInteractionHandler extends MouseAdapter {
@@ -668,7 +693,6 @@ public final class JourneyPlannerBarController extends Controller {
                     showMatchingResults();
                     searchTool.setText(currentQuery);
                     allowSearch = true;
-                    ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBUTTON).toggleActivate(true);
                 }
 
                 @Override
@@ -677,8 +701,6 @@ public final class JourneyPlannerBarController extends Controller {
                     currentQuery = searchTool.getText();
                     allowSearch = false;
                     searchTool.getField().hidePopup();
-                    ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBUTTON).toggleActivate(false);
-                    ToolbarController.getInstance().requestCanvasRepaint();
                 }
             });
         }
