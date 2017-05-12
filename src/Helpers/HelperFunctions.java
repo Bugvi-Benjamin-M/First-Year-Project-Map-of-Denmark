@@ -1,6 +1,7 @@
 package Helpers;
 
 import Controller.CanvasController;
+import Model.Model;
 import OSM.OSMHandler;
 import OSM.OSMWay;
 
@@ -151,7 +152,7 @@ public class HelperFunctions {
      */
     public static double distanceInMeters(Point2D v, Point2D w) {
         double R = 6371e3;
-        float longfactor = OSMHandler.getInstance().getLongitudeFactor();
+        float longfactor = Model.getInstance().getLongitudeFactor();
         double latitude1 = Math.toRadians(-v.getY());
         double latitude2 = Math.toRadians(-w.getY());
         double dy = Math.toRadians((v.getY()-w.getY()));

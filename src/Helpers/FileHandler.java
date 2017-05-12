@@ -150,6 +150,7 @@ public class FileHandler {
                 Model.getInstance().setDynamicBound(BoundType.MAX_LATITUDE,
                     in.readFloat());
             }
+            Model.getInstance().setLongitudeFactor(in.readFloat());
             Model.getInstance().setTst((TenarySearchTrie)in.readObject());
             Model.getInstance().setCityToIndexMap((HashMap<String, Integer>) in.readObject());
             Model.getInstance().setIndexToCityMap((HashMap<Integer, String>) in.readObject());
@@ -175,6 +176,7 @@ public class FileHandler {
             out.writeFloat(Model.getInstance().getMaxLongitude(dynamic));
             out.writeFloat(Model.getInstance().getMinLatitude(dynamic));
             out.writeFloat(Model.getInstance().getMaxLatitude(dynamic));
+            out.writeFloat(Model.getInstance().getLongitudeFactor());
             out.writeObject(Model.getInstance().getTst());
             out.writeObject(Model.getInstance().getCityToIndexMap());
             out.writeObject(Model.getInstance().getIndexToCityMap());

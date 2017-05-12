@@ -36,6 +36,7 @@ public final class Model extends Observable {
     private HashMap<String, Integer> cityToIndex;
     private HashMap<Integer, String> indexToCity;
     private ArrayList<POI> pointsOfInterest;
+    private float longitudefactor = Float.POSITIVE_INFINITY;
 
     private Model()
     {
@@ -264,4 +265,10 @@ public final class Model extends Observable {
     public void removeAllPOI(){
         pointsOfInterest.clear();
     }
+
+    public void setLongitudeFactor(float longitudeFactor) {
+        this.longitudefactor = longitudeFactor;
+    }
+
+    public float getLongitudeFactor() {return longitudefactor;}
 }
