@@ -31,8 +31,8 @@ public class RouteDijkstra {
     private RoadGraphFactory factory;
 
     public RouteDijkstra(RoadGraph graph, Point2D start, Point2D end, TravelType type) {
-        distTo = new HashMap<>();
-        edgeTo = new HashMap<>();
+        distTo = new CachedHashMap<Point2D,Float>(graph.getNumberOfVertices());
+        edgeTo = new CachedHashMap<Point2D,RoadEdge>(graph.getNumberOfVertices());
         this.type = type;
         factory = Model.getInstance().getGraphFactory();
         this.start = start;
@@ -105,6 +105,11 @@ public class RouteDijkstra {
         public Node(Point2D point, float weight){
             this.point = point;
             this.weight = weight;
+        }
+
+        @Override
+        public int hashCode(){
+            return point.hashCode();
         }
 
         @Override
