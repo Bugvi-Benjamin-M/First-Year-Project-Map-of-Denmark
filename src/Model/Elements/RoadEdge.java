@@ -61,34 +61,21 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
 
     public float getWeight(TravelType type, Point2D start, Point2D end) {
         boolean fast = GlobalValue.isFastestRouteSet();
-        boolean ok = false;
 
-        //FIXME: clean this
-        switch (type) {
-            case VEHICLE:
-                if (road.isTravelByCarAllowed()) {
-                    ok = true;
-                }
-                break;
-            case BICYCLE:
-                if (road.isTravelByBikeAllowed()) {
-                    ok = true;
-                }
-                break;
-            case WALK:
-                if (road.isTravelByFootAllowed()) {
-                    ok = true;
-                }
-                break;
-        }
-        if (!ok) {
+        if(type == TravelType.VEHICLE && !road.isTravelByCarAllowed()){
             return Float.POSITIVE_INFINITY;
+        }
+        if(type == TravelType.BICYCLE && !road.isTravelByBikeAllowed()){
+            return Float.POSITIVE_INFINITY;
+        }
+        if(type == TravelType.WALK && !road.isTravelByFootAllowed()){
+            return Float.POSITIVE_INFINITY;
+        }
+
+        if (fast && type == TravelType.VEHICLE) {
+            return (getLengthInCoords()/getSpeed()) + ((float)from.distance(end) / getSpeed());
         } else {
-            if (fast) {
-                return (getLength()/getSpeed()) + ((float)from.distance(end) / getSpeed());
-            } else {
-                return getLength() +  (float)from.distance(end);
-            }
+            return getLengthInCoords() +  (float)from.distance(end);
         }
     }
 
@@ -113,6 +100,10 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
 
     public float getLength() {
         return (float) HelperFunctions.distanceInMeters(from,to);
+    }
+
+    public float getLengthInCoords() {
+        return (float)from.distance(to);
     }
 
     public float getSpeed() {

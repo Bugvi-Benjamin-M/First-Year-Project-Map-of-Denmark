@@ -7,6 +7,7 @@ import Model.Model;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
@@ -37,10 +38,6 @@ public class RouteDijkstra {
         this.start = start;
         this.end = end;
 
-
-        for (Point2D v : graph.getAdjacencyList().keySet()) {
-            distTo.put(v, Float.POSITIVE_INFINITY);
-        }
         distTo.put(start, 0.0f);
 
         // relax vertices in order of distance from s
@@ -49,17 +46,7 @@ public class RouteDijkstra {
 
         Node next;
         while ((next = pQ.poll()) != null) {
-            Point2D v = next.point;
-            if(graph.adjacent(v) != null){
-                for (RoadEdge e : graph.adjacent(v)) {
-                    relax(e);
-                }
-            }
-
-            if (v.equals(end)) {
-                System.out.println("Found route!");
-                return;
-            }
+            handleNextNode(next, graph);
         }
     }
 
@@ -71,8 +58,23 @@ public class RouteDijkstra {
             edgeTo.put(w, e);
 
             Node next = new Node(w, distTo.get(w));
-            pQ.remove(next);      //The weight does not matter .. (Takes linear time)
-            pQ.add(next);
+            pQ.remove(next); //Takes O(n)
+            pQ.add(next); //Takes O(n)
+        }
+    }
+
+    private void handleNextNode(Node next, RoadGraph graph){
+        Point2D v = next.point;
+        List<RoadEdge> adj = graph.adjacent(v);
+        if(adj != null){
+            for (RoadEdge e : adj) {
+                relax(e);
+            }
+        }
+
+        if (v.equals(end)) {
+            System.out.println("Found route!");
+            return;
         }
     }
 

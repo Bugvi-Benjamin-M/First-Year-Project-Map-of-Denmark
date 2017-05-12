@@ -445,26 +445,31 @@ public final class JourneyPlannerBarController extends Controller {
                 if(isSearch) {
                     travelDescription.getField().setText("");
                     if(isSmallJourneyPlannerVisible) descriptionButton.setForeground(ThemeHelper.color("icon"));
-                    RoadGraphFactory factory = Model.getInstance().getGraphFactory();
 
-                    Road start = CanvasController.calculateNearestNeighbour((float)fromPoint.getX(), (float)fromPoint.getY());
-                    Road end = CanvasController.calculateNearestNeighbour((float)toPoint.getX(), (float)toPoint.getY());
+                    new Thread(new Runnable() {
+                         public void run() {
+                             RoadGraphFactory factory = Model.getInstance().getGraphFactory();
 
-                    RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
-                            factory.getGraph(), start.getNearestPoint(fromPoint), end.getNearestPoint(toPoint), type);
+                             Road start = CanvasController.calculateNearestNeighbour((float)fromPoint.getX(), (float)fromPoint.getY());
+                             Road end = CanvasController.calculateNearestNeighbour((float)toPoint.getX(), (float)toPoint.getY());
 
-                    if(dijk.path() == null)
-                    {
-                        PopupWindow.infoBox(null, "No Route Found Between " + fromSearcher.getSearchTool().getText() +  " and " + toSearcher.getSearchTool().getText() + "!", "No Route Found");
-                        System.out.println("No route");
-                        informationBar.grabFocus();
-                        return;
-                    }
+                             RouteSearch.RouteDijkstra dijk = new RouteSearch.RouteDijkstra(
+                                     factory.getGraph(), start.getNearestPoint(fromPoint), end.getNearestPoint(toPoint), type);
 
-                    factory.setRoute(dijk.path());
-                    CanvasController.getInstance().getMapCanvas().setRoute(dijk.path());
+                             if(dijk.path() == null)
+                             {
+                                 PopupWindow.infoBox(null, "No Route Found Between " + fromSearcher.getSearchTool().getText() +  " and " + toSearcher.getSearchTool().getText() + "!", "No Route Found");
+                                 System.out.println("No route");
+                                 informationBar.grabFocus();
+                                 return;
+                             }
 
-                    printRouteDescription();
+                             factory.setRoute(dijk.path());
+                             CanvasController.getInstance().getMapCanvas().setRoute(dijk.path());
+
+                             printRouteDescription();
+                         }
+                    }).start();
                 }
                 informationBar.grabFocus();
             }
