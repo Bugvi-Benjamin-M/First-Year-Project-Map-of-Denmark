@@ -66,7 +66,9 @@ public class RouteDijkstra {
             edgeTo.put(w, e);
 
             Node next = new Node(w, distTo.get(w));
-            pQ.remove(next); //Takes O(n)
+            if(w == end){
+                pQ.remove(next); //Takes O(n)
+            }
             pQ.add(next); //Takes O(n)
         }
     }

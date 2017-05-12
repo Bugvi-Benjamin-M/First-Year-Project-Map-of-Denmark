@@ -19,7 +19,7 @@ public class RoadGraph implements Serializable {
     private Map<Point2D,List<RoadEdge>> adjacencyList;
 
     public RoadGraph() {
-        adjacencyList = new HashMap<>(12000000);
+        adjacencyList = new CachedHashMap<>(12000000);
     }
 
     public int getNumberOfEdges() {return nEdges;}
