@@ -73,6 +73,8 @@ public final class JourneyPlannerBarController extends Controller {
     private final int SMALL_SEARCH_FONT = 11;
 
     private final int DESCRIPTION_BUTTON_FONT_SIZE = 40;
+    private boolean isFirstDownAction = true;
+
 
 
     private InformationBar informationBar;
@@ -700,6 +702,7 @@ public final class JourneyPlannerBarController extends Controller {
                     super.focusLost(e);
                     currentQuery = searchTool.getText();
                     allowSearch = false;
+                    isFirstDownAction = true;
                     searchTool.getField().hidePopup();
                 }
             });
@@ -732,19 +735,31 @@ public final class JourneyPlannerBarController extends Controller {
                     if(OSDetector.isMac()) {
                         if (searchTool.getField().isPopupVisible()) {
                             if (e.getKeyCode() == KeyEvent.VK_UP) {
+                                System.out.println(searchTool.getField().getSelectedIndex());
+                                if(searchTool.getField().getSelectedIndex() == 0) isFirstDownAction = true;
                                 if (searchTool.getField().getSelectedIndex() > 0) {
                                     searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() - 1);
                                     return;
                                 } else return;
                             }
                             if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                                System.out.println(searchTool.getField().getSelectedIndex());
                                 if (searchTool.getField().getSelectedIndex() < searchTool.getField().getModel().getSize() - 1) {
-                                    searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() + 1);
+                                    if(isFirstDownAction){
+                                        searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() + 1);
+                                        searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() - 1);
+                                        isFirstDownAction = false;
+                                        System.out.println("this works");
+                                    }else {
+                                        searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() + 1);
+                                        System.out.println("this dosnt works");
+                                    }
                                     return;
                                 } else return;
                             }
                         }
                     }
+                    isFirstDownAction = true;
                     if (e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE && searchTool.getText().length() > 0) {
                         if(queryTimer == null) {
                             queryTimer = new Timer(QUERY_DELAY, ae -> {

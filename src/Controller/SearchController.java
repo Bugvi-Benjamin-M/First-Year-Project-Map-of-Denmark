@@ -118,7 +118,7 @@ public abstract class SearchController extends Controller {
         protected String selectCity(ArrayList<Value> list){
             String[] cities = buildCityNameList(list);
             Arrays.sort(cities);
-            String result = PopupWindow.confirmBox(null, "Select a City:", "Multiple Search Results!", cities);
+            String result = PopupWindow.confirmBox(null, "Select a City for " + searchTool.getText() + ": ", "Multiple Search Results!", cities);
             if(result != null) {
                 return result;
             }else return null;
@@ -132,7 +132,7 @@ public abstract class SearchController extends Controller {
 
     protected void selectAddress(String[] matches){
             Arrays.sort(matches);
-            String result = PopupWindow.confirmBox(null, "Select an Address:", "Multiple Search Results!", matches);
+            String result = PopupWindow.confirmBox(null, "Select an Address for the input '" + searchTool.getText() +  "' :", "Multiple Search Results!", matches);
             if(result != null) {
                 validSearch = true;
                 currentQuery = result;

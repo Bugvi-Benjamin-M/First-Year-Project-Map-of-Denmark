@@ -62,6 +62,7 @@ public interface Theme {
 
     // Roads
     public abstract Color route();
+    public abstract Color routeBorder();
     public abstract Color motorway();
     public abstract Color trunkRoad();
     public abstract Color primaryRoad();

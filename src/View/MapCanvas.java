@@ -12,6 +12,7 @@ import KDtree.KDTree;
 import Main.Main;
 import Model.Elements.*;
 import OSM.OSMWay;
+import Theme.Theme;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -33,6 +34,7 @@ import java.util.List;
 public class MapCanvas extends View {
 
     private AffineTransform transform  = new AffineTransform();
+    private AffineTransform tranform = new AffineTransform();
     private HashSet<SuperElement> currentSection;
     private Point2D currentPoint;
     private Rectangle2D currentRectangle;
@@ -264,6 +266,22 @@ public class MapCanvas extends View {
 
     private void drawRoute(Graphics2D g) {
         if (route != null && drawRoute) {
+            g.setColor(ThemeHelper.color("routeBorder"));
+            if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_6) {
+                g.setStroke(new BasicStroke(0.0043f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_5) {
+                g.setStroke(new BasicStroke(0.0012f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_4) {
+                g.setStroke(new BasicStroke(0.00055f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_3) {
+                g.setStroke(new BasicStroke(0.00035f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_2) {
+                g.setStroke(new BasicStroke(0.00012f));
+            } else {
+                g.setStroke(new BasicStroke(0.00012f));
+            }
+            g.draw(route);
+
             g.setColor(ThemeHelper.color("route"));
             if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_6) {
                 g.setStroke(new BasicStroke(0.004f));
@@ -279,6 +297,7 @@ public class MapCanvas extends View {
                 g.setStroke(new BasicStroke(0.0001f));
             }
             g.draw(route);
+
         }
     }
 
@@ -1200,9 +1219,11 @@ public class MapCanvas extends View {
         Point2D pointToMove;
         Point2D pointToStart;
         try {
+            if(point != null){
             pointToMove = transform.createInverse().inverseTransform(point, null);
             pointToStart = transform.createInverse().inverseTransform(midpoint, null);
             pan(pointToStart.getX() - pointToMove.getX(), pointToStart.getY() - pointToMove.getY());
+            }
         } catch (NoninvertibleTransformException e) {
             e.printStackTrace();
         }
