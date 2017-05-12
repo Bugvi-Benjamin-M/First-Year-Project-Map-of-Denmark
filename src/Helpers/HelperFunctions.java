@@ -1,6 +1,7 @@
 package Helpers;
 
 import Controller.CanvasController;
+import OSM.OSMHandler;
 import OSM.OSMWay;
 
 import java.awt.geom.Point2D;
@@ -150,10 +151,12 @@ public class HelperFunctions {
      */
     public static double distanceInMeters(Point2D v, Point2D w) {
         double R = 6371e3;
-        double latitude1 = Math.toRadians(v.getY());
-        double latitude2 = Math.toRadians(w.getY());
+        float longfactor = OSMHandler.getInstance().getLongitudeFactor();
+        double latitude1 = Math.toRadians(-v.getY());
+        double latitude2 = Math.toRadians(-w.getY());
         double dy = Math.toRadians((v.getY()-w.getY()));
-        double dx = Math.toRadians(v.getX()-w.getX());
+        double dx = Math.toRadians((v.getX()/longfactor) -
+                (w.getX()/longfactor));
         double a = Math.sin(dy) * Math.sin(dy/2) +
                 Math.cos(latitude1) * Math.cos(latitude2) *
                         Math.sin(dx/2) * Math.sin(dx/2);
@@ -182,7 +185,9 @@ public class HelperFunctions {
     public static String convertMillitimeToTime(long loadtime) {
         long loadtimeSeconds = loadtime / 1000;
         long loadtimeMinutes = loadtimeSeconds / 60;
-        return "" + loadtimeMinutes + " m, " + (loadtimeSeconds - (loadtimeMinutes * 60)) + " s, " +
+        String name = "";
+        if (loadtimeMinutes > 0) name += loadtimeMinutes + " m, ";
+        return name + (loadtimeSeconds - (loadtimeMinutes * 60)) + " s, " +
                 (loadtime - (loadtimeSeconds * 1000)) + " ms";
     }
 
