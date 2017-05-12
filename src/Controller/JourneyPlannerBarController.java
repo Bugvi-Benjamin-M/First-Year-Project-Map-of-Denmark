@@ -357,8 +357,10 @@ public final class JourneyPlannerBarController extends Controller {
 
     public void printRouteDescription() {
         java.util.List<String> route = JourneyPlannerBarController.getInstance().getRouteDescription();
-        for (String string : route) {
-            travelDescription.addLine(string);
+        if (route == null) return;
+        travelDescription.addLine(route.get(route.size()-1));
+        for (int i = 0; i < route.size()-2; i++) {
+            travelDescription.addLine(route.get(i));
         }
     }
 
@@ -627,11 +629,6 @@ public final class JourneyPlannerBarController extends Controller {
         public void mouseEntered(MouseEvent e) {
             if(!fromSearcher.doesSearchbarHaveFocus() && !toSearcher.doesSearchbarHaveFocus()) informationBar.grabFocus();
         }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-            //Maybe set theme
-        }
     }
 
     public boolean isASearchListOpen() {
@@ -722,7 +719,7 @@ public final class JourneyPlannerBarController extends Controller {
                             }
                         }
                     }
-                    if (/*e.getKeyChar() != KeyEvent.VK_BACK_SPACE &&*/ e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE && searchTool.getText().length() > 0) {
+                    if (e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE && searchTool.getText().length() > 0) {
                         if(queryTimer == null) {
                             queryTimer = new Timer(QUERY_DELAY, ae -> {
                                 queryTimer.stop();
@@ -739,18 +736,7 @@ public final class JourneyPlannerBarController extends Controller {
                             });
                             queryTimer.start();
                         } else queryTimer.restart();
-
-                        /*currentQuery = searchTool.getText();
-                        showMatchingResults();
-                        searchTool.getField().showPopup();
-                        searchTool.setText(currentQuery);*/
                     }
-
-                    /*if(e.getKeyChar() == KeyEvent.VK_ENTER){
-                        currentQuery = searchTool.getText();
-                        searchActivatedEvent();
-                    }*/
-
                     if (searchTool.getText().isEmpty()) {
                         searchTool.getField().hidePopup();
                     }

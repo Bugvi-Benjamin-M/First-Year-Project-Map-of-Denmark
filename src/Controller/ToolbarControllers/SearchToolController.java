@@ -202,8 +202,7 @@ public final class SearchToolController extends SearchController {
                         }
                     }
                 }
-                if (/*e.getKeyChar() != KeyEvent.VK_BACK_SPACE &&*/ e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE) {
-                    //currentQuery = searchTool.getText();
+                if (e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE) {
                     if(queryTimer == null) {
                         queryTimer = new Timer(QUERY_DELAY, ae -> {
                             queryTimer.stop();
@@ -220,9 +219,6 @@ public final class SearchToolController extends SearchController {
                         });
                         queryTimer.start();
                     } else queryTimer.restart();
-                    //showMatchingResults();
-                    //searchTool.setText(currentQuery);
-
                 }
 
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {
@@ -231,6 +227,7 @@ public final class SearchToolController extends SearchController {
                     }
                 }
                 if (searchTool.getText().isEmpty()) {
+                    searchTool.getField().setMaximumRowCount(8);
                     ToolbarController.getInstance().requestCanvasRepaint();
                     searchTool.getField().hidePopup();
                     showHistory();
