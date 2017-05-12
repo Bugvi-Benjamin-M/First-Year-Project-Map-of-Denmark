@@ -161,7 +161,7 @@ public final class OSMHandler implements ContentHandler {
             model.setDynamicBound(BoundType.MAX_LONGITUDE, maxLongitude);
             model.setDynamicBound(BoundType.MIN_LATITUDE, minLatitude);
             model.setDynamicBound(BoundType.MAX_LATITUDE, maxLatitude);
-
+            model.setLongitudeFactor(longitudeFactor);
             break;
         case "node":
             long id = Long.parseLong(atts.getValue("id"));
