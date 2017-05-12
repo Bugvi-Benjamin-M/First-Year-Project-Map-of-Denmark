@@ -34,6 +34,7 @@ public final class SearchToolController extends SearchController {
     private JSONParser parser = new JSONParser();
     private JSONArray searchHistory;
 
+
     private SearchToolController() {
         super();
     }
@@ -115,7 +116,9 @@ public final class SearchToolController extends SearchController {
     }
 
     private void showHistory(){
-        if(searchHistory.isEmpty()) return;
+        if(searchHistory.isEmpty()) {
+            return;
+        }
         searchTool.getField().removeAllItems();
         Iterator<String> iterator = searchHistory.iterator();
         while (iterator.hasNext()) {
@@ -207,8 +210,13 @@ public final class SearchToolController extends SearchController {
                             queryTimer = null;
                             currentQuery = searchTool.getText();
                             if(!currentQuery.equals("")) showMatchingResults();
-                            else showHistory();
                             searchTool.setText(currentQuery);
+                            if(searchTool.getField().getModel().getSize() < 8) {
+                                searchTool.getField().setMaximumRowCount(searchTool.getField().getModel().getSize());
+                            } else {
+                                searchTool.getField().setMaximumRowCount(8);
+                            }
+                            if(searchTool.getField().getModel() == null || searchTool.getField().getModel().getSize() == 0) searchTool.getField().hidePopup();
                         });
                         queryTimer.start();
                     } else queryTimer.restart();

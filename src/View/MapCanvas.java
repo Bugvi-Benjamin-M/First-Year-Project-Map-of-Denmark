@@ -596,6 +596,7 @@ public class MapCanvas extends View {
    */
     public void resetTransform() { transform.setToIdentity(); }
 
+
     /**
    * Pans the MapCanvas to another position so other elements might be viewed.
    * @param dx The difference in x-coordinates between the new position to be
