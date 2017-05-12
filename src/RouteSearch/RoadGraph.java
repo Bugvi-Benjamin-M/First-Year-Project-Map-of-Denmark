@@ -7,7 +7,7 @@ import Model.Elements.RoadEdge;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,10 +19,10 @@ import java.util.Map;
 public class RoadGraph implements Serializable {
 
     private int nEdges;
-    private Map<Point2D,LinkedList<RoadEdge>> adjacencyList;
+    private Map<Point2D,ArrayList<RoadEdge>> adjacencyList;
 
     public RoadGraph() {
-        adjacencyList = new HashMap<>(10000000);
+        adjacencyList = new CachedHashMap<>(10000000);
     }
 
     public int getNumberOfEdges() {return nEdges;}
@@ -31,8 +31,8 @@ public class RoadGraph implements Serializable {
 
     public void addEdge(RoadEdge road, Point2D from) {
         if (road == null || from == null) throw new NullPointerException("RoadEdge or from point has not been initiliazed");
-        LinkedList<RoadEdge> listFrom = adjacencyList.get(from);
-        if (listFrom == null) listFrom = new LinkedList<>();
+        ArrayList<RoadEdge> listFrom = adjacencyList.get(from);
+        if (listFrom == null) listFrom = new ArrayList<>();
         listFrom.add(road);
         adjacencyList.put(from, listFrom);
         nEdges++;
@@ -46,7 +46,7 @@ public class RoadGraph implements Serializable {
         return adjacencyList.get(point).size();
     }
 
-    public Map<Point2D,LinkedList<RoadEdge>> getAdjacencyList() {
+    public Map<Point2D,ArrayList<RoadEdge>> getAdjacencyList() {
         return adjacencyList;
     }
 
