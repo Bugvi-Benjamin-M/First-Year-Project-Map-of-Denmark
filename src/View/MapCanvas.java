@@ -336,8 +336,8 @@ public class MapCanvas extends View {
             drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.00008f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00013f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.0001f, 1);
-            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00016f, 1);
-            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00012f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00014f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00007f, 1);
 
             drawRail(g, ThemeHelper.color("rail"), 0.00002f);
             drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00018f, BasicStroke.CAP_BUTT);
@@ -401,8 +401,8 @@ public class MapCanvas extends View {
             drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.0001f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00014f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00012f, 1);
-            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00018f, 1);
-            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00014f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00016f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00008f, 1);
 
             drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00020f, BasicStroke.CAP_BUTT);
             drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00007f, BasicStroke.CAP_BUTT);
@@ -450,8 +450,8 @@ public class MapCanvas extends View {
             drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.0001f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00014f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00012f, 1);
-            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00018f, 1);
-            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00014f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00016f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00008f, 1);
 
             drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00024f, BasicStroke.CAP_BUTT);
             drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00008f, BasicStroke.CAP_BUTT);
@@ -488,8 +488,8 @@ public class MapCanvas extends View {
             drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.0001f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00014f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00012f, 1);
-            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00018f, 1);
-            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00014f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00016f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00008f, 1);
 
             drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00028f, BasicStroke.CAP_BUTT);
             drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00009f, BasicStroke.CAP_BUTT);
@@ -522,8 +522,8 @@ public class MapCanvas extends View {
             drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.0001f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00014f, 1);
             drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00012f, 1);
-            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00018f, 1);
-            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00014f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00016f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00008f, 1);
 
             drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00030f, BasicStroke.CAP_BUTT);
             drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00010f, BasicStroke.CAP_BUTT);
