@@ -120,7 +120,7 @@ public class DefaultTheme implements Theme {
         return new Color(0x90E49E);
     }
     public Color wetland(){
-        return new Color(0x55C76B);
+        return new Color(75, 206, 167, 129);
     }
     public Color commonland(){
         return new Color(0xC0E48F);

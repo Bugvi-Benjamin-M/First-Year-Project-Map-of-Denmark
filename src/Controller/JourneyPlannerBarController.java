@@ -73,7 +73,7 @@ public final class JourneyPlannerBarController extends Controller {
     private final int DESCRIPTION_BUTTON_NORTH_DISTANCE = 25;
     private final int DESCRIPTION_BUTTON_EAST_DISTANCE = -20;
 
-    private final int LARGE_SEARCH_FONT = 13;
+    private final int LARGE_SEARCH_FONT = 17;
     private final int SMALL_SEARCH_FONT = 11;
 
     private final int DESCRIPTION_BUTTON_FONT_SIZE = 40;
@@ -173,6 +173,7 @@ public final class JourneyPlannerBarController extends Controller {
         toSearcher.getSearchTool().setPreferredSize(new Dimension(SEARCHTOOL_WIDTH, SEARCHTOOL_LARGE_HEIGHT));
         toSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH, SEARCHBAR_HEIGHT));
         toSearcher.setBarBorder(TITLE_FONT_SIZE);
+        toSearcher.getSearchTool().getField().setFont(new Font("Verdana", Font.PLAIN, LARGE_SEARCH_FONT));
         int journeyPlannerDescriptionFieldHeight = journeyPlannerBarHeight - JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT_DECREASE;
         travelDescription.setPreferredSize(new Dimension(JOURNEY_PLANNER_DESCRIPTION_FIELD_WIDTH, journeyPlannerDescriptionFieldHeight));
         informationBarLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, journeyPlannerBar, 0, SpringLayout.HORIZONTAL_CENTER, informationBar);
@@ -212,6 +213,7 @@ public final class JourneyPlannerBarController extends Controller {
         toSearcher.getSearchTool().setPreferredSize(new Dimension(SEARCHTOOL_WIDTH, SEARCHTOOL_SMALL_HEIGHT));
         toSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH,SEARCHBAR_HEIGHT));
         toSearcher.setBarBorder(SMALL_TITLE_FONT_SIZE);
+        toSearcher.getSearchTool().getField().setFont(new Font("Verdana", Font.PLAIN, SMALL_SEARCH_FONT));
         journeyPlannerSearchClearButtons.setPreferredSize(new Dimension(SMALL_CLEAR_SEARCH_BUTTONS_WIDTH, SMALL_CLEAR_SEARCH_BUTTONS_HEIGHT));
         journeyPlannerSearchClearButtons.applySmallState();
         descriptionButton.setPreferredSize(new Dimension(DESCRIPTION_BUTTON_WIDTH,DESCRIPTION_BUTTON_HEIGHT));
@@ -408,7 +410,7 @@ public final class JourneyPlannerBarController extends Controller {
                 fromSearcher.setCurrentQuery("");
                 toSearcher.setCurrentQuery("");
                 travelDescription.getField().setText("");
-                MainWindowController.getInstance().requestCanvasResetToAndFrom();
+                MainWindowController.getInstance().requestCanvasResetRoute();
                 descriptionButton.setForeground(ThemeHelper.color("inactiveButton"));
                 if(isDescriptionFieldOpen && isSmallJourneyPlannerVisible) descriptionDeactivationEvent();
                 noSearchInitialised();
@@ -728,6 +730,12 @@ public final class JourneyPlannerBarController extends Controller {
                                 currentQuery = searchTool.getText();
                                 if(!currentQuery.equals("")) showMatchingResults();
                                 if(currentQuery != null) searchTool.setText(currentQuery);
+                                if(searchTool.getField().getModel().getSize() < 8) {
+                                    searchTool.getField().setMaximumRowCount(searchTool.getField().getModel().getSize());
+                                } else {
+                                    searchTool.getField().setMaximumRowCount(8);
+                                }
+                                if(searchTool.getField().getModel() == null || searchTool.getField().getModel().getSize() == 0) searchTool.getField().hidePopup();
                             });
                             queryTimer.start();
                         } else queryTimer.restart();
