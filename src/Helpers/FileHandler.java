@@ -156,7 +156,7 @@ public class FileHandler {
             Model.getInstance().setIndexToCityMap((HashMap<Integer, String>) in.readObject());
             Model.getInstance().setPointsOfInterest((ArrayList<POI>) in.readObject());
             //List<RoadEdge> edges = (List<RoadEdge>) in.readObject();
-            Model.getInstance().setGraph((RoadGraph) in.readObject());
+            //Model.getInstance().setGraph((RoadGraph) in.readObject());
             time = System.nanoTime() - time;
             System.out.println("Object deserialization: "+
                     HelperFunctions.convertNanotimeToTime(time));
@@ -182,7 +182,7 @@ public class FileHandler {
             out.writeObject(Model.getInstance().getIndexToCityMap());
             out.writeObject(Model.getInstance().getPointsOfInterest());
             //out.writeObject(Model.getInstance().getGraphFactory().getEdges());
-            out.writeObject(Model.getInstance().getGraph());
+            //out.writeObject(Model.getInstance().getGraph());
             time = System.nanoTime() - time;
             System.out.println("Save time: "+
                     HelperFunctions.convertNanotimeToTime(time));

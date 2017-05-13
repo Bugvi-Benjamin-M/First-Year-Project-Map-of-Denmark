@@ -119,7 +119,6 @@ public final class OSMHandler implements ContentHandler {
         relation = null;
         //refRelation = null;
         nodeGenerator = new NodeGenerator();
-        model.createGraph(roads);
     }
 
     @Override

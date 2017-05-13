@@ -8,6 +8,7 @@ import Model.Coastlines.CoastlineFactory;
 import Model.Elements.Road;
 import Model.Elements.RoadEdge;
 import Model.Elements.POI;
+import Model.Elements.SuperElement;
 import RouteSearch.RoadGraph;
 import RouteSearch.RoadGraphFactory;
 
@@ -86,14 +87,9 @@ public final class Model extends Observable {
         }
     }
 
-    public void createGraph(List<Road> roads) {
+    public void createGraph(HashSet<SuperElement> roads) {
         if (roads == null) throw new IllegalArgumentException("Collection is not initialized, must not be null");
-        graphFactory = new RoadGraphFactory(roads, RoadGraphFactory.LoadType.ROADS);
-    }
-
-    public void loadGraph(List<RoadEdge> roads) {
-        if (roads == null) throw new IllegalArgumentException("Collection is not initialized, must not be null");
-        graphFactory = new RoadGraphFactory(roads, RoadGraphFactory.LoadType.ROADEDGES);
+        graphFactory = new RoadGraphFactory(roads);
     }
 
     public String getIndexToCity(int index){

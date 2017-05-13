@@ -65,6 +65,8 @@ public class Main {
             }
         }
 
+        model.createGraph(model.getElements(Enums.OSMEnums.ElementType.HIGHWAY).getAllSections());
+
         splashScreenDestruct();
         SwingUtilities.invokeLater(() -> {
             MainWindowController.getInstance().setupMainWindow();

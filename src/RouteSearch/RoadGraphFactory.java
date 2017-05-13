@@ -7,6 +7,8 @@ import Model.Elements.RoadEdge;
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.HashSet;
+import Model.Elements.SuperElement;
 
 /**
  * TODO: write javadoc
@@ -29,53 +31,19 @@ public class RoadGraphFactory {
         //this.roads = roads;
     }
 
-    public RoadGraphFactory(Iterable roads, LoadType type) {
+    public RoadGraphFactory(HashSet<SuperElement> roads) {
         if (roads == null) throw new NullPointerException("Roads not initialized");
-        //this.roads = new ArrayList<>();
-        if (type == LoadType.ROADS) {
-            graph = new RoadGraph();
-            constructGraph((Iterable<Road>) roads);
-        } else if (type == LoadType.ROADEDGES) {
-            graph = new RoadGraph();
-            for (Object road : roads) {
-                graph.addEdge((RoadEdge) road,((RoadEdge) road).getEither(),
-                        ((RoadEdge) road).getOther(((RoadEdge) road).getEither()));
-                //this.roads.add((RoadEdge) road);
-            }
-        } else {
-            throw new IllegalArgumentException("Type not defined");
-        }
+
+        graph = new RoadGraph();
+        constructGraph(roads);
+
         System.out.println("Done building graph");
     }
 
-    /*
-    private void constructGraph(Iterable<Road> roads) {
+    private void constructGraph(HashSet<SuperElement> roads) {
         int counter = 0;
-        for (Road road : roads) {
-            for (OSMWay way: road.getRelation()) {
-                for (int i = 1; i < way.size(); i++) {
-                    Point2D from = way.get(i-1);
-                    Point2D to = way.get(i);
-                    RoadEdge edge = new RoadEdge(from,to,road);
-                    graph.addEdge(edge,from,to);
-                    //this.roads.add(edge);
-                    if(!road.isOneWay()) {
-                        RoadEdge reverse = edge.createReverse();
-                        graph.addEdge(reverse,to,from);
-                        //this.roads.add(reverse);
-                        counter++;
-                    }
-                    counter++;
-                    if (counter % 1000 == 0) System.out.println("... added edges: "+counter);
-                }
-            }
-        }
-    }
-    */
-
-    private void constructGraph(Iterable<Road> roads) {
-        int counter = 0;
-        for (Road road : roads) {
+        for (SuperElement superElement : roads) {
+            Road road = (Road)superElement;
             PolygonApprox shape = road.getShape();
             float[] coords = shape.getCoords();
             for (int i = 2; i < coords.length; i += 2){
