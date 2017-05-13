@@ -145,6 +145,10 @@ public class HelperFunctions {
         return Math.abs(dividend / 2);
     }
 
+    public static double lazyDistance(Point2D from, Point2D to){
+        return Math.sqrt((Math.pow(((from.getX()-to.getX())/62.445),2)) + (Math.pow(((from.getY()-to.getY())/111.096),2)));
+    }
+
     /**
      * Calculates the distance between two points to meters
      * @param v A point on a sphere
