@@ -150,32 +150,13 @@ public class HelperFunctions {
      * @param v A point on a sphere
      * @param w Another point on a sphere
      */
-    /*
     public static double distanceInMeters(Point2D v, Point2D w) {
-        double R = 6371e3;
+        double R = 6371e3; //Earthradius in meters
         float longfactor = Model.getInstance().getLongitudeFactor();
         double latitude1 = Math.toRadians(-v.getY());
         double latitude2 = Math.toRadians(-w.getY());
         double dy = Math.toRadians((v.getY()-w.getY()));
         double dx = Math.toRadians((v.getX()/longfactor) - (w.getX()/longfactor));
-        double a = Math.sin(dy) * Math.sin(dy/2) + Math.cos(latitude1) * Math.cos(latitude2) * Math.sin(dx/2) * Math.sin(dx/2);
-        double c = 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-        return R * c;
-    }
-    */
-
-    public static double distanceInMeters(Point2D v, Point2D w) {
-        double R = 6371e3; //Earth radius in meters
-        float longfactor = Model.getInstance().getLongitudeFactor();
-        double latitude1 = -0.0174532925199433 * v.getY();
-        double latitude2 = -0.0174532925199433 * w.getY();
-        //double latitude1 = Math.toRadians(-v.getY());
-        //double latitude2 = Math.toRadians(-w.getY());
-        double dy = 0.0174532925199433 * (v.getY()-w.getY());
-        double dx = 0.0174532925199433 * (v.getX()/longfactor) - (w.getX()/longfactor);
-
-        //double dy = Math.toRadians((v.getY()-w.getY()));
-        //double dx = Math.toRadians((v.getX()/longfactor) - (w.getX()/longfactor));
         double a = Math.sin(dy) * Math.sin(dy/2) + Math.cos(latitude1) * Math.cos(latitude2) * Math.sin(dx/2) * Math.sin(dx/2);
         double c = 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
         return R * c;
