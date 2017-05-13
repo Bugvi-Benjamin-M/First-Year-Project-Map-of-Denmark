@@ -499,9 +499,10 @@ public final class JourneyPlannerBarController extends Controller {
                                 }
 
                                 factory.setRoute(dijk.path());
-                                MainWindowController.getInstance().requestCanvasSetRoute(dijk.path());
-                                //CanvasController.getInstance().getMapCanvas().setRoute(dijk.path());
-
+                                //MainWindowController.getInstance().requestCanvasSetRoute(dijk.path());
+                                MainWindowController.getInstance().requestCanvasResetRoute();
+                                CanvasController.getInstance().getMapCanvas().setRoute(dijk.path());
+                                MainWindowController.getInstance().requestCanvasUpateToAndFrom(toPoint, fromPoint);
                                 printRouteDescription();
                                 MainWindowController.getInstance().requestCanvasRepaint();
                                 searchUnderway = false;
@@ -660,8 +661,6 @@ public final class JourneyPlannerBarController extends Controller {
         if(toPoint != null && fromPoint != null) {
             searchInitialised();
             informationBar.grabFocus();
-            MainWindowController.getInstance().requestCanvasResetRoute();
-            MainWindowController.getInstance().requestCanvasUpateToAndFrom(toPoint, fromPoint);
         }else {
             noSearchInitialised();
             PopupWindow.infoBox(null, "Could not find an address", "Mismatch");
@@ -757,7 +756,6 @@ public final class JourneyPlannerBarController extends Controller {
                     if(OSDetector.isMac()) {
                         if (searchTool.getField().isPopupVisible()) {
                             if (e.getKeyCode() == KeyEvent.VK_UP) {
-                                System.out.println(searchTool.getField().getSelectedIndex());
                                 if(searchTool.getField().getSelectedIndex() == 0) isFirstDownAction = true;
                                 if (searchTool.getField().getSelectedIndex() > 0) {
                                     searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() - 1);

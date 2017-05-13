@@ -33,6 +33,7 @@ public final class SearchToolController extends SearchController {
     private static SearchToolController instance;
     private JSONParser parser = new JSONParser();
     private JSONArray searchHistory;
+    private boolean isFirstDownAction = true;
 
 
     private SearchToolController() {
@@ -189,6 +190,7 @@ public final class SearchToolController extends SearchController {
                 if(OSDetector.isMac()) {
                     if (searchTool.getField().isPopupVisible()) {
                         if (e.getKeyCode() == KeyEvent.VK_UP) {
+                            if(searchTool.getField().getSelectedIndex() == 0) isFirstDownAction = true;
                             if (searchTool.getField().getSelectedIndex() > 0) {
                                 searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() - 1);
                                 return;
@@ -196,7 +198,15 @@ public final class SearchToolController extends SearchController {
                         }
                         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
                             if (searchTool.getField().getSelectedIndex() < searchTool.getField().getModel().getSize() - 1) {
-                                searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() + 1);
+                                if(isFirstDownAction){
+                                    searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() + 1);
+                                    searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() - 1);
+                                    isFirstDownAction = false;
+                                    System.out.println("this works");
+                                }else {
+                                    searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() + 1);
+                                    System.out.println("this dosnt works");
+                                }
                                 return;
                             } else return;
                         }
