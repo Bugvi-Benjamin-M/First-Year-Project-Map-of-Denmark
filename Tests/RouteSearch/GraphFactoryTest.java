@@ -37,7 +37,7 @@ public class GraphFactoryTest {
         way.add(point);
         point = new Point2D.Float(0.1f,0.6f);
         way.add(point);
-        road.setWay(way);
+        //road.setWay(way);
         roads.add(road);
         //factory = new GraphFactory();
     }

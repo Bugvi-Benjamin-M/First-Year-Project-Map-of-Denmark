@@ -719,32 +719,6 @@ public final class CanvasController extends Controller implements Observer {
         ArrayList<HashSet<SuperElement>> roads = new ArrayList<>();
 
         roads.add(getNearestNeighbour(ElementType.HIGHWAY, x, y));
-        /*
-        roads.add(getNearestNeighbour(ElementType.PRIMARY_ROAD, x, y));
-        roads.add(getNearestNeighbour(ElementType.SECONDARY_ROAD, x, y));
-        roads.add(getNearestNeighbour(ElementType.MOTORWAY, x, y));
-        roads.add(getNearestNeighbour(ElementType.MOTORWAY_LINK, x, y));
-        roads.add(getNearestNeighbour(ElementType.TERTIARY_ROAD, x, y));
-        roads.add(getNearestNeighbour(ElementType.TERTIARY_ROAD_LINK, x, y));
-        roads.add(getNearestNeighbour(ElementType.TRUNK_ROAD, x, y));
-        roads.add(getNearestNeighbour(ElementType.TERTIARY_ROAD_LINK, x, y));
-        roads.add(getNearestNeighbour(ElementType.UNCLASSIFIED_ROAD, x, y));
-        roads.add(getNearestNeighbour(ElementType.RESIDENTIAL_ROAD, x, y));
-        roads.add(getNearestNeighbour(ElementType.LIVING_STREET, x, y));
-        roads.add(getNearestNeighbour(ElementType.SERVICE_ROAD, x, y));
-        roads.add(getNearestNeighbour(ElementType.BUS_GUIDEWAY, x, y));
-        roads.add(getNearestNeighbour(ElementType.ESCAPE, x, y));
-        roads.add(getNearestNeighbour(ElementType.RACEWAY, x, y));
-        roads.add(getNearestNeighbour(ElementType.PEDESTRIAN_STREET, x, y));
-        roads.add(getNearestNeighbour(ElementType.TRACK, x, y));
-        roads.add(getNearestNeighbour(ElementType.STEPS, x, y));
-        roads.add(getNearestNeighbour(ElementType.FOOTWAY, x, y));
-        roads.add(getNearestNeighbour(ElementType.BRIDLEWAY, x, y));
-        roads.add(getNearestNeighbour(ElementType.CYCLEWAY, x, y));
-        roads.add(getNearestNeighbour(ElementType.PATH, x, y));
-        roads.add(getNearestNeighbour(ElementType.ROAD, x, y));
-        */
-
         return roads;
     }
 

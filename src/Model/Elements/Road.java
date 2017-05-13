@@ -25,14 +25,14 @@ public class Road extends Element {
     private boolean travelByBikeAllowed = false;
     private boolean travelByFootAllowed = false;
     private boolean travelByCarAllowed = false;
-    private java.util.List<OSMWay> relation;
+    //private java.util.List<OSMWay> relation;
     private RoadType roadType;
 
     public Road(PolygonApprox polygon, String name, RoadType roadType)
     {
         super(polygon);
         this.name = name.intern();
-        relation = new ArrayList<>();
+        //relation = new ArrayList<>();
         this.roadType = roadType;
     }
 
@@ -42,14 +42,17 @@ public class Road extends Element {
         this.area = area;
     }
 
+    /*
     public Road(String name, RoadType roadType) {
         this(null, name, roadType);
     }
-
+    */
+    /*
     public Road(String name, boolean area, RoadType roadType) {
         this(null, name, roadType);
         this.area = area;
     }
+    */
 
     public void setTravelByBikeAllowed(boolean travelByBikeAllowed) {
         this.travelByBikeAllowed = travelByBikeAllowed;
@@ -77,10 +80,11 @@ public class Road extends Element {
 
     public boolean isArea() { return area; }
 
+    /*
     public PolygonApprox getShape() {
         if (super.getShape() == null) {
             if (relation.size() > 1) {
-                //FIXME
+                
                 OSMRelation osmRelation = new OSMRelation(12L);
                 for (OSMWay way: relation) {
                     if(way != null){
@@ -102,7 +106,8 @@ public class Road extends Element {
         }
         return (PolygonApprox)super.getShape();
     }
-
+    */
+    /*
     public PolygonApprox getShapeSection(long start, long end) {
         if (area) {
             int sI = -1, eI = -1, sR = -1, eR = -1;
@@ -139,6 +144,7 @@ public class Road extends Element {
         }
         return null;
     }
+    */
 
     public String getName() { return name; }
 
@@ -146,6 +152,7 @@ public class Road extends Element {
 
     public int getMaxSpeed() {return maxSpeed;}
 
+    /*
     public List<OSMWay> getRelation() {
         return relation;
     }
@@ -158,6 +165,7 @@ public class Road extends Element {
     public void setWay(OSMWay way) {
         this.relation.add(way);
     }
+    */
 
     public void setMaxSpeed(int maxSpeed) {
         this.maxSpeed = maxSpeed;
@@ -168,8 +176,31 @@ public class Road extends Element {
     }
 
     public Point2D getNearestPoint(Point2D point) {
+        if (point == null) throw new NullPointerException("Point cannot be null");
+        PolygonApprox shape = (PolygonApprox) super.getShape();
+        float[] coords = shape.getCoords();
+        if (coords.length == 0) throw new NullPointerException("This way contains no points");
+        else if (coords.length == 2) return new Point2D.Float(coords[0], coords[1]);
+        else {
+            float minDistance = Float.POSITIVE_INFINITY;
+            Point2D closest = null;
+            for (int i = 0; i < coords.length; i += 2) {
+                Point2D.Float newPpoint = new Point2D.Float(coords[i], coords[i + 1]);
+                float distance = (float) HelperFunctions.distanceBetweenTwoPoints(newPpoint, point);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closest = newPpoint;
+                }
+            }
+            return closest;
+        }
+    }
+
+
+        /*
         if (point == null ) throw new NullPointerException("Point cannot be null");
         if (relation == null) throw new NullPointerException("Relation has not been initialized");
+
         Point2D closest = null; float minDistance = Float.POSITIVE_INFINITY;
         for (OSMWay way : relation) {
             if (way != null) {
@@ -189,9 +220,12 @@ public class Road extends Element {
         } else {
             return null;
         }
-    }
+        */
+
 
     public RoadType getRoadType() {
         return roadType;
     }
+
+    public PolygonApprox getShape() { return (PolygonApprox)super.getShape(); }
 }

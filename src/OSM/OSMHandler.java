@@ -938,18 +938,18 @@ public final class OSMHandler implements ContentHandler {
     {
         Road road;
         if (!isRelation) {
-            //PolygonApprox polygonApprox = new PolygonApprox(way);
+            PolygonApprox polygonApprox = new PolygonApprox(way);
             if (!area) {
-                road = new Road(name.intern(), roadType);
+                road = new Road(polygonApprox, name.intern(), roadType);
             } else {
-                road = new Road(name.intern(), area, roadType);
+                road = new Road(polygonApprox, name.intern(), area, roadType);
             }
             road.setTravelByBikeAllowed(isCycleAllowed);
             road.setTravelByCarAllowed(isVehicleAllowed);
             road.setTravelByFootAllowed(isWalkingAllowed);
             road.setMaxSpeed(maxSpeed);
             road.setOneWay(isOneWay);
-            road.setWay(way);
+            //road.setWay(way);
             roads.add(road);
             for (int i = 0; i < way.size(); i += precision) {
                 Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), road);
@@ -959,18 +959,18 @@ public final class OSMHandler implements ContentHandler {
                 }
             }
         } else {
-            //MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
+            MultiPolygonApprox multiPolygonApprox = new MultiPolygonApprox(relation);
             if (!area) {
-                road = new Road(name.intern(), roadType);
+                road = new Road(multiPolygonApprox, name.intern(), roadType);
             } else {
-                road = new Road(name.intern(), true, roadType);
+                road = new Road(multiPolygonApprox, name.intern(), true, roadType);
             }
             road.setTravelByBikeAllowed(isCycleAllowed);
             road.setTravelByCarAllowed(isVehicleAllowed);
             road.setTravelByFootAllowed(isWalkingAllowed);
             road.setMaxSpeed(maxSpeed);
             road.setOneWay(isOneWay);
-            road.setRelation(relation);
+            //road.setRelation(relation);
             for (int i = 0; i < relation.size(); i++) {
                 if (relation.get(i) != null) {
                     for (int j = 0; j < relation.get(i).size(); j += precision) {

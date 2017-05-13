@@ -1,5 +1,6 @@
 package RouteSearch;
 
+import Helpers.Shapes.PolygonApprox;
 import Model.Elements.Road;
 import Model.Elements.RoadEdge;
 import OSM.OSMWay;
@@ -47,6 +48,7 @@ public class RoadGraphFactory {
         System.out.println("Done building graph");
     }
 
+    /*
     private void constructGraph(Iterable<Road> roads) {
         int counter = 0;
         for (Road road : roads) {
@@ -66,6 +68,30 @@ public class RoadGraphFactory {
                     counter++;
                     if (counter % 1000 == 0) System.out.println("... added edges: "+counter);
                 }
+            }
+        }
+    }
+    */
+
+    private void constructGraph(Iterable<Road> roads) {
+        int counter = 0;
+        for (Road road : roads) {
+            PolygonApprox shape = road.getShape();
+            float[] coords = shape.getCoords();
+            for (int i = 2; i < coords.length; i += 2){
+                Point2D from = new Point2D.Float(coords[i-2], coords[i-1]);
+                Point2D to = new Point2D.Float(coords[i], coords[i+1]);
+                RoadEdge edge = new RoadEdge(from,to,road);
+                graph.addEdge(edge,from);
+                this.roads.add(edge);
+                if(!road.isOneWay()) {
+                    RoadEdge reverse = edge.createReverse();
+                    graph.addEdge(reverse,to);
+                    this.roads.add(reverse);
+                    counter++;
+                }
+                counter++;
+                if (counter % 1000 == 0) System.out.println("... added edges: "+counter);
             }
         }
     }
