@@ -3,10 +3,10 @@ package RouteSearch;
 import Helpers.Shapes.PolygonApprox;
 import Model.Elements.Road;
 import Model.Elements.RoadEdge;
-import OSM.OSMWay;
 
 import java.awt.geom.Point2D;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * TODO: write javadoc
@@ -82,12 +82,12 @@ public class RoadGraphFactory {
                 Point2D from = new Point2D.Float(coords[i-2], coords[i-1]);
                 Point2D to = new Point2D.Float(coords[i], coords[i+1]);
                 RoadEdge edge = new RoadEdge(from,to,road);
-                graph.addEdge(edge,from);
-                this.roads.add(edge);
+                graph.addEdge(edge,from, to);
+                //this.roads.add(edge);
                 if(!road.isOneWay()) {
                     RoadEdge reverse = edge.createReverse();
-                    graph.addEdge(reverse,to);
-                    this.roads.add(reverse);
+                    graph.addEdge(reverse,to, from);
+                  //  this.roads.add(reverse);
                     counter++;
                 }
                 counter++;
