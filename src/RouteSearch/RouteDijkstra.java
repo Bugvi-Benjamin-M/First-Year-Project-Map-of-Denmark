@@ -12,6 +12,12 @@ import java.util.List;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+import Helpers.HelperFunctions;
+import Helpers.GlobalValue;
+import Controller.PreferencesController;
+
+
+
 /**
  * @author Niclas Hedam
  * @author Andreas Blanke
@@ -29,10 +35,11 @@ public class RouteDijkstra {
     private Point2D end;
     private TravelType type;
     private RoadGraphFactory factory;
+    private boolean fast = PreferencesController.getInstance().getUseFastestRouteSetting();
 
     public RouteDijkstra(RoadGraph graph, Point2D start, Point2D end, TravelType type) {
-        distTo = new CachedHashMap<Point2D,Float>(graph.getNumberOfVertices());
-        edgeTo = new CachedHashMap<Point2D,RoadEdge>(graph.getNumberOfVertices());
+        distTo = new HashMap<Point2D,Float>(graph.getNumberOfVertices());
+        edgeTo = new HashMap<Point2D,RoadEdge>(graph.getNumberOfVertices());
         this.type = type;
         factory = Model.getInstance().getGraphFactory();
         this.start = start;
@@ -58,14 +65,25 @@ public class RouteDijkstra {
         }
     }
 
+    private float h(Point2D current){
+        return (float)HelperFunctions.distanceInMeters(current, end);
+    }
+
     // relax edge e and update pq if changed
     private void relax(RoadEdge e) {
         Point2D v = e.getEither(), w = e.getOther(v);
-        if (distTo.get(w) == null || distTo.get(w) > distTo.get(v) + e.getWeight(type, start, end)) {
-            distTo.put(w, distTo.get(v) + e.getWeight(type, start, end));
+        if (distTo.get(w) == null || distTo.get(w) > distTo.get(v) + e.getWeight(type, start, end, fast)) {
+            distTo.put(w, distTo.get(v) + e.getWeight(type, start, end, fast));
             edgeTo.put(w, e);
 
-            Node next = new Node(w, distTo.get(w));
+            Node next;
+            float weight = distTo.get(w);
+            if(fast){
+                next = new Node(w, weight + h(w) / 130);
+            }else{
+                next = new Node(w, weight + h(w));
+            }
+
             if(w == end){
                 pQ.remove(next); //Takes O(n)
             }

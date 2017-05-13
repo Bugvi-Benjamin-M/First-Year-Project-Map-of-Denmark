@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.prefs.Preferences;
+import Controller.PreferencesController;
 
 /**
  * A RoadEdge object represent both an segment of an actual road
@@ -61,9 +62,7 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
                 (float) HelperFunctions.distanceInMeters(other.from,other.to));
     }
 
-    public float getWeight(TravelType type, Point2D start, Point2D end) {
-        boolean fast = GlobalValue.isFastestRouteSet();
-
+    public float getWeight(TravelType type, Point2D start, Point2D end, boolean fast) {
         if(type == TravelType.VEHICLE && !road.isTravelByCarAllowed()){
             return Float.POSITIVE_INFINITY;
         }
@@ -75,9 +74,9 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
         }
 
         if (fast && type == TravelType.VEHICLE) {
-            return (getLengthInCoords()/getSpeed()) + ((float)to.distance(end) / getSpeed());
+            return (getLength() / getSpeed());
         } else {
-            return getLengthInCoords() +  (float)to.distance(end);
+            return getLength();
         }
     }
 

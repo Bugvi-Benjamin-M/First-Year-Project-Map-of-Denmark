@@ -20,7 +20,7 @@ public class RoadGraph implements Serializable {
 
     public RoadGraph() {
         // because of .75 loadFactor and approx. 8,5 mil elements
-        adjacencyList = new CachedHashMap<>(12000000);
+        adjacencyList = new HashMap<>(12000000);
     }
 
     public int getNumberOfEdges() {return nEdges;}

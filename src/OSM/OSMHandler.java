@@ -625,7 +625,7 @@ public final class OSMHandler implements ContentHandler {
                 isVehicleAllowed = true;
                 isWalkingAllowed = true;
                 isCycleAllowed = true;
-                if (maxSpeed == 0) maxSpeed = 80;
+                if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "residential":
                 roadType = RoadType.RESIDENTIAL_ROAD;
