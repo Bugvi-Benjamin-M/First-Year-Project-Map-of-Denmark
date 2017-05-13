@@ -1,6 +1,7 @@
 package Controller;
 
 
+import Helpers.StringSorter;
 import Model.Addresses.Value;
 import Model.Model;
 import View.PopupWindow;
@@ -9,7 +10,6 @@ import View.SearchTool;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -25,7 +25,7 @@ public abstract class SearchController extends Controller {
         private boolean validSearch;
         protected String currentQuery;
         protected final int[] prohibitedKeys = new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_ALT, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
-                KeyEvent.VK_META, /*KeyEvent.VK_DOWN, KeyEvent.VK_UP,*/ KeyEvent.VK_WINDOWS, KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_UNDEFINED};
+                KeyEvent.VK_META, KeyEvent.VK_WINDOWS, KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_UNDEFINED};
         protected javax.swing.Timer queryTimer;
         protected final int QUERY_DELAY = 800;
 
@@ -117,8 +117,8 @@ public abstract class SearchController extends Controller {
 
         protected String selectCity(ArrayList<Value> list){
             String[] cities = buildCityNameList(list);
-            Arrays.sort(cities);
-            String result = PopupWindow.confirmBox(null, "Select a City for " + searchTool.getText() + ": ", "Multiple Search Results!", cities);
+            StringSorter.sort(cities);
+            String result = PopupWindow.confirmBox(null, "Select a City:", "Multiple Search Results!", cities);
             if(result != null) {
                 return result;
             }else return null;
@@ -131,8 +131,8 @@ public abstract class SearchController extends Controller {
      */
 
     protected void selectAddress(String[] matches){
-            Arrays.sort(matches);
-            String result = PopupWindow.confirmBox(null, "Select an Address for the input '" + searchTool.getText() +  "' :", "Multiple Search Results!", matches);
+            StringSorter.sort(matches);
+            String result = PopupWindow.confirmBox(null, "Select an Address:", "Multiple Search Results!", matches);
             if(result != null) {
                 validSearch = true;
                 currentQuery = result;
@@ -159,7 +159,6 @@ public abstract class SearchController extends Controller {
                     searchTool.getField().addItem(s);
                 }
             }
-            //searchTool.getField().hidePopup();
             searchTool.getField().showPopup();
         }
 

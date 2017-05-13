@@ -12,11 +12,12 @@ import KDtree.KDTree;
 import Main.Main;
 import Model.Elements.*;
 import OSM.OSMWay;
-import Theme.Theme;
 
 import java.awt.*;
 import java.awt.geom.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -645,7 +646,7 @@ public class MapCanvas extends View {
     public void setCurrentPoint(Point2D currentPoint) {
         this.currentPoint = currentPoint;
     }
-    /*
+    /**
      * Draw Motorways, trunkroads and primary roads.
      * This method is supposed to be used at zoom lvl 5 and 6.
      * This is made to avoid browsing through all roads to find the few that are to be drawn at these zoom levels.
@@ -672,14 +673,14 @@ public class MapCanvas extends View {
         }
     }
 
-    /*
+    /**
      *  Draw the road elements
-     *  @param The Graphics2D object
-     *  @param RoadType the kind of road to be drawn
-     *  @param The color of the road when drawn as a way/path
-     *  @param The color of the raod when drawn as an area
-     *  @param float strokeSize - the size of the stroke used to paint the way/path
-     *  @param int lineEnd - an integer which represent what type of end the way/path should have: CAP_BUTT=0, CAP_ROUND=1, CAP_SQUARE=2
+     *  @param g graphics2D object
+     *  @param roadType kind of road to be drawn
+     *  @param color of the road when drawn as a way/path
+     *  @param color of the raod when drawn as an area
+     *  @param strokeWidth - the size of the stroke used to paint the way/path
+     *  @param lineEnd - an integer which represent what type of end the way/path should have: CAP_BUTT=0, CAP_ROUND=1, CAP_SQUARE=2
      */
     private void drawRoad(Graphics2D g, RoadType roadType, Color color, Color areaColor, float strokeWidth, int lineEnd){
         setCurrentSection(ElementType.HIGHWAY);

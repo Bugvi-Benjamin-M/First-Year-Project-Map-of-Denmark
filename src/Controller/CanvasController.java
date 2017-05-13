@@ -5,10 +5,7 @@ import Enums.OSMEnums.ElementType;
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
-import Model.Elements.Element;
-import Model.Elements.POI;
-import Model.Elements.Road;
-import Model.Elements.SuperElement;
+import Model.Elements.*;
 import Model.Model;
 import View.CanvasPopup;
 import View.MapCanvas;
@@ -62,7 +59,6 @@ public final class CanvasController extends Controller implements Observer {
     private CanvasInteractionHandler handler;
     private CanvasFocusHandler focusHandler;
     private static double zoom_value;
-    private HashSet<Element> roads;
 
     private Cursor crossCursor;
     private Cursor normalCursor;
@@ -178,6 +174,10 @@ public final class CanvasController extends Controller implements Observer {
     {
         focusHandler = new CanvasFocusHandler();
         mapCanvas.addFocusListener(focusHandler);
+    }
+
+    public void canvasSetRoute(Iterable<RoadEdge> path) {
+        mapCanvas.setRoute(path);
     }
 
     private void specifyKeyBindings()

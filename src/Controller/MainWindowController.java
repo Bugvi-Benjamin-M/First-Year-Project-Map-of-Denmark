@@ -8,6 +8,8 @@ import Helpers.OSDetector;
 import Helpers.ThemeHelper;
 import Helpers.Utilities.DebugWindow;
 import Model.Elements.POI;
+import Model.Elements.Road;
+import Model.Elements.RoadEdge;
 import Model.Model;
 import View.DistanceScalerView;
 import View.PopupWindow;
@@ -471,6 +473,14 @@ public final class MainWindowController extends WindowController {
 
     public void requestUpdatePointsOfInterestBar() {
         PointsOfInterestController.getInstance().updatePointsOfInterestBar();
+    }
+
+    public void requestCanvasSetRoute(Iterable<RoadEdge> path) {
+        CanvasController.getInstance().canvasSetRoute(path);
+    }
+
+    public Road requestCalculateNearestNeighbour(float x, float y) {
+        return CanvasController.calculateNearestNeighbour(x,y);
     }
 
     private class MainWindowInteractionHandler

@@ -317,7 +317,10 @@ public final class JourneyPlannerBarController extends Controller {
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
-                if(isSearch) descriptionButton.setForeground(ThemeHelper.color("icon"));
+                if(isSearch) {
+                    if(isDescriptionFieldOpen)  descriptionButton.setForeground(ThemeHelper.color("toolActivated"));
+                    else descriptionButton.setForeground(ThemeHelper.color("icon"));
+                }
             }
 
             @Override
@@ -414,6 +417,7 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerSearchClearButtons.getClearButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if(searchUnderway) return;
                 super.mouseClicked(e);
                 fromSearcher.getSearchTool().getField().getEditor().setItem("");
                 toSearcher.getSearchTool().getField().getEditor().setItem("");
@@ -455,6 +459,8 @@ public final class JourneyPlannerBarController extends Controller {
                 journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("toolActivated"));
                 if(!searchUnderway) {
                     super.mouseClicked(e);
+                    fromSearcher.getSearchTool().getField().setFocusable(false);
+                    toSearcher.getSearchTool().getField().setFocusable(false);
                     searchActivatedEvent();
                     informationBar.grabFocus();
                     if (isSearch) {
@@ -465,15 +471,16 @@ public final class JourneyPlannerBarController extends Controller {
                             @Override
                             protected Object doInBackground() throws Exception {
                                 searchUnderway = true;
-                                MainWindowController.getInstance().requestCanvasResetRoute();
-                                MainWindowController.getInstance().requestCanvasRepaint();
                                 factory = Model.getInstance().getGraphFactory();
 
+                                //Road start = MainWindowController.getInstance().requestCalculateNearestNeighbour((float) fromPoint.getX(), (float) fromPoint.getY());
+                                //Road end = MainWindowController.getInstance().requestCalculateNearestNeighbour((float) fromPoint.getX(), (float) fromPoint.getY());
                                 Road start = CanvasController.calculateNearestNeighbour((float) fromPoint.getX(), (float) fromPoint.getY());
                                 Road end = CanvasController.calculateNearestNeighbour((float) toPoint.getX(), (float) toPoint.getY());
 
                                 dijk = new RouteSearch.RouteDijkstra(
                                         factory.getGraph(), start.getNearestPoint(fromPoint), end.getNearestPoint(toPoint), type);
+                                MainWindowController.getInstance().requestCanvasRepaint();
                                 return "Done";
                             }
 
@@ -484,10 +491,13 @@ public final class JourneyPlannerBarController extends Controller {
                                     System.out.println("No route");
                                     informationBar.grabFocus();
                                     journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
+                                    fromSearcher.getSearchTool().getField().setFocusable(true);
+                                    toSearcher.getSearchTool().getField().setFocusable(true);
                                     return;
                                 }
 
                                 factory.setRoute(dijk.path());
+                                //MainWindowController.getInstance().requestCanvasSetRoute(dijk.path());
                                 CanvasController.getInstance().getMapCanvas().setRoute(dijk.path());
 
                                 printRouteDescription();
@@ -495,12 +505,18 @@ public final class JourneyPlannerBarController extends Controller {
                                 searchUnderway = false;
                                 informationBar.grabFocus();
                                 journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
+                                fromSearcher.getSearchTool().getField().setFocusable(true);
+                                toSearcher.getSearchTool().getField().setFocusable(true);
                             }
                         };
                         worker.execute();
-                        informationBar.grabFocus();
+                        MainWindowController.getInstance().transferFocusToMapCanvas();
                     }
-                } else informationBar.grabFocus();
+                } else {
+                    fromSearcher.getSearchTool().getField().setFocusable(true);
+                    toSearcher.getSearchTool().getField().setFocusable(true);
+                    informationBar.grabFocus();
+                }
             }
 
             @Override
@@ -639,6 +655,7 @@ public final class JourneyPlannerBarController extends Controller {
         if(toPoint != null && fromPoint != null) {
             searchInitialised();
             informationBar.grabFocus();
+            MainWindowController.getInstance().requestCanvasResetRoute();
             MainWindowController.getInstance().requestCanvasUpateToAndFrom(toPoint, fromPoint);
         }else {
             noSearchInitialised();
