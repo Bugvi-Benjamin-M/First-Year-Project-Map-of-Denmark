@@ -649,7 +649,7 @@ public final class OSMHandler implements ContentHandler {
                 if (maxSpeed == 0) maxSpeed = 50;
                 break;
             case "raceway":
-                roadType = RoadType.RACEWAY;
+                elementType = ElementType.AIRPORT_TAXIWAY;
                 break;
             case "pedestrian":
                 roadType = RoadType.PEDESTRIAN_STREET;

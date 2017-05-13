@@ -3,10 +3,10 @@ package RouteSearch;
 import Helpers.Shapes.PolygonApprox;
 import Model.Elements.Road;
 import Model.Elements.RoadEdge;
-import OSM.OSMWay;
 
 import java.awt.geom.Point2D;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * TODO: write javadoc

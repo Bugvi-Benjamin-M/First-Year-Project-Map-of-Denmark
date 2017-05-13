@@ -80,9 +80,11 @@ public abstract class SearchController extends Controller {
                     if(matches.length > 0) {
                         selectAddress(matches);
                         ArrayList<Value> selectedStrings = Model.getInstance().getTst().get(currentQuery);
-                        if(selectedStrings != null) {
+                        if(selectedStrings != null && selectedStrings.size() > 0) {
                             point = new Point2D.Float(selectedStrings.get(0).getX(), selectedStrings.get(0).getY());
                         }
+                    }else{
+                        PopupWindow.infoBox(null, "Could not find a matching address", "Try again");
                     }
                 }
                 allowSearch = true;
@@ -213,11 +215,12 @@ public abstract class SearchController extends Controller {
             String[] sortedMatches = new String[matches.length];
             int currentIndex = 0;
             for(int i = 0; i < goodMatch.size(); i++){
-                sortedMatches[currentIndex] = goodMatch.get(i);
+                    sortedMatches[currentIndex] = goodMatch.get(i);
                 currentIndex++;
             }
             for(int i = 0; i < badMatch.size(); i++){
-                sortedMatches[currentIndex] = badMatch.get(i);
+                    sortedMatches[currentIndex] = badMatch.get(i);
+
                 currentIndex++;
             }
 
