@@ -23,7 +23,7 @@ public class GlobalValue {
 
     private static boolean isAddNewPointActive = false;
 
-    private static boolean getFastestRoute = false;
+   // private static boolean getFastestRoute = false;
 
     private static boolean isLoading = false;
 
@@ -103,13 +103,13 @@ public class GlobalValue {
         return 150;
     }
 
-    public static boolean isFastestRouteSet() {
+    /*public static boolean isFastestRouteSet() {
         return getFastestRoute;
     }
 
     public static void setFastestRoute(boolean useFastestRoute) {
         GlobalValue.getFastestRoute = useFastestRoute;
-    }
+    }*/
 
     public static boolean isLoading() {
         return isLoading;

@@ -369,6 +369,7 @@ public final class JourneyPlannerBarController extends Controller {
         for (int i = 0; i < route.size()-2; i++) {
             travelDescription.addLine(route.get(i));
         }
+        travelDescription.getField().setCaretPosition(0);
     }
 
     private java.util.List<String> getRouteDescription() {
@@ -491,7 +492,7 @@ public final class JourneyPlannerBarController extends Controller {
                                     System.out.println("No route");
                                     searchUnderway = false;
                                     noSearchInitialised();
-                                    informationBar.grabFocus();
+                                    //informationBar.grabFocus();
                                     journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
                                     fromSearcher.getSearchTool().getField().setFocusable(true);
                                     toSearcher.getSearchTool().getField().setFocusable(true);
@@ -506,22 +507,24 @@ public final class JourneyPlannerBarController extends Controller {
                                 printRouteDescription();
                                 MainWindowController.getInstance().requestCanvasRepaint();
                                 searchUnderway = false;
-                                informationBar.grabFocus();
+                                //informationBar.grabFocus();
                                 journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
                                 fromSearcher.getSearchTool().getField().setFocusable(true);
                                 toSearcher.getSearchTool().getField().setFocusable(true);
                             }
                         };
                         worker.execute();
-                        MainWindowController.getInstance().transferFocusToMapCanvas();
+                        //MainWindowController.getInstance().transferFocusToMapCanvas();
+                        worker = null;
                     } else {
                         fromSearcher.getSearchTool().getField().setFocusable(true);
                         toSearcher.getSearchTool().getField().setFocusable(true);
+                        //informationBar.grabFocus();
                     }
                 } else {
                     fromSearcher.getSearchTool().getField().setFocusable(true);
                     toSearcher.getSearchTool().getField().setFocusable(true);
-                    informationBar.grabFocus();
+                    //informationBar.grabFocus();
                 }
             }
 
