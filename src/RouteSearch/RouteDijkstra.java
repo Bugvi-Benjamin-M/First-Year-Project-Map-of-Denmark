@@ -66,14 +66,15 @@ public class RouteDijkstra {
     }
 
     private float h(Point2D current){
-        return (float)HelperFunctions.distanceInMeters(current, end);
+        return (float)HelperFunctions.lazyDistance(current, end);
     }
 
     // relax edge e and update pq if changed
     private void relax(RoadEdge e) {
         Point2D v = e.getEither(), w = e.getOther(v);
-        if (distTo.get(w) == null || distTo.get(w) > distTo.get(v) + e.getWeight(type, start, end, fast)) {
-            distTo.put(w, distTo.get(v) + e.getWeight(type, start, end, fast));
+        Float distV = distTo.get(v), distW = distTo.get(w);
+        if (distW == null || distW > distV + e.getWeight(type, start, end, fast)) {
+            distTo.put(w, distV + e.getWeight(type, start, end, fast));
             edgeTo.put(w, e);
 
             Node next;

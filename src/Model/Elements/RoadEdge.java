@@ -74,9 +74,9 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
         }
 
         if (fast && type == TravelType.VEHICLE) {
-            return (getLength() / getSpeed());
+            return (float)(HelperFunctions.lazyDistance(from,to) / getSpeed());
         } else {
-            return getLength();
+            return (float)HelperFunctions.lazyDistance(from,to);
         }
     }
 
