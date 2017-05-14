@@ -130,6 +130,31 @@ public final class PointsOfInterestController extends Controller {
         pointsOfInterestBar.removeAll();
         POIpanels.clear();
     }
+
+    public boolean isLargePOIVisible() {
+        return isLargePOIVisible;
+    }
+
+    public boolean isSmallPOIVisible() {
+        return isSmallPOIVisible;
+    }
+
+    public void resizeEvent() {
+        if(isLargePOIVisible) {
+            informationBar.setBounds(0,0,GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight());
+            int largeScrollbarHeight = (int) (window.getFrame().getHeight() + LARGE_SCROLLBAR_HEIGHT_DECREASE);
+            largeScroll.setPreferredSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, largeScrollbarHeight));
+            largeScroll.setMinimumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, largeScrollbarHeight));
+            largeScroll.setMaximumSize(new Dimension(LARGE_POINTS_OF_INTERESTBAR_WIDTH, largeScrollbarHeight));
+        } else if(isSmallPOIVisible) {
+            informationBar.setBounds(0, window.getFrame().getHeight() - GlobalValue.getSmallInformationBarHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
+            int smallScrollbarWidth = (int) (window.getFrame().getWidth() + SMALL_SCROLLBAR_WIDTH_DECREASE);
+            smallScroll.setPreferredSize(new Dimension(smallScrollbarWidth, SMALL_SCROLLBAR_HEIGHT));
+            smallScroll.setMinimumSize(new Dimension(smallScrollbarWidth, SMALL_SCROLLBAR_HEIGHT));
+            smallScroll.setMaximumSize(new Dimension(smallScrollbarWidth, SMALL_SCROLLBAR_HEIGHT));
+        }
+    }
+
     public void poiModeOn(){
         poiButtons.getNewPointButton().setForeground(ThemeHelper.color("toolActivated"));
         MainWindowController.getInstance().changeCanvasMouseCursorToPoint();
@@ -214,10 +239,10 @@ public final class PointsOfInterestController extends Controller {
     private void setupSmallScrollbar() {
         smallScroll = new JScrollPane(pointsOfInterestBar);
         smallScroll.setOpaque(true);
-        int SMALL_SCROLLBAR_WIDTH = (int) (window.getFrame().getWidth() + SMALL_SCROLLBAR_WIDTH_DECREASE);
-        smallScroll.setPreferredSize(new Dimension(SMALL_SCROLLBAR_WIDTH, SMALL_SCROLLBAR_HEIGHT));
-        smallScroll.setMinimumSize(new Dimension(SMALL_SCROLLBAR_WIDTH, SMALL_SCROLLBAR_HEIGHT));
-        smallScroll.setMaximumSize(new Dimension(SMALL_SCROLLBAR_WIDTH, SMALL_SCROLLBAR_HEIGHT));
+        int smallScrollbarWidth = (int) (window.getFrame().getWidth() + SMALL_SCROLLBAR_WIDTH_DECREASE);
+        smallScroll.setPreferredSize(new Dimension(smallScrollbarWidth, SMALL_SCROLLBAR_HEIGHT));
+        smallScroll.setMinimumSize(new Dimension(smallScrollbarWidth, SMALL_SCROLLBAR_HEIGHT));
+        smallScroll.setMaximumSize(new Dimension(smallScrollbarWidth, SMALL_SCROLLBAR_HEIGHT));
         smallScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         smallScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         smallScroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));

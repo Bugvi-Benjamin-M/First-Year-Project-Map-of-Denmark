@@ -208,6 +208,8 @@ public final class ToolbarController extends Controller {
             searchToolResizeEvent();
         else MenuToolController.getInstance().windowResizedEvent();
         calculateLoadingScreenPosition();
+        if(journeyPlannerToolActive) toolbar.getTool(ToolType.ROUTES).toggleActivate(true);
+        else if(poiToolActive) toolbar.getTool(ToolType.POI).toggleActivate(true);
     }
 
     public void moveEvent()

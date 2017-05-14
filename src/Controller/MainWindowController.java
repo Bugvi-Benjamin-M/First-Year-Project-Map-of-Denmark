@@ -109,13 +109,23 @@ public final class MainWindowController extends WindowController {
             0, 0, window.getFrame().getWidth(), window.getFrame().getHeight());
         PointsOfInterestController.getInstance().getInformationBar().setBounds(
             0, 0, 0, window.getFrame().getHeight());
-        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(
+        if(!JourneyPlannerBarController.getInstance().isLargeJourneyPlannerVisible() &&
+                !JourneyPlannerBarController.getInstance().isSmallJourneyPlannerVisible() &&
+                !PointsOfInterestController.getInstance().isLargePOIVisible() &&
+                !PointsOfInterestController.getInstance().isSmallPOIVisible())
+            JourneyPlannerBarController.getInstance().getInformationBar().setBounds(
                 0, 0, 0, window.getFrame().getHeight());
         DistanceScalerView distance = CanvasExtrasController.getInstance()
                 .getDistanceScaller();
-        distance.setBounds(window.getFrame().getWidth()-180,
-                window.getFrame().getHeight()-120, 120,
-                40);
+        if(!JourneyPlannerBarController.getInstance().isSmallJourneyPlannerVisible() && !PointsOfInterestController.getInstance().isSmallPOIVisible()) {
+            distance.setBounds(window.getFrame().getWidth() - 180,
+                    window.getFrame().getHeight() - 120, 120,
+                    40);
+        } else {
+            distance.setBounds(window.getFrame().getWidth() - 180,
+                    window.getFrame().getHeight() - (105 + GlobalValue.getSmallInformationBarHeight()), 120,
+                    40);
+        }
     }
 
     private void setupToolbar()
@@ -260,6 +270,22 @@ public final class MainWindowController extends WindowController {
         }
     }
 
+    private void swapFromLargeJourneyPlannerToSmall() {
+        JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
+        JourneyPlannerBarController.getInstance().setupSmallJourneyPlannerBar();
+        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight() - GlobalValue.getSmallInformationBarHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
+        JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
+        JourneyPlannerBarController.getInstance().getInformationBar().repaint();
+    }
+
+    private void swapFromSmallJourneyPlannerToLarge() {
+        JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
+        JourneyPlannerBarController.getInstance().setupLargeJourneyPlannerBar();
+        JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0,0,GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight());
+        JourneyPlannerBarController.getInstance().getInformationBar().revalidate();
+        JourneyPlannerBarController.getInstance().getInformationBar().repaint();
+    }
+
     public void deactivateLargeJourneyPlannerInformationBar() {
         if(!isSliding) {
             JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, 0, window.getFrame().getHeight());
@@ -277,6 +303,26 @@ public final class MainWindowController extends WindowController {
                     CanvasExtrasController.getInstance().getDistanceScaller().getY() + GlobalValue.getSmallInformationBarHeight() - 15);
             CanvasController.repaintCanvas();
         }
+    }
+
+    private void swapFromLargePOIToSmall() {
+        PointsOfInterestController.getInstance().clearPointsOfInterestBar();
+        PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight() - GlobalValue.getSmallInformationBarHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().getInformationBar().revalidate();
+        PointsOfInterestController.getInstance().getInformationBar().repaint();
+        if(GlobalValue.isAddNewPointActive()) CanvasController.getInstance().changeCanvasMouseCursorToPoint();
+        else CanvasController.getInstance().changeCanvasMouseCursorToNormal();
+    }
+
+    private void swapFromSmallPOIToLarge() {
+        PointsOfInterestController.getInstance().clearPointsOfInterestBar();
+        PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
+        PointsOfInterestController.getInstance().getInformationBar().setBounds(0,0,GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight());
+        PointsOfInterestController.getInstance().getInformationBar().revalidate();
+        PointsOfInterestController.getInstance().getInformationBar().repaint();
+        if(GlobalValue.isAddNewPointActive()) CanvasController.getInstance().changeCanvasMouseCursorToPoint();
+        else CanvasController.getInstance().changeCanvasMouseCursorToNormal();
     }
 
     public void transferFocusToMapCanvas()
@@ -491,7 +537,7 @@ public final class MainWindowController extends WindowController {
         {
             super.componentResized(e);
             adjustBounds();
-            if(ToolbarController.getInstance().isPoiToolActive()) {
+            /*if(ToolbarController.getInstance().isPoiToolActive()) {
                 ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
                 ToolbarController.getInstance().setIsPoiToolActive(false);
                 if(ToolbarController.getInstance().getType() == ToolbarType.SMALL) deactivateSmallPointsOfInterestInformationBar();
@@ -501,10 +547,21 @@ public final class MainWindowController extends WindowController {
                 ToolbarController.getInstance().setIsJourneyPlannerToolActive(false);
                 if(ToolbarController.getInstance().getType() == ToolbarType.LARGE) deactivateLargeJourneyPlannerInformationBar();
                 else if(ToolbarController.getInstance().getType() == ToolbarType.SMALL) deactivateSmallJourneyPlannerInformationBar();
-            }
-
+            }*/
+            JourneyPlannerBarController.getInstance().resizeEvent();
+            PointsOfInterestController.getInstance().resizeEvent();
             ToolbarController.getInstance().resizeEvent();
             CanvasController.getInstance().resizeEvent();
+            if(JourneyPlannerBarController.getInstance().isLargeJourneyPlannerVisible() && window.getFrame().getWidth() < ToolbarController.getSmallLargeEventWidth()) {
+                swapFromLargeJourneyPlannerToSmall();
+            } else if(JourneyPlannerBarController.getInstance().isSmallJourneyPlannerVisible() && window.getFrame().getWidth() >= ToolbarController.getSmallLargeEventWidth()) {
+                swapFromSmallJourneyPlannerToLarge();
+            }
+            if(PointsOfInterestController.getInstance().isLargePOIVisible() && window.getFrame().getWidth() < ToolbarController.getSmallLargeEventWidth()) {
+                swapFromLargePOIToSmall();
+            } else if(PointsOfInterestController.getInstance().isSmallPOIVisible() && window.getFrame().getWidth() >= ToolbarController.getSmallLargeEventWidth()) {
+                swapFromSmallPOIToLarge();
+            }
             CanvasController.getInstance().disablePopup();
         }
 
