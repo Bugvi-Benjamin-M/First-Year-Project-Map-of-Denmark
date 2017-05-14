@@ -514,7 +514,6 @@ public final class JourneyPlannerBarController extends Controller {
                                     System.out.println("No route");
                                     searchUnderway = false;
                                     noSearchInitialised();
-                                    //informationBar.grabFocus();
                                     journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
                                     fromSearcher.getSearchTool().getField().setFocusable(true);
                                     toSearcher.getSearchTool().getField().setFocusable(true);
@@ -529,24 +528,20 @@ public final class JourneyPlannerBarController extends Controller {
                                 printRouteDescription();
                                 MainWindowController.getInstance().requestCanvasRepaint();
                                 searchUnderway = false;
-                                //informationBar.grabFocus();
                                 journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
                                 fromSearcher.getSearchTool().getField().setFocusable(true);
                                 toSearcher.getSearchTool().getField().setFocusable(true);
                             }
                         };
                         worker.execute();
-                        //MainWindowController.getInstance().transferFocusToMapCanvas();
                         worker = null;
                     } else {
                         fromSearcher.getSearchTool().getField().setFocusable(true);
                         toSearcher.getSearchTool().getField().setFocusable(true);
-                        //informationBar.grabFocus();
                     }
                 } else {
                     fromSearcher.getSearchTool().getField().setFocusable(true);
                     toSearcher.getSearchTool().getField().setFocusable(true);
-                    //informationBar.grabFocus();
                 }
             }
 
@@ -758,7 +753,8 @@ public final class JourneyPlannerBarController extends Controller {
         protected void themeHasChanged() {
             searchTool.applyTheme();
             searchTool.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
-            searchTool.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), title, TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(searchTool.getFont().getName(), searchTool.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
+            if(isLargeJourneyPlannerVisible) searchTool.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), title, TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(searchTool.getFont().getName(), searchTool.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
+            else if(isSmallJourneyPlannerVisible) searchTool.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), title, TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(searchTool.getFont().getName(), searchTool.getFont().getStyle(), SMALL_TITLE_FONT_SIZE), ThemeHelper.color("icon")));
         }
 
         @Override
