@@ -56,8 +56,12 @@ public class DefaultTheme implements Theme {
 
     public Color pointHover() {return new Color(0xAEA9AF);}
 
-    public Color markerForeground() {return new Color(0xFF8416);}
+    public Color addressMarkerForeground() {return new Color(0xFF8416);}
     public Color markerBackground() {return new Color(0XFFFFFF);}
+
+    public Color fromMarkerForeground() {return new Color(0xFF8416);}
+
+    public Color toMarkerForeground() {return new Color(0xFF8416);}
 
     public Color poiButtonsForeground() {return new Color(0x000000);}
 

@@ -188,7 +188,7 @@ public class MapCanvas extends View {
         if(locationMarker != null) {
             g.setColor(ThemeHelper.color("markerBackground"));
             g.fill(getEllipseFromCenter(locationMarker.getX(), locationMarker.getY(), boundswhite, boundswhite));
-            g.setColor(ThemeHelper.color("markerForeground"));
+            g.setColor(ThemeHelper.color("addressMarkerForeground"));
             g.fill(getEllipseFromCenter(locationMarker.getX(), locationMarker.getY(), boundsblue, boundsblue));
         }
         //Only draw the route if the journey planner window is open.
@@ -196,17 +196,21 @@ public class MapCanvas extends View {
             if (toMarker != null) {
                 g.setColor(ThemeHelper.color("markerBackground"));
                 g.fill(getEllipseFromCenter(toMarker.getX(), toMarker.getY(), boundswhite, boundswhite));
-                g.setColor(ThemeHelper.color("markerForeground"));
+                g.setColor(ThemeHelper.color("toMarkerForeground"));
                 g.fill(getEllipseFromCenter(toMarker.getX(), toMarker.getY(), boundsblue, boundsblue));
             }
 
             if (fromMarker != null) {
                 g.setColor(ThemeHelper.color("markerBackground"));
                 g.fill(getEllipseFromCenter(fromMarker.getX(), fromMarker.getY(), boundswhite, boundswhite));
-                g.setColor(ThemeHelper.color("markerForeground"));
+                g.setColor(ThemeHelper.color("fromMarkerForeground"));
                 g.fill(getEllipseFromCenter(fromMarker.getX(), fromMarker.getY(), boundsblue, boundsblue));
             }
         }
+    }
+
+    public void resetLocationMarker(){
+        locationMarker = null;
     }
 
     public void toggleRouteVisualization(boolean isActive){

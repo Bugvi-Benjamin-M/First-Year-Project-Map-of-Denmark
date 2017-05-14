@@ -485,6 +485,10 @@ public final class MainWindowController extends WindowController {
         CanvasController.getInstance().updateCanvasPOI();
     }
 
+    public void requestCanvasResetLocationMarker(){
+        CanvasController.getInstance().canvasResetLocationMarker();
+    }
+
     public void requestCanvasToggleRouteVisualization(boolean isActive){
         CanvasController.getInstance().toggleRouteVisualization(isActive);
     }

@@ -523,6 +523,7 @@ public final class JourneyPlannerBarController extends Controller {
 
                                 factory.setRoute(dijk.path());
                                 MainWindowController.getInstance().requestCanvasResetRoute();
+                                MainWindowController.getInstance().requestCanvasResetLocationMarker();
                                 MainWindowController.getInstance().requestCanvasSetRoute(dijk.path());
                                 MainWindowController.getInstance().requestCanvasUpateToAndFrom(toPoint, fromPoint);
                                 printRouteDescription();

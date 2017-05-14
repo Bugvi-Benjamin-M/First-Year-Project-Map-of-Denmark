@@ -170,10 +170,13 @@ public final class CanvasController extends Controller implements Observer {
         specifyKeyBindings();
     }
 
-    private void addFocusHandlerToCanvas()
-    {
+    private void addFocusHandlerToCanvas() {
         focusHandler = new CanvasFocusHandler();
         mapCanvas.addFocusListener(focusHandler);
+    }
+
+    public void canvasResetLocationMarker(){
+        mapCanvas.resetLocationMarker();
     }
 
     public void canvasSetRoute(Iterable<RoadEdge> path) {

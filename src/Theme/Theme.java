@@ -32,8 +32,10 @@ public interface Theme {
 
     public abstract Color pointHover();
 
-    public abstract Color markerForeground();
+    public abstract Color addressMarkerForeground();
     public abstract Color markerBackground();
+    public abstract Color fromMarkerForeground();
+    public abstract Color toMarkerForeground();
 
     public abstract Color poiButtonsForeground();
 
