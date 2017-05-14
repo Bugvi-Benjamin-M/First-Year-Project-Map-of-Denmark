@@ -23,9 +23,8 @@ public class GlobalValue {
 
     private static boolean isAddNewPointActive = false;
 
-   // private static boolean getFastestRoute = false;
-
     private static boolean isLoading = false;
+    private static boolean isSaving = false;
 
     public static void setDidProgramLoadDefault(boolean truth_value)
     {
@@ -103,13 +102,6 @@ public class GlobalValue {
         return 150;
     }
 
-    /*public static boolean isFastestRouteSet() {
-        return getFastestRoute;
-    }
-
-    public static void setFastestRoute(boolean useFastestRoute) {
-        GlobalValue.getFastestRoute = useFastestRoute;
-    }*/
 
     public static boolean isLoading() {
         return isLoading;
@@ -118,4 +110,8 @@ public class GlobalValue {
     public static void setIsLoading(boolean status) {
         isLoading = status;
     }
+
+    public static boolean isSaving() {return isSaving;}
+
+    public static void setIsSaving(boolean status) {isSaving = status;}
 }

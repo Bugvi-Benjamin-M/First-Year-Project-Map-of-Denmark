@@ -22,6 +22,9 @@ import java.awt.geom.Point2D;
 
 /**
  * Created by Búgvi Magnussen on 14-03-2017.
+ * This class is the controller for the main window of the application.
+ * It deals with setting up the main window and all the components in it.
+ * The MainWindowController also acts as a connection between other controllers.
  */
 public final class MainWindowController extends WindowController {
 
@@ -35,8 +38,15 @@ public final class MainWindowController extends WindowController {
 
     private boolean isSliding;
 
+    /**
+     * private constructor, called by getInstance.
+     */
     private MainWindowController() { super(); }
 
+    /**
+     * Returns the singleton instance of the MainWindowController.
+     * @return the singleton
+     */
     public static MainWindowController getInstance()
     {
         if (instance == null) {
@@ -45,6 +55,9 @@ public final class MainWindowController extends WindowController {
         return instance;
     }
 
+    /**
+     * Sets up the main window of the application.
+     */
     public void setupMainWindow()
     {
         window = new Window()
@@ -56,6 +69,7 @@ public final class MainWindowController extends WindowController {
                      .layout(new BorderLayout())
                      .icon()
                      .hide();
+        //Todo, optimise window height minimum
         window.setMinimumWindowSize(new Dimension(ToolbarController.getSmallLargeEventWidth()-FROM_RESIZE_EVENT_TO_MINIMUMWIDTH,(int) ((Toolkit.getDefaultToolkit().getScreenSize().getHeight()) /1.3)));
         setupToolbar();
         setupCanvas();
@@ -71,12 +85,18 @@ public final class MainWindowController extends WindowController {
         isSliding = false;
     }
 
+    /**
+     * Sets the theme for tooltips application wide.
+     */
     private void setToolTipTheme()
     {
         UIManager.put("ToolTip.background", ThemeHelper.color("toolTipBackground"));
         UIManager.put("ToolTip.foreground", ThemeHelper.color("toolTipForeground"));
     }
 
+    /**
+     * Sets up the JLayeredPane.
+     */
     private void setupLayeredPane()
     {
         layeredPane = new JLayeredPane();
@@ -99,6 +119,9 @@ public final class MainWindowController extends WindowController {
             new Integer(5));
     }
 
+    /**
+     * Adjusts all components bounds in the JLayeredPane.
+     */
     private void adjustBounds()
     {
         layeredPane.setBounds(new Rectangle(window.getFrame().getWidth(),
@@ -128,23 +151,35 @@ public final class MainWindowController extends WindowController {
         }
     }
 
+    /**
+     * Sets up the toolbar.
+     */
     private void setupToolbar()
     {
         ToolbarController.getInstance().specifyWindow(window);
         ToolbarController.getInstance().setupToolbar(ToolbarType.LARGE);
     }
 
+    /**
+     * Sets up the canvas.
+     */
     private void setupCanvas()
     {
         CanvasController.getInstance().specifyWindow(window);
         CanvasController.getInstance().setupCanvas();
     }
 
+    /**
+     * Sets up the canvas extra component, the distance scaler.
+     */
     private void setupCanvasExtras(){
         CanvasExtrasController.getInstance().specifyWindow(window);
         CanvasExtrasController.getInstance().setupExtras();
     }
 
+    /**
+     * Sets up the Points of Interest bar.
+     */
     private void setupPointsOfInterestBar()
     {
         PointsOfInterestController.getInstance().specifyWindow(window);
@@ -152,12 +187,19 @@ public final class MainWindowController extends WindowController {
         PointsOfInterestController.getInstance().setupBasePointsOfInterestBar();
     }
 
+    /**
+     * Sets up the JourneyPlanner.
+     */
     private void setupJourneyPlannerBar() {
         JourneyPlannerBarController.getInstance().specifyWindow(window);
         JourneyPlannerBarController.getInstance().setupInformationBar();
         JourneyPlannerBarController.getInstance().setupBaseJourneyPlannerBar();
     }
 
+    /**
+     * Activates the large version of the Points of Interest bar. The Points of Interest bar will appear
+     * with a slide in animation.
+     */
     public void activateLargePointsOfInterestInformationBar() {
         if(inSlideTimer == null) {
             PointsOfInterestController.getInstance().clearPointsOfInterestBar();
@@ -180,7 +222,10 @@ public final class MainWindowController extends WindowController {
             PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
         }
     }
-
+    /**
+     * Activates the small version of the Points of Interest bar. The Points of Interest bar will appear
+     * with a slide in animation.
+     */
     public void activateSmallPointsOfInterestInformationBar() {
         if(inSlideTimer == null) {
             PointsOfInterestController.getInstance().clearPointsOfInterestBar();
@@ -205,6 +250,10 @@ public final class MainWindowController extends WindowController {
         }
     }
 
+    /**
+     * Deactivates and removes the large version of the Points of Interest bar.
+     * Will block deactivation if an animation is already in progress.
+     */
     public void deactivateLargePointsOfInterestInformationBar() {
         if(!isSliding) {
             PointsOfInterestController.getInstance().getInformationBar().setBounds(0, 0, 0, window.getFrame().getHeight());
@@ -213,6 +262,10 @@ public final class MainWindowController extends WindowController {
         }
     }
 
+    /**
+     * Deactivates and removes the small version of the Points of Interest bar.
+     * Will block deactivation if an animation is already in progress.
+     */
     public void deactivateSmallPointsOfInterestInformationBar() {
         if(!isSliding) {
             PointsOfInterestController.getInstance().getInformationBar().setBounds(0, window.getFrame().getHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
@@ -223,6 +276,10 @@ public final class MainWindowController extends WindowController {
         }
     }
 
+    /**
+     * Activates the Larger version of the JourneyPlanner. The JourneyPlanner will appear with a slide in
+     * animation.
+     */
     public void activateLargeJourneyPlannerInformationBar() {
         if(inSlideTimer == null) {
             JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
@@ -246,6 +303,10 @@ public final class MainWindowController extends WindowController {
         }
     }
 
+    /**
+     * Activates the small version of the JourneyPlanner. The JourneyPlanner will appear
+     * with a slide in animation.
+     */
     public void activateSmallJourneyPlannerInformationBar() {
         if (!isSliding) {
             JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
@@ -270,6 +331,9 @@ public final class MainWindowController extends WindowController {
         }
     }
 
+    /**
+     * This method replaces the large version of the JourneyPlanner with the small version.
+     */
     private void swapFromLargeJourneyPlannerToSmall() {
         JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
         JourneyPlannerBarController.getInstance().setupSmallJourneyPlannerBar();
@@ -278,6 +342,9 @@ public final class MainWindowController extends WindowController {
         JourneyPlannerBarController.getInstance().getInformationBar().repaint();
     }
 
+    /**
+     * This method replaces the small version of the JourneyPlanner with the large version.
+     */
     private void swapFromSmallJourneyPlannerToLarge() {
         JourneyPlannerBarController.getInstance().clearJourneyPlannerBar();
         JourneyPlannerBarController.getInstance().setupLargeJourneyPlannerBar();
@@ -286,6 +353,10 @@ public final class MainWindowController extends WindowController {
         JourneyPlannerBarController.getInstance().getInformationBar().repaint();
     }
 
+    /**
+     * Deactivates and removes the large version of the JourneyPlanner.
+     * Will block deactivation if an animation is already in progress.
+     */
     public void deactivateLargeJourneyPlannerInformationBar() {
         if(!isSliding) {
             JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, 0, window.getFrame().getHeight());
@@ -294,7 +365,10 @@ public final class MainWindowController extends WindowController {
         }
     }
 
-
+    /**
+     * Deactivates and removes the small version of the JourneyPlanner.
+     * Will block deactivation if an animation is already in progress.
+     */
     public void deactivateSmallJourneyPlannerInformationBar() {
         if(!isSliding) {
             JourneyPlannerBarController.getInstance().getInformationBar().setBounds(0, 0, 0, window.getFrame().getHeight());
@@ -305,6 +379,9 @@ public final class MainWindowController extends WindowController {
         }
     }
 
+    /**
+     * This method replaces the large version of the POIinformationbar with the small version.
+     */
     private void swapFromLargePOIToSmall() {
         PointsOfInterestController.getInstance().clearPointsOfInterestBar();
         PointsOfInterestController.getInstance().setupSmallPointsOfInterestBar();
@@ -315,6 +392,9 @@ public final class MainWindowController extends WindowController {
         else CanvasController.getInstance().changeCanvasMouseCursorToNormal();
     }
 
+    /**
+     * This method replaces the small version of the POIinformationbar with the large version.
+     */
     private void swapFromSmallPOIToLarge() {
         PointsOfInterestController.getInstance().clearPointsOfInterestBar();
         PointsOfInterestController.getInstance().setupLargePointsOfInterestBar();
@@ -325,11 +405,18 @@ public final class MainWindowController extends WindowController {
         else CanvasController.getInstance().changeCanvasMouseCursorToNormal();
     }
 
+    /**
+     * Transfers focus to the map canvas.
+     * note: to be used to decrease coupling.
+     */
     public void transferFocusToMapCanvas()
     {
         CanvasController.getInstance().getMapCanvas().grabFocus();
     }
 
+    /**
+     * Notify relevant parties of theme change.
+     */
     public void themeHasChanged()
     {
         ToolbarController.getInstance().themeHasChanged();
@@ -341,10 +428,18 @@ public final class MainWindowController extends WindowController {
         setProgressBarTheme();
     }
 
+    /**
+     * Lets a client know if a sliding animation is in progress.
+     * @return is an animation in progress
+     */
     public boolean isSliding() {
         return isSliding;
     }
 
+
+    /**
+     * Specifies key bindings for the main window.
+     */
     @Override
     protected void specifyKeyBindings()
     {
@@ -377,6 +472,12 @@ public final class MainWindowController extends WindowController {
                 }
             });
     }
+
+    /**
+     * Adds an interaction handler to the window. This interaction handler deals with resizing and other events that
+     * relate to the main window. The interation handler is a component adapter.
+     * @Override this method also adds a window adapter to deal with window focus.
+     */
     @Override
     protected void addInteractionHandlerToWindow()
     {
@@ -404,6 +505,9 @@ public final class MainWindowController extends WindowController {
         });
     }
 
+    /**
+     * Toggles key bindings across the application.
+     */
     public void setKeyToggle()
     {
         CanvasController.getInstance().toggleKeyBindings();
@@ -412,130 +516,273 @@ public final class MainWindowController extends WindowController {
         MainWindowController.getInstance().toggleKeyBindings();
     }
 
+    /**
+     * Resets the instance.
+     * Note: is only intended for testing purposes.
+     */
     public void resetInstance() { instance = null; }
 
+    /**
+     * Repaint the map canvas.
+     * note: to be used to decrease coupling.
+     */
     public void requestCanvasRepaint()
     {
         CanvasController.repaintCanvas();
     }
 
+
+    /**
+     * Reset the elements in map canvas
+     * note: to be used to decrease coupling.
+     */
     public void requestCanvasResetElements() {
         CanvasController.getInstance().getMapCanvas().setElements(Model.getInstance().getElements());
     }
 
+    /**
+     * Transfers focus to the informationBar, either Points of interest information bar or JourneyPlanner
+     * information bar, depending on which of these is visible.
+     * note: to be used to decrease coupling.
+     */
     public void transferFocusToInformationBar() {
         PointsOfInterestController.getInstance().getInformationBar().grabFocus();
     }
 
+    /**
+     * Change the canvas cursor to a crosshair.
+     * note: to be used to decrease coupling.
+     */
     public void changeCanvasMouseCursorToPoint() {
         CanvasController.getInstance().changeCanvasMouseCursorToPoint();
     }
 
+    /**
+     * Repaints either Points of interest information bar or JourneyPlanner
+     * information bar, depending on which of these is visible.
+     * note: to be used to decrease coupling.
+     */
     public void requestPointsOfInterestBarRepaint() {
         PointsOfInterestController.getInstance().repaintPointsOfInterestBar();
     }
 
+    /**
+     * Change the canvas cursor to a normal.
+     * note: to be used to decrease coupling.
+     */
     public void changeCanvasMouseCursorToNormal() {
         CanvasController.getInstance().changeCanvasMouseCursorToNormal();
     }
 
+    /**
+     * Adjust map canvas to data bounds,
+     * note: not dynamic, only on startup.
+     * note: to be used to decrease coupling.
+     */
     public void requestCanvasAdjustToBounds() {
         CanvasController.adjustToBounds();
     }
 
+    /**
+     * Adjust map canvas to data bounds,
+     * note: dynamic, to be used every time a file is loaded.
+     * note: to be used to decrease coupling.
+     */
     public void requestCanvasAdjustToDynamicBounds() {
         CanvasController.adjustToDynamicBounds();
     }
 
+    /**
+     * Repaint the toolbar.
+     * note: to be used to decrease coupling.
+     */
     public void requestToolbarRepaint() {
         ToolbarController.getInstance().repaintToolbar();
     }
 
+    /**
+     * Close the address parser popup list.
+     * note: to be used to decrease coupling.
+     */
     public void requestSearchToolCloseList() {
         ToolbarController.getInstance().requestSearchToolHideList();
     }
 
+    /**
+     * Lets the client know if the search fields in the JourneyPlanner have focus.
+     * note: to be used to decrease coupling.
+     * @return do the JourneyPlanner search fields have focus
+     */
     public boolean doesJourneyPlannerSearchHaveFocus() {
         return JourneyPlannerBarController.getInstance().isASearchListOpen();
     }
 
+    /**
+     * Close the JourneyPlanner search popup lists.
+     * note: to be used to decrease coupling.
+     */
     public void requestJourneyPlannerCloseSearchLists() {
         JourneyPlannerBarController.getInstance().closeSearchLists();
     }
 
+    /**
+     * Sets the theme of progressBars across the application.
+     */
     public void setProgressBarTheme() {
         UIManager.put("ProgressBar.border", BorderFactory.createLineBorder(ThemeHelper.color("border")));
         UIManager.put("ProgressBar.background", ThemeHelper.color("progressBarBackground"));
         UIManager.put("ProgressBar.foreground", ThemeHelper.color("progressBarForeground"));
     }
 
+    /**
+     * Lets the client know whether the menu tool popup is visible
+     * @return is the menu tool popup visible.
+     * note: to be used to decrease coupling.
+     */
     public boolean isMenuToolPopupVisible() {
         return ToolbarController.getInstance().isMenuToolPopupVisible();
     }
 
+    /**
+     * Closes the menu tool popup
+     * note: to be used to decrease coupling.
+     */
     public void requestMenuToolHidePopup() {
         ToolbarController.getInstance().requestHideMenuToolPopup();
     }
 
+    /**
+     * Lets the client know the address parser has focus
+     * @return does the address parser have focus
+     * note: to be used to decrease coupling.
+     */
     public boolean doesSearchToolHaveFocus() {
         return ToolbarController.getInstance().doesSearchbarHaveFocus();
     }
 
-    public void requestCanvasUpdatePOI() {
-        CanvasController.getInstance().updateCanvasPOI();
-    }
-
+    /**
+     * Resets the location marker on the map canvas.
+     * note: to be used to decrease coupling.
+     */
     public void requestCanvasResetLocationMarker(){
         CanvasController.getInstance().canvasResetLocationMarker();
     }
 
+    /**
+     * Updates the canvas points of interest.
+     * note: to be used to decrease coupling.
+     */
+    public void requestCanvasUpdatePOI() {
+        CanvasController.getInstance().updateCanvasPOI();
+    }
+
+    /**
+     * Toggles whether the current route should be displayed.
+     * @param isActive
+     * note: to be used to decrease coupling.
+     */
     public void requestCanvasToggleRouteVisualization(boolean isActive){
         CanvasController.getInstance().toggleRouteVisualization(isActive);
     }
 
+    /**
+     * Sets the to and from points in a route search on the map canvas.
+     * @param to the to point
+     * @param from the from point
+     * note: to be used to decrease coupling.
+     */
     public void requestCanvasUpateToAndFrom(Point2D.Float to, Point2D.Float from){
         CanvasController.getInstance().updateToAndFrom(to, from);
     }
 
+    /**
+     * Resets the route on the map canvas
+     * note: to be used to decrease coupling.
+     */
     public void requestCanvasResetRoute(){
         CanvasController.getInstance().resetRoute();
     }
 
+    /**
+     * Updates the searched address point on the map canvas.
+     * @param address the new point
+     * note: to be used to decrease coupling.
+     */
     public void requestCanvasUpdateAddressMarker(Point2D.Float address){
         CanvasController.getInstance().markLocation(address);
     }
 
+    /**
+     * Pans to the given point on the map canvas.
+     * @param aFloat the point to be panned to.
+     * note: to be used to decrease coupling.
+     */
     public void requestCanvasPanToPoint(Point.Float aFloat) {
         CanvasController.getInstance().panToPoint(aFloat);
     }
 
+    /**
+     * Toggles the new POI mode off.
+     * note: to be used to decrease coupling.
+     */
     public void requestPoiModeOff() {
         PointsOfInterestController.getInstance().poiModeOff();
     }
 
+    /**
+     * Toggles the new POI mode on.
+     * note: to be used to decrease coupling.
+     */
     public void requestPoiModeOn() {
         PointsOfInterestController.getInstance().poiModeOn();
     }
 
+    /**
+     * Add a point of interest to the map canvas.
+     * @param poi the point to be added.
+     * note: to be used to decrease coupling.
+     */
     public void requestAddPOI(POI poi) {
         PointsOfInterestController.getInstance().addPOI(poi);
     }
 
+    /**
+     * Updates the points of interest bar such that all current points of interest are visible.
+     * note: to be used to decrease coupling.
+     */
     public void requestUpdatePointsOfInterestBar() {
         PointsOfInterestController.getInstance().updatePointsOfInterestBar();
     }
 
+    /**
+     * Sets a route on the map canvas.
+     * @param path the route to be added to the map canvas.
+     * note: to be used to decrease coupling.
+     */
     public void requestCanvasSetRoute(Iterable<RoadEdge> path) {
         CanvasController.getInstance().canvasSetRoute(path);
     }
 
+    /**
+     * Calculates nearest road to a given point.
+     * @param x the x coordinate of the point.
+     * @param y the y coordinate of the point.
+     * note: to be used to decrease coupling.
+     */
     public Road requestCalculateNearestNeighbour(float x, float y) {
         return CanvasController.calculateNearestNeighbour(x,y);
     }
 
-    private class MainWindowInteractionHandler
-        extends MainWindowController.WindowInteractionHandler {
-
+    /**
+     * The interaction handler that deals with key shortcuts and various other events, such as component resize,
+     * component hidden, and component shown.
+     */
+    private class MainWindowInteractionHandler extends MainWindowController.WindowInteractionHandler {
+        /**
+         * Called every time the main window is resized. Adjusts bounds of components and notifies all relevant parties
+         * to deal with the size of the window.
+         * @param e the resize event
+         */
         @Override
         public void componentResized(ComponentEvent e)
         {
@@ -569,6 +816,10 @@ public final class MainWindowController extends WindowController {
             CanvasController.getInstance().disablePopup();
         }
 
+        /**
+         * Called every time the main window is moved. Notifies relevant parties of the moved event.
+         * @param e the move event.
+         */
         @Override
         public void componentMoved(ComponentEvent e)
         {
@@ -577,6 +828,10 @@ public final class MainWindowController extends WindowController {
             CanvasController.getInstance().disablePopup();
         }
 
+        /**
+         * Called every time the main window is hidden. Notifies relevant parties of the hide event.
+         * @param e the hide event
+         */
         @Override
         public void componentHidden(ComponentEvent e)
         {
@@ -589,6 +844,10 @@ public final class MainWindowController extends WindowController {
             }
         }
 
+        /**
+         * Called every time the main window is shown. Notifies relevant parties of the shown event.
+         * @param e the shown event.
+         */
         @Override
         public void componentShown(ComponentEvent e) {
             ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(true);

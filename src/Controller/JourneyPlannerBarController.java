@@ -156,7 +156,7 @@ public final class JourneyPlannerBarController extends Controller {
         addInteractionHandlersToJourneyPlannerTransportButtons();
         addInteractionHandlerToClearSearchButtons();
         addInteractionHandlerToDescriptionButton();
-        type = TravelType.WALK;
+        type = TravelType.VEHICLE;
     }
 
     public void setupLargeJourneyPlannerBar() {

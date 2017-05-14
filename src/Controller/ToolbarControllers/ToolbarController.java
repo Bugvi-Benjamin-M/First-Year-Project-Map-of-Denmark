@@ -455,14 +455,6 @@ public final class ToolbarController extends Controller {
         }
     }
 
-    public void setIsPoiToolActive(boolean status) {
-        poiToolActive = status;
-    }
-
-    public boolean isPoiToolActive() {
-        return poiToolActive;
-    }
-
     private void searchButtonEvent()
     {
        Point2D.Float point = SearchToolController.getInstance().searchActivatedEvent();
@@ -531,13 +523,23 @@ public final class ToolbarController extends Controller {
 
     private void loadEvent()
     {
+        if(GlobalValue.isLoading()) {
+            toolbar.getTool(ToolType.LOAD).toggleActivate(true);
+            PopupWindow.infoBox(null, "Please Wait for the Current Load Process to Complete Before Loading a New File!", "File Loading in Progress");
+            return;
+        }
+        if(GlobalValue.isSaving()) {
+            toolbar.getTool(ToolType.LOAD).toggleActivate(false);
+            PopupWindow.infoBox(null, "Please Wait for the Current Save Process to Complete Before Loading a File!", "File Saving in Progress");
+            return;
+        }
         if (type == ToolbarType.LARGE)
             toolbar.getTool(ToolType.LOAD).toggleActivate(true);
-        Object[] options = new Object[] { "Load default", "Select file" };
+        Object[] options = new Object[] { "Load Default", "Select File" };
         int selected = PopupWindow.confirmBox(
-            null, "Do you want to load the default "
-                + "file or select your own file to load from?",
-            "Load file options", options, options[1]);
+            null, "Do you Want to Load the Default "
+                + "File or Select your own File to Load From?",
+            "Load File Options", options, options[1]);
         switch (selected) {
         case JOptionPane.YES_OPTION:
             loadDefaultFile();
