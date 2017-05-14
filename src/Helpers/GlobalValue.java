@@ -16,7 +16,7 @@ public class GlobalValue {
     public static final int MAX_ZOOM_DECREASE = -30;
 
     private static ZoomLevel zoomLevel = ZoomLevel.LEVEL_6;
-    private static double maxZoom = MAX_ZOOM_DECREASE;
+    //private static double maxZoom = MAX_ZOOM_DECREASE;
 
     private static boolean markCoastlines = false;
     private static boolean didProgramLoadDefault = false;
@@ -36,9 +36,9 @@ public class GlobalValue {
         return didProgramLoadDefault;
     }
 
-    public static void setMaxZoom(double zoom_value) { maxZoom = zoom_value; }
+    //public static void setMaxZoom(double zoom_value) { maxZoom = zoom_value; }
 
-    public static double getMaxZoom() { return maxZoom; }
+    //public static double getMaxZoom() { return maxZoom; }
 
     public static int getSearchFieldLargeSize()
     {

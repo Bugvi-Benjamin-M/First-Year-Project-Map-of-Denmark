@@ -581,7 +581,7 @@ public final class ToolbarController extends Controller {
                 MainWindowController.getInstance().requestCanvasResetElements();
                 MainWindowController.getInstance().requestCanvasAdjustToDynamicBounds();
                 MainWindowController.getInstance().requestCanvasUpdatePOI();
-                GlobalValue.setMaxZoom(GlobalValue.MAX_ZOOM_DECREASE);
+                //GlobalValue.setMaxZoom(GlobalValue.MAX_ZOOM_DECREASE);
                 MainWindowController.getInstance().requestCanvasRepaint();
                 loadWindow.setVisible(false);
                 loadWindow = null;

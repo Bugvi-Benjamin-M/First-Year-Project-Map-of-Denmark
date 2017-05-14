@@ -400,7 +400,7 @@ public final class CanvasController extends Controller implements Observer {
             changeZoomLevel(+10);
         }
         repaintCanvas();
-        GlobalValue.setMaxZoom(ZoomLevel.getZoomFactor() - 50);
+        //GlobalValue.setMaxZoom(ZoomLevel.getZoomFactor() - 50);
     }
 
     public void panToPoint(Point.Float aFloat) {
