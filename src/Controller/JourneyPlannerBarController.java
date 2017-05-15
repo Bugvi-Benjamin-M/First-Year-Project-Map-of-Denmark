@@ -17,11 +17,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+
 /**
- * Created by  on .
  *
- * @author bugvimagnussen
- * @version 03/05/2017
  */
 public final class JourneyPlannerBarController extends Controller {
 
@@ -35,6 +33,7 @@ public final class JourneyPlannerBarController extends Controller {
     private final int DISTANCE_BETWEEN_BUTTONS_AND_FROMBAR = 10;
     private final int SEARCHBAR_WIDTH = 312;
     private final int SEARCHBAR_HEIGHT = 30;
+    private final int SMALL_SEARCHBAR_HEIGHT = 20;
     private final int JOURNEY_PLANNERBAR_WIDTH = 325;
     private final int JOURNEY_PLANNERBAR_HEIGHT_DECREASE = 167;
     private final int TITLE_FONT_SIZE = 15;
@@ -53,7 +52,7 @@ public final class JourneyPlannerBarController extends Controller {
     private final int WEST_DISTANCE_SMALL_JOURNEY_PLANNERBAR_TRANSPORT_BUTTONS = 5;
     private final int SEARCHTOOL_WIDTH = 330;
     private final int SEARCHTOOL_LARGE_HEIGHT = 65;
-    private final int SEARCHTOOL_SMALL_HEIGHT = 50;
+    private final int SEARCHTOOL_SMALL_HEIGHT = 45;
 
     private final int DESCRIPTION_BUTTON_WIDTH = 60;
     private final int DESCRIPTION_BUTTON_HEIGHT = 60;
@@ -65,6 +64,8 @@ public final class JourneyPlannerBarController extends Controller {
 
     private final int SMALL_NORTH_DISTANCE_BETWEEN_CLEARSEARCH_BUTTONS_AND_JOURNEYPLANNERBAR = 33;
     private final int SMALL_VERTICAL_DISTANCE_BETWEEN_CLEARSEARCH_BUTTONS_AND_SEARCHBARS = 5;
+
+    private final int SMALL_NORTH_DISTANCE_BETWEEN_FROM_SEARCHBAR_TO_JOURNEYPLANNERBAR = 5;
 
     private final int DESCRIPTION_BUTTON_NORTH_DISTANCE = 25;
     private final int DESCRIPTION_BUTTON_EAST_DISTANCE = -20;
@@ -211,11 +212,11 @@ public final class JourneyPlannerBarController extends Controller {
         journeyPlannerTransportTypeButtons.setPreferredSize(new Dimension(SMALL_TRANSPORT_BUTTONS_WIDTH, SMALL_TRANSPORT_BUTTONS_HEIGHT));
         journeyPlannerTransportTypeButtons.applySmallerState();
         fromSearcher.getSearchTool().setPreferredSize(new Dimension(SEARCHTOOL_WIDTH, SEARCHTOOL_SMALL_HEIGHT));
-        fromSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH,SEARCHBAR_HEIGHT));
+        fromSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH, SMALL_SEARCHBAR_HEIGHT));
         fromSearcher.setBarBorder(SMALL_TITLE_FONT_SIZE);
         fromSearcher.getSearchTool().getField().setFont(new Font("Verdana", Font.PLAIN, SMALL_SEARCH_FONT));
         toSearcher.getSearchTool().setPreferredSize(new Dimension(SEARCHTOOL_WIDTH, SEARCHTOOL_SMALL_HEIGHT));
-        toSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH,SEARCHBAR_HEIGHT));
+        toSearcher.getSearchTool().getField().setPreferredSize(new Dimension(SEARCHBAR_WIDTH, SMALL_SEARCHBAR_HEIGHT));
         toSearcher.setBarBorder(SMALL_TITLE_FONT_SIZE);
         toSearcher.getSearchTool().getField().setFont(new Font("Verdana", Font.PLAIN, SMALL_SEARCH_FONT));
         journeyPlannerSearchClearButtons.setPreferredSize(new Dimension(SMALL_CLEAR_SEARCH_BUTTONS_WIDTH, SMALL_CLEAR_SEARCH_BUTTONS_HEIGHT));
@@ -225,7 +226,7 @@ public final class JourneyPlannerBarController extends Controller {
         informationBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerBar, DISTANCE_BETWEEN_JOURNEY_PLANNERBAR_AND_SMALL_INFORMATIONBAR, SpringLayout.NORTH, informationBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerTransportTypeButtons, NORTH_DISTANCE_SMALL_JOURNEY_PLANNERBAR_TRANSPORT_BUTTONS, SpringLayout.NORTH, journeyPlannerBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.WEST, journeyPlannerTransportTypeButtons, WEST_DISTANCE_SMALL_JOURNEY_PLANNERBAR_TRANSPORT_BUTTONS, SpringLayout.WEST, journeyPlannerBar);
-        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, fromSearcher.getSearchTool(), 0, SpringLayout.NORTH, journeyPlannerBar);
+        journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, fromSearcher.getSearchTool(), SMALL_NORTH_DISTANCE_BETWEEN_FROM_SEARCHBAR_TO_JOURNEYPLANNERBAR, SpringLayout.NORTH, journeyPlannerBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.WEST, fromSearcher.getSearchTool(), SMALL_VERTICAL_DISTANCE_BETWEEN_TRANSPORTBUTTONS_AND_SEARCHBARS, SpringLayout.EAST, journeyPlannerTransportTypeButtons);
         journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, toSearcher.getSearchTool(), SMALL_VERTICAL_DISTANCE_BETWEEN_TRANSPORTBUTTONS_AND_SEARCHBARS, SpringLayout.SOUTH, fromSearcher.getSearchTool());
         journeyPlannerBarLayout.putConstraint(SpringLayout.WEST, toSearcher.getSearchTool(), SMALL_VERTICAL_DISTANCE_BETWEEN_TRANSPORTBUTTONS_AND_SEARCHBARS, SpringLayout.EAST, journeyPlannerTransportTypeButtons);
