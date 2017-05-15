@@ -41,11 +41,9 @@ public abstract class SearchController extends Controller {
         protected Point2D.Float searchActivatedEvent() {
             validSearch = false;
             if(!allowSearch) {
-                System.out.println("Allow search is false");
                 searchTool.getField().requestFocus();
             }
             else if(allowSearch && searchTool.getText().isEmpty()) {
-                System.out.println("textbox is empty");
                 searchTool.getField().requestFocus();
             }
             //else if(allowSearch) {
@@ -201,7 +199,6 @@ public abstract class SearchController extends Controller {
         protected String[] sortByBestMatch(String[] matches){
             ArrayList<String> goodMatch = new ArrayList<>();
             ArrayList<String> badMatch = new ArrayList<>();
-            System.out.println(currentQuery);
             for(String s : matches){
                 if(s.startsWith(currentQuery)){
                     goodMatch.add(s);

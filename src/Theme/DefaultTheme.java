@@ -2,6 +2,10 @@ package Theme;
 
 import java.awt.*;
 
+/**
+ * The DefaultTheme is inspired by Google Maps colour scheme
+ * and provides all required colours when using this theme.
+ */
 public class DefaultTheme implements Theme {
 
     private String name = "Default";
@@ -40,33 +44,22 @@ public class DefaultTheme implements Theme {
     public Color canvasPopupBackground() { return new Color(0xF2F2F2); }
     public Color canvasPopupForeground() { return new Color(0x5B5B5B); }
     public Color canvasExtra() {return new Color(255, 255, 255, 40);}
-
     public Color toolActivated() { return new Color(0x4471C2); }
     public Color toolHover() {return new Color(0x83B1F1);}
-
     public Color inactiveButton() {return new Color(0xA4A6A7);}
-
     public Color scrollBarThumb() {return new Color(0x789AE0);}
-
     public Color pointHover() {return new Color(0xAEA9AF);}
-
     public Color addressMarkerForeground() {return new Color(0xFF8416);}
     public Color markerBackground() {return new Color(0XFFFFFF);}
-
     public Color fromMarkerForeground() {return new Color(0xFF8416);}
-
     public Color toMarkerForeground() {return new Color(0xFF8416);}
-
     public Color poiButtonsForeground() {return new Color(0x000000);}
-
     public Color progressBarBackground() {
         return new Color(0x8E8A8C);
     }
-
     public Color progressBarForeground() {
         return new Color(0x4471C2);
     }
-
     public Color cityName() { return new Color(0x000000); }
     public Color roadName() { return new Color(0x000000); }
     public Color barName() { return new Color(0x000000); }
@@ -75,7 +68,6 @@ public class DefaultTheme implements Theme {
     public Color hospital() { return new Color(0xD30408); }
     public Color parkingAmenity() { return new Color(0x0A00FF); }
     public Color sportAmenity() { return new Color(0xFF7D00); }
-
     public Color water()
     {
         return new Color(0x6993D1);
