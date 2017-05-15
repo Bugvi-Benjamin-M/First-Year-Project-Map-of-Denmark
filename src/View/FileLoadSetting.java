@@ -5,12 +5,7 @@ import Helpers.FontAwesome;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 24/04/2017
- */
+
 public class FileLoadSetting extends View {
 
     private JLabel label;

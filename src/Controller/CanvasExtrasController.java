@@ -6,12 +6,7 @@ import View.DistanceScalerView;
 
 import java.awt.geom.Point2D;
 
-/**
- * Class details:
- *
- * @author Andreas Blanke, blan@itu.dk
- * @version 09-05-2017
- */
+
 public class CanvasExtrasController extends Controller {
 
     private static CanvasExtrasController instance;

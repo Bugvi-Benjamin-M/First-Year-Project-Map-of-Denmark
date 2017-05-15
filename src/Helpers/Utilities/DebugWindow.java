@@ -14,13 +14,6 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-/**
- * Class details:
- *
- * @author Andreas Blanke, blan@itu.dk
- * @version 28-03-2017.
- * @project BFST
- */
 public class DebugWindow extends WindowAdapter {
 
     private static DebugWindow instance;

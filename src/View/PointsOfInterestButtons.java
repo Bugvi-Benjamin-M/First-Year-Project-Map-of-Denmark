@@ -7,12 +7,7 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 27/04/2017
- */
+
 public class PointsOfInterestButtons extends View {
 
     private final float BUTTON_FONT_SIZE = 40f;

@@ -18,9 +18,6 @@ import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-/**
- *
- */
 public final class JourneyPlannerBarController extends Controller {
 
     private static JourneyPlannerBarController instance;

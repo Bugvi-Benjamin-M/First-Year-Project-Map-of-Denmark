@@ -6,12 +6,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 25/03/2017
- */
 public class SettingsButtons extends View {
 
     private JButton apply;

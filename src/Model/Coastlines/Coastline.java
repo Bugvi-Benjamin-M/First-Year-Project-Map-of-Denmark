@@ -26,8 +26,6 @@ import java.util.List;
  * collection HAS TO BE IN PERFECT ORDER or else its path will be
  * displayed incorrectly.
  *
- * @author Andreas Blanke, blan@itu.dk
- * @version 24-04-2017
  * @see HelperFunctions pathGeneralization()
  */
 public class Coastline extends OSMWay {

@@ -1,20 +1,12 @@
 package View;
 
-import Helpers.ThemeHelper;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
 import static javax.swing.SpringLayout.*;
 
-/**
- * Class details:
- *
- * @author Andreas Blanke, blan@itu.dk
- * @version 28-03-2017.
- * @project BFST
- */
+
 public class TextView extends View {
 
     private Map<String, JLabel> labels;

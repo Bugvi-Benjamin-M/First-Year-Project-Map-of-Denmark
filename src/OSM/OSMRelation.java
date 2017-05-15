@@ -3,11 +3,8 @@ package OSM;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
-/**
- * Created by Jakob on 06-03-2017.
- */
+
 public class OSMRelation extends ArrayList<OSMWay> {
 
     private long ref;

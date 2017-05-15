@@ -1,18 +1,11 @@
 package RouteSearch;
 
-import Helpers.GlobalValue;
-import Model.Elements.Road;
 import Model.Elements.RoadEdge;
 
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.*;
 
-/**
- *
- * @author Andreas Blanke
- * @version 05-05-2017
- */
 public class RoadGraph implements Serializable {
 
     private int nEdges;

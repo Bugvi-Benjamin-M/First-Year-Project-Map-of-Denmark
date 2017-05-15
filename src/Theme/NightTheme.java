@@ -2,12 +2,7 @@ package Theme;
 
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 24/03/2017
- */
+
 public class NightTheme implements Theme {
 
     private String name = "Night";

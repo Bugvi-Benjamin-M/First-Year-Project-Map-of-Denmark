@@ -15,8 +15,6 @@ import java.util.stream.Collectors;
  * Class details:
  * Data structure used to store and generating coastline paths.
  *
- * @author Andreas Blanke, blan@itu.dk
- * @version 23-03-2017
  * @see Coastline for path generation
  */
 public class CoastlineFactory {

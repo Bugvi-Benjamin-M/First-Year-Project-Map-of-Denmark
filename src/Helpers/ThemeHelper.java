@@ -6,12 +6,7 @@ import java.awt.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 13/03/2017
- */
+
 public final class ThemeHelper {
 
     private static Theme currentTheme;

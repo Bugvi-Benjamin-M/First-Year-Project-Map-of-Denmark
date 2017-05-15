@@ -23,9 +23,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
-/**
- * Created by Búgvi Magnussen on 02-04-2017.
- */
+
 public final class SearchToolController extends SearchController {
 
     private static final String defaultText = "Type an address, point of interest...";

@@ -24,13 +24,6 @@ import java.util.List;
  * The MapCanvas is a visual component, which purpose is to display the
  * elements (roads, points, structure, etc.) of the model. The MapCanvas
  * is able to be zoomed to and from as well as panned around upon.
- *
- * @author Andreas Blanke, blan@itu.dk
- * @author Niclas Hedam, nhed@itu.dk
- * @author Nikolaj Bläser, nibl@itu.dk
- * @author Búgvi Magnussen, buma@itu.dk
- * @author Jakob Mollerup, jmol@itu.dk
- * @version 06-03-2017
  */
 public class MapCanvas extends View {
 

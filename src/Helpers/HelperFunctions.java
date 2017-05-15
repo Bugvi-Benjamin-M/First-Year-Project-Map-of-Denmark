@@ -14,8 +14,6 @@ import java.util.List;
  * A collection of different mathematical and useful functions
  * used for different purposes in different parts of the program.
  *
- * @author Andreas Blanke, blan@itu.dk
- * @version 04-04-2017
  */
 public class HelperFunctions {
 

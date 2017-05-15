@@ -1,9 +1,7 @@
 package Model.Elements;
 
 import Helpers.Shapes.PolygonApprox;
-/**
- * Created by Jakob on 26-04-2017.
- */
+
 public class ManMade extends Element{
 
     private boolean isArea;

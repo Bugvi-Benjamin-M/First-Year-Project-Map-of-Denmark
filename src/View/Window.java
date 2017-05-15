@@ -10,10 +10,6 @@ import java.awt.event.WindowListener;
  * Class details:
  * The Window class is the primary visual presentation of the program and
  * contains all visual elements directly or indirectly.
- *
- * @author Andreas Blanke, blan@itu.dk
- * @author Niclas Hedam, nhed@itu.dk
- * @version 10-03-2017.
  */
 public class Window {
 

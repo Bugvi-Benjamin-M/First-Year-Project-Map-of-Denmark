@@ -7,12 +7,7 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 05/05/2017
- */
+
 public class JourneyPlannerSearchClearButtons extends View {
 
     private final float BUTTON_FONT_SIZE = 40f;

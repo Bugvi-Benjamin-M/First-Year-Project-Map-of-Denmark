@@ -1,13 +1,10 @@
 package KDtree;
 
-import Model.Elements.Element;
 import Model.Elements.SuperElement;
 
 import java.util.*;
 
-/**
- * Created by Jakob on 30-03-2017.
- */
+
 public class Node extends Point {
     private HashSet<SuperElement> elements;
     private int depth;

@@ -2,9 +2,6 @@ package Model.Elements;
 
 import java.awt.geom.Point2D;
 
-/**
- * Created by Nik on 27/04/17.
- */
 public class POI extends Point2D.Float{
 
     private String description;

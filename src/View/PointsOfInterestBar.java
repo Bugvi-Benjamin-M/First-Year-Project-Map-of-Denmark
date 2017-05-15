@@ -6,12 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseListener;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 26/04/2017
- */
+
 public class PointsOfInterestBar extends View {
 
     private final int SPACE_BETWEEN_PROFILES = 10;

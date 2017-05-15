@@ -6,12 +6,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 05/05/2017
- */
+
 public class JourneyDescriptionField extends View {
 
     private JTextArea field;

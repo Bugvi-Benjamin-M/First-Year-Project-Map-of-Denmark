@@ -2,9 +2,7 @@ package Model.Elements;
 
 import Enums.OSMEnums.AmenityType;
 
-/**
- * Created by Jakob on 19-04-2017.
- */
+
 public class Amenity extends Element {
 
     private float x;

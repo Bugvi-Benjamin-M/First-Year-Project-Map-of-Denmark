@@ -5,12 +5,7 @@ import Helpers.ThemeHelper;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 05/04/2017
- */
+
 public class MenuTool extends ToolComponent {
 
     private JPopupMenu popupMenu;

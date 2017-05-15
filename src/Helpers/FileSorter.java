@@ -11,13 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-/**
- * Class details:
- *
- * @author Andreas Blanke, blan@itu.dk
- * @version 27-03-2017.
- * @project BFST
- */
+
 public class FileSorter {
 
     public static void main(String[] args)

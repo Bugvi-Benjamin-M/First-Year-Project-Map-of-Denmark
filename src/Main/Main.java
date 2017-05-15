@@ -5,29 +5,19 @@ import Controller.ToolbarControllers.ToolbarController;
 import Exceptions.FileWasNotFoundException;
 import Helpers.DefaultSettings;
 import Helpers.FileHandler;
-import Helpers.GlobalValue;
 import Helpers.HelperFunctions;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
-import Model.Addresses.Value;
-import Model.Elements.RoadEdge;
 import Model.Model;
-import RouteSearch.RoadGraphFactory;
 import View.PopupWindow;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 
-/**
- * Created by Jakob on 06-03-2017.
- */
+
 public class Main {
 
     public static final FPSCounter FPS_COUNTER = new FPSCounter();
-
-    public static final boolean DEBUG_MODE = false;
 
     public static long LOAD_TIME;
     private static SplashScreen screen;
@@ -42,7 +32,7 @@ public class Main {
         splashScreenInit();
 
         Model model = Model.getInstance();
-        CanvasController.getInstance().setupAsObserver();
+        //CanvasController.getInstance().setupAsObserver();
         try {
             FileHandler.loadDefaultResource(true);
         } catch (FileNotFoundException | FileWasNotFoundException e) {
@@ -64,8 +54,6 @@ public class Main {
                 loadDefaultFile = true;
             }
         }
-
-        model.createGraph(model.getElements(Enums.OSMEnums.ElementType.HIGHWAY).getAllSections());
 
         splashScreenDestruct();
         SwingUtilities.invokeLater(() -> {

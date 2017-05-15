@@ -16,13 +16,6 @@ import java.util.List;
 
 import static javax.swing.SpringLayout.*;
 
-/**
- * Class details:
- *
- * @author Andreas Blanke, blan@itu.dk
- * @version 06-03-2017.
- * @project BFST
- */
 public final class PointsOfInterestController extends Controller {
 
     private final int PROFILE_HEIGHT = 90;

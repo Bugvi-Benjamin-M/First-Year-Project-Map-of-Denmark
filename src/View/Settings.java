@@ -3,12 +3,7 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 29/03/2017
- */
+
 public class Settings extends View {
 
     public Settings() { setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); }

@@ -2,9 +2,6 @@ package Model.Addresses;
 
 import java.io.Serializable;
 
-/**
- * Created by Nik on 24/04/17.
- */
 public class Value implements Serializable {
     private int citynameindex;
     private float x;

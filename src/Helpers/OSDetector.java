@@ -2,9 +2,6 @@ package Helpers;
 
 import java.awt.event.KeyEvent;
 
-/**
- * Created by Búgvi Magnussen on 08-03-2017.
- */
 public class OSDetector {
 
     public static String OS() { return System.getProperty("os.name"); }

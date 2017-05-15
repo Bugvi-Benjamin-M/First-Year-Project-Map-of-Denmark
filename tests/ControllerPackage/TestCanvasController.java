@@ -82,17 +82,6 @@ public class TestCanvasController {
     }
 
     @Test
-    public void testUpdate()
-    {
-
-        // Todo implement properly
-        Model.getInstance();
-        MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
-        CanvasController canvasController = CanvasController.getInstance();
-        canvasController.update(Model.getInstance(), null);
-    }
-
-    @Test
     public void testMousePressed()
     {
         Model.getInstance();

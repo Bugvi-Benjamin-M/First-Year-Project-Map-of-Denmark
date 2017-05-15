@@ -18,13 +18,6 @@ import Controller.PreferencesController;
 
 
 
-/**
- * @author Niclas Hedam
- * @author Andreas Blanke
- * @author Robert Sedgewick
- * @author Kevin Wayne
- * @version 05-05-2017
- */
 public class RouteDijkstra {
 
     private Map<Point2D,Float> distTo;

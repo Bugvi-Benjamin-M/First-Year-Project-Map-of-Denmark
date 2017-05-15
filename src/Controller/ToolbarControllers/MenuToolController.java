@@ -16,12 +16,6 @@ import java.awt.event.KeyEvent;
 import static javax.swing.SpringLayout.NORTH;
 import static javax.swing.SpringLayout.WEST;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 05/04/2017
- */
 public final class MenuToolController extends Controller {
 
     private final int POPUP_MARGIN_LEFT = 10;

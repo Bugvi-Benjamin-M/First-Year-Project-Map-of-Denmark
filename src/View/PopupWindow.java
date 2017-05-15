@@ -13,8 +13,6 @@ import java.awt.*;
  * can be
  * shown during the execution of the program.
  *
- * @author Búgvi Magnussen, buma@itu.dk
- * @version 09/03/2017
  */
 public class PopupWindow {
 

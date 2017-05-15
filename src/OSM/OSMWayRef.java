@@ -6,12 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Class details:
- *
- * @author Andreas Blanke, blan@itu.dk
- * @version 01-05-2017
- */
+
 public class OSMWayRef implements Iterable, Serializable {
 
     private List<Long> references;

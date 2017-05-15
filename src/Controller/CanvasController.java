@@ -24,10 +24,8 @@ import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 
-/**
- * Created by Jakob on 06-03-2017.
- */
-public final class CanvasController extends Controller implements Observer {
+
+public final class CanvasController extends Controller  {
 
     private static final double ZOOM_FACTOR = 0.9;
     private static final double KEYBOARD_ZOOM_FACTOR = 1.0;
@@ -124,13 +122,10 @@ public final class CanvasController extends Controller implements Observer {
 
     }
 
-    public void setupAsObserver() {
-        model = Model.getInstance();
-        model.addObserver(this);
-    }
 
     public void setupCanvas() {
         mapCanvas = new MapCanvas();
+        model = Model.getInstance();
         mapCanvas.setPreferredSize(new Dimension(
                 window.getFrame().getWidth(),
                 window.getFrame().getHeight() - GlobalValue.getToolbarHeight()));
@@ -452,11 +447,11 @@ public final class CanvasController extends Controller implements Observer {
 
     public static void resetBounds() { if(mapCanvas != null) mapCanvas.resetTransform(); }
 
-    @Override
+    /*@Override
     public void update(Observable o, Object arg)
     {
         repaintCanvas();
-    }
+    }*/
 
     private void mousePressedEvent(MouseEvent event)
     {

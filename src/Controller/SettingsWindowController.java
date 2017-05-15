@@ -20,8 +20,6 @@ import java.awt.event.WindowEvent;
 /**
  * The settings controller class controls the settings window and settings in
  * general. It inherits from WindowController.
- * @author Búgvi Magnussen
- * @version 20/03/2017
  */
 public final class SettingsWindowController extends WindowController {
 
