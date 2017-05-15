@@ -26,24 +26,39 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
     private Point2D from;
     private Point2D to;
 
+    /**
+     * Creates an edge from a point to another
+     */
     public RoadEdge(Point2D from, Point2D to) {
         this.from = from;
         this.to = to;
     }
 
+    /**
+     * Creates an edge from a point to another and attaches a road.
+     */
     public RoadEdge(Point2D from, Point2D to, Road road) {
         this(from,to);
         this.road = road;
     }
 
+    /**
+     * Creates an edge in the other direction
+     */
     public RoadEdge createReverse() {
         return new RoadEdge(this.to,this.from,this.road);
     }
 
+    /**
+     * Returns one of the two points
+     */
     public Point2D getEither() {
         return from;
     }
 
+    /**
+     * Returns the other point, if you have one of them.
+     */
     public Point2D getOther(Point2D point) {
         if (from.equals(point)) return to;
         else if (to.equals(point)) return from;
@@ -52,12 +67,18 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
         }
     }
 
+    /**
+     * Compares two edges to eachother by the distance
+     */
     @Override
     public int compareTo(RoadEdge other) {
         return Double.compare((float) HelperFunctions.distanceInMeters(from,to),
                 (float) HelperFunctions.distanceInMeters(other.from,other.to));
     }
 
+    /**
+     * Calculates the Dijkstra weight of this edge
+     */
     public float getWeight(TravelType type, Point2D start, Point2D end, boolean fast) {
         if(type == TravelType.VEHICLE && !road.isTravelByCarAllowed()){
             return Float.POSITIVE_INFINITY;
@@ -81,6 +102,9 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
         return "Road:'"+getName()+"'; "+getLength()+" m;";
     }
 
+    /**
+     * Describes this edge in words
+     */
     public String describe(float length) {
         String name = getName();
         if (name.equals("") || name.equals(" ")){
@@ -98,6 +122,9 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
         }
     }
 
+    /**
+     * Compares the edge to another edge based on the direction of them
+     */
     public int compareToRoad(RoadEdge other) {
         if (other == null) throw new NullPointerException("RoadEdge not initialized!");
         if (other.getName().equals(getName())) return 0;
@@ -105,26 +132,44 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
                 other.from,other.to);
     }
 
+    /**
+     * Returns the length of the edge in meters
+     */
     public float getLength() {
         return (float) HelperFunctions.distanceInMeters(from,to);
     }
 
+    /**
+     * Returns the mathematical length of the edge
+     */
     public float getLengthInCoords() {
         return (float)from.distance(to);
     }
 
+    /**
+     * Returns the max speed in meters per second
+     */
     public float getSpeed() {
         return road.getMaxSpeed()*SPEED_TO_METERS_PER_SECOND;
     }
 
+    /**
+     * Returns the time is takes to drive the edge
+     */
     public float getTime() {
         return getLength() / getSpeed();
     }
 
+    /**
+     * Return the edge name
+     */
     public String getName() {
         return road.getName();
     }
 
+    /**
+     * Returns the edge type
+     */
     public RoadType getRoadType() {
         return road.getRoadType();
     }

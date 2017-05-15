@@ -11,6 +11,9 @@ public class Rail extends Element {
     }
     public PolygonApprox getShape() { return (PolygonApprox)super.getShape(); }
 
+    /**
+     * Whether the railways is in a tunnel
+     */
     public boolean isInTunnel() {
         return isInTunnel;
     }
