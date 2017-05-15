@@ -70,7 +70,8 @@ public final class MainWindowController extends WindowController {
                      .icon()
                      .hide();
         //Todo, optimise window height minimum
-        window.setMinimumWindowSize(new Dimension(ToolbarController.getSmallLargeEventWidth()-FROM_RESIZE_EVENT_TO_MINIMUMWIDTH,(int) ((Toolkit.getDefaultToolkit().getScreenSize().getHeight()) /1.3)));
+        if(!OSDetector.isWindows()) window.setMinimumWindowSize(new Dimension(ToolbarController.getSmallLargeEventWidth()-FROM_RESIZE_EVENT_TO_MINIMUMWIDTH, 650));
+        else window.setMinimumWindowSize(new Dimension(ToolbarController.getSmallLargeEventWidth()-FROM_RESIZE_EVENT_TO_MINIMUMWIDTH, 660));
         setupToolbar();
         setupCanvas();
         setupCanvasExtras();
