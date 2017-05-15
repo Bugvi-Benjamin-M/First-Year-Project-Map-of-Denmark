@@ -12,7 +12,12 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+/**
+ * The superclass of the program's multiple searchtools.
+ * The primary idea with this class is to decrease code duplication.
+ * The functionality of the searchtools which is common, is gathered in this class.
+ * Especially the functionality of the auto completion feature.
+ */
 public abstract class SearchController extends Controller {
 
         protected SearchTool searchTool;
@@ -24,7 +29,10 @@ public abstract class SearchController extends Controller {
         protected javax.swing.Timer queryTimer;
         protected final int QUERY_DELAY = 600;
 
-        protected SearchController() {
+    /**
+     * Creates a new controller.
+     */
+    protected SearchController() {
             super();
         }
 
@@ -38,7 +46,15 @@ public abstract class SearchController extends Controller {
             searchTool.getField().setToolTipText(tip);
         }
 
-        protected Point2D.Float searchActivatedEvent() {
+    /**
+     * Search activated is called when the user presses enter
+     * or clicks on the search button after entering an address.
+     * The method will return a point if the tst contains a direct match,
+     * if this is not the case the method will create a popupwindow and come
+     * with suggestions. (Strings that match the input)
+     * @return the Point associated with the address.
+     */
+    protected Point2D.Float searchActivatedEvent() {
             validSearch = false;
             if(!allowSearch) {
                 searchTool.getField().requestFocus();
@@ -46,7 +62,6 @@ public abstract class SearchController extends Controller {
             else if(allowSearch && searchTool.getText().isEmpty()) {
                 searchTool.getField().requestFocus();
             }
-            //else if(allowSearch) {
                 Point2D.Float point = null;
                 ArrayList<Value> list = Model.getInstance().getTst().get(searchTool.getText());
                 //if there exists a value
@@ -82,8 +97,6 @@ public abstract class SearchController extends Controller {
                 }
                 allowSearch = true;
                 return point;
-           // }
-           // return null;
         }
 
     /**
@@ -127,6 +140,7 @@ public abstract class SearchController extends Controller {
 
     protected void selectAddress(String[] matches){
             StringSorter.sort(matches);
+            System.out.println(matches.length);
             String result = PopupWindow.confirmBox(null, "Select an Address:", "Multiple Search Results!", matches);
             if(result != null) {
                 validSearch = true;
@@ -136,7 +150,7 @@ public abstract class SearchController extends Controller {
         }
 
     /**
-     * Shows all keys in the TST that could match the user input.
+     * Shows all keys in the TST that could match the user input in a popup.
      */
 
     protected void showMatchingResults() {
@@ -228,24 +242,37 @@ public abstract class SearchController extends Controller {
             return sortedMatches;
         }
 
-
-        public boolean doesSearchbarHaveFocus() {
+    /**
+     * this method checks if the component has focus.
+     * @return does the component have focus (true/false)
+     */
+    public boolean doesSearchbarHaveFocus() {
             return searchTool.getField().getEditor().getEditorComponent().hasFocus();
         }
 
-        protected boolean checkForProhibitedKey(KeyEvent e) {
+    /**
+     * Checks if a key is valid.
+     * @param e the key
+     * @return true if the key is valid, false if not.
+     */
+    protected boolean checkForProhibitedKey(KeyEvent e) {
             for (int key : prohibitedKeys) {
                 if (e.getKeyCode() == key) return true;
             }
             return false;
         }
 
-        protected abstract void specifyKeyBindings();
+    protected abstract void specifyKeyBindings();
 
     protected boolean isValidSearch() {
         return validSearch;
     }
 
+    /**
+     * Sets the current query.
+     *(The current query is the the text in the searchtool field.)
+     * @param query
+     */
     protected void setCurrentQuery(String query) {
         currentQuery = query;
     }
