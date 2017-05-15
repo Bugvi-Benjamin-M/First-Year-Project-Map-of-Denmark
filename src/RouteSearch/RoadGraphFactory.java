@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.HashSet;
 import Model.Elements.SuperElement;
 
-
 public class RoadGraphFactory {
 
     public enum LoadType {
