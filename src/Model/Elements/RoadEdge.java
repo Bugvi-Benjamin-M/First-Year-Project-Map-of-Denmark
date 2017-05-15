@@ -86,17 +86,23 @@ public class RoadEdge implements Comparable<RoadEdge>, Serializable {
         if (name.equals("") || name.equals(" ")){
             name = road.getRoadType().name();
         }
-        return "Travel via "+name+" for " + (int) Math.floor(length) + " meters";
+        String returnable = "Travel via "+name+" for ";
+        int len = (int) Math.floor(length/10)*10;
+        if (len == 0) {
+            return returnable + Math.round(length)
+                    + " meters";
+        } else if (len - 1000 > 0) {
+            return returnable + Math.round(len/1000) + " kilometers";
+        } else {
+            return returnable + len + " meters";
+        }
     }
 
     public int compareToRoad(RoadEdge other) {
         if (other == null) throw new NullPointerException("RoadEdge not initialized!");
         if (other.getName().equals(getName())) return 0;
-        double angle = HelperFunctions.angle(this.from,this.to,
+        return HelperFunctions.direction(this.from,this.to,
                 other.from,other.to);
-        if (angle < 0) return -1;       // to the left
-        else if (angle > 0) return 1;   // to the right
-        else return 0;                  // same angle
     }
 
     public float getLength() {

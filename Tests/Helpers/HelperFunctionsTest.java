@@ -23,6 +23,8 @@ public class HelperFunctionsTest {
     private static Point2D D = new Point2D.Double(12, 1);
     private static Point2D E = new Point2D.Double(-1, -1);
 
+
+
     @Test
     public void pathGeneralization() throws Exception
     {
@@ -95,5 +97,14 @@ public class HelperFunctionsTest {
         distance = HelperFunctions.distanceInMeters(points);
         System.out.println("distance: "+distance);
         assertEquals(4680,distance,5);
+    }
+
+    @Test
+    public void directionTest() throws Exception {
+        System.out.println("AB-AC: "+HelperFunctions.direction(A,B,A,C));
+        System.out.println("AB-AD: "+HelperFunctions.direction(A,B,A,D));
+        System.out.println("AB-AE: "+HelperFunctions.direction(A,B,A,E));
+        System.out.println("AC-AD: "+HelperFunctions.direction(A,C,A,D));
+        System.out.println("AC-AB: "+HelperFunctions.direction(A,C,A,B));
     }
 }

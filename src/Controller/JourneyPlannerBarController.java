@@ -388,7 +388,7 @@ public final class JourneyPlannerBarController extends Controller {
         java.util.List<String> route = JourneyPlannerBarController.getInstance().getRouteDescription();
         if (route == null) return;
         travelDescription.addLine(route.get(route.size()-1));
-        for (int i = 0; i < route.size()-2; i++) {
+        for (int i = 0; i < route.size()-1; i++) {
             travelDescription.addLine(route.get(i));
         }
         travelDescription.getField().setCaretPosition(0);
@@ -407,7 +407,8 @@ public final class JourneyPlannerBarController extends Controller {
                     next = route.get(i);
                     int compare = last.compareToRoad(next);
                     if (compare != 0){
-                        description.add(last.describe(distance));
+                        if (distance == 0) description.add(last.describe(last.getLength()));
+                        else description.add(last.describe(distance));
                         distance = 0;
                         String name = next.getName();
                         if (name.equals("")) name = next.getRoadType().name();

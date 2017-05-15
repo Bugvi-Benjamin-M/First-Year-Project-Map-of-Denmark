@@ -1,6 +1,7 @@
 package Helpers;
 
 import Controller.CanvasController;
+import KDtree.Point;
 import Model.Model;
 import OSM.OSMHandler;
 import OSM.OSMWay;
@@ -221,41 +222,29 @@ public class HelperFunctions {
         if (a == null || b == null) {
             throw new NullPointerException("Arguments must not be null");
         }
-        return (a.x * b.y) + (a.y * b.x);
+        return (a.x * b.x) + (a.y * b.y);
     }
 
-    public static double angle(OSMWay one, OSMWay other) {
-        if (one == null || other == null) {
-            throw new NullPointerException("Arguments must not be null");
-        } else if (one.size() < 2 || other.size() < 2) {
-            throw new IllegalArgumentException("Angle between points is not possible");
+    public static int direction(Point2D a, Point2D b, Point2D c, Point2D d) {
+        Vector ab = new Vector(a,b);
+        Vector cd = new Vector(c,d);
+        double dot = ab.x*-cd.y + ab.y*cd.x;
+        if (dot > 0) {
+            return -1;  // to the left
+        } else if (dot < 0) {
+            return 1;   // to the right
+        } else {
+            return 0;   // parallel
         }
-        Vector a = new Vector(one.getFromNode(),one.getToNode());
-        Vector b = new Vector(other.getFromNode(),other.getToNode());
-        return angle(a,b);
     }
 
-    public static double angle(Point2D from1, Point2D to1,Point2D from2,Point2D to2){
-        if (from1 == null || from2 == null || to1 == null || to2 == null)
-            throw new IllegalArgumentException("No arguments may be null.");
-        Vector a = new Vector(from1,to1);
-        Vector b = new Vector(from2,to2);
-        return angle(a,b);
-    }
-
-    private static double angle(Vector a, Vector b) {
-        //System.out.println("a "+a.toString()+" - b "+b.toString());
-        double distances = a.length() * b.length();
-        return (dotProduct(a,b) / distances);
-    }
-
-    private static class Vector {
+    public static class Vector {
         private double x;
         private double y;
 
         Vector(Point2D a, Point2D b) {
-            x = a.getX()-b.getX();
-            y = a.getY()-b.getY();
+            x = b.getX()-a.getX();
+            y = b.getY()-a.getY();
         }
 
         double length() {
