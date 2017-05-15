@@ -175,11 +175,17 @@ public class HelperFunctions {
         return length;
     }
 
+    /**
+     * Convertes nano seconds to a string describing the amount
+     */
     public static String convertNanotimeToTime(long loadtime) {
         long loadtimeMilliseconds = loadtime / 1000000;
         return convertMillitimeToTime(loadtimeMilliseconds);
         }
 
+    /**
+     * Convertes milli seconds to a string describing the amount
+     */
     public static String convertMillitimeToTime(long loadtime) {
         long loadtimeSeconds = loadtime / 1000;
         long loadtimeMinutes = loadtimeSeconds / 60;
@@ -189,6 +195,9 @@ public class HelperFunctions {
                 (loadtime - (loadtimeSeconds * 1000)) + " ms";
     }
 
+    /**
+     * Convertes nano seconds to a string describing the amount
+     */
     public static String simplifyNanoTime(long loadtime) {
         long loadtimeMilliseconds = loadtime / 1000000;
         long loadtimeSeconds = loadtimeMilliseconds / 1000;
@@ -209,12 +218,18 @@ public class HelperFunctions {
         return time;
     }
 
+    /**
+     * Convertes distance on screen coordinates to distance in the model
+     */
     public static float convertDistanceFromScreenCoordsToModelCoords(int distance) {
         Point2D start = CanvasController.getInstance().getMapCanvas().toModelCoords(new Point2D.Float(0,0));
         Point2D end = CanvasController.getInstance().getMapCanvas().toModelCoords(new Point2D.Float(distance,0));
         return (float) (end.getX() - start.getX());
     }
 
+    /**
+     * Calculates the mathematical dot product from two given vectors
+     */
     private static double dotProduct(Vector a, Vector b) {
         if (a == null || b == null) {
             throw new NullPointerException("Arguments must not be null");
@@ -222,6 +237,9 @@ public class HelperFunctions {
         return (a.x * b.x) + (a.y * b.y);
     }
 
+    /**
+     * Compares the direction of two vectors, provided as points.
+     */
     public static int direction(Point2D a, Point2D b, Point2D c, Point2D d) {
         Vector ab = new Vector(a,b);
         Vector cd = new Vector(c,d);
@@ -235,15 +253,24 @@ public class HelperFunctions {
         }
     }
 
+    /**
+     * A mathematical vector described by two points.
+     */
     public static class Vector {
         private double x;
         private double y;
 
+        /**
+         * Vector constructor
+         */
         Vector(Point2D a, Point2D b) {
             x = b.getX()-a.getX();
             y = b.getY()-a.getY();
         }
 
+        /**
+         * Length of the vector
+         */
         double length() {
             return Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
         }
