@@ -498,8 +498,8 @@ public final class JourneyPlannerBarController extends Controller {
                                 searchUnderway = true;
                                 factory = Model.getInstance().getGraphFactory();
 
-                                Road start = MainWindowController.getInstance().requestCalculateNearestNeighbour((float) fromPoint.getX(), (float) fromPoint.getY());
-                                Road end = MainWindowController.getInstance().requestCalculateNearestNeighbour((float) toPoint.getX(), (float) toPoint.getY());
+                                Road start = MainWindowController.getInstance().requestCalculateNearestNeighbour((float) fromPoint.getX(), (float) fromPoint.getY(), type);
+                                Road end = MainWindowController.getInstance().requestCalculateNearestNeighbour((float) toPoint.getX(), (float) toPoint.getY(), type);
 
                                 dijk = new RouteSearch.RouteDijkstra(
                                         factory.getGraph(), start.getNearestPoint(fromPoint), end.getNearestPoint(toPoint), type);

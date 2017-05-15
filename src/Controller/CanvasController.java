@@ -9,6 +9,7 @@ import Model.Elements.*;
 import Model.Model;
 import View.CanvasPopup;
 import View.MapCanvas;
+import Enums.TravelType;
 import View.PopupWindow;
 
 import javax.swing.*;
@@ -702,6 +703,42 @@ public final class CanvasController extends Controller implements Observer {
             for (SuperElement element : set) {
             Road r = (Road) element;
             if (r.getShape() != null && r.getShape().distTo(new Point2D.Float(x, y)) < minDist) {
+                if (!r.getName().equals("")) {
+                    e = r;
+                    minDist = (float) r.getShape().distTo(new Point2D.Float(x, y));
+                    }
+                }
+            }
+        }
+
+        if (minDist > MINIMUM_ACCEPTED_DISTANCE)
+            return null;
+        if (e != null) {
+            return e;
+        } else
+            return null;
+    }
+
+    public static Road calculateNearestNeighbour(float x, float y, TravelType type) {
+        ArrayList<HashSet<SuperElement>> roads = getNearestNeighbourOfAllRoads(x, y);
+
+        float minDist = 1000;
+        Road e = null;
+        for(HashSet<SuperElement> set : roads){
+            for (SuperElement element : set) {
+            Road r = (Road) element;
+            if (r.getShape() != null && r.getShape().distTo(new Point2D.Float(x, y)) < minDist) {
+                if(type == TravelType.VEHICLE && !r.isTravelByCarAllowed()){
+                    continue;
+                }
+                if(type == TravelType.BICYCLE && !r.isTravelByBikeAllowed()){
+                    continue;
+                }
+                if(type == TravelType.WALK && !r.isTravelByFootAllowed()){
+                    continue;
+                }
+
+
                 if (!r.getName().equals("")) {
                     e = r;
                     minDist = (float) r.getShape().distTo(new Point2D.Float(x, y));

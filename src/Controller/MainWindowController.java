@@ -3,6 +3,7 @@ package Controller;
 import Controller.ToolbarControllers.ToolbarController;
 import Enums.ToolType;
 import Enums.ToolbarType;
+import Enums.TravelType;
 import Helpers.GlobalValue;
 import Helpers.OSDetector;
 import Helpers.ThemeHelper;
@@ -771,6 +772,16 @@ public final class MainWindowController extends WindowController {
      */
     public Road requestCalculateNearestNeighbour(float x, float y) {
         return CanvasController.calculateNearestNeighbour(x,y);
+    }
+
+    /**
+     * Calculates nearest road to a given point, with the traveltype in mind.
+     * @param x the x coordinate of the point.
+     * @param y the y coordinate of the point.
+     * note: to be used to decrease coupling.
+     */
+    public Road requestCalculateNearestNeighbour(float x, float y, TravelType type) {
+        return CanvasController.calculateNearestNeighbour(x,y,type);
     }
 
     /**
