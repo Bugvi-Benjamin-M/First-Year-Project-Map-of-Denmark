@@ -30,6 +30,12 @@ public class RouteDijkstra {
     private RoadGraphFactory factory;
     private boolean fast = PreferencesController.getInstance().getUseFastestRouteSetting();
 
+    /**
+     * Constructor.
+     * Takes a graph as argument, two points and the traveltype.
+     * The end point is required to automatically stop the algorithm, when we reach the final destination.
+     * The travel type is needed to stop people from biking on the motorway.
+     */
     public RouteDijkstra(RoadGraph graph, Point2D start, Point2D end, TravelType type) {
         distTo = new HashMap<Point2D,Float>(graph.getNumberOfVertices());
         edgeTo = new HashMap<Point2D,RoadEdge>(graph.getNumberOfVertices());
@@ -58,11 +64,22 @@ public class RouteDijkstra {
         }
     }
 
+    /**
+     * A* function.
+     * Calculates the ever-smallest possible distance to the final destination.
+     * It's used to weight roads, so that going in the right direction weights
+     * less than going in the wrong directon.
+     */
     private float h(Point2D current){
         return (float)HelperFunctions.lazyDistance(current, end);
     }
 
-    // relax edge e and update pq if changed
+    /**
+     * "Relaxing" the edge, checking whether it has found a faster road and
+     * inserts the edge into a priority queue.
+     *
+     * The queue is lazy.
+     */
     private void relax(RoadEdge e) {
         Point2D v = e.getEither(), w = e.getOther(v);
         Float distV = distTo.get(v), distW = distTo.get(w);
@@ -85,22 +102,37 @@ public class RouteDijkstra {
         }
     }
 
+    /**
+     * A for loop releaxing all edges on a given vertex, given as a list.
+     */
     private void handleNextNode(List<RoadEdge> adj){
         for (RoadEdge e : adj) {
             relax(e);
         }
     }
 
+    /**
+     * Returns the distance from our startpoint to the final destination or any
+     * given destination, that Dijkstra reached before the end-point.
+     */
     public float distTo(Point2D point) {
         Float dist = distTo.get(point);
         return dist != null ? dist : Float.POSITIVE_INFINITY;
     }
 
+    /**
+     * Checks whether we have a path to the final destination or any
+     * given destination, that Dijkstra reached before the end-point.
+     */
     public boolean hasPathTo(Point2D point) {
         Float dist = distTo.get(point);
         return dist != null ? dist < Double.POSITIVE_INFINITY : false;
     }
 
+    /**
+     * Returns a stack of the optimal road to the end point.
+     * The stack contains RoadEdges.
+     */
     public Iterable<RoadEdge> path() {
         if (!hasPathTo(end))
             return null;
@@ -112,20 +144,33 @@ public class RouteDijkstra {
         return path;
     }
 
+    /**
+     * An internal class describing a vertex and it's weight.
+     */
     private class Node{
         public Point2D point;
         public Float weight;
 
+        /**
+         * Constructor
+         */
         public Node(Point2D point, float weight){
             this.point = point;
             this.weight = weight;
         }
 
+        /**
+         * Overrides the hashCode and states that the hashCode is equal to the point's hashcode.
+         */
         @Override
         public int hashCode(){
             return point.hashCode();
         }
 
+        /**
+         * Overrides the equals function, and determines that all Nodes on
+         * the same point are equal, ignoring the weight completely.
+         */
         @Override
         public boolean equals(Object obj) {
             if (obj == null) {
@@ -139,8 +184,14 @@ public class RouteDijkstra {
         }
     }
 
+    /**
+     * A comparator to compare nodes based on weight.
+     */
     private class WeightComperator implements Comparator<Node>
     {
+        /**
+         * This compares the two nodes based on their weight.
+         */
         @Override
         public int compare(Node x, Node y)
         {
