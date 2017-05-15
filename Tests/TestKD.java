@@ -20,8 +20,7 @@ public class TestKD {
     private KDTree tree;
 
     @Before
-    public void buildUp()
-    {
+    public void buildUp() {
         NodeGenerator gen = new NodeGenerator(10, 2);
         tree = new KDTree();
 
@@ -42,8 +41,7 @@ public class TestKD {
     }
 
     @Test
-    public void testGetManyElementsLittleSquare()
-    {
+    public void testGetManyElementsLittleSquare() {
         HashSet<SuperElement> set = tree.getManySections(-1, -1, 3, 3);
 
         assertEquals(5, set.size());
