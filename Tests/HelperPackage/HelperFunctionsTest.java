@@ -1,5 +1,6 @@
-package Helpers;
+package HelperPackage;
 
+import Helpers.HelperFunctions;
 import org.junit.Test;
 
 import java.awt.geom.Point2D;

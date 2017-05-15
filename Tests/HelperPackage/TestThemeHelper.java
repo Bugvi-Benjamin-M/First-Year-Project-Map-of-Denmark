@@ -1,4 +1,4 @@
-package HelpersPackage;
+package HelperPackage;
 
 import Helpers.ThemeHelper;
 import Theme.*;

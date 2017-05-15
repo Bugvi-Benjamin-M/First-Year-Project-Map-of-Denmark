@@ -1,5 +1,6 @@
-package Helpers.Utilities;
+package HelperPackage.Utilities;
 
+import Helpers.Utilities.FPSCounter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
