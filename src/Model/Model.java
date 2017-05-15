@@ -27,7 +27,6 @@ public final class Model extends Observable {
     private TenarySearchTrie tst;
 
     private static Model instance;
-    private ArrayList<Point2D> medianpoints = new ArrayList<>();
 
     private CoastlineFactory coastlineFactory;
     private RoadGraphFactory graphFactory;
@@ -186,20 +185,28 @@ public final class Model extends Observable {
         this.elements = elements;
     }
 
-    public void addWayElement(ElementType type, Pointer pointer)
-    {
-        elements.get(type).putPointer(pointer);
-    }
-
+    /*
+     * Gets a List of all the coastlines
+     */
     public List<Path2D> getCoastlines()
     {
         return coastlineFactory.getCoastlinePolygons();
     }
 
+    /*
+     * Gets the TenarySearchTrie from the model
+     */
     public TenarySearchTrie getTst() { return tst; }
 
+    /*
+     * Sets the TenarySearchTrie
+     */
     public void setTst(TenarySearchTrie tst) { this.tst = tst; }
 
+
+    /*
+     * Sets the bounds to the coastlines, if no real bounds was found
+     */
     public void loadFromCoastlines()
     {
         coastlineFactory.setLongitudeFactor();
@@ -216,6 +223,9 @@ public final class Model extends Observable {
         DebugWindow.getInstance().setLatitudeLabel();
     }
 
+    /*
+     * Clears the model by removing all elements from the models KDTrees
+     */
     public void clear()
     {
         for (ElementType type : ElementType.values()) {
@@ -224,33 +234,51 @@ public final class Model extends Observable {
         }
     }
 
+    /*
+     * Propogates that the model has changed to all listeners.
+     */
     public void modelHasChanged()
     {
         setChanged();
         notifyObservers();
     }
 
+    /*
+     * Sets a bound of the given type to a value
+     */
     public void setBound(BoundType type, float value)
     {
         bounds.put(type, value);
         dynamicBounds.put(type, value);
     }
 
+    /*
+     * Sets a dynamic bound of the given type to a value
+     */
     public void setDynamicBound(BoundType type, float value)
     {
         dynamicBounds.put(type, value);
     }
 
+    /*
+     * Sets a camera bound of the given type to a value
+     */
     public void setCameraBound(BoundType type, float value)
     {
         camera_bounds.put(type, value);
     }
 
+    /*
+     * Gets the camera bound by type
+     */
     public float getCameraBound(BoundType type)
     {
         return camera_bounds.get(type);
     }
 
+    /*
+     * Gets the lowest latitude
+     */
     public float getMinLatitude(boolean dynamic)
     {
         if (dynamic)
@@ -259,6 +287,9 @@ public final class Model extends Observable {
             return bounds.get(BoundType.MIN_LATITUDE);
     }
 
+    /*
+     * Get the highest latitude
+     */
     public float getMaxLatitude(boolean dynamic)
     {
         if (dynamic)
@@ -267,6 +298,9 @@ public final class Model extends Observable {
             return bounds.get(BoundType.MAX_LATITUDE);
     }
 
+    /*
+     * Gets the lowest longitude
+     */
     public float getMinLongitude(boolean dynamic)
     {
         if (dynamic)
@@ -275,6 +309,9 @@ public final class Model extends Observable {
             return bounds.get(BoundType.MIN_LONGITUDE);
     }
 
+    /*
+     * Gets the highest longitude
+     */
     public float getMaxLongitude(boolean dynamic)
     {
         if (dynamic)
@@ -283,40 +320,60 @@ public final class Model extends Observable {
             return bounds.get(BoundType.MAX_LONGITUDE);
     }
 
-    public ArrayList<Point2D> getMedianpoints() { return medianpoints; }
-
-    public void addMedianPoints(Double longitude, Double latitude)
-    {
-        medianpoints.add(new Point2D.Double(longitude, latitude));
-    }
-
+    /*
+     * Resets the Model singleton to null.
+     */
     public void resetInstance() { instance = null; }
 
+    /*
+     * Gets the coastline factory
+     */
     public CoastlineFactory getCoastlineFactory() { return coastlineFactory; }
 
+    /*
+     * Gets an arraylist of all the point of interests
+     */
     public ArrayList<POI> getPointsOfInterest() {
         return pointsOfInterest;
     }
 
+    /*
+     * Sets the point of interest array list
+     */
     public void setPointsOfInterest(ArrayList<POI> pointsOfInterest) {
         this.pointsOfInterest = pointsOfInterest;
     }
 
+    /*
+     * Adds a point of interest to the model
+     */
     public void addPOI(POI poi){
         pointsOfInterest.add(poi);
     }
 
+    /*
+     * Removes a single point of interest with a given index
+     */
     public void removePOI(int index){
         pointsOfInterest.remove(index);
     }
 
+    /*
+     * Removes all the points of interest from the model
+     */
     public void removeAllPOI(){
         pointsOfInterest.clear();
     }
 
+    /*
+     * Sets the longitude factor
+     */
     public void setLongitudeFactor(float longitudeFactor) {
         this.longitudefactor = longitudeFactor;
     }
 
+    /*
+     * Returns the longitude factor
+     */
     public float getLongitudeFactor() {return longitudefactor;}
 }
