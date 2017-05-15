@@ -18,8 +18,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * The settings controller class controls the settings window and settings in
- * general. It inherits from WindowController.
+ * The settings controller class controls the settings window. It inherits from WindowController.
  */
 public final class SettingsWindowController extends WindowController {
 
@@ -36,6 +35,9 @@ public final class SettingsWindowController extends WindowController {
     private String chosenFilePath;
     private String chosenFileName;
 
+    /**
+     * Creates SettingsWindowController object. Used by getInstance.
+     */
     private SettingsWindowController() { super(); }
 
     /**
@@ -65,9 +67,7 @@ public final class SettingsWindowController extends WindowController {
     }
 
     /**
-   * Sets up a new settings window. In general, this is only done when the
-   * singleton instance of this controller
-   * is created.
+   * Sets up a new settings window.
    * @return the newly created settings window.
    */
     public void setupSettingsWindow()
@@ -89,6 +89,9 @@ public final class SettingsWindowController extends WindowController {
         hideWindow();
     }
 
+    /**
+     * Creates all the settings components to be added to the settings window.
+     */
     private void createSettings()
     {
         settings = new Settings();
@@ -102,13 +105,16 @@ public final class SettingsWindowController extends WindowController {
         setToCurrentSettings();
     }
 
+    /**
+     * Sets all the settings components to the user's preferred settings.
+     */
     private void setToCurrentSettings()
     {
         antiAliasingToggle.setSelectedStatus(
             PreferencesController.getInstance().getAntiAliasingSetting());
         canvasRealTimeInformationToggle.setSelectedStatus(
             PreferencesController.getInstance()
-                .getCanvasRealTimeInformationSetting());
+                .getShowNearestRoadNameSetting());
         keyboardKeysToggle.setSelectedStatus(
             PreferencesController.getInstance().getKeyBindingsSetting());
         useFastestRouteToggle.setSelectedStatus(
@@ -119,8 +125,9 @@ public final class SettingsWindowController extends WindowController {
     }
 
     /**
-   * adds the individual components to the settings JPanel
-   */
+     * adds the individual components to the settings JPanel and
+     * determines dimensions.
+     */
     private void buildSettings()
     {
         settings.createSpace(new Dimension(0, 20));
@@ -163,12 +170,20 @@ public final class SettingsWindowController extends WindowController {
         });
     }
 
+    /**
+     * Activated when the user presses the default file button.
+     * Sets the load on startup file to the default resource, Danmark.bin.
+     */
     private void defaultFileButtonActivated() {
         chosenFilePath = GlobalValue.DEFAULT_BIN_RESOURCE;
         chosenFileName = DefaultSettings.DEFAULT_FILE_NAME;
         fileLoadSetting.setTextField(DefaultSettings.DEFAULT_FILE_NAME);
     }
 
+    /**
+     * Opens a JFileChooser to let the user pick a file to be loaded on startup.
+     * Updates the file name field.
+     */
     private void fileButtonActivated() {
         window.getFrame().setAlwaysOnTop(false);
         FileNameExtensionFilter[] filters = new FileNameExtensionFilter[] {
@@ -187,7 +202,7 @@ public final class SettingsWindowController extends WindowController {
     }
 
     /**
-   * Method is called when default button is pressed. Returns all settings to
+   * Method is called when default settings button is pressed. Returns all settings to
    * default.
    */
     private void defaultButtonActivated()
@@ -205,8 +220,7 @@ public final class SettingsWindowController extends WindowController {
 
     /**
    * Method is called when the apply button is pressed. Applies all changed
-   * settings and makes sure the settings
-   * window accurately reflects the current settings.
+   * settings. Lastly, closes the settings window.
    */
     private void applyButtonActivated()
     {
@@ -260,8 +274,7 @@ public final class SettingsWindowController extends WindowController {
 
     /**
    * Overrides the superclass' method. Builds on the superclass method by adding
-   * a window listener to the settings window
-   * to add further functionality.
+   * a window listener to the settings window that handles close window events.
    */
     @Override
     protected void addInteractionHandlerToWindow()
@@ -278,19 +291,24 @@ public final class SettingsWindowController extends WindowController {
         });
     }
 
+    /**
+     * Overrides the superclass' method. Returns the control back to the
+     * main window of the application, deactivates the settings tool.
+     */
     @Override
     public void hideWindow()
     {
         MainWindowController.getInstance().getWindow().getFrame().setEnabled(true);
         MainWindowController.getInstance().getWindow().getFrame().setFocusable(
             true);
-        window.getFrame().setAlwaysOnTop(true);
+        window.getFrame().setAlwaysOnTop(false);
         window.hide();
         ToolbarController.getInstance().getToolbar().getTool(ToolType.SETTINGS).toggleActivate(false);
     }
 
     /**
    * resets the singleton instance.
+     * This method is meant for testing purposes.
    */
     public void resetInstance() { instance = null; }
 }

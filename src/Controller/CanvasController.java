@@ -137,7 +137,7 @@ public final class CanvasController extends Controller  {
     public void disablePopup()
     {
         if (PreferencesController.getInstance()
-                .getCanvasRealTimeInformationSetting()) {
+                .getShowNearestRoadNameSetting()) {
             if (popup != null) {
                 if (popup.getPopupMenu() != null)
                     popup.hidePopupMenu();
@@ -703,7 +703,7 @@ public final class CanvasController extends Controller  {
             return;
         }
         if (PreferencesController.getInstance()
-                .getCanvasRealTimeInformationSetting()) {
+                .getShowNearestRoadNameSetting()) {
             if (mapCanvas.hasFocus()) {
                 disablePopup();
                 popup = new CanvasPopup();
