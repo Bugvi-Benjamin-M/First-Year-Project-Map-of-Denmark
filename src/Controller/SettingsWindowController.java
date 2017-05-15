@@ -212,7 +212,7 @@ public final class SettingsWindowController extends WindowController {
     {
         PreferencesController.getInstance().setThemeSetting(
             themeSettings.getSelectedTheme());
-        PreferencesController.getInstance().setCanvasRealTimeInformationSetting(
+        PreferencesController.getInstance().setShowNearestRoadNameSetting(
             canvasRealTimeInformationToggle.isToggleSelected());
         PreferencesController.getInstance().setKeyBindingsSetting(
             keyboardKeysToggle.isToggleSelected());

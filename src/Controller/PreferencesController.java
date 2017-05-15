@@ -42,7 +42,6 @@ public final class PreferencesController {
     {
         preferences = Preferences.userNodeForPackage(this.getClass());
         ThemeHelper.setTheme(PreferencesController.getInstance().getThemeSetting());
-        //GlobalValue.setFastestRoute(PreferencesController.getInstance().getUseFastestRouteSetting());
     }
 
     public boolean getAntiAliasingSetting()
@@ -90,7 +89,7 @@ public final class PreferencesController {
         preferences.putBoolean("KeyBindings", setting);
     }
 
-    public void setCanvasRealTimeInformationSetting(boolean setting)
+    public void setShowNearestRoadNameSetting(boolean setting)
     {
         preferences.putBoolean("CanvasRealTimeInformation", setting);
     }
