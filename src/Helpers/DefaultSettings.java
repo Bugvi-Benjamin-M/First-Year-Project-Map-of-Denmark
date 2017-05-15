@@ -1,6 +1,9 @@
 package Helpers;
 
-
+/**
+ * The default settings for the program if no other settings
+ * are loaded or if settings are reset to default
+ */
 public class DefaultSettings {
 
     public static final boolean ANTI_ALIASING = false;
