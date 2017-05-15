@@ -11,8 +11,15 @@ public final class ThemeHelper {
 
     private static Theme currentTheme;
 
+    /**
+     * Returns the current shown theme
+     */
     public static String getCurrentTheme() { return currentTheme.getName(); }
 
+    /**
+     * Returns the applicate color based on a search query.
+     * The color is determined by the current theme in the Theme folder.
+     */
     public static Color color(String input)
     {
         try {
@@ -23,6 +30,9 @@ public final class ThemeHelper {
         }
     }
 
+    /**
+     * Sets the current theme, based on a theme name.
+     */
     public static void setTheme(String input)
     {
         String modInput = input.trim().replaceAll("\\s", "") + "Theme";
