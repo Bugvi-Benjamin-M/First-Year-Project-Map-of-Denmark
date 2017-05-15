@@ -96,7 +96,7 @@ public final class SettingsWindowController extends WindowController {
         keyboardKeysToggle = new KeyboardKeysToggle();
         southButtons = new SettingsButtons();
         antiAliasingToggle = new AntiAliasingToggle();
-        canvasRealTimeInformationToggle = new CanvasRealTimeInformationToggle();
+        canvasRealTimeInformationToggle = new CanvasShowNearestRoadToggle();
         useFastestRouteToggle = new FastestRouteToggle();
         fileLoadSetting = new FileLoadSetting();
         setToCurrentSettings();

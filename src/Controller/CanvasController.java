@@ -2,14 +2,16 @@ package Controller;
 
 import Enums.BoundType;
 import Enums.OSMEnums.ElementType;
-import Enums.ZoomLevel;
+import Enums.TravelType;
 import Helpers.GlobalValue;
 import Helpers.ThemeHelper;
-import Model.Elements.*;
+import Model.Elements.POI;
+import Model.Elements.Road;
+import Model.Elements.RoadEdge;
+import Model.Elements.SuperElement;
 import Model.Model;
 import View.CanvasPopup;
 import View.MapCanvas;
-import Enums.TravelType;
 import View.PopupWindow;
 
 import javax.swing.*;
@@ -21,8 +23,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Observable;
-import java.util.Observer;
 
 
 public final class CanvasController extends Controller  {
@@ -62,11 +62,18 @@ public final class CanvasController extends Controller  {
     private Cursor crossCursor;
     private Cursor normalCursor;
 
+    /**
+     * Private constructor, used by getInstance.
+     */
     private CanvasController()
     {
         super();
     }
 
+    /**
+     * Returns the singleton object to the client.
+     * @return the singleton object
+     */
     public static CanvasController getInstance() {
         if (instance == null) {
             instance = new CanvasController();
@@ -74,19 +81,33 @@ public final class CanvasController extends Controller  {
         return instance;
     }
 
+    /**
+     * Marks a point on the map canvas.
+     * @param address the point to be marked.
+     */
     public void markLocation(Point2D.Float address){
         mapCanvas.setLocationMarker(address);
         mapCanvas.panToPoint(address);
     }
 
+    /**
+     * Toggles whether the last saved route should be displayed on the map canvas.
+     * @param isActive display the last saved route.
+     */
     public void toggleRouteVisualization(boolean isActive){
         mapCanvas.toggleRouteVisualization(isActive);
     }
 
+    /**
+     * Resets the saved route.
+     */
     public void resetRoute(){
         mapCanvas.resetRoute();
     }
 
+    /**
+     * Adapts the map canvas to the
+     */
     public void resizeEvent()
     {
         mapCanvas.revalidate();
