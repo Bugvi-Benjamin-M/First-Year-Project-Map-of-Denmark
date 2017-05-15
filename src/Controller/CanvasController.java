@@ -170,10 +170,13 @@ public final class CanvasController extends Controller implements Observer {
         specifyKeyBindings();
     }
 
-    private void addFocusHandlerToCanvas()
-    {
+    private void addFocusHandlerToCanvas() {
         focusHandler = new CanvasFocusHandler();
         mapCanvas.addFocusListener(focusHandler);
+    }
+
+    public void canvasResetLocationMarker(){
+        mapCanvas.resetLocationMarker();
     }
 
     public void canvasSetRoute(Iterable<RoadEdge> path) {
@@ -359,10 +362,10 @@ public final class CanvasController extends Controller implements Observer {
 
         Point2D newCenterPoint = mapCanvas.toModelCoords(new Point2D.Double(canvasX, canvasY));
 
-        if (newCenterPoint.getX() < model.getMinLongitude(true)
-                || newCenterPoint.getX() > model.getMaxLongitude(true)
-                || newCenterPoint.getY() < model.getMaxLatitude(true)
-                || newCenterPoint.getY() > model.getMinLatitude(true)) {
+        if (newCenterPoint.getX() < model.getMinLongitude(false)
+                || newCenterPoint.getX() > model.getMaxLongitude(false)
+                || newCenterPoint.getY() < model.getMaxLatitude(false)
+                || newCenterPoint.getY() > model.getMinLatitude(false)) {
             mapCanvas.pan(-dx, -dy);
         }
         repaintCanvas();
@@ -397,7 +400,7 @@ public final class CanvasController extends Controller implements Observer {
             changeZoomLevel(+10);
         }
         repaintCanvas();
-        GlobalValue.setMaxZoom(ZoomLevel.getZoomFactor() - 50);
+        //GlobalValue.setMaxZoom(ZoomLevel.getZoomFactor() - 50);
     }
 
     public void panToPoint(Point.Float aFloat) {
@@ -672,7 +675,7 @@ public final class CanvasController extends Controller implements Observer {
     private static void zoomEvent(double dx, double dy, double increase,
         double zoomFactor)
     {
-        if ((zoom_value > GlobalValue.getMaxZoom() || increase > 0) && (zoom_value < 700 || increase < 0)) {
+        if ((zoom_value > -50 || increase > 0) && (zoom_value < 700 || increase < 0)) {
             mapCanvas.pan(-dx, -dy);
             mapCanvas.zoom(zoomFactor);
             changeZoomLevel(increase);

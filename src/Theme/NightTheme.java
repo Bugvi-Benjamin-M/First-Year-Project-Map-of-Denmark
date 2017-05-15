@@ -54,8 +54,13 @@ public class NightTheme implements Theme {
 
     public Color pointHover() {return new Color(0xAEA9AF);}
 
-    public Color markerForeground() {return new Color(0xFF8416);}
+    public Color addressMarkerForeground() {return new Color(0x875997);}
     public Color markerBackground() {return new Color(0XFFFFFF);}
+
+    public Color fromMarkerForeground() {return new Color(0x875997);}
+
+    public Color toMarkerForeground() {return new Color(0x875997);}
+
 
     public Color inactiveButton() {return new Color(0xA4A6A7);}
 

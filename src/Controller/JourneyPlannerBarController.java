@@ -156,7 +156,7 @@ public final class JourneyPlannerBarController extends Controller {
         addInteractionHandlersToJourneyPlannerTransportButtons();
         addInteractionHandlerToClearSearchButtons();
         addInteractionHandlerToDescriptionButton();
-        type = TravelType.WALK;
+        type = TravelType.VEHICLE;
     }
 
     public void setupLargeJourneyPlannerBar() {
@@ -261,6 +261,30 @@ public final class JourneyPlannerBarController extends Controller {
             case VEHICLE:
                 journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("toolActivated"));
                 break;
+        }
+    }
+
+    public boolean isLargeJourneyPlannerVisible() {
+        return isLargeJourneyPlannerVisible;
+    }
+
+    public boolean isSmallJourneyPlannerVisible() {
+        return isSmallJourneyPlannerVisible;
+    }
+
+    public void resizeEvent() {
+        if(isLargeJourneyPlannerVisible) {
+            informationBar.setBounds(0,0,GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight());
+            int journeyPlannerBarHeight = window.getFrame().getHeight() - JOURNEY_PLANNERBAR_HEIGHT_DECREASE;
+            journeyPlannerBar.setPreferredSize(new Dimension(JOURNEY_PLANNERBAR_WIDTH, journeyPlannerBarHeight));
+            int journeyPlannerDescriptionFieldHeight = journeyPlannerBarHeight - JOURNEY_PLANNER_DESCRIPTION_FIELD_HEIGHT_DECREASE;
+            travelDescription.setPreferredSize(new Dimension(JOURNEY_PLANNER_DESCRIPTION_FIELD_WIDTH, journeyPlannerDescriptionFieldHeight));
+        } else if(isSmallJourneyPlannerVisible) {
+            informationBar.setBounds(0, window.getFrame().getHeight() - GlobalValue.getSmallInformationBarHeight(), window.getFrame().getWidth(), window.getFrame().getHeight());
+            journeyPlannerBar.setPreferredSize(new Dimension(window.getFrame().getWidth() - SMALL_JOURNEY_PLANNERBAR_WIDTH_DECREASE, GlobalValue.getSmallInformationBarHeight() - SMALL_JOURNEY_PLANNERBAR_HEIGHT_DECREASE));
+            if(isDescriptionFieldOpen) {
+                travelDescription.setBounds(window.getFrame().getWidth() - 300, window.getFrame().getHeight() - GlobalValue.getSmallInformationBarHeight() - 400, 300, 400);
+            }
         }
     }
 
@@ -369,6 +393,7 @@ public final class JourneyPlannerBarController extends Controller {
         for (int i = 0; i < route.size()-2; i++) {
             travelDescription.addLine(route.get(i));
         }
+        travelDescription.getField().setCaretPosition(0);
     }
 
     private java.util.List<String> getRouteDescription() {
@@ -475,8 +500,6 @@ public final class JourneyPlannerBarController extends Controller {
 
                                 Road start = MainWindowController.getInstance().requestCalculateNearestNeighbour((float) fromPoint.getX(), (float) fromPoint.getY());
                                 Road end = MainWindowController.getInstance().requestCalculateNearestNeighbour((float) toPoint.getX(), (float) toPoint.getY());
-                                //Road start = CanvasController.calculateNearestNeighbour((float) fromPoint.getX(), (float) fromPoint.getY());
-                                //Road end = CanvasController.calculateNearestNeighbour((float) toPoint.getX(), (float) toPoint.getY());
 
                                 dijk = new RouteSearch.RouteDijkstra(
                                         factory.getGraph(), start.getNearestPoint(fromPoint), end.getNearestPoint(toPoint), type);
@@ -491,7 +514,6 @@ public final class JourneyPlannerBarController extends Controller {
                                     System.out.println("No route");
                                     searchUnderway = false;
                                     noSearchInitialised();
-                                    informationBar.grabFocus();
                                     journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
                                     fromSearcher.getSearchTool().getField().setFocusable(true);
                                     toSearcher.getSearchTool().getField().setFocusable(true);
@@ -499,21 +521,20 @@ public final class JourneyPlannerBarController extends Controller {
                                 }
 
                                 factory.setRoute(dijk.path());
-                                //MainWindowController.getInstance().requestCanvasSetRoute(dijk.path());
                                 MainWindowController.getInstance().requestCanvasResetRoute();
-                                CanvasController.getInstance().getMapCanvas().setRoute(dijk.path());
+                                MainWindowController.getInstance().requestCanvasResetLocationMarker();
+                                MainWindowController.getInstance().requestCanvasSetRoute(dijk.path());
                                 MainWindowController.getInstance().requestCanvasUpateToAndFrom(toPoint, fromPoint);
                                 printRouteDescription();
                                 MainWindowController.getInstance().requestCanvasRepaint();
                                 searchUnderway = false;
-                                informationBar.grabFocus();
                                 journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
                                 fromSearcher.getSearchTool().getField().setFocusable(true);
                                 toSearcher.getSearchTool().getField().setFocusable(true);
                             }
                         };
                         worker.execute();
-                        MainWindowController.getInstance().transferFocusToMapCanvas();
+                        worker = null;
                     } else {
                         fromSearcher.getSearchTool().getField().setFocusable(true);
                         toSearcher.getSearchTool().getField().setFocusable(true);
@@ -521,7 +542,6 @@ public final class JourneyPlannerBarController extends Controller {
                 } else {
                     fromSearcher.getSearchTool().getField().setFocusable(true);
                     toSearcher.getSearchTool().getField().setFocusable(true);
-                    informationBar.grabFocus();
                 }
             }
 
@@ -733,7 +753,8 @@ public final class JourneyPlannerBarController extends Controller {
         protected void themeHasChanged() {
             searchTool.applyTheme();
             searchTool.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
-            searchTool.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), title, TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(searchTool.getFont().getName(), searchTool.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
+            if(isLargeJourneyPlannerVisible) searchTool.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), title, TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(searchTool.getFont().getName(), searchTool.getFont().getStyle(), TITLE_FONT_SIZE), ThemeHelper.color("icon")));
+            else if(isSmallJourneyPlannerVisible) searchTool.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), title, TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(searchTool.getFont().getName(), searchTool.getFont().getStyle(), SMALL_TITLE_FONT_SIZE), ThemeHelper.color("icon")));
         }
 
         @Override
@@ -763,16 +784,13 @@ public final class JourneyPlannerBarController extends Controller {
                                 } else return;
                             }
                             if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                                System.out.println(searchTool.getField().getSelectedIndex());
                                 if (searchTool.getField().getSelectedIndex() < searchTool.getField().getModel().getSize() - 1) {
                                     if(isFirstDownAction){
                                         searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() + 1);
                                         searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() - 1);
                                         isFirstDownAction = false;
-                                        System.out.println("this works");
                                     }else {
                                         searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() + 1);
-                                        System.out.println("this dosnt works");
                                     }
                                     return;
                                 } else return;

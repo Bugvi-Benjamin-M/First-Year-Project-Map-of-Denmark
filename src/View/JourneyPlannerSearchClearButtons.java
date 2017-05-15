@@ -20,14 +20,14 @@ public class JourneyPlannerSearchClearButtons extends View {
     private JLabel clearButton;
     private final String CLEAR_BUTTON_TOOLTIP = "Clear Search!";
     private final String SEARCH_BUTTON_TOOLTIP = "Search!";
-    private final int CLEAR_BUTTON_WIDTH = 40;
+    private final int CLEAR_BUTTON_WIDTH = 45;
     private final int SEARCH_BUTTON_WIDTH= 40;
     private final int CLEAR_BUTTON_HEIGHT = 40;
     private final int SEARCH_BUTTON_HEIGHT = 40;
-    private final int DISTANCE_BETWEEN_BUTTONS = 90;
+    private final int DISTANCE_BETWEEN_BUTTONS = 85;
 
     public JourneyPlannerSearchClearButtons() {
-        clearButton = new JLabel("\uf01e");
+        clearButton = new JLabel("\uf12d");
         //clearButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
         clearButton.setOpaque(true);
         //clearButton.setPreferredSize(new Dimension(CLEAR_BUTTON_WIDTH, CLEAR_BUTTON_HEIGHT));

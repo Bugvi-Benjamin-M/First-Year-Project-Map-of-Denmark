@@ -16,16 +16,15 @@ public class GlobalValue {
     public static final int MAX_ZOOM_DECREASE = -30;
 
     private static ZoomLevel zoomLevel = ZoomLevel.LEVEL_6;
-    private static double maxZoom = MAX_ZOOM_DECREASE;
+    //private static double maxZoom = MAX_ZOOM_DECREASE;
 
     private static boolean markCoastlines = false;
     private static boolean didProgramLoadDefault = false;
 
     private static boolean isAddNewPointActive = false;
 
-    private static boolean getFastestRoute = false;
-
     private static boolean isLoading = false;
+    private static boolean isSaving = false;
 
     public static void setDidProgramLoadDefault(boolean truth_value)
     {
@@ -37,9 +36,9 @@ public class GlobalValue {
         return didProgramLoadDefault;
     }
 
-    public static void setMaxZoom(double zoom_value) { maxZoom = zoom_value; }
+    //public static void setMaxZoom(double zoom_value) { maxZoom = zoom_value; }
 
-    public static double getMaxZoom() { return maxZoom; }
+    //public static double getMaxZoom() { return maxZoom; }
 
     public static int getSearchFieldLargeSize()
     {
@@ -103,13 +102,6 @@ public class GlobalValue {
         return 150;
     }
 
-    public static boolean isFastestRouteSet() {
-        return getFastestRoute;
-    }
-
-    public static void setFastestRoute(boolean useFastestRoute) {
-        GlobalValue.getFastestRoute = useFastestRoute;
-    }
 
     public static boolean isLoading() {
         return isLoading;
@@ -118,4 +110,8 @@ public class GlobalValue {
     public static void setIsLoading(boolean status) {
         isLoading = status;
     }
+
+    public static boolean isSaving() {return isSaving;}
+
+    public static void setIsSaving(boolean status) {isSaving = status;}
 }
