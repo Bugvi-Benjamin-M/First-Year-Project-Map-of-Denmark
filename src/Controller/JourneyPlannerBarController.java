@@ -510,7 +510,6 @@ public final class JourneyPlannerBarController extends Controller {
                             protected void done() {
                                 if (dijk.path() == null) {
                                     PopupWindow.infoBox(null, "No Route Found Between " + fromSearcher.getSearchTool().getText() + " and " + toSearcher.getSearchTool().getText() + "!", "No Route Found");
-                                    System.out.println("No route");
                                     searchUnderway = false;
                                     noSearchInitialised();
                                     journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));

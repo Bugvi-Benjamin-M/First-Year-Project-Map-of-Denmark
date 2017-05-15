@@ -26,7 +26,7 @@ import java.util.Iterator;
 
 public final class SearchToolController extends SearchController {
 
-    private static final String defaultText = "Type an address, point of interest...";
+    private static final String defaultText = "Search for an address or a city...";
 
     private static SearchToolController instance;
     private JSONParser parser = new JSONParser();
@@ -200,10 +200,8 @@ public final class SearchToolController extends SearchController {
                                     searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() + 1);
                                     searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() - 1);
                                     isFirstDownAction = false;
-                                    System.out.println("this works");
                                 }else {
                                     searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() + 1);
-                                    System.out.println("this dosnt works");
                                 }
                                 return;
                             } else return;

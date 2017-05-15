@@ -12,30 +12,29 @@ import Model.Elements.SuperElement;
 
 public class RoadGraphFactory {
 
-    public enum LoadType {
-        ROADS, ROADEDGES
-    }
-
     private List<RoadEdge> route;
-    //private List<RoadEdge> roads;
     private RoadGraph graph;
 
+    /**
+     * Constructor
+     */
     public RoadGraphFactory(RoadGraph graph) {
         this.graph = graph;
-        //this.roads = roads;
     }
 
+    /**
+     * Constructor with a given HashSet of roads
+     */
     public RoadGraphFactory(HashSet<SuperElement> roads) {
         if (roads == null) throw new NullPointerException("Roads not initialized");
-
         graph = new RoadGraph();
         constructGraph(roads);
-
-        System.out.println("Done building graph");
     }
 
+    /**
+     * Constructs the graph based on a HashSet of roads to be connected.
+     */
     private void constructGraph(HashSet<SuperElement> roads) {
-        int counter = 0;
         for (SuperElement superElement : roads) {
             Road road = (Road)superElement;
             PolygonApprox shape = road.getShape();
@@ -44,32 +43,39 @@ public class RoadGraphFactory {
                 Point2D from = new Point2D.Float(coords[i-2], coords[i-1]);
                 Point2D to = new Point2D.Float(coords[i], coords[i+1]);
                 RoadEdge edge = new RoadEdge(from,to,road);
-                graph.addEdge(edge, from, to);
-                //this.roads.add(edge);
+                graph.addEdge(edge, from);
                 if(!road.isOneWay()) {
                     RoadEdge reverse = edge.createReverse();
-                    graph.addEdge(reverse,to, from);
-                    //this.roads.add(reverse);
-                    counter++;
+                    graph.addEdge(reverse, to);
                 }
-                counter++;
-                if (counter % 1000 == 0) System.out.println("... added edges: "+counter);
             }
         }
     }
 
+    /**
+     * Gets the Graph. Fx. to run Dijkstra on
+     */
     public RoadGraph getGraph() {
         return graph;
     }
 
+    /**
+     * Sets the graph
+     */
     public void setGraph(RoadGraph graph) {
         this.graph = graph;
     }
 
+    /**
+     * Gets the current route.
+     */
     public List<RoadEdge> getRoute() {
         return route;
     }
 
+    /**
+     * Sets the current route.
+     */
     public void setRoute(List<RoadEdge> route) {
         this.route = route;
     }
@@ -81,18 +87,4 @@ public class RoadGraphFactory {
         }
         setRoute(roadEdges);
     }
-
-    /*
-    public List<RoadEdge> getEdges() {
-        if (roads == null) throw new NullPointerException("Edges not initialized");
-        return roads;
-    }
-
-    public RoadEdge getRoad(String name) {
-        for (RoadEdge road: roads) {
-            if (road.getName().equals(name)) return road;
-        }
-        return null;
-    }
-    */
 }

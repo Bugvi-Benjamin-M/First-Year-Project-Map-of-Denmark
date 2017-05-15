@@ -2,17 +2,17 @@ package Model.Elements;
 
 import Enums.OSMEnums.RoadType;
 import Helpers.HelperFunctions;
-import Helpers.Shapes.MultiPolygonApprox;
 import Helpers.Shapes.PolygonApprox;
-import OSM.OSMRelation;
-import OSM.OSMWay;
-import OSM.OSMWayRef;
 
 import java.awt.geom.Point2D;
-import java.util.*;
-import java.util.List;
 
-
+/**
+ * A Road is both a visual component on the map and an object
+ * in the model. Each road has a name, a shape and a type, such
+ * as 'Østfynsk Motervej", which is of type MOTORWAY. Besides that
+ * a road can also be oneway, have a maximum allowed speed, be an
+ * area as well as be allowed to travel via bike, foot and car.
+ */
 public class Road extends Element {
     private String name = "";
     private boolean oneWay = false;
@@ -21,156 +21,119 @@ public class Road extends Element {
     private boolean travelByBikeAllowed = false;
     private boolean travelByFootAllowed = false;
     private boolean travelByCarAllowed = false;
-    //private java.util.List<OSMWay> relation;
     private RoadType roadType;
 
+    /**
+     * Simple Road constructor
+     * @param polygon The shape of the road
+     * @param name The name of the road
+     * @param roadType The type of the road
+     */
     public Road(PolygonApprox polygon, String name, RoadType roadType)
     {
         super(polygon);
         this.name = name.intern();
-        //relation = new ArrayList<>();
         this.roadType = roadType;
     }
 
+    /**
+     * Road Area constructor
+     * @param polygon The shape of the road
+     * @param name The name of the road
+     * @param area Whether the road is an area
+     * @param roadType The type of the road
+     */
     public Road(PolygonApprox polygon, String name, boolean area, RoadType roadType)
     {
         this(polygon, name, roadType);
         this.area = area;
     }
 
-    /*
-    public Road(String name, RoadType roadType) {
-        this(null, name, roadType);
-    }
-    */
-    /*
-    public Road(String name, boolean area, RoadType roadType) {
-        this(null, name, roadType);
-        this.area = area;
-    }
-    */
-
+    /**
+     * Change whether travel by bicycle is allowed on this road
+     */
     public void setTravelByBikeAllowed(boolean travelByBikeAllowed) {
         this.travelByBikeAllowed = travelByBikeAllowed;
     }
 
+    /**
+     * Change whether travel by foot is allowed on this road
+     */
     public void setTravelByFootAllowed(boolean travelByFootAllowed) {
         this.travelByFootAllowed = travelByFootAllowed;
     }
 
+    /**
+     * Change whether travel by car is allowed on this road
+     */
     public void setTravelByCarAllowed(boolean travelByCarAllowed) {
         this.travelByCarAllowed = travelByCarAllowed;
     }
 
+    /**
+     * Returns whether it is possible to travel via bicycle on
+     * this road
+     */
     public boolean isTravelByBikeAllowed() {
         return travelByBikeAllowed;
     }
 
+    /**
+     * Returns whether one is allowed to walk beside this road
+     */
     public boolean isTravelByFootAllowed() {
         return travelByFootAllowed;
     }
 
+    /**
+     * Returns whether cars is allowed to travel on this road
+     */
     public boolean isTravelByCarAllowed() {
         return travelByCarAllowed;
     }
 
+    /**
+     * Returns whether the road is actually an area
+     * (consists of multiple segments of road, e.g. a square)
+     */
     public boolean isArea() { return area; }
 
-    /*
-    public PolygonApprox getShape() {
-        if (super.getShape() == null) {
-            if (relation.size() > 1) {
-                
-                OSMRelation osmRelation = new OSMRelation(12L);
-                for (OSMWay way: relation) {
-                    if(way != null){
-                        osmRelation.add(way);
-                    }
-                }
-                if(osmRelation.size() == 0){
-                    return null;
-                }else if(osmRelation.size() == 1){
-                    super.setShape(new PolygonApprox(relation.get(0)));
-
-                }else{
-                    super.setShape(new MultiPolygonApprox(osmRelation));
-                }
-
-            } else if (relation.size() == 1) {
-                super.setShape(new PolygonApprox(relation.get(0)));
-            }
-        }
-        return (PolygonApprox)super.getShape();
-    }
-    */
-    /*
-    public PolygonApprox getShapeSection(long start, long end) {
-        if (area) {
-            int sI = -1, eI = -1, sR = -1, eR = -1;
-            for (int j = 0; j < relation.size(); j++) {
-                OSMWay way = relation.get(j);
-                int s = way.indexOf(start);
-                if (s != -1) {sI = s; sR = j;}
-                int e = way.indexOf(end);
-                if (e != -1) {eI = e; eR = j;}
-            }
-            if (sI != -1 && eI != -1 && sR != -1 && eR != -1) {
-                OSMWay way = new OSMWay();
-                way.add(relation.get(sR).get(sI));
-                way.add(relation.get(eR).get(eI));
-                return new PolygonApprox(way);
-            }
-        } else {
-            OSMWay osmWay = new OSMWay();
-            OSMWay way = relation.get(0);
-            int s = way.indexOf(start);
-            int e = way.indexOf(end);
-            if (s != -1 && e != -1) {
-                if (s < e) {
-                    for (int i = s; i <= e; i++) {
-                        osmWay.add(way.get(i));
-                    }
-                } else {
-                    for (int i = e; i <= s; i++) {
-                        osmWay.add(way.get(i));
-                    }
-                }
-            }
-            return new PolygonApprox(osmWay);
-        }
-        return null;
-    }
-    */
-
+    /**
+     * Returns the name of the road
+     */
     public String getName() { return name; }
 
+    /**
+     * Returns whether or not this road is oneway
+     */
     public boolean isOneWay() {return oneWay;}
 
+    /**
+     * Returns the maximum allowed speed on the road
+     */
     public int getMaxSpeed() {return maxSpeed;}
 
-    /*
-    public List<OSMWay> getRelation() {
-        return relation;
-    }
-
-    public void setRelation(List<OSMWay> relation) {
-        this.relation = new ArrayList<>();
-        relation.forEach(this::setWay);
-    }
-
-    public void setWay(OSMWay way) {
-        this.relation.add(way);
-    }
-    */
-
+    /**
+     * Change the maximum allowed speed on this road
+     */
     public void setMaxSpeed(int maxSpeed) {
         this.maxSpeed = maxSpeed;
     }
 
+    /**
+     * Change whether this road is oneway or not
+     */
     public void setOneWay(boolean oneWay) {
         this.oneWay = oneWay;
     }
 
+    /**
+     * Finds and returns the point on this road that has the
+     * minimum distance to a given point.
+     * Amortized run time: O(N) - has to check every point in
+     * the path of this road.
+     * @param point The point to which the road finds closest point to.
+     */
     public Point2D getNearestPoint(Point2D point) {
         if (point == null) throw new NullPointerException("Point cannot be null");
         PolygonApprox shape = (PolygonApprox) super.getShape();
@@ -192,36 +155,17 @@ public class Road extends Element {
         }
     }
 
-
-        /*
-        if (point == null ) throw new NullPointerException("Point cannot be null");
-        if (relation == null) throw new NullPointerException("Relation has not been initialized");
-
-        Point2D closest = null; float minDistance = Float.POSITIVE_INFINITY;
-        for (OSMWay way : relation) {
-            if (way != null) {
-                for (Point2D nd : way) {
-                    if (nd != null) {
-                        float distance = (float) HelperFunctions.distanceBetweenTwoPoints(nd,point);
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            closest = nd;
-                        }
-                    }
-                }
-            }
-        }
-        if (closest != null) {
-            return closest;
-        } else {
-            return null;
-        }
-        */
-
-
+    /**
+     * Returns the RoadType of this road
+     * @see RoadType
+     */
     public RoadType getRoadType() {
         return roadType;
     }
 
+    /**
+     * Returns the shape of this road
+     * @see PolygonApprox
+     */
     public PolygonApprox getShape() { return (PolygonApprox)super.getShape(); }
 }
