@@ -72,7 +72,6 @@ public final class MainWindowController extends WindowController {
         //Todo, optimise window height minimum
         if(!OSDetector.isWindows()) window.setMinimumWindowSize(new Dimension(ToolbarController.getSmallLargeEventWidth()-FROM_RESIZE_EVENT_TO_MINIMUMWIDTH, 650));
         else window.setMinimumWindowSize(new Dimension(ToolbarController.getSmallLargeEventWidth()-FROM_RESIZE_EVENT_TO_MINIMUMWIDTH, 660));
-        System.out.println(Toolkit.getDefaultToolkit().getScreenSize().getHeight());
         setupToolbar();
         setupCanvas();
         setupCanvasExtras();
