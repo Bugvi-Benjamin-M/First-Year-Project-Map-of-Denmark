@@ -26,6 +26,9 @@ public class Window {
     public Window() {
     }
 
+    /**
+     * Set icon and return window
+     */
     public Window icon() {
         java.net.URL imgURL = this.getClass().getResource(ICON_PATH);
         if (imgURL != null) {
@@ -37,24 +40,36 @@ public class Window {
         return this;
     }
 
+    /**
+     * Set title and return window
+     */
     public Window title(String title) {
         this.title = title;
         window = new JFrame(title);
         return this;
     }
 
+    /**
+     * Set close operation and return window
+     */
     public Window closeOperation(int closeOperation) {
         this.closeOperation = closeOperation;
         window.setDefaultCloseOperation(closeOperation);
         return this;
     }
 
+    /**
+     * Set dimension and return window
+     */
     public Window dimension(Dimension dimension) {
         this.dimension = dimension;
         window.setPreferredSize(dimension);
         return this;
     }
 
+    /**
+     * Set layout manager and return window
+     */
     public Window layout(LayoutManager layout) {
         this.layout = layout;
         window.setLayout(layout);
@@ -62,23 +77,35 @@ public class Window {
         return this;
     }
 
+    /**
+     * Set relative to frame position and return window
+     */
     public Window relativeTo(JFrame relativeTo) {
         this.relativeTo = relativeTo;
         window.setLocationRelativeTo(relativeTo);
         return this;
     }
 
+    /**
+     * Set extended state and return window
+     */
     public Window extendedState(int extendedState) {
         this.extendedState = extendedState;
         window.setExtendedState(extendedState);
         return this;
     }
 
+    /**
+     * Show window and return window
+     */
     public Window show() {
         window.setVisible(true);
         return this;
     }
 
+    /**
+     * Hide window and return window
+     */
     public Window hide() {
         window.setVisible(false);
         return this;
@@ -103,6 +130,10 @@ public class Window {
             show();
     }
 
+    /**
+     * Remove component from window
+     * @param component The component to remove
+     */
     public void removeComponent(View component) { window.remove(component); }
 
     /**
@@ -117,15 +148,28 @@ public class Window {
         }
     }
 
+    /**
+     * Retrieves current dimension
+     */
     public Dimension getDimension() { return dimension; }
 
+    /**
+     * Retrieves the frame of the window
+     */
     public JFrame getFrame() { return window; }
 
+    /**
+     * Sets the minimum window size to a dimension
+     */
     public void setMinimumWindowSize(Dimension dimension)
     {
         getFrame().setMinimumSize(dimension);
     }
 
+    /**
+     * Adds a window listener to the window that can
+     * respond to window interaction
+     */
     public void addWindowAdapter(WindowListener listener)
     {
         window.addWindowListener(listener);
