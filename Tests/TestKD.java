@@ -9,12 +9,6 @@ import java.util.Arrays;
 
 import static junit.framework.TestCase.assertEquals;
 
-/**
- * Created by  on .
- *
- * @author santa
- * @version 14/10/2012
- */
 public class TestKD {
 
     private KDTree tree;

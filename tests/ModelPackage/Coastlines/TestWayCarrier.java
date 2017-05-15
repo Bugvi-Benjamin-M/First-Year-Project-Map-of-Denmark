@@ -7,13 +7,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- * Class details:
- *
- * @author Andreas Blanke, blan@itu.dk
- * @version 23-03-2017.
- * @project BFST
- */
 public class TestWayCarrier {
 
     private CoastlineFileGenerator.WayCarrier way;
