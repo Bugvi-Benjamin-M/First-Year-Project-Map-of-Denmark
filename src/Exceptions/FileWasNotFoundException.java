@@ -1,8 +1,12 @@
 package Exceptions;
 
-/**
- * Created by Nik on 13/03/17.
+/*
+ * This exception describes an event, where a selected file wasn't found.
  */
 public class FileWasNotFoundException extends Exception {
+
+    /*
+     * Constructor
+     */
     public FileWasNotFoundException(String message) { super(message); }
 }

@@ -12,7 +12,7 @@ import java.util.HashSet;
  * of the class SuperElement as parameters.
  *
  * The KDTree is setup by using an instance of the NodeGenerator class. After
- * the KDTree have been setup it is ready for having pointers put.
+ * the KDTree has been setup it is ready for having pointers put.
  */
 public class KDTree implements Serializable {
     private Node root;
@@ -47,7 +47,7 @@ public class KDTree implements Serializable {
 
     /**
      * The parameters taken in this method correspond to the top right and bottom left corners in a rectangle.
-     * This rectangle will intersect and contain the areas of map divided by the KDTree.
+     * This rectangle will intersect and contain the areas of the map divided by the KDTree.
      *
      * @param - float minX, float minY, float maxX, float maxY in the recangle in where the desired elements are contained.
      */

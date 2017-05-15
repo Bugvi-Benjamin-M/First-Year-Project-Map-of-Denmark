@@ -4,16 +4,26 @@ import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
+/**
+ * A OSMRelation is a collection of OSMWays and presents paths
+ * or ways that are connected in some way, such as with buildings
+ * or similar connected objects.
+ */
 public class OSMRelation extends ArrayList<OSMWay> {
 
     private long ref;
 
+    /**
+     * Creates a OSMRelation with an osm reference stored
+     */
     public OSMRelation(long ref) {
         super();
         this.ref = ref;
     }
 
+    /**
+     * Produces a string representation of this object
+     */
     @Override
     public String toString() {
         int size = 0;
@@ -23,6 +33,11 @@ public class OSMRelation extends ArrayList<OSMWay> {
         return "ref "+ref + " with size "+size;
     }
 
+    /**
+     * Produces a Path2D shape representing the OSMRelation
+     * @param connected Whether the shapes of the OSMRelation's
+     *                  ways should be connected
+     */
     public Path2D toPath2D(boolean connected)
     {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
@@ -34,6 +49,10 @@ public class OSMRelation extends ArrayList<OSMWay> {
         return path;
     }
 
+    /**
+     * Sorts the ways contained in the OSMRelation
+     * @return The sorted OSMRelation
+     */
     public static OSMRelation sortWays(OSMRelation relation){
         OSMWay[] temp = relation.toArray(new OSMWay[relation.size()]);
         OSMWay tempWay;
@@ -75,51 +94,4 @@ public class OSMRelation extends ArrayList<OSMWay> {
         }
         return relation;
     }
-
-    /*@Override
-    public boolean add(OSMWay way){
-        if(way == null) return true;
-        if(size() == 0){
-            return super.add(way);
-        }
-        OSMWay before = get(0);
-        OSMWay current = way;
-
-        double beforeXfirst = before.get(0).getX();
-        double beforeYfirst  = before.get(0).getX();
-
-        double currentXlast = current.get(current.size()-1).getX();
-        double currentYlast = current.get(current.size()-1).getX();
-
-        if(beforeXfirst == currentXlast && beforeYfirst == currentYlast){
-            super.add(0, current);
-            return true;
-        }
-
-        for(int i = 0 ; i < size() ; i++) {
-            before = get(i);
-            current = way;
-
-            double x = before.get(before.size() - 1).getX();
-            double y = before.get(before.size() - 1).getY();
-
-            double x1 = current.get(0).getX();
-            double y1 = current.get(0).getY();
-
-            if (x == x1 && y == y1) {
-                super.add(i + 1, current);
-                return true;
-            } else {
-                double x2 = current.get(current.size() - 1).getX();
-                double y2 = current.get(current.size() - 1).getY();
-                if (x == x2 && y == y2) {
-                    Collections.reverse(current);
-                    super.add(i + 1, current);
-                    return true;
-                }
-            }
-        }
-        super.add(way);
-        return true;
-    }*/
 }

@@ -232,12 +232,194 @@ public class KDTreeTest {
     }
 
     @Test
-    public void getAllSections() throws Exception {
+    public void getManySections() throws Exception {
+        //Using the premade KDTree, but clearing it, such that no pointers are stored in the leaves.
+        tree.clear();
 
+        /* 13 - statement 13 is true */
+        /* 14 - statement 14 is true, true and then false in the recursion sequence */
+        /* 15 - statement 15 is true and then false in the recursion sequence */
+        /* 16A - statement 16A is true */
+        /* 17A - statement 17A is true */
+        /* 18 - statement 18 The forEach loop is not traversed */
+        //There are no pointers in the root-left-left leaf. the returned set should be empty.
+        HashSet set = tree.getManySections(1,1,1,1);
+        assertEquals(0,set.size(),0);
+
+        //Making a pointer to be put into the root-left-left leaf of the KDTree
+        OSMWay way = new OSMWay();
+        way.add(new Point2D.Float(1, 1));
+        PolygonApprox polygonApprox = new PolygonApprox(way);
+        Building building1 = new Building(polygonApprox);
+        Pointer p = new Pointer(1,1, building1);
+        tree.putPointer(p);
+
+        /* 13 - statement 13 is true */
+        /* 14 - statement 14 is true, true and then false in the recursion sequence */
+        /* 15 - statement 15 is true and then false in the recursion sequence */
+        /* 16A - statement 16A is true */
+        /* 17A - statement 17A is true */
+        /* 18 - statement 18 The forEach loop is traversed once */
+        //There is one pointer in the root-left-left leaf, and the element in the HashSet return should be building1
+        set = tree.getManySections(1,1,1,1);
+        assertEquals(1, set.size(), 0);
+        assertTrue(set.contains(building1));
+
+        //Making a pointer to be put into the root-right-right leaf of the KDTree
+        way = new OSMWay();
+        way.add(new Point2D.Float(15, 15));
+        polygonApprox = new PolygonApprox(way);
+        Building building15 = new Building(polygonApprox);
+        p = new Pointer(15,15, building15);
+        tree.putPointer(p);
+
+        /* 13 - statement 13 is true */
+        /* 14 - statement 14 is true, true and then false in the recursion sequence */
+        /* 15 - statement 15 is true and then false in the recursion sequence */
+        /* 16A - statement 16A is false */
+        /* 16B - statement 16B is true */
+        /* 17A - statement 17A is false */
+        /* 17B - statement 17B is true */
+        /* 18 - statement 18 The forEach loop is traversed once */
+        //There is one pointer in the root-right-right leaf, and the element in the HashSet return should be building15
+        set = tree.getManySections(15,15,15,15);
+        assertEquals(1, set.size(), 0);
+        assertTrue(set.contains(building15));
+
+        //Making a pointer to be put into the root-left-right leaf of the KDTree
+        way = new OSMWay();
+        way.add(new Point2D.Float(6, 6));
+        polygonApprox = new PolygonApprox(way);
+        Building building6 = new Building(polygonApprox);
+        p = new Pointer(6,6, building6);
+        tree.putPointer(p);
+
+        //Making a pointer to be put into the root-right-left leaf of the KDTree
+        way = new OSMWay();
+        way.add(new Point2D.Float(10, 10));
+        polygonApprox = new PolygonApprox(way);
+        Building building10 = new Building(polygonApprox);
+        p = new Pointer(10,10, building10);
+        tree.putPointer(p);
+
+        /* 13 - statement 13 is true */
+        /* 14 - statement 14 is true, true and then false in the recursion sequence */
+        /* 15 - statement 15 is true and then false in the recursion sequence */
+        /* 16A - statement 16A is true */
+        /* 17A - statement 17A is false */
+        /* 17B - statement 17B is false */
+        /* 17C - statement 17C is true (accessed) */
+        /* 18 - statement 18 The forEach loop is traversed twice */
+        //There is one pointer in the root-left-left leaf, and in the root-left-right leaf.
+        //The elements in the HashSet should be building1 and building6
+        set = tree.getManySections(1,1,7,7);
+        assertEquals(2, set.size(), 0);
+        assertTrue(set.contains(building1));
+        assertTrue(set.contains(building6));
+
+        /* 13 - statement 13 is true */
+        /* 14 - statement 14 is true, true and then false in the recursion sequence */
+        /* 15 - statement 15 is true and then false in the recursion sequence */
+        /* 16A - statement 16A is false */
+        /* 16B - statement 16B is false */
+        /* 16C - statement 16C is true (accessed) */
+        /* 17A - statement 17A is false */
+        /* 17B - statement 17B is false */
+        /* 17C - statement 17C is true (accessed) */
+        /* 18 - statement 18 The forEach loop is traversed four times */
+        //There is one pointer in each of the four leaves in the KDTree
+        //The elements in the HashSet should be building1, building6, building10 and building15
+        set = tree.getManySections(1,1,15,15);
+        assertEquals(4, set.size(), 0);
+        assertTrue(set.contains(building1));
+        assertTrue(set.contains(building6));
+        assertTrue(set.contains(building10));
+        assertTrue(set.contains(building15));
+
+        /* 13 - statement 13 is true */
+        /* 14 - statement 14 is true, true and then false in the recursion sequence */
+        /* 15 - statement 15 is true and then false in the recursion sequence */
+        /* 16A - statement 16A is false */
+        /* 16B - statement 16B is false */
+        /* 16C - statement 16C is true (accessed) */
+        /* 17A - statement 17A is true (in the recursion on the right side - root-right-left) */
+        /* 17B - statement 17B is true (in the recursion on the left side - root-left-right) */
+        /* 18 - statement 18 The forEach loop is traversed four times */
+        //There is one pointer in second and third leaves in the KDTree (the middle leaves)
+        //The elements in the HashSet should be building6 and building10
+        set = tree.getManySections(5,5,11,11);
+        assertEquals(2, set.size(), 0);
+        assertTrue(set.contains(building6));
+        assertTrue(set.contains(building10));
+
+        //Setting up a new KDTree, with no nodes
+        tree = new KDTree();
+
+        //Checking that the field root is null
+        Field field = tree.getClass().getDeclaredField("root");
+        field.setAccessible(true);
+        assertNull(field.get(tree));
+
+        /* 13 - statement is false*/
+        //The HashSet should be null because the root is null
+        set = tree.getManySections(1,1,15,15);
+        assertNull(set);
     }
 
     @Test
-    public void getManySections() throws Exception {
+    public void getAllSections() throws Exception {
+        /* 19 - is accessed*/
+        //There is 15 elements in the KDTree. Alle elements are expected to be returned
+        //because they are within the (-1000,-1000) to (1000,1000) range.
+        HashSet set = tree.getAllSections();
+        assertEquals(15, set.size());
 
+        //Negative test of the getAllSections method:
+        //Making a new tree with leaves smaller and greater than -1000 and 1000.
+        tree = new KDTree();
+
+        /*
+         * A Nodegenerator instance is created.
+         * 4096 Point2D.Floats are made and added to the nodegenerator.
+         */
+        NodeGenerator nodeGenerator = new NodeGenerator(5000, 11);
+        tree = new KDTree();
+
+        // Adds the Point2D.Floats with the coordinates (-2500,-2500) , (-2499,-2499) , ... , (2499,2499)
+        for (int i = -2500; i < 2500; i++) {
+            nodeGenerator.addPoint(new Point2D.Float(i, i));
+        }
+
+        //Initialise the nodegenerator (finding medians and the correct nodes for the KDTree).
+        nodeGenerator.initialise();
+
+        //Applying the nodegenerators data to the KDTree that is used for this test.
+        nodeGenerator.setupTree(tree);
+
+        /*
+         * Making a building instance for each Point2D.Floats generated above.
+         * A pointer for each building is added to the KDTree such that there is
+         * a pointer for each point (-2500,-2500) , (-2499,-2499) , ... , (2499,2499)
+         */
+        for (int i = -2500; i < 2500; i++) {
+            OSMWay way = new OSMWay();
+            way.add(new Point2D.Float(i, i));
+            PolygonApprox polygonApprox = new PolygonApprox(way);
+            Building building = new Building(polygonApprox);
+            Pointer p = new Pointer(i,i, building);
+            tree.putPointer(p);
+        }
+
+        //Testing that not all elements are returned, because the boundry of the KDTree is
+        //smaller and greater than -1000 and 1000
+        set = tree.getAllSections();
+        assertNotEquals(5000, set.size());
+        assertTrue(set.size() < 5000);
+    }
+
+    @Test(expected=NullPointerException.class)
+    //Testing for NullPointerException in the putPointer-method
+    public void testNullPointerExceptionInPutPointer() {
+        tree.putPointer(null);
     }
 }

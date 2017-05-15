@@ -23,6 +23,11 @@ public class Main {
     private static SplashScreen screen;
     private static boolean loadDefaultFile;
 
+    /**
+      * Entry point of the application. Starts loading data from the
+      * data-files and creates the applicate controllers.
+      * Responsibility is delegated down to controllers.
+      */
     public static void main(String[] args)
     {
         long startTime = System.nanoTime();
@@ -73,6 +78,9 @@ public class Main {
         });
     }
 
+    /**
+      * Creates the controller-singletons.
+      */
     private static void createControllers()
     {
         PreferencesController.getInstance();
@@ -84,12 +92,18 @@ public class Main {
         CanvasExtrasController.getInstance();
     }
 
+    /**
+      * Removes the splash screen
+      */
     public static void splashScreenDestruct()
     {
         screen.setScreenVisible(false);
         screen = null;
     }
 
+    /**
+      * Creates the splash screen and shows it
+      */
     public static void splashScreenInit()
     {
         ImageIcon myImage = new ImageIcon(Main.class.getResource("/vejle.jpg")); // denmark.gif

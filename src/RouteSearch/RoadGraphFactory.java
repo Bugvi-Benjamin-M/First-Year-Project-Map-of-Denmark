@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.HashSet;
 import Model.Elements.SuperElement;
 
+/**
+ * This factory turns a set of roads into a RoadGraph element. It also stores
+ * the current road.
+ */
 public class RoadGraphFactory {
 
     private List<RoadEdge> route;

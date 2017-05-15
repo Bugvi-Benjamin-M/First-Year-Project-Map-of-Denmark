@@ -14,6 +14,9 @@ public class SplashScreen extends JWindow {
     JProgressBar progressBar = new JProgressBar();
     ImageIcon imageIcon;
 
+    /**
+      * Constructor. Takes the loading images as parameter.
+      */
     public SplashScreen(ImageIcon imageIcon)
     {
         this.imageIcon = imageIcon;
@@ -24,7 +27,9 @@ public class SplashScreen extends JWindow {
         }
     }
 
-    // note - this class created with JBuilder
+    /**
+      * Initializes the view and adds the elements to it. Uses a border layout.
+      */
     void jbInit() throws Exception
     {
         progressBar.setUI(new BasicProgressBarUI());
@@ -43,6 +48,9 @@ public class SplashScreen extends JWindow {
 
     }
 
+    /**
+      * Sets whether the screen is visible at the moment.
+      */
     public void setScreenVisible(boolean b)
     {
         final boolean boo = b;

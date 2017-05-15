@@ -6,6 +6,10 @@ import java.io.InputStream;
 public class FontAwesome {
 
     public static Font fontAwesome;
+
+    /**
+     * This Helper loads a font file and returns the Font Object.
+     */
     public static Font getFontAwesome()
     {
         if(fontAwesome != null){

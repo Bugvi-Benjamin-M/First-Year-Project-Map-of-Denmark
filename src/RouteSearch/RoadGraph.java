@@ -6,6 +6,9 @@ import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * RoadGraph is an edge weighted digraph, created to run Dijkstra on.
+ */
 public class RoadGraph implements Serializable {
 
     private int nEdges;

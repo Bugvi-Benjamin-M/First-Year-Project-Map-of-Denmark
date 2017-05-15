@@ -17,7 +17,10 @@ import Helpers.GlobalValue;
 import Controller.PreferencesController;
 
 
-
+/**
+ * A Dijkstra implementation with A* and a lazy priority queue.
+ * Based on the version by Robert Sedgewick and Kevin Wayne.
+ */
 public class RouteDijkstra {
 
     private Map<Point2D,Float> distTo;
