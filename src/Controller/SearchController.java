@@ -154,7 +154,16 @@ public abstract class SearchController extends Controller {
                     searchTool.getField().addItem(s);
                 }
             }
-            searchTool.getField().showPopup();
+            if(searchTool.getField().getModel().getSize() != 0)
+            {
+                if(searchTool.getField().getModel().getSize() <= 8) {
+                    searchTool.getField().setMaximumRowCount(searchTool.getField().getModel().getSize());
+                } else if (searchTool.getField().getModel().getSize() > 8){
+                    searchTool.getField().setMaximumRowCount(8);
+                }
+                searchTool.getField().showPopup();
+            }
+            else searchTool.getField().hidePopup();
         }
 
     /**
