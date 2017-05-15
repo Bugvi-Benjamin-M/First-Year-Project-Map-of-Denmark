@@ -199,8 +199,6 @@ public class FileHandler {
                     HelperFunctions.convertNanotimeToTime(time));
             // Creates the graph from the loaded roads
             Model.getInstance().createGraph(Model.getInstance().getElements(Enums.OSMEnums.ElementType.HIGHWAY).getAllSections());
-            // Marks that the model has been changed
-            Model.getInstance().modelHasChanged();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             throw new FileWasNotFoundException("Failed loading bin file.");
@@ -269,7 +267,6 @@ public class FileHandler {
             XMLReader reader = XMLReaderFactory.createXMLReader();
             reader.setContentHandler(OSMHandler.getInstance());
             reader.parse(inputSource);
-            Model.getInstance().modelHasChanged();
         } catch (SAXException | IOException e) {
             throw new FileWasNotFoundException("OSM File not Found");
         }

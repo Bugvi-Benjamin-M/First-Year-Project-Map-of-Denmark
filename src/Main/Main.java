@@ -6,6 +6,7 @@ import Exceptions.FileWasNotFoundException;
 import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.HelperFunctions;
+import Helpers.OSDetector;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
 import Model.Model;
@@ -36,8 +37,6 @@ public class Main {
         MainWindowController.getInstance().setProgressBarTheme();
         splashScreenInit();
 
-        Model model = Model.getInstance();
-        //CanvasController.getInstance().setupAsObserver();
         try {
             FileHandler.loadDefaultResource(true);
         } catch (FileNotFoundException | FileWasNotFoundException e) {
@@ -64,7 +63,6 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             MainWindowController.getInstance().setupMainWindow();
             SettingsWindowController.getInstance().setupSettingsWindow();
-            model.modelHasChanged();
             MainWindowController.getInstance().showWindow();
             if (loadDefaultFile) CanvasController.adjustToBounds();
             else CanvasController.adjustToDynamicBounds();
