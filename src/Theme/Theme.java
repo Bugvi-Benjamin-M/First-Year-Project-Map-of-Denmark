@@ -2,7 +2,12 @@ package Theme;
 
 import java.awt.*;
 
-
+/**
+ * A Theme is a collection of colours that are used to
+ * determine the look and feel of the program. This class
+ * is the interface that all themes must inherit and expand
+ * such that the themes are consistant.
+ */
 public interface Theme {
 
     public abstract Color background();
@@ -12,33 +17,23 @@ public interface Theme {
     public abstract Color border();
     public abstract Color searchfield();
     public abstract Color defaulttext();
-
     public abstract Color toolTipBackground();
     public abstract Color toolTipForeground();
-
     public abstract Color canvasPopupBackground();
     public abstract Color canvasPopupForeground();
     public abstract Color canvasExtra();
-
     public abstract Color toolActivated();
     public abstract Color toolHover();
-
     public abstract Color scrollBarThumb();
-
     public abstract Color pointHover();
-
     public abstract Color addressMarkerForeground();
     public abstract Color markerBackground();
     public abstract Color fromMarkerForeground();
     public abstract Color toMarkerForeground();
-
     public abstract Color poiButtonsForeground();
-
     public abstract Color inactiveButton();
-
     public abstract Color progressBarBackground();
     public abstract Color progressBarForeground();
-
     public abstract Color water();
     public abstract Color park();
     public abstract Color forest();
@@ -80,15 +75,12 @@ public interface Theme {
     public abstract Color path();
     public abstract Color road();
     public abstract Color airport();
-
     public abstract Color rail();
-
     public abstract Color cityName();
     public abstract Color roadName();
     public abstract Color barName();
     public abstract Color nightClubName();
     public abstract Color fastFoodName();
-
     public abstract Color hospital();
     public abstract Color parkingAmenity();
     public abstract Color sportAmenity();
@@ -96,6 +88,5 @@ public interface Theme {
     public abstract Color airportAmenity();
     public abstract Color university();
     public abstract Color poi();
-
     public abstract String getName();
 }

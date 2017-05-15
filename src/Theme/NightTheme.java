@@ -2,7 +2,10 @@ package Theme;
 
 import java.awt.*;
 
-
+/**
+ * The NightTheme is supposed to be used during evenings or
+ * nights, when too bright colours can disturb the user.
+ */
 public class NightTheme implements Theme {
 
     private String name = "Night";
@@ -41,36 +44,22 @@ public class NightTheme implements Theme {
     public Color canvasPopupBackground() { return new Color(0x7562A9); }
     public Color canvasPopupForeground() { return new Color(0xFFFFFF); }
     public Color canvasExtra() {return new Color(255, 255, 255, 40);}
-
     public Color toolActivated() { return new Color(0x875997); }
     public Color toolHover() {return new Color(0xD1B1E4);}
-
     public Color scrollBarThumb() {return new Color(0x875997);}
-
     public Color pointHover() {return new Color(0xAEA9AF);}
-
     public Color addressMarkerForeground() {return new Color(0x875997);}
     public Color markerBackground() {return new Color(0XFFFFFF);}
-
     public Color fromMarkerForeground() {return new Color(0x875997);}
-
     public Color toMarkerForeground() {return new Color(0x875997);}
-
-
     public Color inactiveButton() {return new Color(0xA4A6A7);}
-
     public Color poiButtonsForeground() {return new Color(0xFFFBFB);}
-
-    @Override
     public Color progressBarBackground() {
         return new Color(0x0C0A0B);
     }
-
-    @Override
     public Color progressBarForeground() {
         return new Color(0x875997);
     }
-
     public Color cityName() { return new Color(0xCCC9C7); }
     public Color roadName() { return new Color(0x000000); }
     public Color barName() { return new Color(0xF9FF17); }
@@ -83,7 +72,6 @@ public class NightTheme implements Theme {
     public Color airportAmenity() { return new Color(0x949494); }
     public Color university() { return new Color(0x913D3E); }
     public Color poi() { return new Color(0x3EFF00); }
-
     public Color water()
     {
         return new Color(0x515c6d);
@@ -165,7 +153,6 @@ public class NightTheme implements Theme {
     public Color path() { return new Color(0x787878); }
     public Color road() { return new Color(0x787878); }
     public Color airport() { return new Color(0x8D8993); }
-
 
     @Override
     public String getName()
