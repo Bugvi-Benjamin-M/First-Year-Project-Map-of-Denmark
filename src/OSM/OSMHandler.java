@@ -26,19 +26,14 @@ public final class OSMHandler implements ContentHandler {
 
     private LongToPointMap idToNode;
     private Map<Long, OSMWay> idToWay;
-    //private Map<Long,OSMWayRef> idToRefWay;
     private OSMWay way;
-    //private OSMWayRef refWay;
-    // private List<OSMWayRef> refRelation;
     private OSMRelation relation;
-    // private OSMNode node;
     private ElementType elementType;
     private RoadType roadType;
     private AmenityType place;
     private String name;
     private float longitudeFactor;
     private Model model;
-    private int loadednodes, loadedRelations, loadedWays;
     private boolean isDefaultMode;
     private boolean isInitialized;
     private float latitude;
@@ -66,7 +61,6 @@ public final class OSMHandler implements ContentHandler {
     private OSMHandler() {
         idToNode = new LongToPointMap(22);
         idToWay = new HashMap<>();
-        //idToRefWay = new HashMap<>();
         model = Model.getInstance();
         model.setTst(new TenarySearchTrie());
         nodeGenerator = new NodeGenerator();
@@ -108,12 +102,9 @@ public final class OSMHandler implements ContentHandler {
 
     @Override
     public void endDocument() throws SAXException {
-        // idToRefWay = new HashMap<>();
-        // refWay = null;
         idToWay = new HashMap<>();
         idToNode = new LongToPointMap(22);
         relation = null;
-        //refRelation = null;
         nodeGenerator = new NodeGenerator();
         model.createGraph(model.getElements(Enums.OSMEnums.ElementType.HIGHWAY).getAllSections());
     }
@@ -177,9 +168,6 @@ public final class OSMHandler implements ContentHandler {
             zipCode = "";
             isAddress = false;
             place = AmenityType.UNKNOWN;
-
-            if (loadednodes % 100000 == 0) System.out.println("NumNodes: "+loadednodes);
-            loadednodes++;
             break;
         case "relation":
             long relationID = Long.parseLong(atts.getValue("id"));
@@ -194,10 +182,6 @@ public final class OSMHandler implements ContentHandler {
             isCycleAllowed = false;
             maxSpeed = 0;
             relation = new OSMRelation(relationID);
-            // refRelation = new ArrayList<>();
-
-            if (loadedRelations % 100 == 0) System.out.println("NumRelations: "+loadedRelations);
-            loadedRelations++;
             break;
         case "way":
             if (!isInitialized && isDefaultMode) {
@@ -232,14 +216,10 @@ public final class OSMHandler implements ContentHandler {
             isCycleAllowed = false;
             maxSpeed = 0;
             isOneWay = false;
-
-            if (loadedWays % 1000 == 0) System.out.println("NumWays: "+loadedWays);
-            loadedWays++;
             break;
         case "nd":
             long ref = Long.parseLong(atts.getValue("ref"));
             way.add(idToNode.get(ref));
-            //refWay.add(idToNode.get(ref),ref);
             break;
         case "tag":
             String k = atts.getValue("k");
