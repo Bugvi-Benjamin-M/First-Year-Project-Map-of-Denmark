@@ -55,24 +55,39 @@ public class ToolFeature extends ToolComponent {
         this.add(label);
     }
 
+    /**
+     * Retrieves the type of the tool
+     */
     public ToolType getType() { return type; }
 
+    /**
+     * Updates and sets the theme for this tool
+     */
     public void setTheme()
     {
         for (Component component : getComponents())
             component.setForeground(ThemeHelper.color("icon"));
     }
 
+    /**
+     * Change the font size of the text
+     */
     public void overrideStandardLabelFontSize(int size)
     {
         label.setFont(new Font(label.getFont().getName(), Font.PLAIN, size));
     }
 
+    /**
+     * Create some space between the label and the icon
+     */
     public void createSpaceBetweenLabelAndIcon(int size)
     {
         this.add(Box.createRigidArea(new Dimension(0, size)), 1);
     }
 
+    /**
+     * Create some space between the icon and the top of the toolbar
+     */
     public void createSpaceBeforeIcon(int size) {
         this.remove(iconLabel);
         iconLabel.setBorder(new EmptyBorder(0, size, 0, 0));

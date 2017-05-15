@@ -5,6 +5,9 @@ import Helpers.ThemeHelper;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * A ToolComponent is an abstract tool that can be used in a toolbar
+ */
 public abstract class ToolComponent extends JPanel {
 
     private Color defaultColor;
@@ -17,10 +20,14 @@ public abstract class ToolComponent extends JPanel {
         activated = false;
     }
 
+    /**
+     * Sets up the specific layout for any Tool Component
+     */
     abstract void setupLayout();
 
-    public Color getDefaultColor() { return defaultColor; }
-
+    /**
+     * Activate or deactivates the tool
+     */
     public void toggleActivate(boolean state)
     {
         activated = state;
@@ -30,6 +37,9 @@ public abstract class ToolComponent extends JPanel {
         }
     }
 
+    /**
+     * Activates or deactiviates hovering over the tool
+     */
     public void toggleHover(boolean hover) {
         for(Component component : this.getComponents()) {
             if(hover) component.setForeground(ThemeHelper.color("toolHover"));
@@ -37,5 +47,8 @@ public abstract class ToolComponent extends JPanel {
         }
     }
 
+    /**
+     * Returns whether this tool is activated
+     */
     public boolean getActivatedStatus() { return activated; }
 }
