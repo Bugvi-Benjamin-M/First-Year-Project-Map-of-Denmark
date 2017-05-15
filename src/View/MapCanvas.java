@@ -252,14 +252,6 @@ public class MapCanvas extends View {
         for (Path2D path : coastlines) {
             g.fill(path);
         }
-        // Creates outline
-        if (GlobalValue.getMarkCoastlines()) {
-            g.setStroke(new BasicStroke(Float.MIN_VALUE));
-            g.setColor(Color.black);
-            for (Path2D path : coastlines) {
-                g.draw(path);
-            }
-        }
     }
 
     private void drawRoute(Graphics2D g) {
