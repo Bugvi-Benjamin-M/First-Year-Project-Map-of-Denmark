@@ -46,6 +46,7 @@
             <manifest>
                 <attribute name="Main-Class" value="Main.Main"/>
             </manifest>
+            <zipgroupfileset dir="lib" includes="**/*.jar"/>
         </jar>
     </target>
 
