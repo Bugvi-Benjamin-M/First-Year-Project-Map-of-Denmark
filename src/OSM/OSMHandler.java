@@ -200,13 +200,11 @@ public final class OSMHandler implements ContentHandler {
             }
 
             way = new OSMWay();
-            // refWay = new OSMWayRef();
             id = Long.parseLong(atts.getValue("id"));
             elementType = ElementType.UNKNOWN;
             place = AmenityType.UNKNOWN;
             roadType = RoadType.UNKNOWN;
             idToWay.put(id, way);
-            // idToRefWay.put(id,refWay);
             name = "";
             isInTunnel = false;
             isWikiDataAvalible = false;
