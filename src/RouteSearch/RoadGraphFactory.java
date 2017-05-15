@@ -11,7 +11,6 @@ import java.util.HashSet;
 import Model.Elements.SuperElement;
 
 /**
- * TODO: write javadoc
  *
  * @author Andreas Blanke
  * @version 05-05-2017
