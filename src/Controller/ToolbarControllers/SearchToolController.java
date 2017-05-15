@@ -216,11 +216,15 @@ public final class SearchToolController extends SearchController {
                             currentQuery = searchTool.getText();
                             if(!currentQuery.equals("")) showMatchingResults();
                             searchTool.setText(currentQuery);
-                            if(searchTool.getField().getModel().getSize() < 8) {
+                            if(searchTool.getField().getModel().getSize() <= 8) {
                                 searchTool.getField().setMaximumRowCount(searchTool.getField().getModel().getSize());
-                            } else {
+                            } else if(searchTool.getField().getModel().getSize() > 8)
+                            {
+                                searchTool.getField().hidePopup();
                                 searchTool.getField().setMaximumRowCount(8);
+                                searchTool.getField().showPopup();
                             }
+
                             if(searchTool.getField().getModel() == null || searchTool.getField().getModel().getSize() == 0) searchTool.getField().hidePopup();
                         });
                         queryTimer.start();
