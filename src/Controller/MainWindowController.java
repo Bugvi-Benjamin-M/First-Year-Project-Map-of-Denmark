@@ -475,7 +475,7 @@ public final class MainWindowController extends WindowController {
 
     /**
      * Adds an interaction handler to the window. This interaction handler deals with resizing and other events that
-     * relate to the main window. The interation handler is a component adapter.
+     * relate to the main window. The interaction handler is a component adapter.
      * @Override this method also adds a window adapter to deal with window focus.
      */
     @Override
@@ -798,17 +798,6 @@ public final class MainWindowController extends WindowController {
         {
             super.componentResized(e);
             adjustBounds();
-            /*if(ToolbarController.getInstance().isPoiToolActive()) {
-                ToolbarController.getInstance().getToolbar().getTool(ToolType.POI).toggleActivate(false);
-                ToolbarController.getInstance().setIsPoiToolActive(false);
-                if(ToolbarController.getInstance().getType() == ToolbarType.SMALL) deactivateSmallPointsOfInterestInformationBar();
-                else if(ToolbarController.getInstance().getType() == ToolbarType.LARGE) deactivateLargePointsOfInterestInformationBar();
-            } else if(ToolbarController.getInstance().isJourneyPlannerToolActive()) {
-                ToolbarController.getInstance().getToolbar().getTool(ToolType.ROUTES).toggleActivate(false);
-                ToolbarController.getInstance().setIsJourneyPlannerToolActive(false);
-                if(ToolbarController.getInstance().getType() == ToolbarType.LARGE) deactivateLargeJourneyPlannerInformationBar();
-                else if(ToolbarController.getInstance().getType() == ToolbarType.SMALL) deactivateSmallJourneyPlannerInformationBar();
-            }*/
             JourneyPlannerBarController.getInstance().resizeEvent();
             PointsOfInterestController.getInstance().resizeEvent();
             ToolbarController.getInstance().resizeEvent();
@@ -823,6 +812,7 @@ public final class MainWindowController extends WindowController {
             } else if(PointsOfInterestController.getInstance().isSmallPOIVisible() && window.getFrame().getWidth() >= ToolbarController.getSmallLargeEventWidth()) {
                 swapFromSmallPOIToLarge();
             }
+            adjustBounds();
             CanvasController.getInstance().disablePopup();
         }
 

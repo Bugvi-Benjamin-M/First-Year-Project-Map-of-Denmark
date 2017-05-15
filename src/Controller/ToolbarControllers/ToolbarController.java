@@ -518,12 +518,10 @@ public final class ToolbarController extends Controller {
     private void loadEvent()
     {
         if(GlobalValue.isLoading()) {
-            toolbar.getTool(ToolType.LOAD).toggleActivate(true);
             PopupWindow.infoBox(null, "Please Wait for the Current Load Process to Complete Before Loading a New File!", "File Loading in Progress");
             return;
         }
         if(GlobalValue.isSaving()) {
-            toolbar.getTool(ToolType.LOAD).toggleActivate(false);
             PopupWindow.infoBox(null, "Please Wait for the Current Save Process to Complete Before Loading a File!", "File Saving in Progress");
             return;
         }
@@ -626,6 +624,14 @@ public final class ToolbarController extends Controller {
 
     private void saveEvent()
     {
+        if(GlobalValue.isLoading()) {
+            PopupWindow.infoBox(null, "Please Wait for the Current Load Process to Complete Before Saving a File!", "File Loading in Progress");
+            return;
+        }
+        if(GlobalValue.isSaving()) {
+            PopupWindow.infoBox(null, "Please Wait for the Current Save Process to Complete before Saving a new File", "File Saving in Progress");
+            return;
+        }
         if (type == ToolbarType.LARGE)
             toolbar.getTool(ToolType.SAVE).toggleActivate(true);
         FileNameExtensionFilter[] filters = new FileNameExtensionFilter[] {
@@ -636,6 +642,7 @@ public final class ToolbarController extends Controller {
             SwingWorker worker = new SwingWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
+                    GlobalValue.setIsSaving(true);
                     loadWindow = PopupWindow.LoadingScreen("Saving File: " + chooser.getSelectedFile().getName());
                     calculateLoadingScreenPosition();
                     try {
@@ -652,6 +659,7 @@ public final class ToolbarController extends Controller {
                     loadWindow = null;
                     if (type == ToolbarType.LARGE)
                         toolbar.getTool(ToolType.SAVE).toggleActivate(false);
+                    GlobalValue.setIsSaving(false);
                 }
             };
             worker.execute();

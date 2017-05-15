@@ -96,7 +96,9 @@ public class GlobalValue {
     }
 
     public static int getSmallInformationBarHeight() {
-        return 150;
+        if(OSDetector.isMac()) return 150;
+        else if(OSDetector.isWindows()) return 160;
+        else return 150;
     }
 
 
