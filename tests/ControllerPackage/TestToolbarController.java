@@ -16,12 +16,6 @@ import java.awt.event.MouseListener;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 23/03/2017
- */
 public class TestToolbarController {
 
     @Test
