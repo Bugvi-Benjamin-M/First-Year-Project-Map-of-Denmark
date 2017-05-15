@@ -23,18 +23,10 @@ public class Window {
     private int extendedState;
     private JFrame relativeTo;
 
-    /** Default constructor for Window objects. At default the program opens with
-   * the window maximized.
-   * This constructor is used to create the main window of the application.
-   *
-   */
-    public Window()
-    {
-        //
+    public Window() {
     }
 
-    public Window icon()
-    {
+    public Window icon() {
         java.net.URL imgURL = this.getClass().getResource(ICON_PATH);
         if (imgURL != null) {
             window.setIconImage(new ImageIcon(imgURL, "OSM Visualizer").getImage());
@@ -45,57 +37,49 @@ public class Window {
         return this;
     }
 
-    public Window title(String title)
-    {
+    public Window title(String title) {
         this.title = title;
         window = new JFrame(title);
         return this;
     }
 
-    public Window closeOperation(int closeOperation)
-    {
+    public Window closeOperation(int closeOperation) {
         this.closeOperation = closeOperation;
         window.setDefaultCloseOperation(closeOperation);
         return this;
     }
 
-    public Window dimension(Dimension dimension)
-    {
+    public Window dimension(Dimension dimension) {
         this.dimension = dimension;
         window.setPreferredSize(dimension);
         return this;
     }
 
-    public Window layout(LayoutManager layout)
-    {
+    public Window layout(LayoutManager layout) {
         this.layout = layout;
         window.setLayout(layout);
         window.pack();
         return this;
     }
 
-    public Window relativeTo(JFrame relativeTo)
-    {
+    public Window relativeTo(JFrame relativeTo) {
         this.relativeTo = relativeTo;
         window.setLocationRelativeTo(relativeTo);
         return this;
     }
 
-    public Window extendedState(int extendedState)
-    {
+    public Window extendedState(int extendedState) {
         this.extendedState = extendedState;
         window.setExtendedState(extendedState);
         return this;
     }
 
-    public Window show()
-    {
+    public Window show() {
         window.setVisible(true);
         return this;
     }
 
-    public Window hide()
-    {
+    public Window hide() {
         window.setVisible(false);
         return this;
     }
