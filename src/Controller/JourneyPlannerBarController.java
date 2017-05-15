@@ -1026,6 +1026,11 @@ public final class JourneyPlannerBarController extends Controller {
                 }
             });
             searchTool.getField().getEditor().getEditorComponent().addFocusListener(new FocusAdapter() {
+                /**
+                 * Handles FocusGained events.
+                 * Initiates matching results, enables allow search mode and sets the text to currentQuery.
+                 * @param e the focus gained event.
+                 */
                 @Override
                 public void focusGained(FocusEvent e) {
                     super.focusGained(e);
@@ -1034,6 +1039,12 @@ public final class JourneyPlannerBarController extends Controller {
                     allowSearch = true;
                 }
 
+                /**
+                 * Handles FocusLost events.
+                 * sets the currentquery to the text in the search field.
+                 * Disables allow search and hides search popup list.
+                 * @param e the focus lost event.
+                 */
                 @Override
                 public void focusLost(FocusEvent e) {
                     super.focusLost(e);
@@ -1045,6 +1056,9 @@ public final class JourneyPlannerBarController extends Controller {
             });
         }
 
+        /**
+         * Changes the colors of the search field to match the current theme.
+         */
         @Override
         protected void themeHasChanged() {
             searchTool.applyTheme();
@@ -1053,6 +1067,9 @@ public final class JourneyPlannerBarController extends Controller {
             else if(isSmallJourneyPlannerVisible) searchTool.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), title, TitledBorder.LEFT, TitledBorder.ABOVE_TOP, new Font(searchTool.getFont().getName(), searchTool.getFont().getStyle(), SMALL_TITLE_FONT_SIZE), ThemeHelper.color("icon")));
         }
 
+        /**
+         * Closes the search fields popup list.
+         */
         @Override
         public void closeSearchToolList() {
             if(searchTool.getField().isPopupVisible()) {
@@ -1061,6 +1078,10 @@ public final class JourneyPlannerBarController extends Controller {
             }
         }
 
+        /**
+         * Specifies the keybindings for the searchfield.
+         * Adjusts the size of the search list based on matching items.
+         */
         @Override
         protected void specifyKeyBindings() {
             searchTool.getField().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
@@ -1127,14 +1148,26 @@ public final class JourneyPlannerBarController extends Controller {
             });
         }
 
+        /**
+         * Returns the search tool to the client.
+         * @return the search tool.
+         */
         public SearchTool getSearchTool() {
             return searchTool;
         }
 
+        /**
+         * Sets the title to be used in the titledborder.
+         * @param title the title of the titledborder.
+         */
         public void setTitle(String title) {
             this.title = title;
         }
 
+        /**
+         * Sets the border of the searchTool with a given font size.
+         * @param fontSize the size of the font of the titleborder.
+         */
         public void setBarBorder(int fontSize) {
             Font font = new Font("Verdana", Font.PLAIN, fontSize);
             searchTool.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), title, TitledBorder.LEFT, TitledBorder.ABOVE_TOP, font, ThemeHelper.color("icon")));
