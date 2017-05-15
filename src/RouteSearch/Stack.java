@@ -3,7 +3,9 @@ package RouteSearch;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-
+/**
+ *  A stack based on the version by Robert Sedgewick and Kevin Wayne.
+ */
 public class Stack<Item> implements Iterable<Item> {
     private Node<Item> first;     // top of stack
     private int n;                // size of the stack
