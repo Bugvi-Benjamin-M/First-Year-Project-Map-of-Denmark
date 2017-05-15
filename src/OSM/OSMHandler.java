@@ -20,10 +20,13 @@ import org.xml.sax.SAXException;
 import java.awt.geom.Point2D;
 import java.util.*;
 
+/**
+ * The OSMHandler is a specialized ContentHandler that is able
+ * to read data from a OSM file and load it into the model.
+ */
 public final class OSMHandler implements ContentHandler {
     private static OSMHandler handler;
     private NodeGenerator nodeGenerator;
-
     private LongToPointMap idToNode;
     private Map<Long, OSMWay> idToWay;
     private OSMWay way;
@@ -48,16 +51,17 @@ public final class OSMHandler implements ContentHandler {
     private boolean isWikiDataAvalible;
     private boolean isInTunnel;
     private ArrayList<Road> roads;
-
     private String roadName;
     private String roadNumber;
     private String zipCode;
     private String cityName;
-
     private boolean isAddress;
     private int indexCounter = 1;
     private static final int precision = 3;
 
+    /**
+     * Initializes the OSMHandler and the collections needed
+     */
     private OSMHandler() {
         idToNode = new LongToPointMap(22);
         idToWay = new HashMap<>();
@@ -76,14 +80,18 @@ public final class OSMHandler implements ContentHandler {
         this.isInitialized = isInitialized;
     }
 
+    /**
+     * Returns the longitude factor of the loaded elements,
+     * e.g. how much the coordinates have been shifted to
+     * project a circular globe onto a flat surface.
+     */
     public float getLongitudeFactor(){
         return longitudeFactor;
     }
 
     /**
-   * Returns the OSMHandler, which is a singleton.
-   * @return OSMHandler.
-   */
+     * Returns the OSMHandler instance
+     */
     public static OSMHandler getInstance()
     {
         if (handler == null) {
@@ -92,14 +100,23 @@ public final class OSMHandler implements ContentHandler {
         return handler;
     }
 
+    /**
+     * Resets the instance so that it can be reused cleanly
+     */
     public static void resetInstance() { handler = null; }
 
+    /* --- IGNORE ME --- */
     @Override
     public void setDocumentLocator(Locator locator) {}
 
+    /* --- IGNORE ME --- */
     @Override
     public void startDocument() throws SAXException {}
 
+    /**
+     * Method that runs whenever the handler reaches the
+     * end of the file.
+     */
     @Override
     public void endDocument() throws SAXException {
         idToWay = new HashMap<>();
@@ -109,19 +126,26 @@ public final class OSMHandler implements ContentHandler {
         model.createGraph(model.getElements(Enums.OSMEnums.ElementType.HIGHWAY).getAllSections());
     }
 
+    /* --- IGNORE ME --- */
     @Override
     public void startPrefixMapping(String prefix, String uri)
         throws SAXException {}
 
+    /* --- IGNORE ME --- */
     @Override
     public void endPrefixMapping(String prefix) throws SAXException {}
 
+    /**
+     * OSMHandler reaches an opening tag with some data attached
+     * @param qName The name of the opening tag
+     * @param atts Collection of attributes defined in the opening tag
+     */
     @Override
     public void startElement(String uri, String localName, String qName,
         Attributes atts) throws SAXException
     {
         switch (qName) {
-        case "bounds":
+        case "bounds":      // the bounds of the loaded map
             float minLatitude, maxLatitude, minLongitude, maxLongitude;
             minLatitude = Float.parseFloat(atts.getValue("minlat"));
             maxLatitude = Float.parseFloat(atts.getValue("maxlat"));
@@ -150,7 +174,7 @@ public final class OSMHandler implements ContentHandler {
             model.setDynamicBound(BoundType.MAX_LATITUDE, maxLatitude);
             model.setLongitudeFactor(longitudeFactor);
             break;
-        case "node":
+        case "node":    // a point on the globe
             long id = Long.parseLong(atts.getValue("id"));
             latitude = Float.parseFloat(atts.getValue("lat"));
             longitude = Float.parseFloat(atts.getValue("lon"));
@@ -169,7 +193,7 @@ public final class OSMHandler implements ContentHandler {
             isAddress = false;
             place = AmenityType.UNKNOWN;
             break;
-        case "relation":
+        case "relation":    // a collection of ways
             long relationID = Long.parseLong(atts.getValue("id"));
             name = "";
             isArea = false;
@@ -183,7 +207,7 @@ public final class OSMHandler implements ContentHandler {
             maxSpeed = 0;
             relation = new OSMRelation(relationID);
             break;
-        case "way":
+        case "way":     // a collection of nodes
             if (!isInitialized && isDefaultMode) {
                 nodeGenerator.initialise();
                 for (ElementType type : ElementType.values()) {
@@ -215,11 +239,11 @@ public final class OSMHandler implements ContentHandler {
             maxSpeed = 0;
             isOneWay = false;
             break;
-        case "nd":
+        case "nd":      // node that is part of a way
             long ref = Long.parseLong(atts.getValue("ref"));
             way.add(idToNode.get(ref));
             break;
-        case "tag":
+        case "tag":     // extra information about an element
             String k = atts.getValue("k");
             String v = atts.getValue("v");
             switch (k) {
@@ -320,7 +344,7 @@ public final class OSMHandler implements ContentHandler {
                     break;
             }
             break;
-        case "member":
+        case "member":  // part of a relation
             ref = Long.parseLong(atts.getValue("ref"));
             OSMWay way = idToWay.get(ref);
             if (way != null) {
@@ -330,6 +354,9 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Determines the ElementType for a land usage
+     */
     private void determineLanduse(String value) {
         switch (value) {
             case "forest":
@@ -360,6 +387,9 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Determines the ElementType of a man made structure
+     */
     private void determineManMade(String value){
         switch (value){
             case "bridge":
@@ -371,6 +401,9 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Determine the ElementType of a Barrier
+     */
     private void determineBarrier (String value){
         switch (value){
             case "hedge":
@@ -379,6 +412,10 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Determine the ElementType or AmenityType
+     * for elements marked as Leisure
+     */
     private void determineLeisure(String value) {
         switch (value) {
             case "park":
@@ -405,6 +442,10 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Determine the ElementType or AmenityType for
+     * elements marked as railway
+     */
     private void determineRailway(String value) {
         switch (value) {
             case "light_rail":
@@ -419,6 +460,9 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Determines the AmenityType of elements
+     */
     private void determineAmenity(String value) {
         switch (value) {
             case "bar":
@@ -445,6 +489,9 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Determines the AmenityType for a place
+     */
     private void determinePlace(String value) {
         switch (value) {
             case "city":
@@ -471,6 +518,10 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Determines the ElementType for natural elements,
+     * such as water or forests
+     */
     private void determineNatural(String value) {
         elementType = elementType.UNKNOWN;
         switch (value) {
@@ -500,6 +551,10 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Determines the ElementType of a waterway,
+     * such as a river
+     */
     private void determineWaterWay(String value){
         elementType = ElementType.UNKNOWN;
         switch (value){
@@ -515,6 +570,10 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Determines the ElementType or AmenityType of airport
+     * elements
+     */
     private void determineAirport(String value){
         elementType = ElementType.UNKNOWN;
         switch (value){
@@ -530,6 +589,10 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Determines the RoadType, maxspeed, allowed travel types etc.
+     * of elements marked as highway.
+     */
     private void determineHighway(String value) {
         switch (value) {
             case "motorway":
@@ -665,10 +728,14 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * The OSMHandler reaches an end tag and calls this method
+     * @param qName The name of the end tag
+     */
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName){
-            case "node":
+            case "node":    // if the element was a node
                 switch (place){
                     case CITY_NAME:
                     case TOWN_NAME:
@@ -703,7 +770,7 @@ public final class OSMHandler implements ContentHandler {
                 }
 
             break;
-        case "way":
+        case "way":     // if the element was a way
             switch (elementType) {
                 case HIGHWAY:
                     if (!isArea) {
@@ -718,7 +785,6 @@ public final class OSMHandler implements ContentHandler {
                     break;
                 case BUILDING:
                     addBuilding(elementType, false);
-                    //if(place == AmenityType.RAILWAY_STATION)addAmenity(AmenityType.RAILWAY_STATION, false);
                     break;
                 case WATER:
                 case WETLAND:
@@ -763,7 +829,7 @@ public final class OSMHandler implements ContentHandler {
                         break;
                 }
                 break;
-            case "relation":
+            case "relation":    // if element was a relation
                 switch (elementType) {
                     case HIGHWAY:
                         addRoad(elementType, true, true, roadType);
@@ -812,6 +878,9 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Adds a Rail object to the model
+     */
     private void addRail(boolean isRelation, boolean isInTunnel){
         if (!isRelation) {
             PolygonApprox polygonApprox = new PolygonApprox(way);
@@ -838,6 +907,9 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Adds a Building to the model
+     */
     private void addBuilding(ElementType type, boolean isRelation) {
         PolygonApprox polygonApprox;
         polygonApprox = new PolygonApprox(way);
@@ -866,6 +938,9 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Adds a name / place to the model
+     */
     private void addName(AmenityType type) {
         Amenity name = new Amenity(type, longitude * longitudeFactor, -latitude, this.name.intern());
         Pointer p = new Pointer(longitude * longitudeFactor, -latitude, name);
@@ -881,6 +956,10 @@ public final class OSMHandler implements ContentHandler {
                 break;
         }
     }
+
+    /**
+     * Adds a manmade object to the model
+     */
     private void addManMade(ElementType type, boolean isRelation, boolean area){
         if (!isRelation) {
             PolygonApprox polygonApprox = new PolygonApprox(way);
@@ -908,6 +987,9 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Adds a road to the model
+     */
     private void addRoad(ElementType type, boolean isRelation, boolean area, RoadType roadType)
     {
         Road road;
@@ -923,7 +1005,6 @@ public final class OSMHandler implements ContentHandler {
             road.setTravelByFootAllowed(isWalkingAllowed);
             road.setMaxSpeed(maxSpeed);
             road.setOneWay(isOneWay);
-            //road.setWay(way);
             roads.add(road);
             for (int i = 0; i < way.size(); i += precision) {
                 Pointer p = new Pointer((float)way.get(i).getX(), (float)way.get(i).getY(), road);
@@ -944,7 +1025,6 @@ public final class OSMHandler implements ContentHandler {
             road.setTravelByFootAllowed(isWalkingAllowed);
             road.setMaxSpeed(maxSpeed);
             road.setOneWay(isOneWay);
-            //road.setRelation(relation);
             for (int i = 0; i < relation.size(); i++) {
                 if (relation.get(i) != null) {
                     for (int j = 0; j < relation.get(i).size(); j += precision) {
@@ -961,6 +1041,9 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Adds a biome object to the Model
+     */
     private void addBiome(ElementType type, boolean isRelation) {
             if (!isRelation) {
                 PolygonApprox polygonApprox;
@@ -988,6 +1071,9 @@ public final class OSMHandler implements ContentHandler {
             }
     }
 
+    /**
+     * Adds an Amenity to the model
+     */
     private void addAmenity(AmenityType type, boolean isRelation, boolean isNode) {
         Amenity amenity;
         Pointer p;
@@ -1062,11 +1148,11 @@ public final class OSMHandler implements ContentHandler {
         }
     }
 
-    /*
+    /**
      * Check for nearby amenities in the KDTree with amenities.
-     * @param AmenityType the kind of amenity which is checked for
-     * @param the new amenity
-     * @float the minimum distance to other amenities of the kind specified as the first parameter
+     * @param type The kind of amenity which is checked for
+     * @param amenity A new amenity
+     * @param bufferDistance The minimum distance to other amenities of the kind specified as the first parameter
      */
     private boolean checkForNearbyAmenity(AmenityType type, Amenity amenity, float bufferDistance){
         boolean isAmenityNear = false;
@@ -1090,7 +1176,7 @@ public final class OSMHandler implements ContentHandler {
         return isAmenityNear;
     }
 
-    /*
+    /**
      * Check for nearby amenity in the ArrayList. This have to be done while parsing OSMNodes,
      * as the ArrayList is emptied when OSMWays start to be parsed.
      */
@@ -1113,18 +1199,22 @@ public final class OSMHandler implements ContentHandler {
         return isAmenityNear;
     }
 
+    /* --- IGNORE ME --- */
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
     }
 
+    /* --- IGNORE ME --- */
     @Override
     public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
     }
 
+    /* --- IGNORE ME --- */
     @Override
     public void processingInstruction(String target, String data) throws SAXException {
     }
 
+    /* --- IGNORE ME --- */
     @Override
     public void skippedEntity(String name) throws SAXException {
     }
