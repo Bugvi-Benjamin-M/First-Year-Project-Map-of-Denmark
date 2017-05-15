@@ -1,6 +1,9 @@
 package Helpers;
 
-
+/**
+ * three way radix string sort algoritm
+ * @Author Sedgewick & Wayne
+ */
 public class StringSorter {
 
     private static int charAt(String s, int d) {
@@ -8,6 +11,11 @@ public class StringSorter {
         else return -1;
     }
 
+    /**
+     * Sorts an array of Strings alphabeticly
+     * @param a a String[] that is to be sorted
+     * @return a sorted String[]
+     */
     public static String[] sort(String[] a) {
         sort(a, 0, a.length-1, 0);
         return a;
