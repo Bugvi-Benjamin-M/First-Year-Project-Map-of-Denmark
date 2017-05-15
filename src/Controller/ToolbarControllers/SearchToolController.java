@@ -23,7 +23,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
-
+/**
+ * This class is responsible for handling the interaction with the address searchbar.
+ * It extends SearchController which implements the autocompletion functionality.
+ */
 public final class SearchToolController extends SearchController {
 
     private static final String defaultText = "Search for an address or a city...";
@@ -38,6 +41,11 @@ public final class SearchToolController extends SearchController {
         super();
     }
 
+    /**
+     * This method replaces the contructor, and is called when a
+     * reference to the object is needed. (Singleton)
+     * @return an Instance of the class.
+     */
     public static SearchToolController getInstance() {
         if (instance == null) {
             instance = new SearchToolController();
@@ -45,6 +53,11 @@ public final class SearchToolController extends SearchController {
         return instance;
     }
 
+    /**
+     * Sets up the search tool by adding a focus listener to the searchbar, setting
+     * the searchbar to a default text, specifying keybindings for the searchbar, creating a JSON object which is used
+     * to save the history of the user input.
+     */
     protected void setupSearchTool() {
         searchTool = (SearchTool) ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBAR);
         addFocusListenerToSearchTool();
@@ -58,10 +71,18 @@ public final class SearchToolController extends SearchController {
             searchHistory = new JSONArray();
         }
     }
+
+    /**
+     * Resets the singleton.
+     * If getInstance is called afterwards, a new instance is created.
+     */
     public void resetInstance() {
         instance = null;
     }
 
+    /**
+     * Changes the visual appearance of the components dependent on the current theme.
+     */
     protected void themeHasChanged() {
         setToDefaultText();
         if(!searchTool.getText().equals(defaultText)) {
@@ -71,19 +92,28 @@ public final class SearchToolController extends SearchController {
         }
     }
 
+    /**
+     * Resizes the search tool appropriate when a resize event is started.
+     */
     protected void searchToolResizeEvent() {
-
         setToDefaultText();
         searchTool.adaptSizeToLargeToolbar();
         ToolbarController.getInstance().transferFocusToCanvas();
     }
 
+    /**
+     * Assures that the searchbar stops resizing when a given minimum size is reached.
+     */
     protected void searchToolFixedSizeEvent() {
         setToDefaultText();
         searchTool.adaptSizeToSmallToolbar();
         ToolbarController.getInstance().transferFocusToCanvas();
     }
 
+    /**
+     * Sets the searchtool to a default text which gives the user an idea of what
+     * the purpose of the searchtool is.
+     */
     protected void setToDefaultText() {
         if (searchTool.getText().equals("") || searchTool.getText().equals(defaultText)) {
             searchTool.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("defaulttext"));
@@ -91,6 +121,11 @@ public final class SearchToolController extends SearchController {
         }
     }
 
+    /**
+     * Closes the searchtool popup.
+     * Sets the default text.
+     * The user is currently not able to press enter and get any output (allowSearch = false)
+     */
     public void closeSearchToolList() {
         if(searchTool.getField().isPopupVisible()) {
             setToDefaultText();
@@ -101,19 +136,31 @@ public final class SearchToolController extends SearchController {
         }
     }
 
+    /**
+     * Adds a focus listener to the searchtool.
+     */
     private void addFocusListenerToSearchTool() {
         searchTool.getField().getEditor().getEditorComponent().addFocusListener(new SearchToolFocusHandler());
     }
 
+    /**
+     * Calls the searchActivatedEvent method of the superclass and saves it
+     * as history if it is a valid search. (If the address exists)
+     * @return
+     */
     protected Point2D.Float searchActivatedEvent() {
         Point2D.Float point = super.searchActivatedEvent();
         if(isValidSearch()) {
-            saveHistory(currentQuery);
+            saveHistory(searchTool.getText());
             ToolbarController.getInstance().transferFocusToCanvas();
         }
         return point;
     }
 
+    /**
+     * Shows the history of recent user input.
+     * The history is only shown when the searchtool is empty.
+     */
     private void showHistory(){
         if(searchHistory.isEmpty()) {
             return;
@@ -128,6 +175,10 @@ public final class SearchToolController extends SearchController {
         searchTool.getField().showPopup();
     }
 
+    /**
+     * Saves the history to a JSON file.
+     * @param query The current string in the searchtool field.
+     */
     private void saveHistory(String query){
         if(searchHistory.contains(query)){
             return;
@@ -152,6 +203,13 @@ public final class SearchToolController extends SearchController {
         }
     }
 
+    /**
+     * Adds keybindings to the searchtool.
+     * Enter is used to activate a search.
+     * Escape is used to exit the searchtool field.
+     * Any key except the two above are used to start an autocompletion search in the TST.
+     * Up and down are used to navigate through the autocompletion popup.
+     */
     protected void specifyKeyBindings() {
         searchTool.getField().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
@@ -246,6 +304,13 @@ public final class SearchToolController extends SearchController {
         });
     }
 
+    /**
+     * Manages the focus of the searchtool.
+     * If the searchtool loses focus, the autocompletion popup gets hidden,
+     * searching is disabled and the field of the searchtool is set to the default text.
+     * If the searchtool gains focus, the history of the recent user inputs is shown and searching
+     * is enabled.
+     */
     private class SearchToolFocusHandler extends FocusAdapter {
 
         private JComboBox<String> field;

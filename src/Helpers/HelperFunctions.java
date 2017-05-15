@@ -141,6 +141,10 @@ public class HelperFunctions {
         return Math.abs(dividend / 2);
     }
 
+    /**
+     * Quickly generates the distance between two points in meters
+     * Note that this function only works on the Map of Denmark
+     */
     public static double lazyDistance(Point2D from, Point2D to){
         return Math.sqrt((Math.pow(((from.getX()-to.getX())/62.445),2)) + (Math.pow(((from.getY()-to.getY())/111.096),2)));
     }
@@ -151,7 +155,7 @@ public class HelperFunctions {
      * @param w Another point on a sphere
      */
     public static double distanceInMeters(Point2D v, Point2D w) {
-        double R = 6371e3; //Earthradius in meters
+        double R = 6371e3; //Earth radius in meters
         float longfactor = Model.getInstance().getLongitudeFactor();
         double latitude1 = Math.toRadians(-v.getY());
         double latitude2 = Math.toRadians(-w.getY());
@@ -219,25 +223,6 @@ public class HelperFunctions {
     }
 
     /**
-     * Convertes distance on screen coordinates to distance in the model
-     */
-    public static float convertDistanceFromScreenCoordsToModelCoords(int distance) {
-        Point2D start = CanvasController.getInstance().getMapCanvas().toModelCoords(new Point2D.Float(0,0));
-        Point2D end = CanvasController.getInstance().getMapCanvas().toModelCoords(new Point2D.Float(distance,0));
-        return (float) (end.getX() - start.getX());
-    }
-
-    /**
-     * Calculates the mathematical dot product from two given vectors
-     */
-    private static double dotProduct(Vector a, Vector b) {
-        if (a == null || b == null) {
-            throw new NullPointerException("Arguments must not be null");
-        }
-        return (a.x * b.x) + (a.y * b.y);
-    }
-
-    /**
      * Compares the direction of two vectors, provided as points.
      */
     public static int direction(Point2D a, Point2D b, Point2D c, Point2D d) {
@@ -256,7 +241,7 @@ public class HelperFunctions {
     /**
      * A mathematical vector described by two points.
      */
-    public static class Vector {
+    private static class Vector {
         private double x;
         private double y;
 
