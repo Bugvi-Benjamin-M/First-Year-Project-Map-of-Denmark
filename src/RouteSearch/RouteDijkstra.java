@@ -92,11 +92,13 @@ public class RouteDijkstra {
     }
 
     public float distTo(Point2D point) {
-        return distTo.get(point);
+        Float dist = distTo.get(point);
+        return dist != null ? dist : Float.POSITIVE_INFINITY;
     }
 
     public boolean hasPathTo(Point2D point) {
-        return distTo.get(point) < Double.POSITIVE_INFINITY;
+        Float dist = distTo.get(point);
+        return dist != null ? dist < Double.POSITIVE_INFINITY : false;
     }
 
     public Iterable<RoadEdge> path() {
