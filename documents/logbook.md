@@ -550,4 +550,26 @@ Impediments:
 
 Next meeting: Friday 12/05 at 10
 
-## Next logbook...
+## Logbook 15/05 (Scribe Magnussen)
+
+Note: no scrum meeting was held Friday 12/05. 
+ - 
+What we did since last time:
+ - Fixed bugs
+ - Worked on route search
+ - Worked on white box testing
+ - Javadoc
+ - Removed zoom/pan restrictions
+ - GUI work and fixes. 
+ - Dijkstra optimisation
+ - Usability test
+ - Optimisation (roads, roadEdges).
+
+What we will do until next time:
+ - Finish up the code and make the application ready for handin. 
+
+Impediments:
+ - Handin of the assignment. 
+ 
+Last scrum meeting:
+ - This scrum meeting is the last scrum meeting. All following meeting will be related to report writing, and no log will be kept. 
