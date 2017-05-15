@@ -130,4 +130,28 @@ public class HelperFunctionsTest {
         assertEquals(-1,direction);
         System.out.println("AC-AB: "+direction);
     }
+
+    @Test
+    public void sizeOfPolygonTest() throws Exception {
+        List<Point2D> path = new ArrayList<>();
+        path.add(A);
+        path.add(B);
+        path.add(C);
+        path.add(D);
+        path.add(E);
+        double size = HelperFunctions.sizeOfPolygon(path);
+        assertEquals(36.0,size,0.1);
+        System.out.println(size);
+    }
+
+    @Test
+    public void timeTest() throws Exception {
+        long threeminutes = 192000000000L;
+        String timestring = HelperFunctions.convertNanotimeToTime(threeminutes);
+        System.out.println(timestring);
+        assertEquals("3 m, 12 s, 0 ms",timestring);
+        timestring = HelperFunctions.simplifyNanoTime(threeminutes);
+        System.out.println(timestring);
+        assertEquals("3 min, 12 sec",timestring);
+    }
 }

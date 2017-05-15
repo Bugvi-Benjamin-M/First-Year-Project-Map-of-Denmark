@@ -141,6 +141,10 @@ public class HelperFunctions {
         return Math.abs(dividend / 2);
     }
 
+    /**
+     * Quickly generates the distance between two points in meters
+     * Note that this function only works on the Map of Denmark
+     */
     public static double lazyDistance(Point2D from, Point2D to){
         return Math.sqrt((Math.pow(((from.getX()-to.getX())/62.445),2)) + (Math.pow(((from.getY()-to.getY())/111.096),2)));
     }
@@ -151,7 +155,7 @@ public class HelperFunctions {
      * @param w Another point on a sphere
      */
     public static double distanceInMeters(Point2D v, Point2D w) {
-        double R = 6371e3; //Earthradius in meters
+        double R = 6371e3; //Earth radius in meters
         float longfactor = Model.getInstance().getLongitudeFactor();
         double latitude1 = Math.toRadians(-v.getY());
         double latitude2 = Math.toRadians(-w.getY());
@@ -237,7 +241,7 @@ public class HelperFunctions {
     /**
      * A mathematical vector described by two points.
      */
-    public static class Vector {
+    private static class Vector {
         private double x;
         private double y;
 
