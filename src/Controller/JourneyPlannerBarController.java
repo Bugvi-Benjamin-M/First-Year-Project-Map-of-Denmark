@@ -18,7 +18,11 @@ import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-
+/**
+ * Controls the Journeyplanner.
+ * Handles layout and all logic related to user input in the Journeyplanner, as well
+ * as passing on information to the model and requesting relevant information from the model.
+ */
 public final class JourneyPlannerBarController extends Controller {
 
     private static JourneyPlannerBarController instance;
@@ -72,7 +76,7 @@ public final class JourneyPlannerBarController extends Controller {
     private final int SMALL_SEARCH_FONT = 11;
 
     private final int DESCRIPTION_BUTTON_FONT_SIZE = 40;
-    private boolean isFirstDownAction = true;
+    private boolean isFirstDownAction;
 
 
 
@@ -103,13 +107,20 @@ public final class JourneyPlannerBarController extends Controller {
     private RouteSearch.RouteDijkstra dijk;
     private RoadGraphFactory factory;
 
-
+    /**
+     * Private constructor, called by getInstance.
+     * Creates the two search controllers.
+     */
     private JourneyPlannerBarController() {
         super();
         fromSearcher = new ToFromController();
         toSearcher = new ToFromController();
     }
 
+    /**
+     * Returns to the client the singleton instance object.
+     * @return the singleton object.
+     */
     public static JourneyPlannerBarController getInstance() {
         if(instance == null) {
             instance = new JourneyPlannerBarController();
@@ -117,7 +128,13 @@ public final class JourneyPlannerBarController extends Controller {
         return instance;
     }
 
-
+    /**
+     * Sets up the base information bar.
+     * Adds mouse listener to the informationbar, specifies the main window
+     * as the winow of the informationbar and initiates setup of the two search
+     * tools.
+     * Initiates all boolean variables.
+     */
     public void setupInformationBar() {
         informationBar = new InformationBar();
         informationBarLayout = (SpringLayout) informationBar.getLayout();
@@ -131,8 +148,14 @@ public final class JourneyPlannerBarController extends Controller {
         isSmallJourneyPlannerVisible = false;
         isDescriptionFieldOpen = false;
         searchUnderway = false;
+        isFirstDownAction = true;
+        isSearch = false;
     }
 
+    /**
+     * Sets up the base JourneyPlannerbar.
+     * Specifies keybindings, sets borders, adds interaction handlers to components.
+     */
     public void setupBaseJourneyPlannerBar() {
         journeyPlannerTransportTypeButtons = new JourneyPlannerTransportTypeButtons();
         journeyPlannerTransportTypeButtons.setOpaque(true);
@@ -159,6 +182,10 @@ public final class JourneyPlannerBarController extends Controller {
         type = TravelType.VEHICLE;
     }
 
+    /**
+     * Sets up the large version of the JourneyPlanner.
+     * Specifies relations between components and sets font sizes.
+     */
     public void setupLargeJourneyPlannerBar() {
         isLargeJourneyPlannerVisible = true;
         MainWindowController.getInstance().requestCanvasToggleRouteVisualization(true);
@@ -202,6 +229,10 @@ public final class JourneyPlannerBarController extends Controller {
         setToCurrentTravelType();
     }
 
+    /**
+     * Sets up the small version of the JourneyPlanner.
+     * Specifies relations between components and sets font sizes.
+     */
     public void setupSmallJourneyPlannerBar() {
         isSmallJourneyPlannerVisible = true;
         MainWindowController.getInstance().requestCanvasToggleRouteVisualization(true);
@@ -232,10 +263,8 @@ public final class JourneyPlannerBarController extends Controller {
 
         journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, journeyPlannerSearchClearButtons, SMALL_NORTH_DISTANCE_BETWEEN_CLEARSEARCH_BUTTONS_AND_JOURNEYPLANNERBAR, SpringLayout.NORTH, journeyPlannerBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.WEST, journeyPlannerSearchClearButtons, SMALL_VERTICAL_DISTANCE_BETWEEN_CLEARSEARCH_BUTTONS_AND_SEARCHBARS, SpringLayout.EAST, fromSearcher.getSearchTool());
-
         journeyPlannerBarLayout.putConstraint(SpringLayout.NORTH, descriptionButton, DESCRIPTION_BUTTON_NORTH_DISTANCE, SpringLayout.NORTH, journeyPlannerBar);
         journeyPlannerBarLayout.putConstraint(SpringLayout.EAST, descriptionButton, DESCRIPTION_BUTTON_EAST_DISTANCE , SpringLayout.EAST, journeyPlannerBar);
-
         themeHasChanged();
         journeyPlannerBar.add(journeyPlannerTransportTypeButtons);
         journeyPlannerBar.add(fromSearcher.getSearchTool());
@@ -246,10 +275,17 @@ public final class JourneyPlannerBarController extends Controller {
         setToCurrentTravelType();
     }
 
+    /**
+     * Returns the informationbar to the client.
+     * @return the informationbar.
+     */
     public InformationBar getInformationBar() {
         return informationBar;
     }
 
+    /**
+     * Sets the active transport button to the current travel type.
+     */
     private void setToCurrentTravelType() {
         switch (type) {
             case WALK:
@@ -264,14 +300,27 @@ public final class JourneyPlannerBarController extends Controller {
         }
     }
 
+    /**
+     * Lets the client know if the large version of the JourneyPlanner is visible.
+     * @return is the large JourneyPlanner visible.
+     */
     public boolean isLargeJourneyPlannerVisible() {
         return isLargeJourneyPlannerVisible;
     }
 
+
+    /**
+     * Lets the client know if the small version of the JourneyPlanner is visible.
+     * @return is the small JourneyPlanner visible.
+     */
     public boolean isSmallJourneyPlannerVisible() {
         return isSmallJourneyPlannerVisible;
     }
 
+    /**
+     * Adapts the JourneyPlanner to the size of the window.
+     * Adjusts bounds and sizes.
+     */
     public void resizeEvent() {
         if(isLargeJourneyPlannerVisible) {
             informationBar.setBounds(0,0,GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight());
@@ -288,6 +337,10 @@ public final class JourneyPlannerBarController extends Controller {
         }
     }
 
+    /**
+     * Changes the colors of the JourneyPlanner and Informationbar to reflect the
+     * current theme.
+     */
     public void themeHasChanged() {
         informationBar.applyTheme();
         journeyPlannerTransportTypeButtons.applyTheme();
@@ -316,8 +369,22 @@ public final class JourneyPlannerBarController extends Controller {
         }
     }
 
+    /**
+     * Adds an interactionHandler to the description button.
+     * The interactionHandler is a MouseAdapter that registers mouse events
+     * and triggers actions.
+     */
     public void addInteractionHandlerToDescriptionButton() {
         descriptionButton.addMouseListener(new MouseAdapter() {
+
+            /**
+             * Handles the mouse clicked event.
+             * If no search has been made previously, or the last search
+             * has been cleared, this method call is ignored.
+             * Activates the description text field in the small JourneyPlanner.
+             * Changes the relevant colors.
+             * @param e the mouse clicked event.
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
@@ -332,12 +399,26 @@ public final class JourneyPlannerBarController extends Controller {
                 }
             }
 
+            /**
+             * Handles MouseEntered events.
+             * If no search has been made previously, or the last search
+             * has been cleared, this method call is ignored.
+             * Changes the relevant colors.
+             * @param e the mouse entered event.
+             */
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
                 if(isSearch) descriptionButton.setForeground(ThemeHelper.color("toolHover"));
             }
 
+            /**
+             * Handles MouseExited events.
+             * If no search has been made previously, or the last search
+             * has been cleared, this method call is ignored.
+             * Changes the relevant colors.
+             * @param e the mouse exited event.
+             */
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
@@ -347,12 +428,26 @@ public final class JourneyPlannerBarController extends Controller {
                 }
             }
 
+            /**
+             * Handles MousePressed events.
+             * If no search has been made previously, or the last search
+             * has been cleared, this method call is ignored.
+             * Changes the relevant colors.
+             * @param e the mouse pressed event.
+             */
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
                 if(isSearch) descriptionButton.setForeground(ThemeHelper.color("toolActivated"));
             }
 
+            /**
+             * Handles MouseReleased events.
+             * If no search has been made previously, or the last search
+             * has been cleared, this method call is ignored.
+             * Changes the relevant colors.
+             * @param e the mouse released event.
+             */
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
@@ -361,31 +456,47 @@ public final class JourneyPlannerBarController extends Controller {
         });
     }
 
+    /**
+     * Opens the description text field in the small version of the JourneyPlanner.
+     */
     private void descriptionActivationEvent() {
         if(!isSmallJourneyPlannerVisible) return;
             travelDescription.setPreferredSize(new Dimension(300, 400));
-            travelDescription.setBounds(window.getFrame().getWidth() - 300, window.getFrame().getHeight() - GlobalValue.getSmallInformationBarHeight() - 400, 300, 400);
+            if(!OSDetector.isWindows())travelDescription.setBounds(window.getFrame().getWidth() - 300, window.getFrame().getHeight() - GlobalValue.getSmallInformationBarHeight() - 400, 300, 400);
+            else travelDescription.setBounds(window.getFrame().getWidth() - 310, window.getFrame().getHeight() - GlobalValue.getSmallInformationBarHeight() - 400, 300, 400);
             window.getFrame().getLayeredPane().add(travelDescription, new Integer(6));
             isDescriptionFieldOpen = true;
     }
 
+    /**
+     * Closes the description text field of the small version of the JourneyPlanner.
+     */
     private void descriptionDeactivationEvent() {
         window.getFrame().getLayeredPane().remove(travelDescription);
         isDescriptionFieldOpen = false;
         MainWindowController.getInstance().requestCanvasRepaint();
     }
 
+    /**
+     * Used to specify that a valid search has been made.
+     */
     private void searchInitialised() {
         isSearch = true;
         descriptionButton.setForeground(ThemeHelper.color("icon"));
     }
 
+    /**
+     * Used to specify that no valid search has been made.
+     */
     private void noSearchInitialised() {
         isSearch = false;
         descriptionButton.setForeground(ThemeHelper.color("inactiveButton"));
     }
 
 
+    /**
+     * Prints the route description in the description text field.
+     */
     public void printRouteDescription() {
         java.util.List<String> route = JourneyPlannerBarController.getInstance().getRouteDescription();
         if (route == null) return;
@@ -396,6 +507,11 @@ public final class JourneyPlannerBarController extends Controller {
         travelDescription.getField().setCaretPosition(0);
     }
 
+    /**
+     * Retrieves a route description from the RoadGraphFactory and
+     * gives the list of strings the correct format.
+     * @return the formatted description of a route.
+     */
     private java.util.List<String> getRouteDescription() {
         RoadGraphFactory factory = Model.getInstance().getGraphFactory();
         java.util.List<String> description = new ArrayList<>();
@@ -439,8 +555,19 @@ public final class JourneyPlannerBarController extends Controller {
         return null;
     }
 
+    /**
+     * Adds an interactionHandler to the search and clear buttons. The
+     * interactionHandler is a MouseAdapter.
+     */
     private void addInteractionHandlerToClearSearchButtons() {
         journeyPlannerSearchClearButtons.getClearButton().addMouseListener(new MouseAdapter() {
+
+            /**
+             * Handles MouseClicked events on the clear button.
+             * Checks whether a search is already underway, if so this method call is ignored.
+             * Resets all relevant components and changes the colors of relevant components.
+             * @param e the mouse clicked event.
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(searchUnderway) return;
@@ -457,29 +584,56 @@ public final class JourneyPlannerBarController extends Controller {
                 MainWindowController.getInstance().requestCanvasRepaint();
             }
 
+            /**
+             * Handles MouseEntered events on the clear button.
+             * Changes the color of the clear button.
+             * @param e the mouse entered event.
+             */
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
                 journeyPlannerSearchClearButtons.getClearButton().setForeground(ThemeHelper.color("toolHover"));
             }
 
+            /**
+             * Handles MouseExited events on the clear button.
+             * Changes the color of the clear button.
+             * @param e the mouse exited event.
+             */
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
                 journeyPlannerSearchClearButtons.getClearButton().setForeground(ThemeHelper.color("icon"));
             }
 
+            /**
+             * Handles MousePressed events on the clear button.
+             * Changes the color of the clear button.
+             * @param e the mouse pressed event.
+             */
             @Override
             public void mousePressed(MouseEvent e) {
                 journeyPlannerSearchClearButtons.getClearButton().setForeground(ThemeHelper.color("toolActivated"));
             }
 
+            /**
+             * Handles MouseReleased events on the clear button.
+             * Changes the color of the clear button.
+             * @param e the mouse released event.
+             */
             @Override
             public void mouseReleased(MouseEvent e) {
                 journeyPlannerSearchClearButtons.getClearButton().setForeground(ThemeHelper.color("icon"));
             }
         });
         journeyPlannerSearchClearButtons.getSearchButton().addMouseListener(new MouseAdapter() {
+            /**
+             * Handles MouseClicked events on the search button.
+             * Checks whether a search is already underway, if so this method call is ignored.
+             * Initialises a new search for a route.
+             * Uses a SwingWorker to handle the task in the background.
+             * @param e the mouse clicked event.
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("toolActivated"));
@@ -545,23 +699,47 @@ public final class JourneyPlannerBarController extends Controller {
                 }
             }
 
+            /**
+             * Handles MouseExited events on the search button.
+             * Checks whether a search is already underway, if so this method call is ignored.
+             * Changes the color of the search button.
+             * @param e the mouse exited event.
+             */
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
                 if(!searchUnderway) journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
             }
 
+            /**
+             * Handles MouseEntered events on the search button.
+             * Checks whether a search is already underway, if so this method call is ignored.
+             * Changes the color of the search button.
+             * @param e the mouse entered event.
+             */
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseMoved(e);
                 if(!searchUnderway) journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("toolHover"));
             }
 
+            /**
+             * Handles MousePressed events on the search button.
+             * Checks whether a search is already underway, if so this method call is ignored.
+             * Changes the color of the search button.
+             * @param e the mouse pressed event.
+             */
             @Override
             public void mousePressed(MouseEvent e) {
                 journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("toolActivated"));
             }
 
+            /**
+             * Handles MouseReleased events on the search button.
+             * Checks whether a search is already underway, if so this method call is ignored.
+             * Changes the color of the search button.
+             * @param e the mouse released event.
+             */
             @Override
             public void mouseReleased(MouseEvent e) {
                 if(!searchUnderway) journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
@@ -569,41 +747,71 @@ public final class JourneyPlannerBarController extends Controller {
         });
     }
 
+    /**
+     * Adds an interactionHandler to the transport type buttons.
+     * The interactionHandler is a MouseAdapter.
+     */
     private void addInteractionHandlersToJourneyPlannerTransportButtons() {
         journeyPlannerTransportTypeButtons.getOnFootButton().addMouseListener(new MouseAdapter() {
+            /**
+             * Handles MouseClicked events on the walk button.
+             * Changes colors and sets the transportation type to walk.
+             * @param e the mouse clicked event.
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
+                if(searchUnderway) return;
                 super.mouseClicked(e);
                 type = TravelType.WALK;
                 journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("toolActivated"));
                 journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("icon"));
                 journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("icon"));
             }
-
+            /**
+             * Handles MouseEntered events on the walk button.
+             * Changes colors.
+             * @param e the mouse entered event.
+             */
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
                 journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("toolHover"));
             }
 
+            /**
+             * Handles MouseExited events on the walk button.
+             * Changes colors.
+             * @param e the mouse exited event.
+             */
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
                 if(type != TravelType.WALK) journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("icon"));
                 else journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("toolActivated"));
-
             }
 
+            /**
+             * Handles MousePressed events on the walk button.
+             * Changes colors.
+             * @param e the mouse pressed event.
+             */
             @Override
             public void mousePressed(MouseEvent e) {
+                if(searchUnderway) return;
                 super.mousePressed(e);
                 journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("toolActivated"));
             }
 
         });
         journeyPlannerTransportTypeButtons.getBicycleButton().addMouseListener(new MouseAdapter() {
+            /**
+             * Handles MouseClicked events on the bicycle button.
+             * Changes colors and sets the transportation type to bicycle.
+             * @param e the mouse clicked event.
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
+                if(searchUnderway) return;
                 super.mouseClicked(e);
                 type = TravelType.BICYCLE;
                 journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("toolActivated"));
@@ -611,22 +819,50 @@ public final class JourneyPlannerBarController extends Controller {
                 journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("icon"));
             }
 
+            /**
+             * Handles MouseEntered events on the bicycle button.
+             * Changes colors.
+             * @param e the mouse entered event.
+             */
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
                 journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("toolHover"));
             }
 
+            /**
+             * Handles MouseExited events on the bicycle button.
+             * Changes colors.
+             * @param e the mouse exited event.
+             */
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
                 if(type != TravelType.BICYCLE) journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("icon"));
                 else journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("toolActivated"));
             }
+
+            /**
+             * Handles MousePressed events on the bicycle button.
+             * Changes colors.
+             * @param e the mouse pressed event.
+             */
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(searchUnderway) return;
+                super.mousePressed(e);
+                journeyPlannerTransportTypeButtons.getBicycleButton().setForeground(ThemeHelper.color("toolActivated"));
+            }
         });
         journeyPlannerTransportTypeButtons.getCarButton().addMouseListener(new MouseAdapter() {
+            /**
+             * Handles MouseClicked events on the car button.
+             * Changes colors and sets the transportation type to car.
+             * @param e the mouse clicked event.
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (searchUnderway) return;
                 super.mouseClicked(e);
                 type = TravelType.VEHICLE;
                 journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("toolActivated"));
@@ -634,21 +870,47 @@ public final class JourneyPlannerBarController extends Controller {
                 journeyPlannerTransportTypeButtons.getOnFootButton().setForeground(ThemeHelper.color("icon"));
             }
 
+            /**
+             * Handles MouseEntered events on the car button.
+             * Changes colors.
+             * @param e the mouse entered event.
+             */
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
                 journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("toolHover"));
             }
 
+            /**
+             * Handles MouseExited events on the car button.
+             * Changes colors.
+             * @param e the mouse exited event.
+             */
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
                 if(type != TravelType.VEHICLE) journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("icon"));
                 else journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("toolActivated"));
             }
+
+            /**
+             * Handles MousePressed events on the car button.
+             * Changes colors.
+             * @param e the mouse pressed event.
+             */
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(searchUnderway) return;
+                super.mousePressed(e);
+                journeyPlannerTransportTypeButtons.getCarButton().setForeground(ThemeHelper.color("toolActivated"));
+            }
         });
     }
 
+    /**
+     * Clears the JourneyPlanner and informationbar.
+     * Removes all layout specifications and removes all components.
+     */
     public void clearJourneyPlannerBar() {
         if (isDescriptionFieldOpen) descriptionDeactivationEvent();
         isLargeJourneyPlannerVisible = false;
@@ -665,6 +927,11 @@ public final class JourneyPlannerBarController extends Controller {
         informationBar.removeAll();
     }
 
+    /**
+     * Called when a search is initialised. Checks whether the user
+     * inputs are valid. Sets the JourneyPlanner to search mode in case
+     * the input is valid, and not if that is not the case.
+     */
     private void searchActivatedEvent() {
         if(fromSearcher.getSearchTool().getText().equals("")) {
             PopupWindow.infoBox(null, "Please Specify Departure Location!", "No Departure Location Selected!");
@@ -687,8 +954,17 @@ public final class JourneyPlannerBarController extends Controller {
         }
     }
 
+    /**
+     * The informationBarInteractionHandler is a MouseAdapter that deals with
+     * all mouse events related to the informationBar.
+     */
     private class InformationBarInteractionHandler extends MouseAdapter {
 
+        /**
+         * Handles all mouse clicked events on the informationbar.
+         * Closes the Menu tool popup and all search tool popup lists.
+         * @param e the mouse clicked event.
+         */
         @Override
         public void mouseClicked(MouseEvent e) {
             if(MainWindowController.getInstance().isMenuToolPopupVisible()) MainWindowController.getInstance().requestMenuToolHidePopup();
@@ -697,25 +973,45 @@ public final class JourneyPlannerBarController extends Controller {
             toSearcher.closeSearchToolList();
         }
 
+        /**
+         * Handles mouse entered events.
+         * Tranfers focus to the informationbar if no search list popups are visible.
+         * @param e the mouse entered event
+         */
         @Override
         public void mouseEntered(MouseEvent e) {
-            if(!fromSearcher.doesSearchbarHaveFocus() && !toSearcher.doesSearchbarHaveFocus()) informationBar.grabFocus();
+            if(!fromSearcher.doesSearchbarHaveFocus() && !toSearcher.doesSearchbarHaveFocus() && !MainWindowController.getInstance().doesSearchToolHaveFocus()) informationBar.grabFocus();
         }
     }
 
+    /**
+     * Lets the client know whether one of the search fields has a visible popup.
+     * @return is a search field popup visible.
+     */
     public boolean isASearchListOpen() {
         return fromSearcher.doesSearchbarHaveFocus() || toSearcher.doesSearchbarHaveFocus();
     }
 
+    /**
+     * closes the search field popups.
+     */
     public void closeSearchLists() {
         fromSearcher.closeSearchToolList();
         toSearcher.closeSearchToolList();
     }
 
+    /**
+     * The ToFromController controls the a search field and the input given
+     * in it.
+     */
     private class ToFromController extends SearchController {
 
         private String title;
 
+        /**
+         * Sets up a search tool. Adds mouse listener to it, specifies look and feel and adds a
+         * focus listener to it.
+         */
         @Override
         protected void setupSearchTool() {
             searchTool = new SearchTool();
