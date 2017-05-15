@@ -9,12 +9,7 @@ import javax.swing.plaf.basic.BasicComboPopup;
 import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 29/03/2017
- */
+
 public class SearchTool extends ToolComponent {
 
     private JComboBox<String> field;

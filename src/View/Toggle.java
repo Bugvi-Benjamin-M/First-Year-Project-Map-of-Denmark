@@ -3,12 +3,6 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 03/04/2017
- */
 public abstract class Toggle extends View {
 
     protected JCheckBox toggleBox;

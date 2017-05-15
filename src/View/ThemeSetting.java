@@ -3,12 +3,7 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Class details:
- *
- * @author Niclas Hedam, nhed@itu.dk
- * @version 18-03-2017
- */
+
 public class ThemeSetting extends View {
 
     private JLabel themeLabel;

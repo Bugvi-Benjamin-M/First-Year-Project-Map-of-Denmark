@@ -13,7 +13,6 @@ import Model.Addresses.TenarySearchTrie;
 import Model.Addresses.Value;
 import Model.Elements.*;
 import Model.Model;
-import RouteSearch.RoadGraph;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -21,9 +20,6 @@ import org.xml.sax.SAXException;
 import java.awt.geom.Point2D;
 import java.util.*;
 
-/**
- * Created by Jakob on 06-03-2017.
- */
 public final class OSMHandler implements ContentHandler {
     private static OSMHandler handler;
     private NodeGenerator nodeGenerator;
@@ -119,6 +115,7 @@ public final class OSMHandler implements ContentHandler {
         relation = null;
         //refRelation = null;
         nodeGenerator = new NodeGenerator();
+        model.createGraph(model.getElements(Enums.OSMEnums.ElementType.HIGHWAY).getAllSections());
     }
 
     @Override

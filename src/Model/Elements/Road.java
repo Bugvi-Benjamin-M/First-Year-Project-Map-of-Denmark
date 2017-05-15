@@ -12,11 +12,7 @@ import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
 
-/**
- * Created by Jakob on 06-03-2017.
- *
- * nBytes: approx. 32 bytes
- */
+
 public class Road extends Element {
     private String name = "";
     private boolean oneWay = false;

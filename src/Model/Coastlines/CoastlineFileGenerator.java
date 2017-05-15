@@ -40,8 +40,6 @@ import java.util.zip.ZipInputStream;
  * - Select a destination to save to
  * - DONE
  *
- * @author Andreas Blanke, blan@itu.dk
- * @version 20-03-2017
  */
 public final class CoastlineFileGenerator implements ContentHandler {
 

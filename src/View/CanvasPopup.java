@@ -5,12 +5,6 @@ import Helpers.ThemeHelper;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 20/04/2017
- */
 public class CanvasPopup extends View {
 
     private JPopupMenu popupMenu;

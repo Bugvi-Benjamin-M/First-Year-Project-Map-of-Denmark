@@ -10,8 +10,6 @@ package Enums;
  * which elements to be drawn and used for determining the complexity
  * of a coastline segment.
  *
- * @author Andreas Blanke, blan@itu.dk
- * @version 27-03-2017
  */
 public enum ZoomLevel {
     LEVEL_0, // close and detailed

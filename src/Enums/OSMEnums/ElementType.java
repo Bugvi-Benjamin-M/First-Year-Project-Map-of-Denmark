@@ -1,8 +1,5 @@
 package Enums.OSMEnums;
 
-/**
- * Created by Jakob on 06-03-2017.
- */
 public enum ElementType {
     COASTLINE,
     COUNTRY_BOUNDARY_LAND,

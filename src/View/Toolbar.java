@@ -10,10 +10,6 @@ import java.util.Map;
 /**
  * Class details:
  * The Toolbar is a visual component consisting of a collection of tools.
- *
- * @author Andreas Blanke, blan@itu.dk
- * @author Niclas Hedam, nhed@itu.dk
- * @version 06-03-2017
  */
 public class Toolbar extends View {
 

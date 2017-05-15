@@ -7,12 +7,7 @@ import javax.swing.plaf.metal.MetalScrollBarUI;
 import javax.swing.plaf.metal.MetalScrollButton;
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 27/04/2017
- */
+
 public class CustomScrollbarUI extends MetalScrollBarUI {
 
 

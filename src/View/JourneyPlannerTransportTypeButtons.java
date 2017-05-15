@@ -7,12 +7,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 04/05/2017
- */
+
 public class JourneyPlannerTransportTypeButtons extends View {
 
 

@@ -4,9 +4,6 @@ import Controller.MainWindowController;
 import Enums.ZoomLevel;
 import Helpers.Utilities.DebugWindow;
 
-/**
- * Created by Búgvi Magnussen on 02-04-2017.
- */
 public class GlobalValue {
 
     public static final String DEFAULT_COASTLINE_FILE = "/coastlines.zip";

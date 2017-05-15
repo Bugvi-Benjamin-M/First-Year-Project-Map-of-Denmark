@@ -2,9 +2,6 @@ package Model.Elements;
 
 import Helpers.Shapes.PolygonApprox;
 
-/**
- * Created by Jakob on 04-05-2017.
- */
 public class Rail extends Element {
     private boolean isInTunnel;
 

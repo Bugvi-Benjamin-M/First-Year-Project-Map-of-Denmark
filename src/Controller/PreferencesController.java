@@ -7,8 +7,6 @@ import Helpers.ThemeHelper;
 import java.util.prefs.*;
 
 /**
- * Created by Búgvi Magnussen on 22-04-2017.
- *
  * This class stores controls application wide settings.
  * @Warning this class will generate a warning on Windows. This is due to a bug
  * in the JDK. Please ignore.

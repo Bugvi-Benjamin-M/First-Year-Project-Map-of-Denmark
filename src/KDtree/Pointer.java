@@ -1,11 +1,8 @@
 package KDtree;
 
-import Model.Elements.Element;
 import Model.Elements.SuperElement;
 
-/**
- * Created by Jakob on 30-03-2017.
- */
+
 public class Pointer extends Point {
     private SuperElement element;
 

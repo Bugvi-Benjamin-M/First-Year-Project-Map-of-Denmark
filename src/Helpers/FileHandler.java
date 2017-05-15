@@ -29,9 +29,7 @@ import java.util.zip.ZipInputStream;
 import static Helpers.GlobalValue.DEBUG_MODE_ACTIVE;
 import static Helpers.GlobalValue.DEFAULT_COASTLINE_FILE;
 
-/**
- * Created by Jakob on 06-03-2017.
- */
+
 public class FileHandler {
 
     private static String pathStart = OSDetector.getPathPrefix();
@@ -160,6 +158,7 @@ public class FileHandler {
             time = System.nanoTime() - time;
             System.out.println("Object deserialization: "+
                     HelperFunctions.convertNanotimeToTime(time));
+            Model.getInstance().createGraph(Model.getInstance().getElements(Enums.OSMEnums.ElementType.HIGHWAY).getAllSections());
             Model.getInstance().modelHasChanged();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -187,33 +186,6 @@ public class FileHandler {
             System.out.println("Save time: "+
                     HelperFunctions.convertNanotimeToTime(time));
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void saveTreeStructure(String fileName)
-    {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            out.writeObject(Model.getInstance().getElements());
-            System.out.println("DONE");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void loadTreeStructure(String fileName)
-    {
-        try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(
-                 FileHandler.class.getResourceAsStream(fileName)));) {
-            Model.getInstance().setElements(
-                (EnumMap<ElementType, KDTree>)in.readObject());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

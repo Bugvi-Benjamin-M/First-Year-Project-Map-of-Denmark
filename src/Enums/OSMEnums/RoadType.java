@@ -1,8 +1,6 @@
 package Enums.OSMEnums;
 
-/**
- * Created by Jakob on 10-05-2017.
- */
+
 public enum RoadType {
     MOTORWAY, // Motorvej
     MOTORWAY_LINK,

@@ -2,9 +2,7 @@ package Model.Elements;
 
 import java.awt.geom.Path2D;
 
-/**
- * Created by Nik on 10/03/17.
- */
+
 public class UnknownWay extends Element {
 
     private Path2D path;

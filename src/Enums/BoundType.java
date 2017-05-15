@@ -1,12 +1,6 @@
 package Enums;
 
-/**
- * Class details:
- *
- * @author Andreas Blanke, blan@itu.dk
- * @version 23-03-2017.
- * @project BFST
- */
+
 public enum BoundType {
     MIN_LONGITUDE("minlon")
     ,

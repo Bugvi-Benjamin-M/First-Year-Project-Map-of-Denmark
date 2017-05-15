@@ -17,10 +17,6 @@ import Controller.PreferencesController;
 /**
  * A RoadEdge object represent both an segment of an actual road
  * and an weighted directed edge in graph theory.
- * TODO: write javadoc
- *
- * @author Andreas Blanke
- * @version 05-05-2017
  */
 public class RoadEdge implements Comparable<RoadEdge>, Serializable {
 

@@ -6,12 +6,7 @@ import Helpers.ThemeHelper;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 26/04/2017
- */
+
 public class InformationBar extends View {
 
     private Dimension dimension;

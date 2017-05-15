@@ -16,9 +16,7 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.*;
 
-/**
- * Created by Jakob on 06-03-2017.
- */
+
 public final class Model extends Observable {
 
     private EnumMap<ElementType, KDTree> elements;

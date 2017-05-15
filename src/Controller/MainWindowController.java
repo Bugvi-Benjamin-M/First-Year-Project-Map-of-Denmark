@@ -22,7 +22,6 @@ import java.awt.event.*;
 import java.awt.geom.Point2D;
 
 /**
- * Created by Búgvi Magnussen on 14-03-2017.
  * This class is the controller for the main window of the application.
  * It deals with setting up the main window and all the components in it.
  * The MainWindowController also acts as a connection between other controllers.

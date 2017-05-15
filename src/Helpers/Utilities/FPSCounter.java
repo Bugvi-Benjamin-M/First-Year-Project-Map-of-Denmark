@@ -1,15 +1,6 @@
 package Helpers.Utilities;
 
-import java.util.Observable;
-import java.util.Observer;
 
-/**
- * Class details:
- *
- * @author Andreas Blanke, blan@itu.dk
- * @version 28-03-2017.
- * @project BFST
- */
 public class FPSCounter extends Thread {
     private long lastInterupt;
     private double fps;

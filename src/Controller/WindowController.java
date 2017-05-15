@@ -6,12 +6,6 @@ import javax.swing.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 20/03/2017
- */
 public abstract class WindowController extends Controller {
 
     protected WindowInteractionHandler handler;

@@ -1,8 +1,6 @@
 package Helpers;
 
-/**
- * Created by Búgvi Magnussen on 22-04-2017.
- */
+
 public class DefaultSettings {
 
     public static final boolean ANTI_ALIASING = false;

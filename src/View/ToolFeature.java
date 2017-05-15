@@ -11,10 +11,6 @@ import java.awt.*;
  * Class details:
  * The ToolFeature is a visual component consisting of one icon
  * and one describing tagline depending on the type of the tool.
- *
- * @author Andreas Blanke, blan@itu.dk
- * @author Niclas Hedam, nhed@itu.dk
- * @version 06-03-2017
  */
 public class ToolFeature extends ToolComponent {
 

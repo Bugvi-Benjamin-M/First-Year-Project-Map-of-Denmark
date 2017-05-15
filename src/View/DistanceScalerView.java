@@ -5,12 +5,7 @@ import Helpers.ThemeHelper;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Class details:
- *
- * @author Andreas Blanke, blan@itu.dk
- * @version 09-05-2017
- */
+
 public class DistanceScalerView extends View {
 
     private final int PANEL_WIDTH = 120;

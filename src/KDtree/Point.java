@@ -2,9 +2,7 @@ package KDtree;
 
 import java.io.Serializable;
 
-/**
- * Created by Jakob on 30-03-2017.
- */
+
 public abstract class Point implements Serializable {
     private float x;
     private float y;

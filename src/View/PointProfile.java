@@ -6,12 +6,7 @@ import Helpers.ThemeHelper;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 28/04/2017
- */
+
 public class PointProfile extends View {
 
     private final int PROFILE_HEIGHT = 90;

@@ -1,18 +1,11 @@
 package KDtree;
 
-import Model.Elements.Element;
 import Model.Elements.SuperElement;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
-/**
- * Created by Jakob on 30-03-2017.
- */
+
 public class KDTree implements Serializable {
     private Node root;
     private HashSet<SuperElement> elementsToReturn;

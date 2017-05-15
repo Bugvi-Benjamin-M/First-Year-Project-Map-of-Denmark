@@ -4,9 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Jakob on 30-03-2017.
- */
+
 public class NodeGenerator {
 
     private static final int AMOUNT_OF_NODES_DEFAULT = 18788597;

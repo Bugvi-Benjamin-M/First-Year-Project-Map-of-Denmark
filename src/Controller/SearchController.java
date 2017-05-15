@@ -12,12 +12,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 08/05/2017
- */
+
 public abstract class SearchController extends Controller {
 
         protected SearchTool searchTool;

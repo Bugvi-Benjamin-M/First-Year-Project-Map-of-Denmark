@@ -2,12 +2,6 @@ package Theme;
 
 import java.awt.*;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 13/03/2017
- */
 public class DefaultTheme implements Theme {
 
     private String name = "Default";

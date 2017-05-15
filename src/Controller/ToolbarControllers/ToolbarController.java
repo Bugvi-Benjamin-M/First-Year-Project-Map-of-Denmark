@@ -29,13 +29,7 @@ import java.io.FileNotFoundException;
 
 import static javax.swing.SpringLayout.*;
 
-/**
- * Class details:
- *
- * @author Andreas Blanke, blan@itu.dk
- * @version 06-03-2017.
- * @project BFST
- */
+
 public final class ToolbarController extends Controller {
 
 
