@@ -137,7 +137,7 @@ public final class SearchToolController extends SearchController {
         searchHistory.add(query);
 
         try {
-            File file=new File("/tmp/searchHistory.json");
+            File file=new File(OSDetector.getTemporaryPath()  + "searchHistory.json");
             file.createNewFile();
             FileWriter fileWriter = new FileWriter(file);
 
