@@ -5,11 +5,7 @@ import org.junit.Test;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by Nik on 28/04/17.
- */
 public class TestTenarySearchTrie {
-
 
     @Test
     public void testBasicKeysThatMatch(){
@@ -80,8 +76,5 @@ public class TestTenarySearchTrie {
         int size = trie.keysThatMatch("AABAA").get(false).size();
         assertEquals(0, size);
     }
-
-
-
 
 }
