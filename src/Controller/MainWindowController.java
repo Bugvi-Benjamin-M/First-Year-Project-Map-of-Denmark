@@ -69,7 +69,6 @@ public final class MainWindowController extends WindowController {
                      .layout(new BorderLayout())
                      .icon()
                      .hide();
-        //Todo, optimise window height minimum
         if(!OSDetector.isWindows()) window.setMinimumWindowSize(new Dimension(ToolbarController.getSmallLargeEventWidth()-FROM_RESIZE_EVENT_TO_MINIMUMWIDTH, 650));
         else window.setMinimumWindowSize(new Dimension(ToolbarController.getSmallLargeEventWidth()-FROM_RESIZE_EVENT_TO_MINIMUMWIDTH, 660));
         setupToolbar();
