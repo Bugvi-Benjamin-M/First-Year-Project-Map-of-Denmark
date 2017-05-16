@@ -16,6 +16,10 @@ import java.util.List;
 
 import static javax.swing.SpringLayout.*;
 
+/**
+ * The controller that manages the visual point of interest components
+ * and the functionality.
+ */
 public final class PointsOfInterestController extends Controller {
 
     private final int PROFILE_HEIGHT = 90;
@@ -49,6 +53,10 @@ public final class PointsOfInterestController extends Controller {
 
     private PointsOfInterestController() { super();}
 
+    /**
+     * Creates a new instance of the class if the instance field is null. (Singleton)
+     * @return an instance of this class.
+     */
     public static PointsOfInterestController getInstance()
     {
         if (instance == null) {
@@ -57,6 +65,11 @@ public final class PointsOfInterestController extends Controller {
         return instance;
     }
 
+    /**
+     * Sets up the information bar and specifies the layout.
+     * Adds a mouse listener to the information bar.
+     * Adds an interaction handler to the information bar.
+     */
     public void setupInformationBar() {
         informationBar = new InformationBar();
         informationBarLayout = (SpringLayout) informationBar.getLayout();
@@ -66,6 +79,12 @@ public final class PointsOfInterestController extends Controller {
         isSmallPOIVisible = false;
     }
 
+    /**
+     * Sets up the base points of interest bar.
+     * Adds visual components to the point of interest bar.
+     * Adds interactionhandlers to the buttons associated
+     * with the points of interest bar.
+     */
     public void setupBasePointsOfInterestBar() {
         pointsOfInterest = Model.getInstance().getPointsOfInterest();
         POIpanels = new ArrayList<>();
@@ -76,6 +95,10 @@ public final class PointsOfInterestController extends Controller {
         addInteractionHandlersPointsOfInterestButtons();
     }
 
+    /**
+     * Adjusts the size of components and the overall layout of the points of interest bar
+     * to match the window at a specific size.
+     */
     public void setupLargePointsOfInterestBar() {
         isLargePOIVisible = true;
         informationBar.setPreferredSize(new Dimension(GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight()));
@@ -92,6 +115,10 @@ public final class PointsOfInterestController extends Controller {
         informationBar.add(largeScroll);
     }
 
+    /**
+     * Adjusts the size of components and the overall layout of the points of interest bar
+     * to match the window at a specific size.
+     */
     public void setupSmallPointsOfInterestBar() {
         isSmallPOIVisible = true;
         informationBar.setPreferredSize(new Dimension(window.getFrame().getWidth(), GlobalValue.getSmallInformationBarHeight()));
@@ -108,6 +135,10 @@ public final class PointsOfInterestController extends Controller {
         informationBar.add(smallScroll);
     }
 
+    /**
+     * Removes the point of interest bar completely, which makes it
+     * possible to recall set up methods.
+     */
     public void clearPointsOfInterestBar() {
         isLargePOIVisible = false;
         isSmallPOIVisible = false;
@@ -122,14 +153,25 @@ public final class PointsOfInterestController extends Controller {
         POIpanels.clear();
     }
 
+    /**
+     * Returns the current visibility of the large point of interest bar.
+     * @return a boolean that specifies if visible or not.
+     */
     public boolean isLargePOIVisible() {
         return isLargePOIVisible;
     }
 
+    /**
+     * Returns the current visibility of the small point of interest bar.
+     * @return a boolean that specifies if visible or not.
+     */
     public boolean isSmallPOIVisible() {
         return isSmallPOIVisible;
     }
 
+    /**
+     * adjusts the layout of the point of interest bar when resizing the window.
+     */
     public void resizeEvent() {
         if(isLargePOIVisible) {
             informationBar.setBounds(0,0,GlobalValue.getLargeInformationBarWidth(), window.getFrame().getHeight());
@@ -146,18 +188,34 @@ public final class PointsOfInterestController extends Controller {
         }
     }
 
+    /**
+     * Turns the poi mode on, which makes it possible for the user
+     * to add points of interest and save them.
+     * The cursor of the mouse changes.
+     */
     public void poiModeOn(){
         poiButtons.getNewPointButton().setForeground(ThemeHelper.color("toolActivated"));
         MainWindowController.getInstance().changeCanvasMouseCursorToPoint();
         GlobalValue.setIsAddNewPointActive(true);
     }
 
+    /**
+     * Removes the ability to add points of interest.
+     * The cursor of the mouse changes back to normal.
+     */
     public void poiModeOff(){
         poiButtons.getNewPointButton().setForeground(ThemeHelper.color("icon"));
         MainWindowController.getInstance().changeCanvasMouseCursorToNormal();
         GlobalValue.setIsAddNewPointActive(false);
     }
 
+    /**
+     * Adds interaction handlers to poi settings buttons.
+     * New point button manages the poi mode.
+     * Every click will change the poi mode to the opposite.
+     * Delete all button clears all points of interest objects.
+     * Changes the color of the buttons when clicking and hovering over the buttons.
+     */
     private void addInteractionHandlersPointsOfInterestButtons() {
         poiButtons.getNewPointButton().addMouseListener(new MouseAdapter() {
 
@@ -213,6 +271,10 @@ public final class PointsOfInterestController extends Controller {
         });
     }
 
+    /**
+     * Sets up at vertical scrollbar that is shown when the
+     * window has a size above a specific value.
+     */
     private void setupLargeScrollbar() {
         largeScroll = new JScrollPane(pointsOfInterestBar);
         largeScroll.setOpaque(true);
@@ -227,6 +289,10 @@ public final class PointsOfInterestController extends Controller {
         largeScroll.getVerticalScrollBar().setUnitIncrement(SCROLLBAR_SPEED);
     }
 
+    /**
+     * Sets up at horizontal scrollbar that is shown when the
+     * window has a size below a specific value.
+     */
     private void setupSmallScrollbar() {
         smallScroll = new JScrollPane(pointsOfInterestBar);
         smallScroll.setOpaque(true);
@@ -242,7 +308,10 @@ public final class PointsOfInterestController extends Controller {
     }
 
 
-
+    /**
+     * Changes the color of the visual components
+     * according to the current theme.
+     */
     public void themeHasChanged() {
 
         if(largeScroll != null) largeScroll.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
@@ -261,9 +330,18 @@ public final class PointsOfInterestController extends Controller {
 
     }
 
+    /**
+     * @return Information bar containing all points of interest.
+     */
     public InformationBar getInformationBar() {
         return informationBar;
     }
+
+
+    /**
+     * Adds points to the vertical points of interest bar.
+     * The vertical points of interest bar is active when the window is above a given size.
+     */
     private void addPointsToVerticalPointsOfInterestBar() {
         for(POI poi : pointsOfInterest) {
             addPOI(poi);
@@ -272,6 +350,10 @@ public final class PointsOfInterestController extends Controller {
         pointsOfInterestBar.revalidate();
     }
 
+    /**
+     * Adds points to the horizontal points of interest bar.
+     * The horizontal points of interest bar is active when the window is below a given size.
+     */
     public void addPointsToHorizontalPointsOfInterestBar() {
         for(POI poi : pointsOfInterest) {
             addPOI(poi);
@@ -281,6 +363,11 @@ public final class PointsOfInterestController extends Controller {
     }
 
 
+    /**
+     * Adds a point of interest to the point of interest bar. And creates a visual component
+     * that represents the point of interest element.
+     * @param poi the point of interest to be added.
+     */
     public void addPOI(POI poi) {
         if(isSmallPOIVisible || isLargePOIVisible) {
             PointProfile pointProfile = new PointProfile(poi.getDescription(), poi.x, poi.y);
@@ -293,6 +380,9 @@ public final class PointsOfInterestController extends Controller {
         }
     }
 
+    /**
+     * Repaints the point of interest bar with the current theme.
+     */
     public void repaintPointsOfInterestBar() {
         if(pointsOfInterestBar != null) pointsOfInterestBar.applyTheme();
     }
@@ -302,14 +392,24 @@ public final class PointsOfInterestController extends Controller {
         pointsOfInterestBar.repaint();
     }
 
+    /**
+     * A interaction handler for each point of interest.
+     */
     private class PointsInteractionHandler extends MouseAdapter {
 
         private PointProfile point;
 
+        /**
+         * Creates a new interaction handler.
+         */
         public PointsInteractionHandler(PointProfile panel) {
             point = panel;
         }
 
+        /**
+         * Manages the color of the buttons associated with the point of interest
+         * currently interacting with.
+         */
         @Override
         public void mouseEntered(MouseEvent e) {
             point.setBackground(ThemeHelper.color("pointHover"));
@@ -317,12 +417,20 @@ public final class PointsOfInterestController extends Controller {
 
         }
 
+        /**
+         * Manages the color of the buttons associated with the point of interest
+         * currently interacting with.
+         */
         @Override
         public void mouseExited(MouseEvent e) {
             point.setBackground(ThemeHelper.color("toolbar"));
             point.getDeleteButton().setBackground(ThemeHelper.color("toolbar"));
         }
 
+        /**
+         * Pans to the point of interest which is clicked at.
+         * Repaints the canvas.
+         */
         @Override
         public void mouseClicked(MouseEvent e) {
             MainWindowController.getInstance().requestSearchToolCloseList();
@@ -332,16 +440,27 @@ public final class PointsOfInterestController extends Controller {
 
     }
 
+    /**
+     * A interaction handler which is assigned to each point of interest.
+     */
     private class PointDeleteButtonInteractionHandler extends MouseAdapter {
 
         private PointProfile point;
         private JLabel button;
 
+        /**
+         * Creates a new Interaction handler.
+         * @param button the button to which the interaction handler is assigned to.
+         */
         public PointDeleteButtonInteractionHandler(JLabel button) {
             point = (PointProfile) button.getParent();
             this.button = button;
         }
 
+        /**
+         * Manages the color of the buttons associated with the point of interest
+         * currently interacting with.
+         */
         @Override
         public void mouseEntered(MouseEvent e) {
             point.setBackground(ThemeHelper.color("pointHover"));
@@ -349,12 +468,19 @@ public final class PointsOfInterestController extends Controller {
             button.setBackground(ThemeHelper.color("pointHover"));
         }
 
+        /**
+         * Manages the color of the buttons associated with the point of interest
+         * currently interacting with.
+         */
         @Override
         public void mouseExited(MouseEvent e) {
             button.setForeground(ThemeHelper.color("icon"));
             button.setBackground(ThemeHelper.color("toolbar"));
         }
 
+        /**
+         * Removes the specific point of interest clicked at.
+         */
         @Override
         public void mouseClicked(MouseEvent e) {
             int index = POIpanels.indexOf(point);
