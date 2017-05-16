@@ -16,7 +16,6 @@ import static org.junit.Assert.*;
 
 /**
  * The * on the notes in this test class refer to external notes.
- * Created by Jakob on 14-05-2017.
  */
 public class KDTreeTest {
 
