@@ -42,16 +42,19 @@ public class MapCanvas extends View {
     private Shape route;
     private boolean drawRoute;
 
+    //fields for the camera bounds (eg the visible reactangle)
     private float cameraMaxLon;
     private float cameraMinLon;
     private float cameraMaxLat;
     private float cameraMinLat;
 
+    //Fields for the max/min longitude for the entire Denmark map
     private float maxLon;
     private float minLon;
     private float maxLat;
     private float minLat;
 
+    //Dynamic bounds of the loaded map
     private float dynMaxLon;
     private float dynMinLon;
     private float dynMaxLat;
@@ -81,13 +84,12 @@ public class MapCanvas extends View {
         setBackground(ThemeHelper.color("water"));
     }
 
-    //Set the boolean antiAliasing to the parameter (boolean) given as a parameter.
     public void toggleAntiAliasing(boolean isAntiAliasing) {
         antiAliasing = isAntiAliasing;
     }
 
     /*
-     *
+     * Sets the current rectangle a little bigger than the visible reactangle and sets camera bounds accordingly
      */
     private void setCurrentRectangle() {
         Rectangle2D rectangle = getVisibleRect();
@@ -104,72 +106,56 @@ public class MapCanvas extends View {
         DebugWindow.getInstance().setCameraBoundsLabel();
     }
 
-    //Set the coastline
     public void setCoastLines(List<Path2D> coastLines) {this.coastlines = coastLines;}
 
-    //Get the cameMaxLon
     public float getCameraMaxLon() {
         return cameraMaxLon;
     }
 
-    //Get the cameMinLon
     public float getCameraMinLon() {
         return cameraMinLon;
     }
 
-    //Get the cameMaxLat
     public float getCameraMaxLat() {
         return cameraMaxLat;
     }
 
-    //Get the cameMinLat
     public float getCameraMinLat() {
         return cameraMinLat;
     }
 
-    //set maxLon
     public void setMaxLon(float maxLon) {
         this.maxLon = maxLon;
     }
 
-    //Set minLon
     public void setMinLon(float minLon) {
         this.minLon = minLon;
     }
 
-    //Set maxLat
     public void setMaxLat(float maxLat) {
         this.maxLat = maxLat;
     }
 
-    //Set minLat
     public void setMinLat(float minLat) {
         this.minLat = minLat;
     }
 
-    //Set dynMaxLon
     public void setDynMaxLon(float dynMaxLon) {
         this.dynMaxLon = dynMaxLon;
     }
 
-    //Set dynMinLon
     public void setDynMinLon(float dynMinLon) {
         this.dynMinLon = dynMinLon;
     }
 
-    //Set dynMaxLat
     public void setDynMaxLat(float dynMaxLat) {
         this.dynMaxLat = dynMaxLat;
     }
 
-    //Set dynMinLat
     public void setDynMinLat(float dynMinLat) {
         this.dynMinLat = dynMinLat;
     }
 
-    /**
-   * Paints the MapCanvas with all the shapes that should be displayed.
-   */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -230,7 +216,6 @@ public class MapCanvas extends View {
         locationMarker = null;
     }
 
-    //Set the boolean field drawRoute
     public void toggleRouteVisualization(boolean isActive){
         this.drawRoute = isActive;
     }
@@ -266,7 +251,6 @@ public class MapCanvas extends View {
         return ellipse;
     }
 
-    //Draw the background
     private void drawBackground(Graphics2D g) {
         g.setColor(ThemeHelper.color("water"));
         Path2D boundary = new Path2D.Float();
@@ -286,7 +270,7 @@ public class MapCanvas extends View {
         }
     }
 
-    //Draw a route
+    //Draw a route, and set the stroke size depending on the zoom level.
     private void drawRoute(Graphics2D g) {
         if (route != null && drawRoute) {
             g.setColor(ThemeHelper.color("routeBorder"));
@@ -320,11 +304,9 @@ public class MapCanvas extends View {
                 g.setStroke(new BasicStroke(0.0001f));
             }
             g.draw(route);
-
         }
     }
 
-    //The the route to be drawn
     public void setRoute(Iterable<RoadEdge> route) {
         OSMWay way = new OSMWay();
         for (RoadEdge edge : route) {
@@ -670,12 +652,10 @@ public class MapCanvas extends View {
      */
     public void setElements(EnumMap<ElementType, KDTree> map) { elements = map; }
 
-    //Set the current section to the HashSet given as a paramter
     public void setCurrentSection(HashSet<SuperElement> currentSection) {
         this.currentSection = currentSection;
     }
 
-    //Set the currentPoint field to the Point2D given as a parameter
     public void setCurrentPoint(Point2D currentPoint) {
         this.currentPoint = currentPoint;
     }
@@ -733,7 +713,6 @@ public class MapCanvas extends View {
         }
     }
 
-    //Draw bridges
     private void drawBridge(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.BRIDGE);
         g.setColor(color);
@@ -745,7 +724,6 @@ public class MapCanvas extends View {
         }
     }
 
-    //Draw piers
     private void drawPier(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PIER);
         g.setColor(color);
@@ -808,7 +786,6 @@ public class MapCanvas extends View {
         }
     }
 
-    //Draw buildings
     private void drawBuilding(Graphics2D g, Color color) {
         setCurrentSection(ElementType.BUILDING);
         Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .9f);
@@ -959,7 +936,6 @@ public class MapCanvas extends View {
         return Math.acos(cosAngle);
     }
 
-    //Draw citynames
     private void drawCityNames(Graphics2D g, AmenityType type, float scaling) {
         setCurrentSection(ElementType.AMENITY);
         for (SuperElement element : currentSection){
