@@ -21,9 +21,10 @@ public class TenarySearchTrie implements Serializable {
     }
 
     /**
+     * Returns a node at the end of the "path" of the given string.
      * @param key The string used to find the specific value.
      * @return Returns the value that matches to the key,
-     * there is a possiblity of 2 equal strings with 2 different values, which is why a list is returned.
+     * there is a possibility of 2 equal strings with 2 different values, which is why a list is returned.
      */
     public ArrayList<Value> get(String key) {
         Node x = get(root, key, 0);
@@ -32,7 +33,6 @@ public class TenarySearchTrie implements Serializable {
     }
 
     /**
-     *
      * @param x The current Node looked at.
      * @param key The string used to find the specific value.
      * @param d the current character position of the string
