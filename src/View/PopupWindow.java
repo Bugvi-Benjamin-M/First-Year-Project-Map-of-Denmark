@@ -170,7 +170,7 @@ public class PopupWindow {
      * @return the JWindow opened
      */
     public static JWindow LoadingScreen(String description) {
-        JWindow loadWindow = new JWindow();
+        JWindow loadWindow;
         JProgressBar progressBar = new JProgressBar();
         progressBar.setIndeterminate(true);
         progressBar.setVisible(true);
@@ -191,10 +191,41 @@ public class PopupWindow {
         text.setOpaque(true);
         loadWindow = new JWindow();
         loadWindow.setLayout(new BorderLayout());
-        //loadWindow.setLocation(new Point(x,y));
         loadWindow.add(BorderLayout.NORTH, icon);
         loadWindow.add(BorderLayout.CENTER, text);
         loadWindow.add(BorderLayout.SOUTH, progressBar);
+        loadWindow.pack();
+        loadWindow.setVisible(true);
+        loadWindow.setAlwaysOnTop(true);
+        return loadWindow;
+    }
+
+    /**
+     * Opens a route loading screen.
+     * @param description the description for the loading screen.
+     * @return the JWindow routeloadingscreen.
+     */
+    public static JWindow routeLoadingScreen(String description) {
+        JWindow loadWindow;
+        JProgressBar progressBar = new JProgressBar();
+        progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
+        progressBar.setBackground(ThemeHelper.color("toolbar"));
+        progressBar.setOpaque(true);
+        progressBar.setUI(new BasicProgressBarUI());
+        JLabel text = new JLabel(description);
+        text.setHorizontalTextPosition(SwingConstants.CENTER);
+        text.setFont(new Font("Verdana", Font.PLAIN, 18));
+        text.setVisible(true);
+        text.setPreferredSize(new Dimension(300, 100));
+        text.setBorder(BorderFactory.createEmptyBorder(20, 80, 20, 20));
+        text.setBackground(ThemeHelper.color("toolbar"));
+        text.setForeground(ThemeHelper.color("icon"));
+        text.setOpaque(true);
+        loadWindow = new JWindow();
+        loadWindow.setLayout(new BorderLayout());
+        loadWindow.add(text, BorderLayout.CENTER);
+        loadWindow.add(progressBar, BorderLayout.SOUTH);
         loadWindow.pack();
         loadWindow.setVisible(true);
         loadWindow.setAlwaysOnTop(true);

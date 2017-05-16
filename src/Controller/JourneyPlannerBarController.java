@@ -107,6 +107,8 @@ public final class JourneyPlannerBarController extends Controller {
     private RouteSearch.RouteDijkstra dijk;
     private RoadGraphFactory factory;
 
+    private JWindow loadWindow;
+
     /**
      * Private constructor, called by getInstance.
      * Creates the two search controllers.
@@ -335,6 +337,7 @@ public final class JourneyPlannerBarController extends Controller {
                 travelDescription.setBounds(window.getFrame().getWidth() - 300, window.getFrame().getHeight() - GlobalValue.getSmallInformationBarHeight() - 400, 300, 400);
             }
         }
+        if(loadWindow != null) calculateLoadingScreenPosition();
     }
 
     /**
@@ -636,6 +639,14 @@ public final class JourneyPlannerBarController extends Controller {
              */
             @Override
             public void mouseClicked(MouseEvent e) {
+                if(GlobalValue.isLoading()) {
+                    PopupWindow.infoBox(null, "Please Wait for the Current Load Process to Finish Before Searching for a Route!", "Loading in Progress");
+                    return;
+                }
+                if(GlobalValue.isSaving()) {
+                    PopupWindow.infoBox(null, "Please Wait for the Current Save Process to Finish Before Searching for a Route!", "Saving in Progress");
+                    return;
+                }
                 journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("toolActivated"));
                 if(!searchUnderway) {
                     super.mouseClicked(e);
@@ -650,6 +661,7 @@ public final class JourneyPlannerBarController extends Controller {
                         SwingWorker worker = new SwingWorker() {
                             @Override
                             protected Object doInBackground() throws Exception {
+                                activateNewRouteLoadingScreen();
                                 searchUnderway = true;
                                 factory = Model.getInstance().getGraphFactory();
 
@@ -671,6 +683,7 @@ public final class JourneyPlannerBarController extends Controller {
                                     journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
                                     fromSearcher.getSearchTool().getField().setFocusable(true);
                                     toSearcher.getSearchTool().getField().setFocusable(true);
+                                    deactivateNewRouteLoadingScreen();
                                     return;
                                 }
 
@@ -685,6 +698,7 @@ public final class JourneyPlannerBarController extends Controller {
                                 journeyPlannerSearchClearButtons.getSearchButton().setForeground(ThemeHelper.color("icon"));
                                 fromSearcher.getSearchTool().getField().setFocusable(true);
                                 toSearcher.getSearchTool().getField().setFocusable(true);
+                                deactivateNewRouteLoadingScreen();
                             }
                         };
                         worker.execute();
@@ -952,6 +966,70 @@ public final class JourneyPlannerBarController extends Controller {
             noSearchInitialised();
             PopupWindow.infoBox(null, "Could not find an address", "Mismatch");
         }
+    }
+
+    /**
+     * Activates a route loading screen to be shown while a new route is calculated.
+     */
+    private void activateNewRouteLoadingScreen() {
+        loadWindow = PopupWindow.routeLoadingScreen("Loading Route!");
+        loadWindow.setAlwaysOnTop(true);
+        calculateLoadingScreenPosition();
+    }
+
+    /**
+     * Deactivates the route loading screen.
+     */
+    private void deactivateNewRouteLoadingScreen() {
+        if(loadWindow != null) {
+            loadWindow.setAlwaysOnTop(false);
+            loadWindow.setVisible(false);
+            loadWindow = null;
+        }
+    }
+
+    /**
+     * Calculates the position of the route loading screen.
+     */
+    private void calculateLoadingScreenPosition() {
+        if(isLargeJourneyPlannerVisible) loadWindow.setLocation(journeyPlannerSearchClearButtons.getLocationOnScreen().x + 10, journeyPlannerSearchClearButtons.getLocationOnScreen().y + 10);
+        else if(isSmallJourneyPlannerVisible) loadWindow.setLocation(journeyPlannerSearchClearButtons.getLocationOnScreen().x + 10, journeyPlannerSearchClearButtons.getLocationOnScreen().y - 40);
+    }
+
+    /**
+     * Handles a window hidden event. Removes the loading screen always on top requirement.
+     * Can also be used when the window loses focus.
+     */
+    public void hiddenEvent() {
+        if(loadWindow != null) {
+            loadWindow.setAlwaysOnTop(false);
+        }
+    }
+
+    /**
+     * Handles a window moved event. Re-calculates loading screen position.
+     */
+    public void movedEvent() {
+        if(loadWindow != null) calculateLoadingScreenPosition();
+    }
+
+    /**
+     * Handles a window shown event. Sets the loading screen to be always on top.
+     * Can also be used when the window gains focus.
+     */
+    public void shownEvent() {
+        if(loadWindow != null) {
+            calculateLoadingScreenPosition();
+            loadWindow.setAlwaysOnTop(true);
+        }
+    }
+
+    /**
+     * Lets the client know if a search is underway.
+     * @return is a search underway.
+     */
+    public boolean isSearchUnderway() {
+        return searchUnderway;
     }
 
     /**

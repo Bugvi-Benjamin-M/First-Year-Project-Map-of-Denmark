@@ -130,10 +130,10 @@ public class DefaultTheme implements Theme {
 
     // Roads:
     public Color route() {
-        return new Color(143, 184, 255, 129);
+        return new Color(151, 162, 255, 133);
     }
     public Color routeBorder(){
-        return new Color(45, 70, 255, 129);
+        return new Color(65, 142, 255, 129);
     }
     public Color motorway() { return new Color(0xE27B90); }
     public Color trunkRoad() { return new Color(0xE27B90); }

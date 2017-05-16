@@ -21,10 +21,8 @@ public final class PointsOfInterestController extends Controller {
     private final int PROFILE_HEIGHT = 90;
     private final int LARGE_POINTS_OF_INTERESTBAR_WIDTH = 300;
     private final int BUTTONS_HEIGHT = 60;
-    //private final int LARGE_SCROLLBAR_HEIGHT = (int) (0.976316*Toolkit.getDefaultToolkit().getScreenSize().getHeight() + (-292.289));
     private final double LARGE_SCROLLBAR_HEIGHT_DECREASE = -252.289;
     private final double SMALL_SCROLLBAR_WIDTH_DECREASE = -219.421;
-    //private final int SMALL_SCROLLBAR_WIDTH = 790;
     private final int DISTANCE_BETWEEN_TOOLBAR_AND_BUTTONS = GlobalValue.getToolbarHeight() + 10;
     private final int DISTANCE_BETWEEN_BUTTONS_AND_SCROLLPANE = 60;
     private final int SCROLLBAR_SPEED = 14;

@@ -304,6 +304,7 @@ public final class SettingsWindowController extends WindowController {
         window.getFrame().setAlwaysOnTop(false);
         window.hide();
         ToolbarController.getInstance().getToolbar().getTool(ToolType.SETTINGS).toggleActivate(false);
+        MainWindowController.getInstance().transferFocusToMapCanvas();
     }
 
     /**

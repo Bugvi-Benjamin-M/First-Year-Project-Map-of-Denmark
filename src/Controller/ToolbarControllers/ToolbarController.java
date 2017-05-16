@@ -8,14 +8,8 @@ import Enums.FileType;
 import Enums.ToolType;
 import Enums.ToolbarType;
 import Exceptions.FileWasNotFoundException;
-import Helpers.DefaultSettings;
-import Helpers.FileHandler;
-import Helpers.GlobalValue;
-import Helpers.OSDetector;
-import View.PopupWindow;
-import View.ToolComponent;
-import View.ToolFeature;
-import View.Toolbar;
+import Helpers.*;
+import View.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -628,6 +622,7 @@ public final class ToolbarController extends Controller {
      * Triggers the Points of Interest tool event. Opens the Points of Interest bar.
      */
     private void poiToolActivatedEvent() {
+        if(MainWindowController.getInstance().isRouteSearchUnderway()) return;
         if(!MainWindowController.getInstance().isSliding()) {
             if(journeyPlannerToolActive) {
                 if(type == ToolbarType.LARGE) MainWindowController.getInstance().deactivateLargeJourneyPlannerInformationBar();
@@ -658,6 +653,10 @@ public final class ToolbarController extends Controller {
      * Triggers the Routes tool event. Opens the Journey Planner bar.
      */
     private void routesToolActivatedEvent() {
+        if(MainWindowController.getInstance().isRouteSearchUnderway()) {
+            toolbar.getTool(ToolType.ROUTES).toggleActivate(true);
+            return;
+        }
         if(!MainWindowController.getInstance().isSliding()) {
             if (poiToolActive) {
                 if(type == ToolbarType.LARGE) MainWindowController.getInstance().deactivateLargePointsOfInterestInformationBar();
@@ -698,6 +697,7 @@ public final class ToolbarController extends Controller {
      */
     private void loadEvent()
     {
+        if(MainWindowController.getInstance().isRouteSearchUnderway()) return;
         if(GlobalValue.isLoading()) {
             PopupWindow.infoBox(null, "Please Wait for the Current Load Process to Complete Before Loading a New File!", "File Loading in Progress");
             return;
@@ -823,6 +823,7 @@ public final class ToolbarController extends Controller {
      */
     private void saveEvent()
     {
+        if(MainWindowController.getInstance().isRouteSearchUnderway()) return;
         if(GlobalValue.isLoading()) {
             PopupWindow.infoBox(null, "Please Wait for the Current Load Process to Complete Before Saving a File!", "File Loading in Progress");
             return;

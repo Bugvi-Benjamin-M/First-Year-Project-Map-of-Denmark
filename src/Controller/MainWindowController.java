@@ -491,6 +491,7 @@ public final class MainWindowController extends WindowController {
             {
                 CanvasController.getInstance().disablePopup();
                 ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(false);
+                JourneyPlannerBarController.getInstance().hiddenEvent();
                 if(ToolbarController.getInstance().isMenuToolPopupVisible()) {
                     ToolbarController.getInstance().requestHideMenuToolPopup();
                     ToolbarController.getInstance().getToolbar().getTool(ToolType.MENU).toggleActivate(false);
@@ -501,6 +502,7 @@ public final class MainWindowController extends WindowController {
             @Override
             public void windowGainedFocus(WindowEvent e) {
                 ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(true);
+                JourneyPlannerBarController.getInstance().shownEvent();
             }
         });
     }
@@ -784,6 +786,15 @@ public final class MainWindowController extends WindowController {
     }
 
     /**
+     * Lets the client know if a route search is in progress.
+     * @return is a route search underway.
+     * note: to be used to decrease coupling.
+     */
+    public boolean isRouteSearchUnderway() {
+        return JourneyPlannerBarController.getInstance().isSearchUnderway();
+    }
+
+    /**
      * The interaction handler that deals with key shortcuts and various other events, such as component resize,
      * component hidden, and component shown.
      */
@@ -826,6 +837,7 @@ public final class MainWindowController extends WindowController {
             super.componentMoved(e);
             ToolbarController.getInstance().moveEvent();
             CanvasController.getInstance().disablePopup();
+            JourneyPlannerBarController.getInstance().movedEvent();
         }
 
         /**
@@ -842,6 +854,7 @@ public final class MainWindowController extends WindowController {
                 ToolbarController.getInstance().requestHideMenuToolPopup();
                 ToolbarController.getInstance().getToolbar().getTool(ToolType.MENU).toggleActivate(false);
             }
+            JourneyPlannerBarController.getInstance().hiddenEvent();
         }
 
         /**
@@ -851,6 +864,7 @@ public final class MainWindowController extends WindowController {
         @Override
         public void componentShown(ComponentEvent e) {
             ToolbarController.getInstance().setLoadingScreenAlwaysOnTopStatus(true);
+            JourneyPlannerBarController.getInstance().shownEvent();
         }
     }
 }

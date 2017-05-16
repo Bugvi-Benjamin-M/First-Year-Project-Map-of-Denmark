@@ -6,10 +6,8 @@ import Exceptions.FileWasNotFoundException;
 import Helpers.DefaultSettings;
 import Helpers.FileHandler;
 import Helpers.HelperFunctions;
-import Helpers.OSDetector;
 import Helpers.Utilities.DebugWindow;
 import Helpers.Utilities.FPSCounter;
-import Model.Model;
 import View.PopupWindow;
 
 import javax.swing.*;
@@ -58,7 +56,7 @@ public class Main {
                 loadDefaultFile = true;
             }
         }
-
+        System.gc();
         splashScreenDestruct();
         SwingUtilities.invokeLater(() -> {
             MainWindowController.getInstance().setupMainWindow();
