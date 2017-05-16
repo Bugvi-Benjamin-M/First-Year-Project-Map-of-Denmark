@@ -117,8 +117,8 @@ public class FileHandler {
                     throw new FileWasNotFoundException("");
             } catch (FileWasNotFoundException e) {
                 throw new FileWasNotFoundException(
-                    "Program was not able to load default resource \"" + GlobalValue.DEFAULT_RESOURCE + "\""
-                    + "\nLoading from coastlines instead.");
+                    "Program was not able to load default resource."
+                    + "\nLoading from coastlines file instead.");
             }
             GlobalValue.setDidProgramLoadDefault(true);
         } catch (FileWasNotFoundException e) {

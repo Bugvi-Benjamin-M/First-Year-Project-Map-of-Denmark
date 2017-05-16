@@ -5,7 +5,10 @@ import Helpers.ThemeHelper;
 import javax.swing.*;
 import java.awt.*;
 
-
+/**
+ * The DistanceScalerView is a visual component representing the how much approx.
+ * 100 pixels corresponds to in according to the actual distance on the map.
+ */
 public class DistanceScalerView extends View {
 
     private final int PANEL_WIDTH = 120;
@@ -37,11 +40,17 @@ public class DistanceScalerView extends View {
         setBorder(BorderFactory.createLineBorder(ThemeHelper.color("border")));
     }
 
+    /**
+     * Updates and applies the currently selected theme to the component
+     */
     public void themeChanged() {
         distance.setForeground(ThemeHelper.color("icon"));
         this.setBackground(ThemeHelper.color("canvasPopupBackground"));
     }
 
+    /**
+     * Paints the component with the distance marker
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -52,6 +61,10 @@ public class DistanceScalerView extends View {
         g2D.drawLine(110,15,110,PANEL_HEIGHT-5);
     }
 
+    /**
+     * Sets the distance on the scaler
+     * @param distance The distance between two points on the map
+     */
     public void setDistance(double distance) {
         String text, ending;
         if (distance < 1000) {

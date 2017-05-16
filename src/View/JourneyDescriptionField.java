@@ -6,7 +6,10 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-
+/**
+ * The JourneyDescriptionField is a visual component that displays more
+ * information about the currently found route.
+ */
 public class JourneyDescriptionField extends View {
 
     private JTextArea field;
@@ -36,14 +39,23 @@ public class JourneyDescriptionField extends View {
 
     }
 
+    /**
+     * Adds a description line to the box
+     */
     public void addLine(String line) {
         field.append(line + "\n");
     }
 
+    /**
+     * Returns the textarea or field with the description
+     */
     public JTextArea getField() {
         return field;
     }
 
+    /**
+     * Updates and applies the currently selected theme
+     */
     public void applyTheme() {
         setBackground(ThemeHelper.color("toolbar"));
         field.setBackground(ThemeHelper.color("searchfield"));

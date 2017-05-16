@@ -5,7 +5,10 @@ import Helpers.FontAwesome;
 import javax.swing.*;
 import java.awt.*;
 
-
+/**
+ * The FileLoadSetting is visual component where from the user is able to
+ * specify which file the program should start up with when loading.
+ */
 public class FileLoadSetting extends View {
 
     private JLabel label;
@@ -34,14 +37,23 @@ public class FileLoadSetting extends View {
         defaultButton.setToolTipText("Set Startup File to Default");
     }
 
+    /**
+     * Retrieves the chooser button
+     */
     public JButton getChooseButton() {
         return chooseButton;
     }
 
+    /**
+     * Changes the text hint in the path field
+     */
     public void setTextField(String text) {
         fileField.setText(text);
     }
 
+    /**
+     * Returns the default button
+     */
     public JButton getDefaultButton() {
         return defaultButton;
     }
