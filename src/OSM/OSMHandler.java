@@ -470,6 +470,9 @@ public final class OSMHandler implements ContentHandler {
             case "pub":
                 place = AmenityType.BAR;
                 break;
+            case "cafe":
+                place = AmenityType.CAFE;
+                break;
             case "nightclub":
                 place = AmenityType.NIGHT_CLUB;
                 break;
@@ -749,6 +752,7 @@ public final class OSMHandler implements ContentHandler {
                             model.getTst().put(name, new Value(0, longitude * longitudeFactor, -latitude, true));
                         }
                         break;
+                    case CAFE:
                     case BAR:
                     case NIGHT_CLUB:
                     case FAST_FOOD:
@@ -1080,6 +1084,7 @@ public final class OSMHandler implements ContentHandler {
         PolygonApprox polygonApprox;
         switch (type) {
             case BAR:
+            case CAFE:
             case NIGHT_CLUB:
             case FAST_FOOD:
             case RAILWAY_STATION:

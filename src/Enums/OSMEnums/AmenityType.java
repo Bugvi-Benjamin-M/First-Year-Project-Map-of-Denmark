@@ -5,6 +5,7 @@ public enum AmenityType {
     BAR, // night
     NIGHT_CLUB, // Night
     FAST_FOOD, // Night
+    CAFE, //Night
 
     HOSPITAL, // Default
     PARKING_AMENITY, //Default

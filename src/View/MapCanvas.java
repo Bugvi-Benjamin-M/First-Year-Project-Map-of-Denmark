@@ -28,7 +28,6 @@ import java.util.List;
 public class MapCanvas extends View {
 
     private AffineTransform transform  = new AffineTransform();
-    private AffineTransform tranform = new AffineTransform();
     private HashSet<SuperElement> currentSection;
     private Point2D currentPoint;
     private Rectangle2D currentRectangle;
@@ -74,14 +73,22 @@ public class MapCanvas extends View {
         grabFocus();
     }
 
+    /*
+     * Set the backgroundcolor to the color specified as color.
+     * the color should be "water".
+     */
     public void setBackgroundColor() {
         setBackground(ThemeHelper.color("water"));
     }
 
+    //Set the boolean antiAliasing to the parameter (boolean) given as a parameter.
     public void toggleAntiAliasing(boolean isAntiAliasing) {
         antiAliasing = isAntiAliasing;
     }
 
+    /*
+     *
+     */
     private void setCurrentRectangle() {
         Rectangle2D rectangle = getVisibleRect();
         rectangle.setRect(rectangle.getX(), rectangle.getY() + GlobalValue.getToolbarHeight(), rectangle.getWidth(), rectangle.getHeight());
@@ -97,52 +104,65 @@ public class MapCanvas extends View {
         DebugWindow.getInstance().setCameraBoundsLabel();
     }
 
+    //Set the coastline
     public void setCoastLines(List<Path2D> coastLines) {this.coastlines = coastLines;}
 
+    //Get the cameMaxLon
     public float getCameraMaxLon() {
         return cameraMaxLon;
     }
 
+    //Get the cameMinLon
     public float getCameraMinLon() {
         return cameraMinLon;
     }
 
+    //Get the cameMaxLat
     public float getCameraMaxLat() {
         return cameraMaxLat;
     }
 
+    //Get the cameMinLat
     public float getCameraMinLat() {
         return cameraMinLat;
     }
 
+    //set maxLon
     public void setMaxLon(float maxLon) {
         this.maxLon = maxLon;
     }
 
+    //Set minLon
     public void setMinLon(float minLon) {
         this.minLon = minLon;
     }
 
+    //Set maxLat
     public void setMaxLat(float maxLat) {
         this.maxLat = maxLat;
     }
 
+    //Set minLat
     public void setMinLat(float minLat) {
         this.minLat = minLat;
     }
 
+    //Set dynMaxLon
     public void setDynMaxLon(float dynMaxLon) {
         this.dynMaxLon = dynMaxLon;
     }
 
+    //Set dynMinLon
     public void setDynMinLon(float dynMinLon) {
         this.dynMinLon = dynMinLon;
     }
 
+    //Set dynMaxLat
     public void setDynMaxLat(float dynMaxLat) {
         this.dynMaxLat = dynMaxLat;
     }
 
+    //Set dynMinLat
     public void setDynMinLat(float dynMinLat) {
         this.dynMinLat = dynMinLat;
     }
@@ -165,12 +185,15 @@ public class MapCanvas extends View {
 
         drawMarkers(g2D);
         drawPOI(g2D);
-        drawBoundaries(g2D);
+        //drawBoundaries(g2D);
         drawRoute(g2D);
         Main.FPS_COUNTER.interrupt();
         DebugWindow.getInstance().setFPSLabel();
     }
 
+    /*
+     * Draw the markers from the address search, from search bar and the journy planner view.
+     */
     private void drawMarkers(Graphics2D g){
         Point2D start = toModelCoords(new Point2D.Float(0f, 0f));
         Point2D inner = toModelCoords(new Point2D.Float(16f, 0f));
@@ -202,32 +225,39 @@ public class MapCanvas extends View {
         }
     }
 
+    //Set the locationMarker to null, such that it wont be drawn
     public void resetLocationMarker(){
         locationMarker = null;
     }
 
+    //Set the boolean field drawRoute
     public void toggleRouteVisualization(boolean isActive){
         this.drawRoute = isActive;
     }
 
+    //Resets the marker fields such that they wont be drawn
     public void resetRoute(){
         toMarker = null;
         fromMarker = null;
         route = null;
     }
 
+    //Set the locationsMarker to a Point2D.Float, such that it can be drawn
     public void setLocationMarker(Point2D.Float locationMarker) {
         this.locationMarker = locationMarker;
     }
 
+    //Set the tosMarker to a Point2D.Float, such that it can be drawn
     public void setToMarker(Point2D.Float toMarker){
         this.toMarker = toMarker;
     }
 
+    //Set the fromMarker to a Point2D.Float, such that it can be drawn
     public void setFromMarker(Point2D.Float fromMarker){
         this.fromMarker = fromMarker;
     }
 
+    //Make a circke/Ellipse that is used for the locationMarkers
     private Ellipse2D getEllipseFromCenter(double x, double y, double width, double height) {
         double newX = x - width / 2.0;
         double newY = y - height / 2.0;
@@ -236,6 +266,7 @@ public class MapCanvas extends View {
         return ellipse;
     }
 
+    //Draw the background
     private void drawBackground(Graphics2D g) {
         g.setColor(ThemeHelper.color("water"));
         Path2D boundary = new Path2D.Float();
@@ -247,6 +278,7 @@ public class MapCanvas extends View {
         g.fill(boundary);
     }
 
+    //Draw the land
     private void drawCoastlines(Graphics2D g) {
         g.setColor(ThemeHelper.color("background"));
         for (Path2D path : coastlines) {
@@ -254,6 +286,7 @@ public class MapCanvas extends View {
         }
     }
 
+    //Draw a route
     private void drawRoute(Graphics2D g) {
         if (route != null && drawRoute) {
             g.setColor(ThemeHelper.color("routeBorder"));
@@ -291,6 +324,7 @@ public class MapCanvas extends View {
         }
     }
 
+    //The the route to be drawn
     public void setRoute(Iterable<RoadEdge> route) {
         OSMWay way = new OSMWay();
         for (RoadEdge edge : route) {
@@ -300,6 +334,7 @@ public class MapCanvas extends View {
         this.route = new PolygonApprox(way);
     }
 
+    //Invoke all the drawmethods for each Zoom Level.
     private void drawElements(Graphics2D g) {
         switch (ZoomLevel.getZoomLevel()) {
         case LEVEL_0:
@@ -569,7 +604,9 @@ public class MapCanvas extends View {
             break;
         }
     }
-
+    /*
+     * Set the current section to the desired set of element, such that they can be drawn.
+     */
     private void setCurrentSection(ElementType elementType) {
         currentSection = elements.get(elementType)
                              .getManySections((float)currentRectangle.getMinX(),
@@ -578,6 +615,9 @@ public class MapCanvas extends View {
                                  (float)currentRectangle.getMaxY());
     }
 
+    /*
+     * Draw a boundary around the imported/loaded map.
+     */
     private void drawBoundaries(Graphics2D g2D) {
         g2D.setColor(ThemeHelper.color("boundary"));
         g2D.setStroke(new BasicStroke(Float.MIN_VALUE));
@@ -625,17 +665,22 @@ public class MapCanvas extends View {
             throw new RuntimeException();
         }
     }
-
+    /*
+     * Sets the Enum map containing all the KDTree to the Enum map given as a parameter.
+     */
     public void setElements(EnumMap<ElementType, KDTree> map) { elements = map; }
 
+    //Set the current section to the HashSet given as a paramter
     public void setCurrentSection(HashSet<SuperElement> currentSection) {
         this.currentSection = currentSection;
     }
 
+    //Set the currentPoint field to the Point2D given as a parameter
     public void setCurrentPoint(Point2D currentPoint) {
         this.currentPoint = currentPoint;
     }
-    /**
+
+    /*
      * Draw Motorways, trunkroads and primary roads.
      * This method is supposed to be used at zoom lvl 5 and 6.
      * This is made to avoid browsing through all roads to find the few that are to be drawn at these zoom levels.
@@ -688,6 +733,7 @@ public class MapCanvas extends View {
         }
     }
 
+    //Draw bridges
     private void drawBridge(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.BRIDGE);
         g.setColor(color);
@@ -698,6 +744,8 @@ public class MapCanvas extends View {
             else g.draw(manMade.getShape());
         }
     }
+
+    //Draw piers
     private void drawPier(Graphics2D g, Color color, float width) {
         setCurrentSection(ElementType.PIER);
         g.setColor(color);
@@ -742,6 +790,7 @@ public class MapCanvas extends View {
         }
     }
 
+    //Draw railways
     private void drawRail(Graphics2D g, Color color, float width){
         setCurrentSection(ElementType.RAIL);
         g.setColor(color);
@@ -759,6 +808,7 @@ public class MapCanvas extends View {
         }
     }
 
+    //Draw buildings
     private void drawBuilding(Graphics2D g, Color color) {
         setCurrentSection(ElementType.BUILDING);
         Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .9f);
@@ -772,7 +822,10 @@ public class MapCanvas extends View {
         c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         g.setComposite(c);
     }
-
+    /*
+     * Draw road names on the roads. It takes the angle and the length of the road
+     * into consideration
+     */
     private void drawRoadNames(RoadType roadType, Graphics2D g) {
         setCurrentSection(ElementType.HIGHWAY);
 
@@ -874,9 +927,12 @@ public class MapCanvas extends View {
         c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
         g.setComposite(c);
     }
+    //Calculate the length of a vector
     private double vectorLength(float x, float y) {
         return Math.sqrt(x * x + y * y);
     }
+
+    //calculate the dot product of two vectors originating in Origo
     private double dotProduct(float x1, float y1, float x2, float y2) {
         double newX1 = (double)x1;
         double newY1 = (double)y1;
@@ -884,6 +940,8 @@ public class MapCanvas extends View {
         double newY2 = (double)y2;
         return newX1 * newX2 + newY1 * newY2;
     }
+
+    //Calculate the angle between a vector a vector parallel with the x-line
     private double vectorAngle(float x1, float y1, float x2, float y2) {
         double cosAngle;
         double dotProduct = dotProduct((x2 - x1), (y2 - y1), 1, 0f);
@@ -891,6 +949,8 @@ public class MapCanvas extends View {
         double vector2Length = vectorLength(1, 0f);
         cosAngle = dotProduct / (vector1Length * vector2Length);
 
+        //Math.acos corresponds to four different angelt in the range -360 to 360 degrees.
+        //This takes that under consideration tp get the desired angels for drawing road names.
         if ((y2 - y1) < 0 && (x2 - x1) > 0) return -Math.acos(cosAngle);
         if ((y2 - y1) < 0 && (x2 - x1) < 0) return Math.acos(-cosAngle);
         if ((y2 - y1) > 0 && (x2 - x1) > 0) return Math.acos(cosAngle);
@@ -899,6 +959,7 @@ public class MapCanvas extends View {
         return Math.acos(cosAngle);
     }
 
+    //Draw citynames
     private void drawCityNames(Graphics2D g, AmenityType type, float scaling) {
         setCurrentSection(ElementType.AMENITY);
         for (SuperElement element : currentSection){
@@ -947,6 +1008,7 @@ public class MapCanvas extends View {
         }
     }
 
+    //Invokes the draing methods for amenities
     private void drawAmenity(AmenityType type, Graphics2D g){
         switch (type){
             case HOSPITAL:
@@ -955,6 +1017,7 @@ public class MapCanvas extends View {
             case BAR:
             case NIGHT_CLUB:
             case FAST_FOOD:
+            case CAFE:
                 drawNight(type, g);
                 break;
             case UNIVERSITY:
@@ -982,6 +1045,7 @@ public class MapCanvas extends View {
         }
     }
 
+    //Draw the amenities + names that can only be seen when the night theme is activated.
     private void drawNight(AmenityType type, Graphics2D g) {
         if (ThemeHelper.getCurrentTheme() == "Night") {
             if (ZoomLevel.getZoomFactor() >= 650) {
@@ -1003,6 +1067,10 @@ public class MapCanvas extends View {
                         g.setColor(ThemeHelper.color("fastFoodName"));
                         drawString("\uf0f5" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
                     }
+                    if (amenity.getAmenityType() == AmenityType.CAFE) {
+                        g.setColor(ThemeHelper.color("cafeName"));
+                        drawString("\uf0f4" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+                    }
                 }
                 //Drawing names
                 float deltay = ((getFontMetrics(font).getHeight() * scaleFactor) / 2);
@@ -1013,10 +1081,11 @@ public class MapCanvas extends View {
 
                 for (SuperElement element : currentSection) {
                     Amenity amenity = (Amenity) element;
-                    if (amenity.getAmenityType() == AmenityType.BAR || amenity.getAmenityType() == AmenityType.FAST_FOOD || amenity.getAmenityType() == AmenityType.NIGHT_CLUB) {
+                    if (amenity.getAmenityType() == AmenityType.BAR || amenity.getAmenityType() == AmenityType.FAST_FOOD || amenity.getAmenityType() == AmenityType.NIGHT_CLUB  || amenity.getAmenityType() == AmenityType.CAFE) {
                         if (amenity.getAmenityType() == AmenityType.BAR) g.setColor(ThemeHelper.color("barName"));
                         if (amenity.getAmenityType() == AmenityType.NIGHT_CLUB) g.setColor(ThemeHelper.color("nightClubName"));
                         if (amenity.getAmenityType() == AmenityType.FAST_FOOD) g.setColor(ThemeHelper.color("fastFoodName"));
+                        if (amenity.getAmenityType() == AmenityType.CAFE) g.setColor(ThemeHelper.color("cafeName"));
                         String name = amenity.getName();
                         float x = amenity.getX() - (getFontMetrics(font).stringWidth(name) * scaleFactor / 2);
                         drawString(name, g, x, amenity.getY() + deltay, font, scaleFactor, false);
@@ -1026,6 +1095,7 @@ public class MapCanvas extends View {
         }
     }
 
+    //Draw hospital amenities + name
     private void drawHospital(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 1.7f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
@@ -1057,6 +1127,7 @@ public class MapCanvas extends View {
         }
     }
 
+    //Draw university amenities + names
     private void drawUniversity(Graphics2D g){
         float scaleFactor;
         scaleFactor = 1.7f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
@@ -1088,6 +1159,7 @@ public class MapCanvas extends View {
         }
     }
 
+    //Draw railway station amenities + names
     private void drawRailwayStation(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 1.7f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
@@ -1118,6 +1190,7 @@ public class MapCanvas extends View {
         }
     }
 
+    //Draw parking amenities + names
     private void drawParkingAmenity(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 1.5f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
@@ -1145,6 +1218,7 @@ public class MapCanvas extends View {
         g.setComposite(c);
     }
 
+    //Draw sportamenities
     private void drawSportAmenity(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 0.75f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
@@ -1172,6 +1246,7 @@ public class MapCanvas extends View {
         g.setComposite(c);
     }
 
+    //Draw airportamenities + airports
     private void drawAirportAmenity(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 3f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
@@ -1203,6 +1278,7 @@ public class MapCanvas extends View {
         }
     }
 
+    //pan using affine transform
     public void panToPoint(Point2D point){
         Rectangle2D rectangle = getVisibleRect();
         Point2D midpoint = toModelCoords(new Point2D.Double(rectangle.getCenterX(), rectangle.getCenterY()));
@@ -1219,10 +1295,12 @@ public class MapCanvas extends View {
         }
     }
 
+    //Set the points of interest list
     public void setPOIs(ArrayList<POI> poiList){
         this.poiList = poiList;
     }
 
+    //Draw point of interest pin
     private void drawPOI(Graphics2D g) {
         //Calculation of the scalefactor used to derive the font
         float scaleFactor;

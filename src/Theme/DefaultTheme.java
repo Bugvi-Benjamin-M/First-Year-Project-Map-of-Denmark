@@ -65,6 +65,7 @@ public class DefaultTheme implements Theme {
     public Color barName() { return new Color(0x000000); }
     public Color nightClubName() { return new Color(0x000000); }
     public Color fastFoodName() { return new Color(0x000000); }
+    public Color cafeName() { return new Color(0x000000); }
     public Color hospital() { return new Color(0xD30408); }
     public Color parkingAmenity() { return new Color(0x0A00FF); }
     public Color sportAmenity() { return new Color(0xFF7D00); }

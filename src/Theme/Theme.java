@@ -81,6 +81,7 @@ public interface Theme {
     public abstract Color barName();
     public abstract Color nightClubName();
     public abstract Color fastFoodName();
+    public abstract Color cafeName();
     public abstract Color hospital();
     public abstract Color parkingAmenity();
     public abstract Color sportAmenity();

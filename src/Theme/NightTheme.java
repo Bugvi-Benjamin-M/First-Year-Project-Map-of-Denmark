@@ -65,6 +65,7 @@ public class NightTheme implements Theme {
     public Color barName() { return new Color(0xF9FF17); }
     public Color nightClubName() { return new Color(0x00FFFF); }
     public Color fastFoodName() { return new Color(0xFF00F6); }
+    public Color cafeName() { return new Color(0x4FFF00); }
     public Color hospital() { return new Color(0xA80405); }
     public Color parkingAmenity() { return new Color(0x858585); }
     public Color sportAmenity() { return new Color(0x9ECBA0); }
