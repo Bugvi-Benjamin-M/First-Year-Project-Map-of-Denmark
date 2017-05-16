@@ -6,7 +6,10 @@ import Helpers.ThemeHelper;
 import javax.swing.*;
 import java.awt.*;
 
-
+/**
+ * The PointProfile is a visual component that displays information about a point
+ * of interest or user-specified place
+ */
 public class PointProfile extends View {
 
     private final int PROFILE_HEIGHT = 90;
@@ -25,7 +28,12 @@ public class PointProfile extends View {
     private float x;
     private float y;
 
-
+    /**
+     * Creates a new point profile
+     * @param description Description for the POI
+     * @param x The x-coordinate for the POI
+     * @param y The y-coordinate for the POI
+     */
     public PointProfile(String description, float x, float y) {
         this.x = x;
         this.y = y;
@@ -53,6 +61,9 @@ public class PointProfile extends View {
         applyTheme();
     }
 
+    /**
+     * Updates and applies the current theme to the point profile
+     */
     public void applyTheme() {
         setBackground(ThemeHelper.color("toolbar"));
         label.setBackground(ThemeHelper.color("toolbar"));
@@ -61,6 +72,9 @@ public class PointProfile extends View {
         deleteButton.setForeground(ThemeHelper.color("icon"));
     }
 
+    /**
+     * Sets up the delete point button
+     */
     private void setupDeleteButton() {
         deleteButton = new JLabel("\uf00d");
         deleteButton.setPreferredSize(new Dimension(25,20));
@@ -68,24 +82,38 @@ public class PointProfile extends View {
         deleteButton.setOpaque(true);
     }
 
+    /**
+     * Sets up the description label
+     */
     private void setupDescriptionLabel() {
         label = new JLabel(description);
         label.setFont(new Font(label.getFont().getFontName(), label.getFont().getStyle(), DESCRIPTION_FONT));
     }
 
+    /**
+     * Retrieve the delete button
+     */
     public JLabel getDeleteButton() {
         return deleteButton;
     }
 
-
+    /**
+     * Retrieves the x-coordinate of the POI
+     */
     public float getPOIX() {
         return x;
     }
 
+    /**
+     * Retrieves the y-coordinate of the POI
+     */
     public float getPOIY() {
         return y;
     }
 
+    /**
+     * Returns the description label
+     */
     public JLabel getDescription() {
         return label;
     }
