@@ -7,7 +7,10 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
-
+/**
+ * The JourneyPlannerSearchClearButtons is a visual component that consists
+ * of a clear button and a search button.
+ */
 public class JourneyPlannerSearchClearButtons extends View {
 
     private final float BUTTON_FONT_SIZE = 40f;
@@ -23,25 +26,22 @@ public class JourneyPlannerSearchClearButtons extends View {
 
     public JourneyPlannerSearchClearButtons() {
         clearButton = new JLabel("\uf12d");
-        //clearButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
         clearButton.setOpaque(true);
-        //clearButton.setPreferredSize(new Dimension(CLEAR_BUTTON_WIDTH, CLEAR_BUTTON_HEIGHT));
         clearButton.setBorder(BorderFactory.createEmptyBorder());
         clearButton.setToolTipText(CLEAR_BUTTON_TOOLTIP);
         searchButton = new JLabel("\uf002");
-        //searchButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
         searchButton.setOpaque(true);
-        //searchButton.setPreferredSize(new Dimension(SEARCH_BUTTON_WIDTH, SEARCH_BUTTON_HEIGHT));
         searchButton.setBorder(BorderFactory.createEmptyBorder());
         searchButton.setToolTipText(SEARCH_BUTTON_TOOLTIP);
         applyTheme();
         applyLargeState();
-        //add(clearButton);
-        //add(Box.createHorizontalStrut(DISTANCE_BETWEEN_BUTTONS));
-        //add(searchButton);
         setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
     }
 
+    /**
+     * Applies the large state to the component, e.g. resizing to accommodate
+     * the larger width with more room on the screen
+     */
     public void applyLargeState() {
         removeAll();
         clearButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE));
@@ -53,6 +53,10 @@ public class JourneyPlannerSearchClearButtons extends View {
         add(searchButton);
     }
 
+    /**
+     * Applies the small state to the component, e.g. resize such that there
+     * is space for the component on a smaller screen width
+     */
     public void applySmallState() {
         removeAll();
         clearButton.setFont(FontAwesome.getFontAwesome().deriveFont(BUTTON_FONT_SIZE-15));
@@ -64,6 +68,9 @@ public class JourneyPlannerSearchClearButtons extends View {
         add(searchButton);
     }
 
+    /**
+     * Updates and applies the currently selected theme to the component
+     */
     public void applyTheme() {
         setBackground(ThemeHelper.color("toolbar"));
         clearButton.setBackground(ThemeHelper.color("toolbar"));
@@ -72,10 +79,16 @@ public class JourneyPlannerSearchClearButtons extends View {
         searchButton.setForeground(ThemeHelper.color("icon"));
     }
 
+    /**
+     * Retrieve the search button
+     */
     public JLabel getSearchButton() {
         return searchButton;
     }
 
+    /**
+     * Retrieve the clear button
+     */
     public JLabel getClearButton() {
         return clearButton;
     }
