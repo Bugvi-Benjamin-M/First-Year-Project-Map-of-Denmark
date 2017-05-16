@@ -7,7 +7,10 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
-
+/**
+ * PointsOfInterestButtons is a visual component consisting of two buttons
+ * that are used for adding POI's and removed POI's.
+ */
 public class PointsOfInterestButtons extends View {
 
     private final float BUTTON_FONT_SIZE = 40f;
@@ -41,7 +44,9 @@ public class PointsOfInterestButtons extends View {
         setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
     }
 
-
+    /**
+     * Updates and applies the currently selected theme
+     */
     public void applyTheme() {
         this.setBackground(ThemeHelper.color("toolbar"));
         newPointButton.setBorder(BorderFactory.createLineBorder(ThemeHelper.color("toolbar")));
@@ -52,10 +57,16 @@ public class PointsOfInterestButtons extends View {
         deleteAllButton.setForeground(ThemeHelper.color("poiButtonsForeground"));
     }
 
+    /**
+     * Retrieves the new point button
+     */
     public JLabel getNewPointButton() {
         return newPointButton;
     }
 
+    /**
+     * Retrieves the delete all points button
+     */
     public JLabel getDeleteAllButton() {
         return deleteAllButton;
     }
