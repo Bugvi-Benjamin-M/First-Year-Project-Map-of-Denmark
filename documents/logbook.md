@@ -267,7 +267,6 @@ Impediments:
 Notes from meeting:
 - We managed to get halfway through the process of finishing the implementation of the datastructure.
 - Changing themes now works flawless.
-- It is going to be a hard Friday.
 
 ## Logbook 31/3 (Scribe Nikolaj)
 What we will do today:
@@ -347,8 +346,8 @@ What we will do until next time:
 - Finishing loading and saving
 
 Impediments:
-- Jacob has to go to work at 16:00
-- Niklas also has to go to work today
+- Jakob has to go to work at 16:00
+- Niclas also has to go to work today
 
 Next time:
 - Monday the 10th of April at 10:00 (Nikolaj joins via skype)
@@ -399,11 +398,6 @@ What we did since last time:
 - Draw road names
 - Refactoring the GUI
 - tooltips for roads
-- handyman/Sexy guy worked on the address parser
-- more vacation and painting eggs
-- even more vacation and eating eggs
-- Poop
-- We bombed north Korea
 
 What we will do until next time:
 - Prepare release and presentation
@@ -411,7 +405,6 @@ What we will do until next time:
 - restricted zoom / panning
 - More amenities
 - tooltips on amenities
-- (Make child theme)
 - improme/extends nearest neighbour search
 - Tenary search trie for addresses
 
@@ -439,15 +432,14 @@ Impediments:
 
 Next Time:
 - Wednesday the 26th of April
-W
+
 ## Logbook 27/4 (Scribe Hedam)
 What we did since last time:
 - GUI changes
 - Disable AA on pan or zoom
 - Bugfixes
 - Added more cartographic elements
-- Preperation for Dijkstra/A* implementation next week
-
+- Preperation for Dijkstra/A* implementation next wee
 
 What we will do until next time:
 - Graph preperation for GUI
@@ -455,7 +447,6 @@ What we will do until next time:
 - Dijkstra
 - Report writing
 - POI
-
 
 Impediments:
 - Lecture at 12 pm
@@ -486,21 +477,7 @@ Impediments:
 - none
 
 Next scrum meeting:
-- 3/5 9:30 am.
-
-##Logbook 3/5 (Scribe Nikolaj)
-
-What we did since last time:
-
-
-What we will do until next time:
-
-
-Impediments:
-Nikolaj has to go at 10 am.
-
-Next scrum meeting:
-- 5/5 10 am.
+- 5/5 9:30 am.
 
 ##Logbook 5/5 (Scribe Nikolaj)
 
