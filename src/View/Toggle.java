@@ -4,10 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 03/04/2017
+ * A visual component consisting of a checkbox and a descriptive label
  */
 public abstract class Toggle extends View {
 
@@ -24,8 +21,14 @@ public abstract class Toggle extends View {
         add(toggleBox);
     }
 
+    /**
+     * Returns whether the checkbox is selected or not
+     */
     public boolean isToggleSelected() { return toggleBox.isSelected(); }
 
+    /**
+     * Changes the status of the checkbox from either selected or not selected
+     */
     public void setSelectedStatus(boolean isSelected)
     {
         toggleBox.setSelected(isSelected);

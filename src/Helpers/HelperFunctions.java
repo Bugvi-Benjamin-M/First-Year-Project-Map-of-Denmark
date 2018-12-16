@@ -1,6 +1,10 @@
 package Helpers;
 
+import Controller.CanvasController;
+import KDtree.Point;
 import Model.Model;
+import OSM.OSMHandler;
+import OSM.OSMWay;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -8,10 +12,9 @@ import java.util.List;
 
 /**
  * Class details:
+ * A collection of different mathematical and useful functions
+ * used for different purposes in different parts of the program.
  *
- * @author Andreas Blanke, blan@itu.dk
- * @version 04-04-2017.
- * @project BFST
  */
 public class HelperFunctions {
 
@@ -34,7 +37,6 @@ public class HelperFunctions {
         for (int i = 1; i < end; i++) {
             double d = distanceBetweenPointAndPath(points.get(0), points.get(end - 1),
                 points.get(i));
-            // System.out.println("d: "+d);
             if (d > dmax) {
                 index = i;
                 dmax = d;
@@ -45,7 +47,6 @@ public class HelperFunctions {
 
         // if max distance is greater than epsilon, recursively simplify
         if (dmax >= epsilon) {
-            // System.out.println("recursive call");
             // Recursive call
             List<Point2D> firstSection = new ArrayList<>(), secondSection = new ArrayList<>();
             for (int i = 1; i <= index; i++) {
@@ -66,7 +67,6 @@ public class HelperFunctions {
                 result.add(secondSection.get(i));
             }
         } else {
-            // System.out.println("add all");
             for (int i = 1; i < end; i++) {
                 result.add(points.get(i));
             }
@@ -118,6 +118,10 @@ public class HelperFunctions {
         return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
     }
 
+    /**
+     * Returns the size of a polygon based entirely on a ordered collection of points that connect
+     * @param points The list of Point2D representing the shape of the polygon
+     */
     public static double sizeOfPolygon(List<Point2D> points)
     {
         double dividend = 0;
@@ -135,5 +139,130 @@ public class HelperFunctions {
         nextPoint = points.get(0);
         dividend += (previousPoint.getX() * nextPoint.getY() - previousPoint.getY() * nextPoint.getX());
         return Math.abs(dividend / 2);
+    }
+
+    /**
+     * Quickly generates the distance between two points in meters
+     * Note that this function only works on the Map of Denmark
+     */
+    public static double lazyDistance(Point2D from, Point2D to){
+        return Math.sqrt((Math.pow(((from.getX()-to.getX())/62.445),2)) + (Math.pow(((from.getY()-to.getY())/111.096),2)));
+    }
+
+    /**
+     * Calculates the distance between two points to meters
+     * @param v A point on a sphere
+     * @param w Another point on a sphere
+     */
+    public static double distanceInMeters(Point2D v, Point2D w) {
+        double R = 6371e3; //Earth radius in meters
+        float longfactor = Model.getInstance().getLongitudeFactor();
+        double latitude1 = Math.toRadians(-v.getY());
+        double latitude2 = Math.toRadians(-w.getY());
+        double dy = Math.toRadians((v.getY()-w.getY()));
+        double dx = Math.toRadians((v.getX()/longfactor) - (w.getX()/longfactor));
+        double a = Math.sin(dy) * Math.sin(dy/2) + Math.cos(latitude1) * Math.cos(latitude2) * Math.sin(dx/2) * Math.sin(dx/2);
+        double c = 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+        return R * c;
+    }
+
+    /**
+     * Calculates the total distance between each consecutive set of points in a collection
+     * @param way An ordered collection of points
+     */
+    public static double distanceInMeters(List<Point2D> way) {
+        if (way.size() < 2) throw new IllegalArgumentException("needs at least two points to calculate the distance");
+        double length = 0.0;
+        for (int i = 1; i < way.size(); i++) {
+            length += distanceInMeters(way.get(i - 1), way.get(i));
+        }
+        return length;
+    }
+
+    /**
+     * Convertes nano seconds to a string describing the amount
+     */
+    public static String convertNanotimeToTime(long loadtime) {
+        long loadtimeMilliseconds = loadtime / 1000000;
+        return convertMillitimeToTime(loadtimeMilliseconds);
+        }
+
+    /**
+     * Convertes milli seconds to a string describing the amount
+     */
+    public static String convertMillitimeToTime(long loadtime) {
+        long loadtimeSeconds = loadtime / 1000;
+        long loadtimeMinutes = loadtimeSeconds / 60;
+        String name = "";
+        if (loadtimeMinutes > 0) name += loadtimeMinutes + " m, ";
+        return name + (loadtimeSeconds - (loadtimeMinutes * 60)) + " s, " +
+                (loadtime - (loadtimeSeconds * 1000)) + " ms";
+    }
+
+    /**
+     * Convertes nano seconds to a string describing the amount
+     */
+    public static String simplifyNanoTime(long loadtime) {
+        long loadtimeMilliseconds = loadtime / 1000000;
+        long loadtimeSeconds = loadtimeMilliseconds / 1000;
+        long loadtimeMinutes = loadtimeSeconds / 60;
+        String time = "";
+        if (loadtimeMinutes > 0) {
+            time += loadtimeMinutes + " min";
+            long seconds = (loadtimeSeconds - (loadtimeMinutes * 60));
+            if (seconds > 0) time += ", "+seconds+" sec";
+        } else {
+            time += loadtimeSeconds + " sec";
+            long miliseconds = (loadtimeMilliseconds - (loadtimeSeconds * 1000));
+            if (miliseconds > 0) {
+                time += ", "+miliseconds+" ms";
+            }
+        }
+        if (time.equals("")) return "N/A";
+        return time;
+    }
+
+    /**
+     * Compares the direction of two vectors, provided as points.
+     */
+    public static int direction(Point2D a, Point2D b, Point2D c, Point2D d) {
+        Vector ab = new Vector(a,b);
+        Vector cd = new Vector(c,d);
+        double dot = ab.x*-cd.y + ab.y*cd.x;
+        if (dot > 0) {
+            return -1;  // to the left
+        } else if (dot < 0) {
+            return 1;   // to the right
+        } else {
+            return 0;   // parallel
+        }
+    }
+
+    /**
+     * A mathematical vector described by two points.
+     */
+    private static class Vector {
+        private double x;
+        private double y;
+
+        /**
+         * Vector constructor
+         */
+        Vector(Point2D a, Point2D b) {
+            x = b.getX()-a.getX();
+            y = b.getY()-a.getY();
+        }
+
+        /**
+         * Length of the vector
+         */
+        double length() {
+            return Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
+        }
+
+        @Override
+        public String toString() {
+            return "("+x+";"+y+")";
+        }
     }
 }

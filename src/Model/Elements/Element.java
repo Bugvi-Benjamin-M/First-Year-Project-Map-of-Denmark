@@ -1,18 +1,21 @@
 package Model.Elements;
 
-import Model.Model;
 
 import java.awt.*;
-import java.io.Serializable;
 
-/**
- * Created by Jakob on 06-03-2017.
- */
-public abstract class Element implements Serializable {
+
+public abstract class Element extends SuperElement {
 
     private Shape shape;
 
+    /**
+     * Constructs a new generic element
+     */
     public Element(Shape shape) { this.shape = shape; }
 
+    /**
+     * Returns the shape of the generic element
+     */
     public Shape getShape() { return shape; }
+
 }

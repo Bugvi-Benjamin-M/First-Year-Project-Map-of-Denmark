@@ -4,13 +4,12 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Jakob on 30-03-2017.
- */
+
 public class NodeGenerator {
 
     private static final int AMOUNT_OF_NODES_DEFAULT = 18788597;
     private static final int DEPTH_DEFAULT = 14;
+    
     private int depth;
     private int amountOfNodes;
     private Point2D.Float[] points;
@@ -19,6 +18,11 @@ public class NodeGenerator {
 
     public NodeGenerator() { this(AMOUNT_OF_NODES_DEFAULT, DEPTH_DEFAULT); }
 
+    /**
+     * Sets fields and variables that are required to contruct the KDTree
+     * @param amountOfNodes the amount of data in the KDTree
+     * @param depth the depth of the KDTree
+     */
     public NodeGenerator(int amountOfNodes, int depth)
     {
         medians = new ArrayList<>();
@@ -28,42 +32,65 @@ public class NodeGenerator {
         points = new Point2D.Float[amountOfNodes];
     }
 
+    /**
+     * Builds a KD tree by putting nodes into the KDTree, which represent medians of the input data.
+     * @param tree
+     */
     public void setupTree(KDTree tree)
     {
         for (int i = 0; i < medians.size(); i++) {
             Node median = medians.get(i);
             Node node = new Node(median.getX(), median.getY(), median.getDepth());
-            if (median.getPointers() != null)
+            if (median.getElements() != null)
                 node.makeLeaf();
             tree.putNode(node);
         }
     }
 
+    /**
+     * creates a list of medians, which are afterwards put into the KDTree.
+     */
     public void initialise() { initialise(null, 0, amountOfNodes - 1); }
 
+    /**
+     * Builds a list of medians of the given input data.
+     * The amount of medians depend on the specified depth and the size of the input.
+     * @param parent the current node to be looked at.
+     * @param low the lower bound of the section of the array looked at.
+     * @param high the higher bound of the section of the array looked at.
+     */
     private void initialise(Node parent, int low, int high)
     {
         Point2D.Float median;
         int medianDepth = 0;
+
+        //Sorting the input points by the X coordinate and finding the median.
         if (parent == null || parent.getDepth() % 2 == 1) {
             median = findMedianX(low, high);
             if (parent == null)
                 medianDepth = 0;
             else
                 medianDepth = parent.getDepth() + 1;
-        } else {
+        }
+        //Sorting the input points by the Y coordinate and finding the median.
+        else {
             median = findMedianY(low, high);
             medianDepth = parent.getDepth() + 1;
         }
         float floatX = (float)median.getX();
         float floatY = (float)median.getY();
         Node medianNode;
+        //The depth is below the specified max depth.
+            //A new median is added to the list and the recursion continues.
         if (medianDepth < depth) {
             medianNode = new Node(floatX, floatY, medianDepth);
             medians.add(medianNode);
             initialise(medianNode, low, ((low + high) / 2) - 1);
             initialise(medianNode, ((low + high) / 2) + 1, high);
-        } else if (medianDepth == depth) {
+        }
+        //The specified max depth is reached.
+            //The new median is turned into a Leaf and added to the median list.
+        else if (medianDepth == depth) {
             medianNode = new Node(floatX, floatY, medianDepth);
             medianNode.makeLeaf();
             medians.add(medianNode);
@@ -76,6 +103,12 @@ public class NodeGenerator {
         pointsIndex++;
     }
 
+    /**
+     * Finds the median of an array of points by the x coordinate.
+     * @param low the minimum bound of the current section of the array.
+     * @param high the maximum bound of the current section of the array.
+     * @return the median.
+     */
     private Point2D.Float findMedianX(int low, int high)
     {
         int median = (low + high) / 2;
@@ -91,6 +124,12 @@ public class NodeGenerator {
         return points[median];
     }
 
+    /**
+     * Finds the median of an array of points by the y coordinate.
+     * @param low the minimum bound of the current section of the array.
+     * @param high the maximum bound of the current section of the array.
+     * @return the median.
+     */
     private Point2D.Float findMedianY(int low, int high)
     {
         int median = (low + high) / 2;

@@ -1,7 +1,5 @@
 package View;
 
-import Helpers.ThemeHelper;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -9,11 +7,8 @@ import java.util.*;
 import static javax.swing.SpringLayout.*;
 
 /**
- * Class details:
- *
- * @author Andreas Blanke, blan@itu.dk
- * @version 28-03-2017.
- * @project BFST
+ * A TextView is a visual component that contains a collection of labels that
+ * are positioned based upon when they were added to the TextView.
  */
 public class TextView extends View {
 
@@ -32,6 +27,11 @@ public class TextView extends View {
         labels = new HashMap<>();
     }
 
+    /**
+     * Creates and adds a new JLabel to the TextView
+     * @param key The key of the new JLabel for easy retrieval
+     * @param message The initial message of the JLabel
+     */
     public void addJLabel(String key, String message)
     {
         JLabel newLabel = new JLabel(message);
@@ -47,6 +47,10 @@ public class TextView extends View {
         lastInserted = newLabel;
     }
 
+    /**
+     * Removes a JLabel from the TextView
+     * @param key The key of the JLabel to remove
+     */
     public void removeJLabel(String key)
     {
         JLabel removed = labels.get(key);
@@ -56,8 +60,14 @@ public class TextView extends View {
         }
     }
 
+    /**
+     * Returns a JLabel based on its key
+     */
     public JLabel getJLabel(String key) { return labels.get(key); }
 
+    /**
+     * Resets the TextView
+     */
     public void reset()
     {
         labels = new HashMap<>();

@@ -2,23 +2,33 @@ package Helpers;
 
 import java.awt.event.KeyEvent;
 
-/**
- * Created by Búgvi Magnussen on 08-03-2017.
- */
 public class OSDetector {
 
+    /**
+     * Returns the operating system
+     */
     public static String OS() { return System.getProperty("os.name"); }
 
+    /**
+     * Returns whether the current system is a Windows based System
+     */
     public static boolean isWindows()
     {
         return OSDetector.OS().toLowerCase().contains("windows");
     }
 
+    /**
+     * Returns whether the current system is a Mac based system
+     */
     public static boolean isMac()
     {
         return OSDetector.OS().toLowerCase().contains("mac");
     }
 
+    /**
+     * Returns the default secondary shortcut key.
+     * Mac: Command, Windows: CTRL
+     */
     public static int getActivationKey()
     {
         if (isWindows()) {
@@ -30,10 +40,13 @@ public class OSDetector {
         }
     }
 
+    /**
+     * Returns the operating system's temporary path
+     */
     public static String getTemporaryPath()
     {
         if (OSDetector.isWindows()) {
-            return "%USERPROFILE%\\AppData\\Local\\Temp\\";
+            return System.getProperty("java.io.tmpdir") + "\\";
         } else if (OSDetector.isMac()) {
             return "/tmp/";
         } else {
@@ -41,6 +54,9 @@ public class OSDetector {
         }
     }
 
+    /**
+     * Returns the operating systems default file prefix.
+     */
     public static String getPathPrefix()
     {
         if (OSDetector.isWindows()) {

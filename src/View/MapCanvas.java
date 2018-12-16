@@ -1,7 +1,8 @@
 package View;
 
-import Enums.BoundType;
+import Enums.OSMEnums.AmenityType;
 import Enums.OSMEnums.ElementType;
+import Enums.OSMEnums.RoadType;
 import Enums.ZoomLevel;
 import Helpers.GlobalValue;
 import Helpers.Shapes.PolygonApprox;
@@ -10,400 +11,585 @@ import Helpers.Utilities.DebugWindow;
 import KDtree.KDTree;
 import Main.Main;
 import Model.Elements.*;
-import Model.Model;
+import OSM.OSMWay;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.List;
 
 /**
- * Class details:
  * The MapCanvas is a visual component, which purpose is to display the
  * elements (roads, points, structure, etc.) of the model. The MapCanvas
  * is able to be zoomed to and from as well as panned around upon.
- *
- * @author Andreas Blanke, blan@itu.dk
- * @author Niclas Hedam, nhed@itu.dk
- * @author Nikolaj Bläser, nibl@itu.dk
- * @author Búgvi Magnussen, buma@itu.dk
- * @author Jakob Mollerup, jmol@itu.dk
- * @version 06-03-2017
  */
 public class MapCanvas extends View {
 
-    private AffineTransform transform;
-    private HashSet<Element> currentSection;
+    private AffineTransform transform  = new AffineTransform();
+    private HashSet<SuperElement> currentSection;
     private Point2D currentPoint;
     private Rectangle2D currentRectangle;
     private EnumMap<ElementType, KDTree> elements;
     private boolean antiAliasing;
+    private Point2D.Float locationMarker;
+    private Point2D.Float toMarker;
+    private Point2D.Float fromMarker;
+    private ArrayList<POI> poiList;
 
-    /**
-   * The base Constructor for the MapCanvas.
-   */
-    public MapCanvas()
-    {
+    private List<Path2D> coastlines;
+    private Shape route;
+    private boolean drawRoute;
+
+    //fields for the camera bounds (eg the visible reactangle)
+    private float cameraMaxLon;
+    private float cameraMinLon;
+    private float cameraMaxLat;
+    private float cameraMinLat;
+
+    //Fields for the max/min longitude for the entire Denmark map
+    private float maxLon;
+    private float minLon;
+    private float maxLat;
+    private float minLat;
+
+    //Dynamic bounds of the loaded map
+    private float dynMaxLon;
+    private float dynMinLon;
+    private float dynMaxLat;
+    private float dynMinLat;
+
+    //default level of detals on zoom levels
+    private static final double DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.000001;
+    private static final double DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.00005;
+    private static final double DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.00008;
+    private static final double DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.001;
+    private static final double DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.001;
+    private static final double DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.005;
+    private static final double DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT = 0.03;
+
+    public MapCanvas() {
         transform = new AffineTransform();
+        poiList = new ArrayList<>();
         setBackgroundColor();
         grabFocus();
     }
 
-    public void setBackgroundColor()
-    {
+    /*
+     * Set the backgroundcolor to the color specified as color.
+     * the color should be "water".
+     */
+    public void setBackgroundColor() {
         setBackground(ThemeHelper.color("water"));
     }
 
-    public void toggleAntiAliasing(boolean status)
-    {
-        antiAliasing = status;
-        repaint();
+    public void toggleAntiAliasing(boolean isAntiAliasing) {
+        antiAliasing = isAntiAliasing;
     }
 
-    public void setCurrentRectangle()
-    {
+    /*
+     * Sets the current rectangle a little bigger than the visible reactangle and sets camera bounds accordingly
+     */
+    private void setCurrentRectangle() {
         Rectangle2D rectangle = getVisibleRect();
-        rectangle.setRect(rectangle.getX(),
-            rectangle.getY() + GlobalValue.getToolbarHeight(),
-            rectangle.getWidth(), rectangle.getHeight());
+        rectangle.setRect(rectangle.getX(), rectangle.getY() + GlobalValue.getToolbarHeight(), rectangle.getWidth(), rectangle.getHeight());
         Point2D point = toModelCoords(new Point2D.Double(0, GlobalValue.getToolbarHeight()));
-        Point2D factor = toModelCoords(
-            new Point2D.Double(rectangle.getWidth(), rectangle.getHeight()));
+        Point2D factor = toModelCoords(new Point2D.Double(rectangle.getWidth(), rectangle.getHeight()));
         double xBounds = factor.getX() - point.getX();
         double yBounds = factor.getY() - point.getY();
-        currentRectangle = new Rectangle2D.Double(point.getX(), point.getY(), xBounds, yBounds);
-        Model model = Model.getInstance();
-        model.setCameraBound(BoundType.MIN_LONGITUDE, (float)point.getX());
-        model.setCameraBound(BoundType.MAX_LONGITUDE, (float)factor.getX());
-        model.setCameraBound(BoundType.MAX_LATITUDE, (float)point.getY());
-        model.setCameraBound(BoundType.MIN_LATITUDE, (float)factor.getY());
+        currentRectangle = new Rectangle2D.Double(point.getX() - 0.001, point.getY() - 0.001, xBounds + 0.001, yBounds + 0.001);
+        cameraMinLon = (float) point.getX();
+        cameraMaxLon = (float) factor.getX();
+        cameraMaxLat = (float) point.getY();
+        cameraMinLat = (float) factor.getY();
         DebugWindow.getInstance().setCameraBoundsLabel();
     }
 
-    /**
-   * Paints the MapCanvas with all the shapes that should be displayed.
-   */
+    public void setCoastLines(List<Path2D> coastLines) {this.coastlines = coastLines;}
+
+    public float getCameraMaxLon() {
+        return cameraMaxLon;
+    }
+
+    public float getCameraMinLon() {
+        return cameraMinLon;
+    }
+
+    public float getCameraMaxLat() {
+        return cameraMaxLat;
+    }
+
+    public float getCameraMinLat() {
+        return cameraMinLat;
+    }
+
+    public void setMaxLon(float maxLon) {
+        this.maxLon = maxLon;
+    }
+
+    public void setMinLon(float minLon) {
+        this.minLon = minLon;
+    }
+
+    public void setMaxLat(float maxLat) {
+        this.maxLat = maxLat;
+    }
+
+    public void setMinLat(float minLat) {
+        this.minLat = minLat;
+    }
+
+    public void setDynMaxLon(float dynMaxLon) {
+        this.dynMaxLon = dynMaxLon;
+    }
+
+    public void setDynMinLon(float dynMinLon) {
+        this.dynMinLon = dynMinLon;
+    }
+
+    public void setDynMaxLat(float dynMaxLat) {
+        this.dynMaxLat = dynMaxLat;
+    }
+
+    public void setDynMinLat(float dynMinLat) {
+        this.dynMinLat = dynMinLat;
+    }
+
     @Override
-    protected void paintComponent(Graphics g)
-    {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D)g;
         g2D.setTransform(transform);
-        if (antiAliasing)
-            g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        else
-            g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_OFF);
+        if (antiAliasing) g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        else g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         drawBackground(g2D);
-
         setCurrentRectangle();
 
         drawCoastlines(g2D);
-        if (GlobalValue.getDidProgramLoadDefault()) {
-            drawElements(g2D);
-        }
+        if (GlobalValue.getDidProgramLoadDefault()) drawElements(g2D);
 
-        g2D.setColor(Color.black);
-        g2D.setStroke(new BasicStroke(0.00001f));
-        g2D.draw(currentRectangle);
-
-        drawBoundaries(g2D);
+        drawMarkers(g2D);
+        drawPOI(g2D);
+        //drawBoundaries(g2D);
+        drawRoute(g2D);
         Main.FPS_COUNTER.interrupt();
         DebugWindow.getInstance().setFPSLabel();
-
-        /*
-    //Test text på Langeland, rotate text, successfull, saved this bit of code
-    to look at at later times. AffineTransform old = g2D.getTransform();
-    g2D.rotate(Math.PI / 4, 6, -55);
-    g2D.setColor(Color.BLACK);
-    g.drawString("Hello", 6, -55);
-    g2D.setTransform(old);
-    */
     }
 
-    private void drawBackground(Graphics2D g)
-    {
-        g.setColor(ThemeHelper.color("water"));
-        Path2D boundary = new Path2D.Float();
-        Model model = Model.getInstance();
-        boundary.moveTo(model.getMinLongitude(false), model.getMinLatitude(false));
-        boundary.lineTo(model.getMaxLongitude(false), model.getMinLatitude(false));
-        boundary.lineTo(model.getMaxLongitude(false), model.getMaxLatitude(false));
-        boundary.lineTo(model.getMinLongitude(false), model.getMaxLatitude(false));
-        boundary.lineTo(model.getMinLongitude(false), model.getMinLatitude(false));
-        g.fill(boundary);
-    }
+    /*
+     * Draw the markers from the address search, from search bar and the journy planner view.
+     */
+    private void drawMarkers(Graphics2D g){
+        Point2D start = toModelCoords(new Point2D.Float(0f, 0f));
+        Point2D inner = toModelCoords(new Point2D.Float(16f, 0f));
+        Point2D outer = toModelCoords(new Point2D.Float(20f, 0f));
+        float boundsblue = (float)inner.getX() - (float) start.getX();
+        float boundswhite = (float)outer.getX() - (float) start.getX();
 
-    private void drawCoastlines(Graphics2D g)
-    {
-        java.util.List<Path2D> coastlines = Model.getInstance().getCoastlines();
-        g.setColor(ThemeHelper.color("background"));
-        for (Path2D path : coastlines) {
-            g.fill(path);
+        if(locationMarker != null) {
+            g.setColor(ThemeHelper.color("markerBackground"));
+            g.fill(getEllipseFromCenter(locationMarker.getX(), locationMarker.getY(), boundswhite, boundswhite));
+            g.setColor(ThemeHelper.color("addressMarkerForeground"));
+            g.fill(getEllipseFromCenter(locationMarker.getX(), locationMarker.getY(), boundsblue, boundsblue));
         }
-        // Creates outline
-        if (GlobalValue.getMarkCoastlines()) {
-            g.setStroke(new BasicStroke(Float.MIN_VALUE));
-            g.setColor(Color.black);
-            for (Path2D path : coastlines) {
-                g.draw(path);
+        //Only draw the route if the journey planner window is open.
+        if(drawRoute) {
+            if (toMarker != null) {
+                g.setColor(ThemeHelper.color("markerBackground"));
+                g.fill(getEllipseFromCenter(toMarker.getX(), toMarker.getY(), boundswhite, boundswhite));
+                g.setColor(ThemeHelper.color("toMarkerForeground"));
+                g.fill(getEllipseFromCenter(toMarker.getX(), toMarker.getY(), boundsblue, boundsblue));
+            }
+
+            if (fromMarker != null) {
+                g.setColor(ThemeHelper.color("markerBackground"));
+                g.fill(getEllipseFromCenter(fromMarker.getX(), fromMarker.getY(), boundswhite, boundswhite));
+                g.setColor(ThemeHelper.color("fromMarkerForeground"));
+                g.fill(getEllipseFromCenter(fromMarker.getX(), fromMarker.getY(), boundsblue, boundsblue));
             }
         }
     }
 
-    // TODO tænk over rækkefølgen elementerne bliver tegnet i (Jakob Nikolaj)
-    private void drawElements(Graphics2D g)
-    {
-        switch (ZoomLevel.getZoomLevel()) {
-        case LEVEL_0:
-            drawWater(g, ThemeHelper.color("water"), 0.000001);
-            drawPark(g, ThemeHelper.color("park"), 0.000001);
-            drawForest(g, ThemeHelper.color("forest"), 0.000001);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.000001);
-            drawGrass(g, ThemeHelper.color("grass"), 0.000001);
-            drawFarmland(g, ThemeHelper.color("farmland"), 0.000001);
-            drawMeadow(g, ThemeHelper.color("meadow"), 0.000001);
-            drawHeath(g, ThemeHelper.color("heath"), 0.000001);
-            drawFootways(g, ThemeHelper.color("footway"),
-                ThemeHelper.color("footwayArea"), 0.000004f);
-            drawBridleways(g, ThemeHelper.color("bridleway"), 0.000004f);
-            drawCycleways(g, ThemeHelper.color("cycleway"), 0.000004f);
-            drawPaths(g, ThemeHelper.color("path"), 0.000004f);
-            drawRoads(g, ThemeHelper.color("road"), 0.00004f);
-            drawSteps(g, ThemeHelper.color("steps"), 0.000004f);
-            drawTracks(g, ThemeHelper.color("track"), 0.00004f);
-            drawRaceways(g, ThemeHelper.color("raceway"), 0.00007f);
-            drawEscapes(g, ThemeHelper.color("escape"), 0.00002f);
-            drawBusGuideways(g, ThemeHelper.color("busGuideway"), 0.00006f);
+    //Set the locationMarker to null, such that it wont be drawn
+    public void resetLocationMarker(){
+        locationMarker = null;
+    }
 
-            // roadborders
-            drawPedestrianStreets(g, ThemeHelper.color("roadBorder"), 0.000045f);
-            drawServiceRoads(g, ThemeHelper.color("roadBorder"), 0.000045f);
-            drawLivingStreets(g, ThemeHelper.color("roadBorder"), 0.000055f);
-            drawResidentialRoads(g, ThemeHelper.color("roadBorder"), 0.000055f);
-            drawUnclassifiedRoads(g, ThemeHelper.color("roadBorder"), 0.000055f);
-            drawTertiaryRoads(g, ThemeHelper.color("roadBorder"), 0.000065f);
-            drawTertiaryRoadLinks(g, ThemeHelper.color("roadBorder"), 0.000065f);
-            drawSecondaryRoads(g, ThemeHelper.color("roadBorder"), 0.000085f);
-            drawSecondaryRoadLinks(g, ThemeHelper.color("roadBorder"), 0.000085f);
-            drawPrimaryRoads(g, ThemeHelper.color("roadBorder"), 0.000085f);
-            drawPrimaryRoadLinks(g, ThemeHelper.color("roadBorder"), 0.000085f);
-            drawTrunkRoads(g, ThemeHelper.color("roadBorder"), 0.000125f);
-            drawTrunkRoadLinks(g, ThemeHelper.color("roadBorder"), 0.00015f);
-            drawMotorways(g, ThemeHelper.color("roadBorder"), 0.000155f);
-            drawMotorwayLinks(g, ThemeHelper.color("roadBorder"), 0.000125f);
+    public void toggleRouteVisualization(boolean isActive){
+        this.drawRoute = isActive;
+    }
 
-            // roads
-            drawPedestrianStreets(g, ThemeHelper.color("pedestrianStreet"), 0.00004f);
-            drawServiceRoads(g, ThemeHelper.color("serviceRoad"), 0.00004f);
-            drawLivingStreets(g, ThemeHelper.color("livingStreet"), 0.00005f);
-            drawResidentialRoads(g, ThemeHelper.color("residentialRoad"), 0.00005f);
-            drawUnclassifiedRoads(g, ThemeHelper.color("unclassifiedRoad"), 0.00005f);
-            drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.00006f);
-            drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.00006f);
-            drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.00008f);
-            drawSecondaryRoadLinks(g, ThemeHelper.color("secondaryRoad"), 0.00008f);
-            drawPrimaryRoads(g, ThemeHelper.color("primaryRoad"), 0.00008f);
-            drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.00008f);
-            drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00013f);
-            drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.0001f);
-            drawMotorways(g, ThemeHelper.color("motorway"), 0.00016f);
-            drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00012f);
-            drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+    //Resets the marker fields such that they wont be drawn
+    public void resetRoute(){
+        toMarker = null;
+        fromMarker = null;
+        route = null;
+    }
 
-            drawBuilding(g, ThemeHelper.color("building"));
+    //Set the locationsMarker to a Point2D.Float, such that it can be drawn
+    public void setLocationMarker(Point2D.Float locationMarker) {
+        this.locationMarker = locationMarker;
+    }
 
-            drawRoadNames(g, ElementType.PEDESTRIAN_STREET);
-            drawRoadNames(g, ElementType.SERVICE_ROAD);
-            drawRoadNames(g, ElementType.LIVING_STREET);
-            drawRoadNames(g, ElementType.RESIDENTIAL_ROAD);
-            drawRoadNames(g, ElementType.UNCLASSIFIED_ROAD);
-            drawRoadNames(g, ElementType.TERTIARY_ROAD);
-            drawRoadNames(g, ElementType.SECONDARY_ROAD);
-            drawRoadNames(g, ElementType.PRIMARY_ROAD);
-            drawRoadNames(g, ElementType.TRUNK_ROAD);
-            drawRoadNames(g, ElementType.MOTORWAY);
+    //Set the tosMarker to a Point2D.Float, such that it can be drawn
+    public void setToMarker(Point2D.Float toMarker){
+        this.toMarker = toMarker;
+    }
 
-            // Amenities
-            drawNight(g);
-            drawAmenity(g);
-            break;
-        case LEVEL_1:
-            drawWater(g, ThemeHelper.color("water"), 0.00005);
-            drawPark(g, ThemeHelper.color("park"), 0.00005);
-            drawForest(g, ThemeHelper.color("forest"), 0.00005);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.00005);
-            drawGrass(g, ThemeHelper.color("grass"), 0.00005);
-            drawFarmland(g, ThemeHelper.color("farmland"), 0.00005);
-            drawMeadow(g, ThemeHelper.color("meadow"), 0.00005);
-            drawHeath(g, ThemeHelper.color("heath"), 0.00005);
-            drawRaceways(g, ThemeHelper.color("raceway"), 0.00007f);
-            drawEscapes(g, ThemeHelper.color("escape"), 0.00002f);
-            drawBusGuideways(g, ThemeHelper.color("busGuideway"), 0.00006f);
+    //Set the fromMarker to a Point2D.Float, such that it can be drawn
+    public void setFromMarker(Point2D.Float fromMarker){
+        this.fromMarker = fromMarker;
+    }
 
-            drawPedestrianStreets(g, ThemeHelper.color("pedestrianStreet"), 0.00006f);
-            drawServiceRoads(g, ThemeHelper.color("serviceRoad"), 0.00006f);
-            drawLivingStreets(g, ThemeHelper.color("livingStreet"), 0.00007f);
-            drawResidentialRoads(g, ThemeHelper.color("residentialRoad"), 0.00007f);
-            drawUnclassifiedRoads(g, ThemeHelper.color("unclassifiedRoad"), 0.00007f);
-            drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
-            drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
-            drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
-            drawSecondaryRoadLinks(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
-            drawPrimaryRoads(g, ThemeHelper.color("primaryRoad"), 0.0001f);
-            drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
-            drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
-            drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
-            drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
-            drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
+    //Make a circke/Ellipse that is used for the locationMarkers
+    private Ellipse2D getEllipseFromCenter(double x, double y, double width, double height) {
+        double newX = x - width / 2.0;
+        double newY = y - height / 2.0;
 
-            drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+        Ellipse2D ellipse = new Ellipse2D.Double(newX, newY, width, height);
+        return ellipse;
+    }
 
-            drawBuilding(g, ThemeHelper.color("building"));
+    private void drawBackground(Graphics2D g) {
+        g.setColor(ThemeHelper.color("water"));
+        Path2D boundary = new Path2D.Float();
+        boundary.moveTo(minLon, minLat);
+        boundary.lineTo(maxLon, minLat);
+        boundary.lineTo(maxLon, maxLat);
+        boundary.lineTo(minLon, maxLat);
+        boundary.lineTo(minLon, minLat);
+        g.fill(boundary);
+    }
 
-            drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
-            drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
-            drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
-            drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
-
-            drawRoadNames(g, ElementType.PEDESTRIAN_STREET);
-            drawRoadNames(g, ElementType.SERVICE_ROAD);
-            drawRoadNames(g, ElementType.LIVING_STREET);
-            drawRoadNames(g, ElementType.RESIDENTIAL_ROAD);
-            drawRoadNames(g, ElementType.UNCLASSIFIED_ROAD);
-            drawRoadNames(g, ElementType.TERTIARY_ROAD);
-            drawRoadNames(g, ElementType.SECONDARY_ROAD);
-            drawRoadNames(g, ElementType.PRIMARY_ROAD);
-            drawRoadNames(g, ElementType.TRUNK_ROAD);
-            drawRoadNames(g, ElementType.MOTORWAY);
-
-            // Amenities
-            drawAmenity(g);
-            break;
-        case LEVEL_2:
-            drawWater(g, ThemeHelper.color("water"), 0.00008);
-            drawPark(g, ThemeHelper.color("park"), 0.00008);
-            drawForest(g, ThemeHelper.color("forest"), 0.00008);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.00008);
-            drawGrass(g, ThemeHelper.color("grass"), 0.00008);
-            drawFarmland(g, ThemeHelper.color("farmland"), 0.00008);
-            drawMeadow(g, ThemeHelper.color("meadow"), 0.00008);
-            drawHeath(g, ThemeHelper.color("heath"), 0.00008);
-            drawResidentialRoads(g, ThemeHelper.color("residentialRoad"), 0.00007f);
-            drawUnclassifiedRoads(g, ThemeHelper.color("unclassifiedRoad"), 0.00007f);
-            drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
-            drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
-            drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
-            drawSecondaryRoadLinks(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
-            drawPrimaryRoads(g, ThemeHelper.color("primaryRoad"), 0.0001f);
-            drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
-            drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
-            drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
-            drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
-            drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-
-            drawRail(g, ThemeHelper.color("rail"), 0.00002f);
-
-            drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
-            drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
-            drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
-            drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
-            drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
-            break;
-        case LEVEL_3:
-            drawWater(g, ThemeHelper.color("water"), 0.001);
-            drawPark(g, ThemeHelper.color("park"), 0.001);
-            drawForest(g, ThemeHelper.color("forest"), 0.001);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.001);
-            drawGrass(g, ThemeHelper.color("grass"), 0.001);
-            drawFarmland(g, ThemeHelper.color("farmland"), 0.001);
-            drawMeadow(g, ThemeHelper.color("meadow"), 0.001);
-            drawHeath(g, ThemeHelper.color("heath"), 0.001);
-            drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
-            drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
-            drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
-            drawSecondaryRoadLinks(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
-            drawPrimaryRoads(g, ThemeHelper.color("primaryRoad"), 0.0001f);
-            drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
-            drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
-            drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
-            drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
-            drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-
-            drawRail(g, ThemeHelper.color("rail"), 0.00002f);
-
-            drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
-            drawCityNames(g, ElementType.HAMLET_NAME, 0.35f);
-            drawCityNames(g, ElementType.SUBURB_NAME, 0.35f);
-            drawCityNames(g, ElementType.QUARTER_NAME, 0.35f);
-            drawCityNames(g, ElementType.NEIGHBOURHOOD_NAME, 0.35f);
-            break;
-        case LEVEL_4:
-            drawWater(g, ThemeHelper.color("water"), 0.001);
-            drawPark(g, ThemeHelper.color("park"), 0.001);
-            drawForest(g, ThemeHelper.color("forest"), 0.001);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.001);
-            drawGrass(g, ThemeHelper.color("grass"), 0.001);
-            drawFarmland(g, ThemeHelper.color("farmland"), 0.001);
-            drawMeadow(g, ThemeHelper.color("meadow"), 0.001);
-            drawHeath(g, ThemeHelper.color("heath"), 0.001);
-            drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
-            drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
-            drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
-            drawSecondaryRoadLinks(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
-            drawPrimaryRoads(g, ThemeHelper.color("primaryRoad"), 0.0001f);
-            drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
-            drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
-            drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
-            drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
-            drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-
-            drawRail(g, ThemeHelper.color("rail"), 0.00002f);
-
-            drawCityNames(g, ElementType.CITY_NAME, 0.8f);
-            drawCityNames(g, ElementType.TOWN_NAME, 0.35f);
-            drawCityNames(g, ElementType.VILLAGE_NAME, 0.35f);
-            break;
-        case LEVEL_5:
-            drawWater(g, ThemeHelper.color("water"), 0.005);
-            drawPark(g, ThemeHelper.color("park"), 0.005);
-            drawForest(g, ThemeHelper.color("forest"), 0.005);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.005);
-            drawTertiaryRoads(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
-            drawTertiaryRoadLinks(g, ThemeHelper.color("tertiaryRoad"), 0.0001f);
-            drawSecondaryRoads(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
-            drawSecondaryRoadLinks(g, ThemeHelper.color("secondaryRoad"), 0.0001f);
-            drawPrimaryRoads(g, ThemeHelper.color("primaryRoad"), 0.0001f);
-            drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
-            drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
-            drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
-            drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
-            drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-
-            drawRail(g, ThemeHelper.color("rail"), 0.00002f);
-
-            drawCityNames(g, ElementType.CITY_NAME, 0.8f);
-            drawCityNames(g, ElementType.TOWN_NAME, 0.35f);
-            break;
-        case LEVEL_6:
-            drawWater(g, ThemeHelper.color("water"), 0.03);
-            drawPark(g, ThemeHelper.color("park"), 0.03);
-            drawForest(g, ThemeHelper.color("forest"), 0.03);
-            drawGrassland(g, ThemeHelper.color("grassland"), 0.03);
-            drawPrimaryRoads(g, ThemeHelper.color("primaryRoad"), 0.0001f);
-            drawPrimaryRoadLinks(g, ThemeHelper.color("primaryRoad"), 0.0001f);
-            drawTrunkRoads(g, ThemeHelper.color("trunkRoad"), 0.00014f);
-            drawTrunkRoadLinks(g, ThemeHelper.color("trunkRoad"), 0.00012f);
-            drawMotorways(g, ThemeHelper.color("motorway"), 0.00018f);
-            drawMotorwayLinks(g, ThemeHelper.color("motorway"), 0.00014f);
-            drawCityNames(g, ElementType.CITY_NAME, 1f);
-            break;
+    //Draw the land
+    private void drawCoastlines(Graphics2D g) {
+        g.setColor(ThemeHelper.color("background"));
+        for (Path2D path : coastlines) {
+            g.fill(path);
         }
     }
 
-    private void setCurrentSection(ElementType elementType)
-    {
+    //Draw a route, and set the stroke size depending on the zoom level.
+    private void drawRoute(Graphics2D g) {
+        if (route != null && drawRoute) {
+            g.setColor(ThemeHelper.color("routeBorder"));
+            if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_6) {
+                g.setStroke(new BasicStroke(0.0043f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_5) {
+                g.setStroke(new BasicStroke(0.0012f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_4) {
+                g.setStroke(new BasicStroke(0.00055f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_3) {
+                g.setStroke(new BasicStroke(0.00035f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_2) {
+                g.setStroke(new BasicStroke(0.00012f));
+            } else {
+                g.setStroke(new BasicStroke(0.00012f));
+            }
+            g.draw(route);
+
+            g.setColor(ThemeHelper.color("route"));
+            if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_6) {
+                g.setStroke(new BasicStroke(0.004f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_5) {
+                g.setStroke(new BasicStroke(0.001f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_4) {
+                g.setStroke(new BasicStroke(0.0005f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_3) {
+                g.setStroke(new BasicStroke(0.0003f));
+            } else if (ZoomLevel.getZoomLevel() == ZoomLevel.LEVEL_2) {
+                g.setStroke(new BasicStroke(0.0001f));
+            } else {
+                g.setStroke(new BasicStroke(0.0001f));
+            }
+            g.draw(route);
+        }
+    }
+
+    public void setRoute(Iterable<RoadEdge> route) {
+        OSMWay way = new OSMWay();
+        for (RoadEdge edge : route) {
+            way.add(edge.getEither());
+            way.add(edge.getOther(edge.getEither()));
+        }
+        this.route = new PolygonApprox(way);
+    }
+
+    //Invoke all the drawmethods for each Zoom Level.
+    private void drawElements(Graphics2D g) {
+        switch (ZoomLevel.getZoomLevel()) {
+        case LEVEL_0:
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PARK, g, ThemeHelper.color("park"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.BEACH, g, ThemeHelper.color("beach"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASS, g, ThemeHelper.color("grass"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FARMLAND, g, ThemeHelper.color("farmland"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.MEADOW, g, ThemeHelper.color("meadow"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.HEATH, g, ThemeHelper.color("heath"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PLAYGROUND, g, ThemeHelper.color("playground"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.SPORTSPITCH, g, ThemeHelper.color("sportspitch"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.SPORTSTRACK, g, ThemeHelper.color("sportstrack"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeWay(ElementType.HEDGE, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.00004f, BasicStroke.CAP_ROUND);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WETLAND, g, ThemeHelper.color("wetland"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeWay(ElementType.RIVER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.00004f, BasicStroke.CAP_ROUND);
+            drawBiomeWay(ElementType.DRAIN, g, ThemeHelper.color("water"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.00002f, BasicStroke.CAP_ROUND);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
+            drawPier(g, ThemeHelper.color("bridge"), 0.000008f);
+            drawBiomeArea(ElementType.PARKING, g, ThemeHelper.color("parking"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+
+            drawRoad(g, RoadType.FOOTWAY, ThemeHelper.color("footway"), ThemeHelper.color("footwayArea"), 0.000004f, 1);
+            drawRoad(g, RoadType.BRIDLEWAY, ThemeHelper.color("bridleway"), ThemeHelper.color("bridleway"), 0.000004f, 1);
+            drawRoad(g, RoadType.CYCLEWAY, ThemeHelper.color("cycleway"), ThemeHelper.color("cycleway"), 0.000004f, 1);
+            drawRoad(g, RoadType.PATH, ThemeHelper.color("path"), ThemeHelper.color("path"), 0.000004f, 1);
+            drawRoad(g, RoadType.ROAD, ThemeHelper.color("road"), ThemeHelper.color("road"), 0.000004f, 1);
+            drawRoad(g, RoadType.STEPS, ThemeHelper.color("steps"), ThemeHelper.color("steps"), 0.000004f, 1);
+            drawRoad(g, RoadType.TRACK, ThemeHelper.color("track"), ThemeHelper.color("track"), 0.000004f, 1);
+            drawRoad(g, RoadType.RACEWAY, ThemeHelper.color("raceway"), ThemeHelper.color("raceway"), 0.00007f, 1);
+            drawRoad(g, RoadType.PEDESTRIAN_STREET, ThemeHelper.color("pedestrianStreet"), ThemeHelper.color("pedestrianStreet"), 0.00004f, 1);
+            drawRoad(g, RoadType.SERVICE_ROAD, ThemeHelper.color("serviceRoad"), ThemeHelper.color("serviceRoad"), 0.00004f, 1);
+            drawRoad(g, RoadType.LIVING_STREET, ThemeHelper.color("livingStreet"), ThemeHelper.color("livingStreet"), 0.00005f, 1);
+            drawRoad(g, RoadType.RESIDENTIAL_ROAD, ThemeHelper.color("residentialRoad"), ThemeHelper.color("residentialRoad"), 0.00005f, 1);
+            drawRoad(g, RoadType.UNCLASSIFIED_ROAD, ThemeHelper.color("unclassifiedRoad"), ThemeHelper.color("unclassifiedRoad"), 0.00005f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD, ThemeHelper.color("tertiaryRoad"), ThemeHelper.color("tertiaryRoad"), 0.00006f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD_LINK, ThemeHelper.color("tertiaryRoad"), ThemeHelper.color("tertiaryRoad"), 0.00006f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD, ThemeHelper.color("secondaryRoad"), ThemeHelper.color("secondaryRoad"), 0.00008f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD_LINK, ThemeHelper.color("secondaryRoad"), ThemeHelper.color("secondaryRoad"), 0.00008f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.00008f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.00008f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00013f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00014f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00007f, 1);
+
+            drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00018f, BasicStroke.CAP_BUTT);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_0_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00006f, BasicStroke.CAP_BUTT);
+
+            drawBuilding(g, ThemeHelper.color("building"));
+
+            drawRoadNames(RoadType.PEDESTRIAN_STREET, g);
+            drawRoadNames(RoadType.SERVICE_ROAD, g);
+            drawRoadNames(RoadType.LIVING_STREET, g);
+            drawRoadNames(RoadType.RESIDENTIAL_ROAD, g);
+            drawRoadNames(RoadType.UNCLASSIFIED_ROAD, g);
+            drawRoadNames(RoadType.TERTIARY_ROAD, g);
+            drawRoadNames(RoadType.SECONDARY_ROAD, g);
+            drawRoadNames(RoadType.PRIMARY_ROAD, g);
+            drawRoadNames(RoadType.TRUNK_ROAD, g);
+            drawRoadNames(RoadType.MOTORWAY, g);
+
+            drawAmenity(AmenityType.BAR, g);
+            drawAmenity(AmenityType.NIGHT_CLUB, g);
+            drawAmenity(AmenityType.FAST_FOOD, g);
+            drawAmenity(AmenityType.RAILWAY_STATION, g);
+            drawAmenity(AmenityType.HOSPITAL, g);
+            drawAmenity(AmenityType.UNIVERSITY, g);
+            drawAmenity(AmenityType.AIRPORT_AMENITY, g);
+            drawAmenity(AmenityType.PARKING_AMENITY, g);
+            drawAmenity(AmenityType.SPORT_AMENITY, g);
+            break;
+        case LEVEL_1:
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PARK, g, ThemeHelper.color("park"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.BEACH, g, ThemeHelper.color("beach"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASS, g, ThemeHelper.color("grass"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FARMLAND, g, ThemeHelper.color("farmland"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.MEADOW, g, ThemeHelper.color("meadow"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.HEATH, g, ThemeHelper.color("heath"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PLAYGROUND, g, ThemeHelper.color("playground"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.SPORTSPITCH, g, ThemeHelper.color("sportspitch"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.SPORTSTRACK, g, ThemeHelper.color("sportstrack"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WETLAND, g, ThemeHelper.color("wetland"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeWay(ElementType.RIVER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.00005f, BasicStroke.CAP_ROUND);
+            drawBiomeWay(ElementType.DRAIN, g, ThemeHelper.color("water"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.00003f, BasicStroke.CAP_ROUND);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
+            drawPier(g, ThemeHelper.color("bridge"), 0.000008f);
+            drawBiomeArea(ElementType.PARKING, g, ThemeHelper.color("parking"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+
+            drawRoad(g, RoadType.RACEWAY, ThemeHelper.color("raceway"), ThemeHelper.color("raceway"), 0.00007f, 1);
+            drawRoad(g, RoadType.PEDESTRIAN_STREET, ThemeHelper.color("pedestrianStreet"), ThemeHelper.color("pedestrianStreet"), 0.00006f, 1);
+            drawRoad(g, RoadType.SERVICE_ROAD, ThemeHelper.color("serviceRoad"), ThemeHelper.color("serviceRoad"), 0.00006f, 1);
+            drawRoad(g, RoadType.LIVING_STREET, ThemeHelper.color("livingStreet"), ThemeHelper.color("livingStreet"), 0.00007f, 1);
+            drawRoad(g, RoadType.RESIDENTIAL_ROAD, ThemeHelper.color("residentialRoad"), ThemeHelper.color("residentialRoad"), 0.00007f, 1);
+            drawRoad(g, RoadType.UNCLASSIFIED_ROAD, ThemeHelper.color("unclassifiedRoad"), ThemeHelper.color("unclassifiedRoad"), 0.00007f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD, ThemeHelper.color("tertiaryRoad"), ThemeHelper.color("tertiaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD_LINK, ThemeHelper.color("tertiaryRoad"), ThemeHelper.color("tertiaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD, ThemeHelper.color("secondaryRoad"), ThemeHelper.color("secondaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD_LINK, ThemeHelper.color("secondaryRoad"), ThemeHelper.color("secondaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00014f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00012f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00016f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00008f, 1);
+
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00020f, BasicStroke.CAP_BUTT);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_1_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00007f, BasicStroke.CAP_BUTT);
+            drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+
+            drawRoadNames(RoadType.PRIMARY_ROAD, g);
+            drawRoadNames(RoadType.TRUNK_ROAD, g);
+            drawRoadNames(RoadType.MOTORWAY, g);
+
+            drawCityNames(g, AmenityType.VILLAGE_NAME, 0.35f);
+            drawCityNames(g, AmenityType.HAMLET_NAME, 0.35f);
+            drawCityNames(g, AmenityType.SUBURB_NAME, 0.35f);
+            drawCityNames(g, AmenityType.QUARTER_NAME, 0.35f);
+            drawCityNames(g, AmenityType.NEIGHBOURHOOD_NAME, 0.35f);
+
+            drawAmenity(AmenityType.RAILWAY_STATION, g);
+            drawAmenity(AmenityType.HOSPITAL, g);
+            drawAmenity(AmenityType.UNIVERSITY, g);
+            drawAmenity(AmenityType.AIRPORT_AMENITY, g);
+            drawAmenity(AmenityType.PARKING_AMENITY, g);
+            drawAmenity(AmenityType.SPORT_AMENITY, g);
+            break;
+        case LEVEL_2:
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PARK, g, ThemeHelper.color("park"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.BEACH, g, ThemeHelper.color("beach"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASS, g, ThemeHelper.color("grass"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FARMLAND, g, ThemeHelper.color("farmland"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.MEADOW, g, ThemeHelper.color("meadow"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.HEATH, g, ThemeHelper.color("heath"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WETLAND, g, ThemeHelper.color("wetland"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeWay(ElementType.RIVER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.00005f, BasicStroke.CAP_ROUND);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
+
+            drawRoad(g, RoadType.RESIDENTIAL_ROAD, ThemeHelper.color("residentialRoad"), ThemeHelper.color("residentialRoad"), 0.00007f, 1);
+            drawRoad(g, RoadType.UNCLASSIFIED_ROAD, ThemeHelper.color("unclassifiedRoad"), ThemeHelper.color("unclassifiedRoad"), 0.00007f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD, ThemeHelper.color("tertiaryRoad"), ThemeHelper.color("tertiaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD_LINK, ThemeHelper.color("tertiaryRoad"), ThemeHelper.color("tertiaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD, ThemeHelper.color("secondaryRoad"), ThemeHelper.color("secondaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD_LINK, ThemeHelper.color("secondaryRoad"), ThemeHelper.color("secondaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00014f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00012f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00016f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00008f, 1);
+
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00024f, BasicStroke.CAP_BUTT);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00008f, BasicStroke.CAP_BUTT);
+            drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+
+            drawCityNames(g, AmenityType.VILLAGE_NAME, 0.35f);
+            drawCityNames(g, AmenityType.HAMLET_NAME, 0.35f);
+            drawCityNames(g, AmenityType.SUBURB_NAME, 0.35f);
+            drawCityNames(g, AmenityType.QUARTER_NAME, 0.35f);
+            drawCityNames(g, AmenityType.NEIGHBOURHOOD_NAME, 0.35f);
+            break;
+        case LEVEL_3:
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PARK, g, ThemeHelper.color("park"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.BEACH, g, ThemeHelper.color("beach"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASS, g, ThemeHelper.color("grass"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FARMLAND, g, ThemeHelper.color("farmland"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.MEADOW, g, ThemeHelper.color("meadow"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.HEATH, g, ThemeHelper.color("heath"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WETLAND, g, ThemeHelper.color("wetland"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeWay(ElementType.RIVER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_2_MINIMUM_SIZE_TO_BE_SIGNISFICANT, 0.00005f, BasicStroke.CAP_ROUND);
+            drawBridge(g, ThemeHelper.color("bridge"), 0.000004f);
+
+            drawRoad(g, RoadType.RESIDENTIAL_ROAD, ThemeHelper.color("residentialRoad"), ThemeHelper.color("residentialRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.UNCLASSIFIED_ROAD, ThemeHelper.color("unclassifiedRoad"),ThemeHelper.color("unclassifiedRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD, ThemeHelper.color("tertiaryRoad"), ThemeHelper.color("tertiaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD_LINK, ThemeHelper.color("tertiaryRoad"), ThemeHelper.color("tertiaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD, ThemeHelper.color("secondaryRoad"), ThemeHelper.color("secondaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD_LINK, ThemeHelper.color("secondaryRoad"), ThemeHelper.color("secondaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00014f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00012f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00016f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00008f, 1);
+
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00028f, BasicStroke.CAP_BUTT);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00009f, BasicStroke.CAP_BUTT);
+            drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+
+            drawCityNames(g, AmenityType.VILLAGE_NAME, 0.35f);
+            drawCityNames(g, AmenityType.HAMLET_NAME, 0.35f);
+            drawCityNames(g, AmenityType.SUBURB_NAME, 0.35f);
+            drawCityNames(g, AmenityType.QUARTER_NAME, 0.35f);
+            drawCityNames(g, AmenityType.NEIGHBOURHOOD_NAME, 0.35f);
+            break;
+        case LEVEL_4:
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.PARK, g, ThemeHelper.color("park"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.BEACH, g, ThemeHelper.color("beach"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASS, g, ThemeHelper.color("grass"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FARMLAND, g, ThemeHelper.color("farmland"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.MEADOW, g, ThemeHelper.color("meadow"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.HEATH, g, ThemeHelper.color("heath"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WETLAND, g, ThemeHelper.color("wetland"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+
+            drawRoad(g, RoadType.TERTIARY_ROAD, ThemeHelper.color("tertiaryRoad"), ThemeHelper.color("tertiaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.TERTIARY_ROAD_LINK, ThemeHelper.color("tertiaryRoad"), ThemeHelper.color("tertiaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD, ThemeHelper.color("secondaryRoad"), ThemeHelper.color("secondaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.SECONDARY_ROAD_LINK, ThemeHelper.color("secondaryRoad"), ThemeHelper.color("secondaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.PRIMARY_ROAD_LINK, ThemeHelper.color("primaryRoad"), ThemeHelper.color("primaryRoad"), 0.0001f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00014f, 1);
+            drawRoad(g, RoadType.TRUNK_ROAD_LINK, ThemeHelper.color("trunkRoad"), ThemeHelper.color("trunkRoad"), 0.00012f, 1);
+            drawRoad(g, RoadType.MOTORWAY, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00016f, 1);
+            drawRoad(g, RoadType.MOTORWAY_LINK, ThemeHelper.color("motorway"), ThemeHelper.color("motorway"), 0.00008f, 1);
+
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00030f, BasicStroke.CAP_BUTT);
+            drawBiomeWay(ElementType.AIRPORT_TAXIWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_4_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00010f, BasicStroke.CAP_BUTT);
+
+            drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+
+            drawCityNames(g, AmenityType.CITY_NAME, 0.8f);
+            drawCityNames(g, AmenityType.TOWN_NAME, 0.35f);
+            drawCityNames(g, AmenityType.VILLAGE_NAME, 0.35f);
+            break;
+        case LEVEL_5:
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_5_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+
+            drawRoadsLevel_5_6(g);
+
+            drawBiomeWay(ElementType.AIRPORT_RUNWAY, g, ThemeHelper.color("airport"), DEFAULT_LEVEL_3_MINIMUM_SIZE_TO_BE_SIGNISFICANT,0.00036f, BasicStroke.CAP_BUTT);
+            drawRail(g, ThemeHelper.color("rail"), 0.00002f);
+
+            drawCityNames(g, AmenityType.CITY_NAME, 0.8f);
+            drawCityNames(g, AmenityType.TOWN_NAME, 0.35f);
+            break;
+        case LEVEL_6:
+            drawBiomeArea(ElementType.COMMON_LAND, g, ThemeHelper.color("commonland"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.FOREST, g, ThemeHelper.color("forest"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.GRASSLAND, g, ThemeHelper.color("grassland"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+            drawBiomeArea(ElementType.WATER, g, ThemeHelper.color("water"), DEFAULT_LEVEL_6_MINIMUM_SIZE_TO_BE_SIGNISFICANT);
+
+            drawRoadsLevel_5_6(g);
+
+            drawCityNames(g, AmenityType.CITY_NAME, 1f);
+            break;
+        }
+    }
+    /*
+     * Set the current section to the desired set of element, such that they can be drawn.
+     */
+    private void setCurrentSection(ElementType elementType) {
         currentSection = elements.get(elementType)
                              .getManySections((float)currentRectangle.getMinX(),
                                  (float)currentRectangle.getMinY(),
@@ -411,16 +597,18 @@ public class MapCanvas extends View {
                                  (float)currentRectangle.getMaxY());
     }
 
-    private void drawBoundaries(Graphics2D g2D)
-    {
+    /*
+     * Draw a boundary around the imported/loaded map.
+     */
+    private void drawBoundaries(Graphics2D g2D) {
         g2D.setColor(ThemeHelper.color("boundary"));
+        g2D.setStroke(new BasicStroke(Float.MIN_VALUE));
         Path2D boundary = new Path2D.Float();
-        Model model = Model.getInstance();
-        boundary.moveTo(model.getMinLongitude(true), model.getMinLatitude(true));
-        boundary.lineTo(model.getMaxLongitude(true), model.getMinLatitude(true));
-        boundary.lineTo(model.getMaxLongitude(true), model.getMaxLatitude(true));
-        boundary.lineTo(model.getMinLongitude(true), model.getMaxLatitude(true));
-        boundary.lineTo(model.getMinLongitude(true), model.getMinLatitude(true));
+        boundary.moveTo(dynMinLon, dynMinLat);
+        boundary.lineTo(dynMaxLon, dynMinLat);
+        boundary.lineTo(dynMaxLon, dynMaxLat);
+        boundary.lineTo(dynMinLon, dynMaxLat);
+        boundary.lineTo(dynMinLon, dynMinLat);
         g2D.draw(boundary);
     }
 
@@ -428,12 +616,10 @@ public class MapCanvas extends View {
    * Zooms in or out upon the elements on the MapCanvas depending on a given
    * factor.
    */
-    public void zoom(double factor)
-    {
+    public void zoom(double factor) {
         DebugWindow.getInstance().setZoomLabel();
         DebugWindow.getInstance().setZoomFactorLabel();
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-        repaint();
     }
 
     /**
@@ -442,6 +628,7 @@ public class MapCanvas extends View {
    */
     public void resetTransform() { transform.setToIdentity(); }
 
+
     /**
    * Pans the MapCanvas to another position so other elements might be viewed.
    * @param dx The difference in x-coordinates between the new position to be
@@ -449,438 +636,175 @@ public class MapCanvas extends View {
    * @param dy The difference in y-coordinates between the new position to be
    *           centered and the current center point
    */
-    public void pan(double dx, double dy)
-    {
+    public void pan(double dx, double dy) {
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
-        repaint();
     }
 
-    public Point2D toModelCoords(Point2D mousePosition)
-    {
+    public Point2D toModelCoords(Point2D mousePosition) {
         try {
             return transform.inverseTransform(mousePosition, null);
-
         } catch (NoninvertibleTransformException e) {
             throw new RuntimeException();
         }
     }
-
+    /*
+     * Sets the Enum map containing all the KDTree to the Enum map given as a parameter.
+     */
     public void setElements(EnumMap<ElementType, KDTree> map) { elements = map; }
 
-    public void setCurrentSection(HashSet<Element> currentSection)
-    {
+    public void setCurrentSection(HashSet<SuperElement> currentSection) {
         this.currentSection = currentSection;
     }
 
-    public void setCurrentPoint(Point2D currentPoint)
-    {
+    public void setCurrentPoint(Point2D currentPoint) {
         this.currentPoint = currentPoint;
     }
 
-    // Draw Roads Methods
-    private void drawRail(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.RAIL);
-        for (Element element : currentSection) {
-            g.setColor(color);
-            g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND,
-                BasicStroke.JOIN_BEVEL));
-            g.draw(element.getShape());
+    /*
+     * Draw Motorways, trunkroads and primary roads.
+     * This method is supposed to be used at zoom lvl 5 and 6.
+     * This is made to avoid browsing through all roads to find the few that are to be drawn at these zoom levels.
+     */
+    private void drawRoadsLevel_5_6(Graphics2D g){
+        setCurrentSection(ElementType.HIGHWAY_LEVEL_5_6);
+        for (SuperElement element : currentSection){
+            Road road = (Road) element;
+            switch(road.getRoadType()){
+                case MOTORWAY:
+                    g.setStroke(new BasicStroke(0.0001f, 1, BasicStroke.JOIN_BEVEL));
+                    g.setColor(ThemeHelper.color("primaryRoad"));
+                    break;
+                case TRUNK_ROAD:
+                    g.setStroke(new BasicStroke(0.00014f, 1, BasicStroke.JOIN_BEVEL));
+                    g.setColor(ThemeHelper.color("trunkRoad"));
+                    break;
+                case PRIMARY_ROAD:
+                    g.setStroke(new BasicStroke(0.00018f, 1, BasicStroke.JOIN_BEVEL));
+                    g.setColor(ThemeHelper.color("motorway"));
+                    break;
+            }
+            g.draw(road.getShape());
         }
     }
 
-    // Draw Roads Methods
-    private void drawMotorways(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.MOTORWAY);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+    /**
+     *  Draw the road elements
+     *  @param g graphics2D object
+     *  @param roadType kind of road to be drawn
+     *  @param color of the road when drawn as a way/path
+     *  @param color of the raod when drawn as an area
+     *  @param strokeWidth - the size of the stroke used to paint the way/path
+     *  @param lineEnd - an integer which represent what type of end the way/path should have: CAP_BUTT=0, CAP_ROUND=1, CAP_SQUARE=2
+     */
+    private void drawRoad(Graphics2D g, RoadType roadType, Color color, Color areaColor, float strokeWidth, int lineEnd){
+        setCurrentSection(ElementType.HIGHWAY);
+        g.setStroke(new BasicStroke(strokeWidth, lineEnd, BasicStroke.JOIN_BEVEL));
+        for (SuperElement element : currentSection){
+            Road road = (Road) element;
+            if(road.getRoadType() == roadType){
+                if (road.isArea()) {
+                    g.setColor(areaColor);
+                    g.fill(road.getShape());
+                } else {
+                    g.setColor(color);
+                    g.draw(road.getShape());
+                }
+            }
         }
     }
-    private void drawMotorwayLinks(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.MOTORWAY_LINK);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawTrunkRoads(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.TRUNK_ROAD);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawTrunkRoadLinks(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.TRUNK_ROAD_LINK);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawPrimaryRoads(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.PRIMARY_ROAD);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawPrimaryRoadLinks(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.PRIMARY_ROAD_LINK);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawSecondaryRoads(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.SECONDARY_ROAD);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawSecondaryRoadLinks(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.SECONDARY_ROAD_LINK);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawTertiaryRoads(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.TERTIARY_ROAD);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawTertiaryRoadLinks(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.TERTIARY_ROAD_LINK);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawUnclassifiedRoads(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.UNCLASSIFIED_ROAD);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawResidentialRoads(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.RESIDENTIAL_ROAD);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawLivingStreets(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.LIVING_STREET);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawServiceRoads(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.SERVICE_ROAD);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawBusGuideways(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.BUS_GUIDEWAY);
+
+    private void drawBridge(Graphics2D g, Color color, float width) {
+        setCurrentSection(ElementType.BRIDGE);
         g.setColor(color);
         g.setStroke(new BasicStroke(width));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            ManMade manMade = (ManMade)element;
+            if (manMade.isArea()) g.fill(manMade.getShape());
+            else g.draw(manMade.getShape());
         }
     }
-    private void drawEscapes(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.ESCAPE);
+
+    private void drawPier(Graphics2D g, Color color, float width) {
+        setCurrentSection(ElementType.PIER);
         g.setColor(color);
         g.setStroke(new BasicStroke(width));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawRaceways(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.RACEWAY);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawPedestrianStreets(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.PEDESTRIAN_STREET);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            Road road = (Road)element;
-            if (road.isArea())
-                g.fill(element.getShape());
-            g.draw(element.getShape());
-        }
-    }
-    private void drawTracks(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.TRACK);
-        g.setColor(color);
-        g.setStroke(
-            new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawSteps(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.STEPS);
-        g.setColor(color);
-        g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER, 10.0f,
-            new float[] { 0.00001f }, 0.0f));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawFootways(Graphics2D g, Color color, Color areaColor,
-        float width)
-    {
-        setCurrentSection(ElementType.FOOTWAY);
-        g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER, 10.0f,
-            new float[] { 0.00001f }, 0.0f));
-        for (Element element : currentSection) {
-            Road r = (Road)element;
-            if (r.isArea()) {
-                g.setColor(areaColor);
-                g.fill(element.getShape());
-            } else {
-                g.setColor(color);
-                g.draw(element.getShape());
-            }
-        }
-    }
-    private void drawBridleways(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.BRIDLEWAY);
-        g.setColor(color);
-        g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER, 10.0f,
-            new float[] { 0.00001f }, 0.0f));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawCycleways(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.CYCLEWAY);
-        g.setColor(color);
-        g.setStroke(new BasicStroke(width));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawPaths(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.PATH);
-        g.setColor(color);
-        g.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER, 10.0f,
-            new float[] { 0.00001f }, 0.0f));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
-        }
-    }
-    private void drawRoads(Graphics2D g, Color color, float width)
-    {
-        setCurrentSection(ElementType.ROAD);
-        g.setColor(color);
-        g.setStroke(new BasicStroke(width));
-        for (Element element : currentSection) {
-            g.draw(element.getShape());
+        for (SuperElement element : currentSection) {
+            ManMade manMade = (ManMade)element;
+            g.draw(manMade.getShape());
         }
     }
 
-    private void drawPark(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
-        setCurrentSection(ElementType.PARK);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawForest(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
-        setCurrentSection(ElementType.FOREST);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawGrassland(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
-        setCurrentSection(ElementType.GRASSLAND);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawGrass(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
-        setCurrentSection(ElementType.GRASS);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawMeadow(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
-        setCurrentSection(ElementType.MEADOW);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawFarmland(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
-        setCurrentSection(ElementType.FARMLAND);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawHeath(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
-        setCurrentSection(ElementType.HEATH);
-        g.setColor(color);
-        for (Element element : currentSection) {
-            Biome biome = (Biome)element;
-            float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
-        }
-    }
-
-    private void drawWater(Graphics2D g, Color color,
-        Double minSizeToBeSignificant)
-    {
-        setCurrentSection(ElementType.WATER);
+    /*
+     *  Draw the biome elements, which are to be drawns as an area, ie. a filled shape.
+     *  @param Element type, Graphics2D, Color
+     *  @param double minSizeToBeSignificant - a double telling if the biome should be drawn
+     */
+    private void drawBiomeArea(ElementType elementType, Graphics2D g, Color color, Double minSizeToBeSignificant){
+        setCurrentSection(elementType);
         g.setColor(color);
         g.setStroke(new BasicStroke(0.00001f));
-        for (Element element : currentSection) {
+        for (SuperElement element : currentSection){
             Biome biome = (Biome)element;
             float size = biome.getShape().getSize();
-            if (size > minSizeToBeSignificant) {
-                g.fill(biome.getShape());
-            }
+            if (size > minSizeToBeSignificant) g.fill(biome.getShape());
         }
     }
 
-    private void drawBuilding(Graphics2D g, Color color)
-    {
+    /*
+     *  Draw the biome elements, which are to be drawns as ways, ie. not a filled shape.
+     *  @param Element type, Graphics2D, Color
+     *  @param double minSizeToBeSignificant - a double telling if the biome should be drawn
+     *  @param float strokeSize - the size of the stroke used to paint the way/path
+     *  @param int lineEnd - an integer which represent what type of end the way/path should have: CAP_BUTT=0, CAP_ROUND=1, CAP_SQUARE=2
+     */
+    private void drawBiomeWay(ElementType elementType, Graphics2D g, Color color, double minSizeToBeSignificant, float strokeSize, int lineEnd){
+        setCurrentSection(elementType);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(strokeSize, lineEnd, BasicStroke.JOIN_BEVEL));
+        for (SuperElement element : currentSection){
+            Biome biome = (Biome)element;
+            float size = biome.getShape().getSize();
+            if (size > minSizeToBeSignificant) g.draw(biome.getShape());
+        }
+    }
+
+    //Draw railways
+    private void drawRail(Graphics2D g, Color color, float width){
+        setCurrentSection(ElementType.RAIL);
+        g.setColor(color);
+        g.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+
+        for (SuperElement element : currentSection){
+            Rail rail = (Rail) element;
+            if(rail.isInTunnel()){
+                Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f);
+                g.setComposite(c);
+            }
+            g.draw(rail.getShape());
+            Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+            g.setComposite(c);
+        }
+    }
+
+    private void drawBuilding(Graphics2D g, Color color) {
         setCurrentSection(ElementType.BUILDING);
         Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .9f);
         g.setComposite(c);
         g.setColor(color);
         g.setStroke(new BasicStroke(0.00001f));
-        for (Element element : currentSection) {
-            g.fill(element.getShape());
+        for (SuperElement element : currentSection) {
+            Building building = (Building)element;
+            g.fill(building.getShape());
         }
         c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         g.setComposite(c);
     }
-
-    private void drawRoadNames(Graphics2D g, ElementType type)
-    {
-        setCurrentSection(type); // TODO Se drawCityNames for a more generic version
+    /*
+     * Draw road names on the roads. It takes the angle and the length of the road
+     * into consideration
+     */
+    private void drawRoadNames(RoadType roadType, Graphics2D g) {
+        setCurrentSection(ElementType.HIGHWAY);
 
         // Scalefactor
         float scaleFactor = 0.1f * 397.522f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
@@ -889,167 +813,169 @@ public class MapCanvas extends View {
         Font font = new Font("Times New Roman", Font.PLAIN, 12);
 
         // Transparency
-        Composite c = AlphaComposite.getInstance(
-            AlphaComposite.SRC_OVER,
-            .7f); // TODO want transparency for road names ?
+        Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f);
         g.setComposite(c);
 
         // Color
         g.setColor(ThemeHelper.color("roadName"));
 
-        for (Element element : currentSection) {
+        for (SuperElement element : currentSection) {
             Road road = (Road)element;
+            if(road.getRoadType() == roadType){
+                g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+                PolygonApprox polygon = road.getShape();
 
-            g.setFont(font.deriveFont(
-                AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-            PolygonApprox polygon = (PolygonApprox)road.getShape();
+                // The polygon coords
+                float[] coords = polygon.getCoords();
+                if (coords.length < 4) break;
+                float longestVectorX1 = coords[0];
+                float longestVectorY1 = coords[1];
+                float longestVectorX2 = coords[2];
+                float longestVectorY2 = coords[3];
 
-            // The polygon coords
-            float[] coords = polygon.getCoords();
+                // Coords to help finding the longest vector
+                float x1;
+                float y1;
+                float x2;
+                float y2;
 
-            if (coords.length < 4)
-                break;
-            float longestVectorX1 = coords[0];
-            float longestVectorY1 = coords[1];
-            float longestVectorX2 = coords[2];
-            float longestVectorY2 = coords[3];
+                // Find the longest vector in the path
+                for (int i = 2; i < coords.length; i += 2) {
+                    x1 = coords[i - 2];
+                    y1 = coords[i - 1];
+                    x2 = coords[i];
+                    y2 = coords[i + 1];
 
-            // Coords to help finding the longest vector
-            float x1;
-            float y1;
-            float x2;
-            float y2;
-
-            // Find the longest vector in the path
-            for (int i = 2; i < coords.length; i += 2) {
-                x1 = coords[i - 2];
-                y1 = coords[i - 1];
-                x2 = coords[i];
-                y2 = coords[i + 1];
-
-                if ((vectorLength(longestVectorX2 - longestVectorX1,
-                        longestVectorY2 - longestVectorY1))
-                    < (vectorLength(x2 - x1, y2 - y1))) {
-                    longestVectorX1 = x1;
-                    longestVectorY1 = y1;
-                    longestVectorX2 = x2;
-                    longestVectorY2 = y2;
+                    //If longest vector update
+                    if ((vectorLength(longestVectorX2 - longestVectorX1,longestVectorY2 - longestVectorY1)) < (vectorLength(x2 - x1, y2 - y1))) {
+                        longestVectorX1 = x1;
+                        longestVectorY1 = y1;
+                        longestVectorX2 = x2;
+                        longestVectorY2 = y2;
+                    }
                 }
-            }
 
-            // Find the angle of the longest vector in the path
-            double angle = vectorAngle(longestVectorX1, longestVectorY1,
-                longestVectorX2, longestVectorY2);
+                // Find the angle of the longest vector in the path
+                double angle = vectorAngle(longestVectorX1, longestVectorY1,
+                        longestVectorX2, longestVectorY2);
 
-            // The center of the longest vector
-            float centerX = (longestVectorX2 + longestVectorX1) / 2;
-            float centerY = (longestVectorY2 + longestVectorY1) / 2;
+                // The center of the longest vector
+                float centerX = (longestVectorX2 + longestVectorX1) / 2;
+                float centerY = (longestVectorY2 + longestVectorY1) / 2;
 
-            // The length of the string (name)
-            float stringLength = 0;
-            for (int i = 0; i < road.getName().length(); i++) {
-                char ch = road.getName().charAt(i);
-                stringLength += getFontMetrics(font).charWidth(ch) * scaleFactor;
-            }
+                // The length of the string (name)
+                float stringLength = 0;
+                for (int i = 0; i < road.getName().length(); i++) {
+                    char ch = road.getName().charAt(i);
+                    stringLength += getFontMetrics(font).charWidth(ch) * scaleFactor;
+                }
 
-            // Using trigonometry to find the appropiate start for the string
-            float hyp = stringLength / 2;
-            float hos = (float)Math.cos(angle) * hyp;
-            float mod = (float)Math.sin(angle) * hyp;
+                // Using trigonometry to find the appropiate start for the string
+                float hyp = stringLength / 2;
+                float hos = (float)Math.cos(angle) * hyp;
+                float mod = (float)Math.sin(angle) * hyp;
 
-            float drawFromX = centerX - hos;
-            float drawFromY = centerY - mod;
+                float drawFromX = centerX - hos;
+                float drawFromY = centerY - mod;
 
-            hyp = (float)0.0001 / 4; // TODO I though it would be better to divide by
-            // 2 and not 4, but it turned out 4 is better.
-            // Also though it would matter more to adjust for
-            // various stroke sizes.
-            hos = (float)Math.cos(90 - angle) * hyp;
-            mod = (float)Math.sin(90 - angle) * hyp;
+                //Using teachings about triangles
+                hyp = (float)0.0001 / 4;
+                hos = (float)Math.cos(90 - angle) * hyp;
+                mod = (float)Math.sin(90 - angle) * hyp;
 
-            drawFromX = drawFromX - hos;
-            drawFromY = drawFromY + mod;
+                drawFromX = drawFromX - hos;
+                drawFromY = drawFromY + mod;
 
-            // TODO cosider to move the if-statement further up, such that all the
-            // calculations dont have to be done if the name is too long.
-            if (vectorLength(longestVectorX2 - longestVectorX1,
-                    longestVectorY2 - longestVectorY1)
-                > stringLength) {
-                AffineTransform old = g.getTransform();
-                g.rotate(angle, drawFromX, drawFromY);
-                drawString(road.getName(), g, drawFromX, drawFromY, font, scaleFactor,
-                    false);
-                g.setTransform(old);
+            /*
+             Safe Affine transform, rotate, shift etc. draw the name
+             and set Affine Transform back to the state before
+             drawing the name.
+             */
+                if (vectorLength(longestVectorX2 - longestVectorX1,longestVectorY2 - longestVectorY1) > stringLength) {
+                    AffineTransform old = g.getTransform();
+                    g.rotate(angle, drawFromX, drawFromY);
+                    if(!road.isArea())drawString(road.getName(), g, drawFromX, drawFromY, font, scaleFactor,false);
+                    g.setTransform(old);
+                }
+                if(road.isArea())drawString(road.getName(), g, road.getShape().getCenterX(), road.getShape().getCenterY(), font, scaleFactor,true);
             }
         }
+        // Transparency off
+        c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+        g.setComposite(c);
     }
-    private double vectorLength(float x, float y)
-    {
+    //Calculate the length of a vector
+    private double vectorLength(float x, float y) {
         return Math.sqrt(x * x + y * y);
     }
-    private double dotProduct(float x1, float y1, float x2, float y2)
-    {
+
+    //calculate the dot product of two vectors originating in Origo
+    private double dotProduct(float x1, float y1, float x2, float y2) {
         double newX1 = (double)x1;
         double newY1 = (double)y1;
         double newX2 = (double)x2;
         double newY2 = (double)y2;
         return newX1 * newX2 + newY1 * newY2;
     }
-    private double vectorAngle(float x1, float y1, float x2, float y2)
-    {
+
+    //Calculate the angle between a vector a vector parallel with the x-line
+    private double vectorAngle(float x1, float y1, float x2, float y2) {
         double cosAngle;
         double dotProduct = dotProduct((x2 - x1), (y2 - y1), 1, 0f);
         double vector1Length = vectorLength((x2 - x1), (y2 - y1));
         double vector2Length = vectorLength(1, 0f);
         cosAngle = dotProduct / (vector1Length * vector2Length);
 
-        if ((y2 - y1) < 0 && (x2 - x1) > 0)
-            return -Math.acos(cosAngle);
-        if ((y2 - y1) < 0 && (x2 - x1) < 0)
-            return Math.acos(-cosAngle);
-        if ((y2 - y1) > 0 && (x2 - x1) > 0)
-            return Math.acos(cosAngle);
-        if ((y2 - y1) > 0 && (x2 - x1) < 0)
-            return -Math.acos(-cosAngle);
-        if ((x2 - x1) < 0)
-            return Math.acos(-cosAngle);
+        //Math.acos corresponds to four different angelt in the range -360 to 360 degrees.
+        //This takes that under consideration tp get the desired angels for drawing road names.
+        if ((y2 - y1) < 0 && (x2 - x1) > 0) return -Math.acos(cosAngle);
+        if ((y2 - y1) < 0 && (x2 - x1) < 0) return Math.acos(-cosAngle);
+        if ((y2 - y1) > 0 && (x2 - x1) > 0) return Math.acos(cosAngle);
+        if ((y2 - y1) > 0 && (x2 - x1) < 0) return -Math.acos(-cosAngle);
+        if ((x2 - x1) < 0) return Math.acos(-cosAngle);
         return Math.acos(cosAngle);
     }
 
-    private void drawCityNames(Graphics2D g, ElementType type, float scaling)
-    {
-        setCurrentSection(type);
-        if (ZoomLevel.getZoomFactor() > -60) {
-            float scaleFactor;
-            if (ZoomLevel.getZoomFactor() >= 100) {
-                scaleFactor = scaling * 397.522f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
-            } else {
-                scaleFactor = 0.0054586004f;
-            }
-            // Font
-            Font font = new Font("Arial", Font.BOLD, 12);
+    private void drawCityNames(Graphics2D g, AmenityType type, float scaling) {
+        setCurrentSection(ElementType.AMENITY);
+        for (SuperElement element : currentSection){
+            Amenity amenity = (Amenity) element;
+            if(amenity.getAmenityType() == type){
+                if (ZoomLevel.getZoomFactor() > -60){
+                    float scaleFactor;
 
-            // Transparency
-            Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f);
-            g.setComposite(c);
+                    //Set the scalefactor such that the citynames have the desired size of the various zoom levels.
+                    if (ZoomLevel.getZoomFactor() >= 100) scaleFactor = scaling * 397.522f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2.43114f));
+                    else scaleFactor = 0.0054586004f;
 
-            // Color
-            g.setColor(ThemeHelper.color("cityName"));
-            for (Element element : currentSection) {
-                PlaceName placeName = (PlaceName)element;
-                g.setFont(font.deriveFont(
-                    AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-                drawString(placeName.getName(), g, placeName.getX(), placeName.getY(),
-                    font, scaleFactor, true);
+                    // Font
+                    Font font = new Font("Arial", Font.BOLD, 12);
+
+                    // Transparency
+                    Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f);
+                    g.setComposite(c);
+
+                    // Color
+                    g.setColor(ThemeHelper.color("cityName"));
+
+                    g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+                    drawString(amenity.getName(), g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+
+                    // Transparency off
+                    c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+                    g.setComposite(c);
+                }
             }
         }
     }
-    private void drawString(String s, Graphics2D g, float x, float y, Font font,
-        float scaleFactor, boolean isShiftedLeft)
-    {
+
+    /*
+    Draw each character in the String, taken as a parameter, and then shift to the next letter.
+    The shift will be the size of the letter just written.
+     */
+    private void drawString(String s, Graphics2D g, float x, float y, Font font, float scaleFactor, boolean isShiftedLeft) {
         if (s.length() > 0) {
-            if (isShiftedLeft)
-                x = x - ((getFontMetrics(font).charWidth(s.charAt(s.length() / 2)) * scaleFactor) * s.length() / 2);
+            if (isShiftedLeft) x = x - ((getFontMetrics(font).charWidth(s.charAt(s.length() / 2)) * scaleFactor) * s.length() / 2);
             for (int i = 0; i < s.length(); i++) {
                 char ch = s.charAt(i);
                 g.drawString(ch + "", x, y);
@@ -1058,79 +984,317 @@ public class MapCanvas extends View {
         }
     }
 
-    private void drawNight(Graphics2D g)
-    {
-        switch (ThemeHelper.getCurrentTheme()) {
-        case "Night":
+    //Invokes the draing methods for amenities
+    private void drawAmenity(AmenityType type, Graphics2D g){
+        switch (type){
+            case HOSPITAL:
+                drawHospital(g);
+                break;
+            case BAR:
+            case NIGHT_CLUB:
+            case FAST_FOOD:
+            case CAFE:
+                drawNight(type, g);
+                break;
+            case UNIVERSITY:
+                drawUniversity(g);
+                break;
+            case RAILWAY_STATION:
+                drawRailwayStation(g);
+                break;
+            case PARKING_AMENITY:
+                drawParkingAmenity(g);
+                break;
+            case SPORT_AMENITY:
+                drawSportAmenity(g);
+                break;
+            case AIRPORT_AMENITY:
+                drawAirportAmenity(g);
+                break;
+            case CITY_NAME:
+            case TOWN_NAME:
+            case VILLAGE_NAME:
+            case HAMLET_NAME:
+            case SUBURB_NAME:
+            case QUARTER_NAME:
+            case NEIGHBOURHOOD_NAME:
+        }
+    }
+
+    //Draw the amenities + names that can only be seen when the night theme is activated.
+    private void drawNight(AmenityType type, Graphics2D g) {
+        if (ThemeHelper.getCurrentTheme() == "Night") {
             if (ZoomLevel.getZoomFactor() >= 650) {
-                float scaleFactor = 0.5f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
-                setCurrentSection(ElementType.BAR);
-                for (Element element : currentSection) {
-                    Amenity amenity = (Amenity)element;
-                    g.setColor(ThemeHelper.color("barName"));
-                    Font font = Helpers.FontAwesome.getFontAwesome();
-                    g.setFont(font.deriveFont(
-                        AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-                    drawString("\uf000"
-                            + "",
-                        g, amenity.getX(), amenity.getY(), font, scaleFactor,
-                        false);
+                float scaleFactor = 0.5f * (float) (Math.pow(ZoomLevel.getZoomFactor(), -2f));
+                Font font = Helpers.FontAwesome.getFontAwesome();
+                g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+                setCurrentSection(ElementType.AMENITY);
+                for (SuperElement element : currentSection) {
+                    Amenity amenity = (Amenity) element;
+                    if (amenity.getAmenityType() == AmenityType.BAR) {
+                        g.setColor(ThemeHelper.color("barName"));
+                        drawString("\uf000" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+                    }
+                    if (amenity.getAmenityType() == AmenityType.NIGHT_CLUB) {
+                        g.setColor(ThemeHelper.color("nightClubName"));
+                        drawString("\uf001" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+                    }
+                    if (amenity.getAmenityType() == AmenityType.FAST_FOOD) {
+                        g.setColor(ThemeHelper.color("fastFoodName"));
+                        drawString("\uf0f5" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+                    }
+                    if (amenity.getAmenityType() == AmenityType.CAFE) {
+                        g.setColor(ThemeHelper.color("cafeName"));
+                        drawString("\uf0f4" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+                    }
                 }
-                setCurrentSection(ElementType.NIGHT_CLUB);
-                for (Element element : currentSection) {
-                    Amenity amenity = (Amenity)element;
-                    g.setColor(ThemeHelper.color("nightClubName"));
-                    Font font = Helpers.FontAwesome.getFontAwesome();
-                    g.setFont(font.deriveFont(
-                        AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-                    drawString("\uf001"
-                            + "",
-                        g, amenity.getX(), amenity.getY(), font, scaleFactor,
-                        false);
+                //Drawing names
+                float deltay = ((getFontMetrics(font).getHeight() * scaleFactor) / 2);
+
+                //Font for drawing name
+                font = new Font("Arial", Font.PLAIN, 20);
+                g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+
+                for (SuperElement element : currentSection) {
+                    Amenity amenity = (Amenity) element;
+                    if (amenity.getAmenityType() == AmenityType.BAR || amenity.getAmenityType() == AmenityType.FAST_FOOD || amenity.getAmenityType() == AmenityType.NIGHT_CLUB  || amenity.getAmenityType() == AmenityType.CAFE) {
+                        if (amenity.getAmenityType() == AmenityType.BAR) g.setColor(ThemeHelper.color("barName"));
+                        if (amenity.getAmenityType() == AmenityType.NIGHT_CLUB) g.setColor(ThemeHelper.color("nightClubName"));
+                        if (amenity.getAmenityType() == AmenityType.FAST_FOOD) g.setColor(ThemeHelper.color("fastFoodName"));
+                        if (amenity.getAmenityType() == AmenityType.CAFE) g.setColor(ThemeHelper.color("cafeName"));
+                        String name = amenity.getName();
+                        float x = amenity.getX() - (getFontMetrics(font).stringWidth(name) * scaleFactor / 2);
+                        drawString(name, g, x, amenity.getY() + deltay, font, scaleFactor, false);
+                    }
                 }
             }
         }
     }
-    private void drawAmenity(Graphics2D g)
-    {
-        drawHospital(g);
-        drawPlaceOfWorship(g);
-    }
-    private void drawHospital(Graphics2D g)
-    {
+
+    //Draw hospital amenities + name
+    private void drawHospital(Graphics2D g) {
         float scaleFactor;
-        scaleFactor = 1.5f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
-        setCurrentSection(ElementType.HOSPITAL);
-        for (Element element : currentSection) {
+        scaleFactor = 1.7f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
+        setCurrentSection(ElementType.AMENITY);
+
+        //Color and font
+        g.setColor(ThemeHelper.color("hospital"));
+        Font font = Helpers.FontAwesome.getFontAwesome();
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+
+        for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
-            g.setColor(ThemeHelper.color("hospital"));
-            Font font = Helpers.FontAwesome.getFontAwesome();
-            g.setFont(font.deriveFont(
-                AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
-            drawString("\uf0fe"
-                    + "",
-                g, amenity.getX(), amenity.getY(), font, scaleFactor, false);
+            if(amenity.getAmenityType() == AmenityType.HOSPITAL)
+            drawString("\uf0fe" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+        }
+
+        float deltay = ((getFontMetrics(font).getHeight()* scaleFactor)/2);
+
+        //Font for drawing name
+        font = new Font("Arial", Font.ITALIC, 18);
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+        for (SuperElement element : currentSection){
+            Amenity amenity = (Amenity)element;
+            if(amenity.getAmenityType() == AmenityType.HOSPITAL){
+                String name = amenity.getName();
+                float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
+                drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+            }
         }
     }
-    private void drawPlaceOfWorship(Graphics2D g)
-    {
+
+    //Draw university amenities + names
+    private void drawUniversity(Graphics2D g){
+        float scaleFactor;
+        scaleFactor = 1.7f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
+        setCurrentSection(ElementType.AMENITY);
+
+        //Color and font
+        g.setColor(ThemeHelper.color("university"));
+        Font font = Helpers.FontAwesome.getFontAwesome();
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+
+        for (SuperElement element : currentSection) {
+            Amenity amenity = (Amenity)element;
+            if(amenity.getAmenityType() == AmenityType.UNIVERSITY)
+            drawString("\uf19c" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+        }
+
+        float deltay = ((getFontMetrics(font).getHeight()* scaleFactor)/2);
+
+        //Font for drawing name
+        font = new Font("Arial", Font.ITALIC, 18);
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+        for (SuperElement element : currentSection){
+            Amenity amenity = (Amenity)element;
+            if(amenity.getAmenityType() == AmenityType.UNIVERSITY){
+                String name = amenity.getName();
+                float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
+                drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+            }
+        }
+    }
+
+    //Draw railway station amenities + names
+    private void drawRailwayStation(Graphics2D g) {
+        float scaleFactor;
+        scaleFactor = 1.7f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
+
+        //Color and font
+        g.setColor(ThemeHelper.color("railwayStation"));
+        Font font = Helpers.FontAwesome.getFontAwesome();
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+        setCurrentSection(ElementType.AMENITY);
+        for (SuperElement element : currentSection){
+            Amenity amenity = (Amenity)element;
+            if(amenity.getAmenityType() == AmenityType.RAILWAY_STATION)
+            drawString("\uf238" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+        }
+
+        float deltay = ((getFontMetrics(font).getHeight()* scaleFactor)/2);
+
+        //Font for drawing name
+        font = new Font("Arial", Font.BOLD, 14);
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+        for (SuperElement element : currentSection) {
+            Amenity amenity = (Amenity) element;
+            if (amenity.getAmenityType() == AmenityType.RAILWAY_STATION) {
+                String name = amenity.getName();
+                float x = amenity.getX() - (getFontMetrics(font).stringWidth(name) * scaleFactor / 2);
+                drawString(name, g, x, amenity.getY() + deltay, font, scaleFactor, false);
+            }
+        }
+    }
+
+    //Draw parking amenities + names
+    private void drawParkingAmenity(Graphics2D g) {
         float scaleFactor;
         scaleFactor = 1.5f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
-        setCurrentSection(ElementType.PLACE_OF_WORSHIP);
-        for (Element element : currentSection) {
+        setCurrentSection(ElementType.AMENITY);
+
+        // Transparency
+        Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f);
+        g.setComposite(c);
+
+        //Color and font
+        g.setColor(ThemeHelper.color("parkingAmenity"));
+        Font font = new Font("Arial", Font.BOLD, 18);
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+
+        for (SuperElement element : currentSection) {
             Amenity amenity = (Amenity)element;
-            g.setColor(ThemeHelper.color("placeOfWorship"));
-            Font font = new Font("Wingdings", Font.PLAIN, 36);
-            // Font font = new Font("Ariel", Font.PLAIN, 12);
-            g.setFont(font.deriveFont(
-                AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+            if(amenity.getAmenityType() == AmenityType.PARKING_AMENITY){
+                float y = amenity.getY();
+                y += ((getFontMetrics(font).charWidth('P')) / 2) * scaleFactor;
+                drawString("P", g, amenity.getX(), y, font, scaleFactor, true);
+            }
+        }
+        // Transparency off
+        c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+        g.setComposite(c);
+    }
 
-            float y = amenity.getY();
-            y += ((getFontMetrics(font).charWidth('\uf055')) / 2) * scaleFactor;
+    //Draw sportamenities
+    private void drawSportAmenity(Graphics2D g) {
+        float scaleFactor;
+        scaleFactor = 0.75f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
+        setCurrentSection(ElementType.AMENITY);
 
-            drawString("\uf055"
-                    + "",
-                g, amenity.getX(), y, font, scaleFactor, false);
+        // Transparency
+        Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f);
+        g.setComposite(c);
+
+        //Color and font
+        g.setColor(ThemeHelper.color("sportAmenity"));
+        Font font = Helpers.FontAwesome.getFontAwesome();
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+
+        for (SuperElement element : currentSection) {
+            Amenity amenity = (Amenity)element;
+            if(amenity.getAmenityType() == AmenityType.SPORT_AMENITY){
+                float y = amenity.getY();
+                y += ((getFontMetrics(font).charWidth('\uf1e3')) / 2) * scaleFactor;
+                drawString("\uf1e3" + "", g, amenity.getX(), y, font, scaleFactor, true);
+            }
+        }
+        // Transparency off
+        c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+        g.setComposite(c);
+    }
+
+    //Draw airportamenities + airports
+    private void drawAirportAmenity(Graphics2D g) {
+        float scaleFactor;
+        scaleFactor = 3f * (float)(Math.pow(ZoomLevel.getZoomFactor(), -2f));
+        setCurrentSection(ElementType.AMENITY);
+
+        //Color and font
+        g.setColor(ThemeHelper.color("airportAmenity"));
+        Font font = Helpers.FontAwesome.getFontAwesome();
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+
+        for (SuperElement element : currentSection) {
+            Amenity amenity = (Amenity)element;
+            if(amenity.getAmenityType() == AmenityType.AIRPORT_AMENITY)
+            drawString("\uf072" + "", g, amenity.getX(), amenity.getY(), font, scaleFactor, true);
+        }
+
+        float deltay = ((getFontMetrics(font).getHeight()* scaleFactor)/2);
+
+        //Font for drawing name
+        font = new Font("Arial", Font.ITALIC, 20);
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+        for (SuperElement element : currentSection){
+            Amenity amenity = (Amenity)element;
+            if(amenity.getAmenityType() == AmenityType.AIRPORT_AMENITY){
+                String name = amenity.getName();
+                float x = amenity.getX() - (getFontMetrics(font).stringWidth(name)* scaleFactor/2);
+                drawString(name, g, x, amenity.getY()+deltay, font, scaleFactor, false);
+            }
+        }
+    }
+
+    //pan using affine transform
+    public void panToPoint(Point2D point){
+        Rectangle2D rectangle = getVisibleRect();
+        Point2D midpoint = toModelCoords(new Point2D.Double(rectangle.getCenterX(), rectangle.getCenterY()));
+        Point2D pointToMove;
+        Point2D pointToStart;
+        try {
+            if(point != null){
+            pointToMove = transform.createInverse().inverseTransform(point, null);
+            pointToStart = transform.createInverse().inverseTransform(midpoint, null);
+            pan(pointToStart.getX() - pointToMove.getX(), pointToStart.getY() - pointToMove.getY());
+            }
+        } catch (NoninvertibleTransformException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Set the points of interest list
+    public void setPOIs(ArrayList<POI> poiList){
+        this.poiList = poiList;
+    }
+
+    //Draw point of interest pin
+    private void drawPOI(Graphics2D g) {
+        //Calculation of the scalefactor used to derive the font
+        float scaleFactor;
+        scaleFactor = 960000f*(float) (Math.pow(ZoomLevel.getZoomFactor(), -4.0f));
+        if(ZoomLevel.getZoomFactor() < 400) //0.000000015625
+            scaleFactor = 2400f*(float) (Math.pow(ZoomLevel.getZoomFactor(), -3.0f));
+        if(ZoomLevel.getZoomFactor() < 200) //0.0003
+            scaleFactor = 0.003f * (20f) / (float) ZoomLevel.getZoomFactor();
+        if(ZoomLevel.getZoomFactor() < 50)
+            scaleFactor = 0.0012f;
+
+        //Color and font
+        g.setColor(ThemeHelper.color("poi"));
+        Font font = Helpers.FontAwesome.getFontAwesome();
+        g.setFont(font.deriveFont(AffineTransform.getScaleInstance(scaleFactor, scaleFactor)));
+
+        for (POI poi : poiList) {
+            drawString("\uf276" + "", g, (float) poi.getX(), (float)poi.getY(), font, scaleFactor, true);
         }
     }
 }

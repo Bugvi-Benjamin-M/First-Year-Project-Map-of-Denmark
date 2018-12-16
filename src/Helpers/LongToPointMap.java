@@ -4,12 +4,10 @@ import java.awt.geom.Point2D;
 /**
  * Originally created by Troels Bjerre Lund on 17 March 2017
  *
- * Edited by Búgvi, Nikolaj, Andreas, Jakob, Niclas
  *
  * This class is a symbol table that maps a long key to a Node.
  * A Node is a subtype of Point2D.Float.
  *
- * @version 17/03/2017
  */
 
 public class LongToPointMap {

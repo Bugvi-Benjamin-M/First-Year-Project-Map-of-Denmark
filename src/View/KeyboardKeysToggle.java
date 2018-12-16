@@ -1,7 +1,8 @@
 package View;
 
 /**
- * Created by Búgvi Magnussen on 26-03-2017.
+ * The KeyboardKeysToggle is a visual component that handles the setting that
+ * specifies whether it is possible to use keyboard shortcuts
  */
 public class KeyboardKeysToggle extends Toggle {
 

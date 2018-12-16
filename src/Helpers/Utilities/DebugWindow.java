@@ -2,6 +2,7 @@ package Helpers.Utilities;
 
 import Enums.BoundType;
 import Enums.ZoomLevel;
+import Helpers.HelperFunctions;
 import Main.Main;
 import Model.Coastlines.CoastlineFactory;
 import Model.Model;
@@ -14,25 +15,26 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * Class details:
- *
- * @author Andreas Blanke, blan@itu.dk
- * @version 28-03-2017.
- * @project BFST
+ * DebugWindow is a window that displays a multitude of
+ * different extra information not usually displayed to
+ * the user and mostly used for debugging.
  */
 public class DebugWindow extends WindowAdapter {
 
     private static DebugWindow instance;
 
+    private static final String TITLE = "DEBUG WINDOW";
+
     private FPSCounter fpsCounter;
     private Window window;
     private TextView container;
-    private static final String TITLE = "DEBUG WINDOW";
 
+    /**
+     * Initializes the DebugWindow
+     */
     private DebugWindow(FPSCounter fpsCounter)
     {
         this.fpsCounter = fpsCounter;
-
         container = new TextView();
         window = new Window()
                      .title(TITLE)
@@ -43,6 +45,9 @@ public class DebugWindow extends WindowAdapter {
         setupWindow();
     }
 
+    /**
+     * Adds all the information labels to the window
+     */
     private void setupWindow()
     {
         container.reset();
@@ -59,6 +64,9 @@ public class DebugWindow extends WindowAdapter {
         window.addBorderLayoutComponent(BorderLayout.CENTER, container, false);
     }
 
+    /**
+     * Retrieves the DebugWindow instance
+     */
     public static DebugWindow getInstance()
     {
         if (instance == null) {
@@ -67,6 +75,10 @@ public class DebugWindow extends WindowAdapter {
         return instance;
     }
 
+    /**
+     * Sets the FPS label to the current FPS
+     * @see FPSCounter
+     */
     public void setFPSLabel()
     {
         JLabel retrieved = container.getJLabel("fpscount");
@@ -78,6 +90,9 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
+    /**
+     * Sets the Zoom label to the name of the current zoom level
+     */
     public void setZoomLabel()
     {
         JLabel retrieved = container.getJLabel("zoomlabel");
@@ -88,6 +103,9 @@ public class DebugWindow extends WindowAdapter {
             System.out.println("zoom label not found");
     }
 
+    /**
+     * Sets the Zoom factor label to the current zoom factor
+     */
     public void setZoomFactorLabel()
     {
         JLabel retrieved = container.getJLabel("zoomfactor");
@@ -99,6 +117,9 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
+    /**
+     * Sets the longitude label to the current longitude bounds
+     */
     public void setLongitudeLabel()
     {
         JLabel retrieved = container.getJLabel("lonlabel");
@@ -111,6 +132,9 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
+    /**
+     * Sets the latitude label to the current latitude bounds
+     */
     public void setLatitudeLabel()
     {
         JLabel retrieved = container.getJLabel("latlabel");
@@ -123,15 +147,17 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
+    /**
+     * Sets the loadtime label to the time it took to load
+     * the program (simplified time)
+     * @see HelperFunctions simplifyNanoTime()
+     */
     public void setLoadtimeLabel()
     {
         JLabel retrieved = container.getJLabel("loadtime");
         long loadtime = Main.LOAD_TIME;
-        long loadtimeMilliseconds = loadtime / 1000000;
-        long loadtimeSeconds = loadtimeMilliseconds / 1000;
-        long loadtimeMinutes = loadtimeSeconds / 60;
-        String label = "Load time: " + loadtimeMinutes + " m, " + (loadtimeSeconds - (loadtimeMinutes * 60)) + " s, " + (loadtimeMilliseconds - (loadtimeSeconds * 1000)) + " ms";
-        // System.out.println(label);
+        String label = "Load time: "+
+                HelperFunctions.simplifyNanoTime(loadtime);
         if (retrieved != null) {
             retrieved.setText(label);
         } else {
@@ -139,6 +165,10 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
+    /**
+     * Sets the coastlines label to the something representing
+     * the total amount of coastlines
+     */
     public void setCoastlineLabel()
     {
         JLabel retrieved = container.getJLabel("coastlines");
@@ -151,6 +181,10 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
+    /**
+     * Set the camera label to the current bounds of the current
+     * visible canvas
+     */
     public void setCameraBoundsLabel()
     {
         JLabel retrieved = container.getJLabel("camera");
@@ -163,6 +197,9 @@ public class DebugWindow extends WindowAdapter {
         }
     }
 
+    /**
+     * Event that happens whenever the window is opened
+     */
     @Override
     public void windowOpened(WindowEvent e)
     {
@@ -180,6 +217,9 @@ public class DebugWindow extends WindowAdapter {
         fpsCounter.start();
     }
 
+    /**
+     * Event that happens whenever the window closes
+     */
     @Override
     public void windowClosed(WindowEvent e)
     {

@@ -4,10 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Class details:
- *
- * @author Niclas Hedam, nhed@itu.dk
- * @version 18-03-2017
+ * The ThemeSetting is a visual component from which the user is able to change
+ * the the current theme of the program.
  */
 public class ThemeSetting extends View {
 
@@ -27,13 +25,23 @@ public class ThemeSetting extends View {
         add(themeList);
     }
 
+    /**
+     * Retrieves the currently selected theme
+     */
     public String getSelectedTheme()
     {
         return themeList.getSelectedItem().toString();
     }
 
+    /**
+     * Sets the selected theme to the default theme
+     */
     public void setSelectedThemeToDefault() { themeList.setSelectedIndex(0); }
 
+    /**
+     * Sets the selected theme to a given theme ID
+     * @param theme An ID for a theme
+     */
     public void setSelectedTheme(String theme)
     {
         themeList.setSelectedItem(theme);

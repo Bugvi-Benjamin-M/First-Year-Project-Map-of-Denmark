@@ -1,6 +1,7 @@
 package Controller.ToolbarControllers;
 
-import Controller.Controller;
+import Controller.MainWindowController;
+import Controller.SearchController;
 import Enums.ToolType;
 import Helpers.OSDetector;
 import Helpers.ThemeHelper;
@@ -15,6 +16,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -22,145 +24,171 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
- * Created by Búgvi Magnussen on 02-04-2017.
+ * This class is responsible for handling the interaction with the address searchbar.
+ * It extends SearchController which implements the autocompletion functionality.
  */
-public final class SearchToolController extends Controller {
+public final class SearchToolController extends SearchController {
 
-    private static final String defaultText = "Type an address, point of interest...";
+    private static final String defaultText = "Search for an address or a city...";
 
     private static SearchToolController instance;
-    private SearchTool searchTool;
-    private boolean allowSearch;
     private JSONParser parser = new JSONParser();
     private JSONArray searchHistory;
+    private boolean isFirstDownAction = true;
 
-    private String currentQuery;
-    // Todo accept down and up key when the list is not empty
-    private final int[] prohibitedKeys = new int[] {
-        KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_ALT,
-        KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP,
-        KeyEvent.VK_DOWN, KeyEvent.VK_META, KeyEvent.VK_WINDOWS,
-        KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_UNDEFINED
-    };
 
-    private SearchToolController() { super(); }
+    private SearchToolController() {
+        super();
+    }
 
-    public static SearchToolController getInstance()
-    {
+    /**
+     * This method replaces the contructor, and is called when a
+     * reference to the object is needed. (Singleton)
+     * @return an Instance of the class.
+     */
+    public static SearchToolController getInstance() {
         if (instance == null) {
             instance = new SearchToolController();
         }
         return instance;
     }
 
-    protected void setupSearchTool()
-    {
-        searchTool = (SearchTool)ToolbarController.getInstance().getToolbar().getTool(
-            ToolType.SEARCHBAR);
+    /**
+     * Sets up the search tool by adding a focus listener to the searchbar, setting
+     * the searchbar to a default text, specifying keybindings for the searchbar, creating a JSON object which is used
+     * to save the history of the user input.
+     */
+    protected void setupSearchTool() {
+        searchTool = (SearchTool) ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBAR);
         addFocusListenerToSearchTool();
         setToDefaultText();
         specifyKeyBindings();
         try {
-            Object obj = parser.parse(
-                new FileReader(OSDetector.getTemporaryPath() + "searchHistory.json"));
-            JSONObject jsonObject = (JSONObject)obj;
-            searchHistory = (JSONArray)jsonObject.get("history");
-        } catch (Exception e) {
+            Object obj = parser.parse(new FileReader(OSDetector.getTemporaryPath()  + "searchHistory.json"));
+            JSONObject jsonObject = (JSONObject) obj;
+            searchHistory = (JSONArray) jsonObject.get("history");
+        }catch(Exception e){
             searchHistory = new JSONArray();
         }
     }
-    public void resetInstance() { instance = null; }
 
-    protected void themeHasChanged()
-    {
+    /**
+     * Resets the singleton.
+     * If getInstance is called afterwards, a new instance is created.
+     */
+    public void resetInstance() {
+        instance = null;
+    }
+
+    /**
+     * Changes the visual appearance of the components dependent on the current theme.
+     */
+    protected void themeHasChanged() {
         setToDefaultText();
-        if (!searchTool.getText().equals(defaultText)) {
+        if(!searchTool.getText().equals(defaultText)) {
             String text = searchTool.getText();
-            searchTool.getField().getEditor().getEditorComponent().setForeground(
-                ThemeHelper.color("icon"));
+            searchTool.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("icon"));
             searchTool.setText(text);
         }
     }
 
-    protected void searchToolResizeEvent()
-    {
-
+    /**
+     * Resizes the search tool appropriate when a resize event is started.
+     */
+    protected void searchToolResizeEvent() {
         setToDefaultText();
         searchTool.adaptSizeToLargeToolbar();
         ToolbarController.getInstance().transferFocusToCanvas();
     }
 
-    protected void searchToolFixedSizeEvent()
-    {
+    /**
+     * Assures that the searchbar stops resizing when a given minimum size is reached.
+     */
+    protected void searchToolFixedSizeEvent() {
         setToDefaultText();
         searchTool.adaptSizeToSmallToolbar();
         ToolbarController.getInstance().transferFocusToCanvas();
     }
 
-    protected void setToDefaultText()
-    {
+    /**
+     * Sets the searchtool to a default text which gives the user an idea of what
+     * the purpose of the searchtool is.
+     */
+    protected void setToDefaultText() {
         if (searchTool.getText().equals("") || searchTool.getText().equals(defaultText)) {
-            searchTool.getField().getEditor().getEditorComponent().setForeground(
-                ThemeHelper.color("defaulttext"));
+            searchTool.getField().getEditor().getEditorComponent().setForeground(ThemeHelper.color("defaulttext"));
             searchTool.setText(defaultText);
         }
     }
 
-    private void addFocusListenerToSearchTool()
-    {
-        searchTool.getField().getEditor().getEditorComponent().addFocusListener(
-            new SearchToolFocusHandler());
-    }
-
-    protected void setToolTip()
-    {
-        searchTool.getField().setToolTipText("Search");
-    }
-
-    protected void searchActivatedEvent()
-    {
-        if (!allowSearch) {
-            searchTool.getField().requestFocus();
-        } else if (allowSearch && searchTool.getText().isEmpty()) {
-            searchTool.getField().requestFocus();
-        } else if (allowSearch) {
-            this.saveHistory(searchTool.getText());
-
-            ToolbarController.getInstance().transferFocusToCanvas();
-            allowSearch = true;
+    /**
+     * Closes the searchtool popup.
+     * Sets the default text.
+     * The user is currently not able to press enter and get any output (allowSearch = false)
+     */
+    public void closeSearchToolList() {
+        if(searchTool.getField().isPopupVisible()) {
+            setToDefaultText();
+            allowSearch = false;
+            searchTool.getField().hidePopup();
+            ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBUTTON).toggleActivate(false);
+            ToolbarController.getInstance().requestCanvasRepaint();
         }
     }
 
-    private void showMatchingResults()
-    {
-        // Todo implement proper search
-        if (searchTool.getField().isPopupVisible() && searchTool.getField().getItemCount() == 0)
-            searchTool.getField().hidePopup();
-        searchTool.getField().removeAllItems();
-        searchTool.getField().addItem("Cat");
-        searchTool.getField().addItem("Horse");
-        searchTool.getField().showPopup();
+    /**
+     * Adds a focus listener to the searchtool.
+     */
+    private void addFocusListenerToSearchTool() {
+        searchTool.getField().getEditor().getEditorComponent().addFocusListener(new SearchToolFocusHandler());
     }
 
-    private void showHistory()
-    {
-        if (searchHistory.isEmpty())
+    /**
+     * Calls the searchActivatedEvent method of the superclass and saves it
+     * as history if it is a valid search. (If the address exists)
+     * @return
+     */
+    protected Point2D.Float searchActivatedEvent() {
+        Point2D.Float point = super.searchActivatedEvent();
+        if(isValidSearch()) {
+            saveHistory(searchTool.getText());
+            ToolbarController.getInstance().transferFocusToCanvas();
+        }
+        return point;
+    }
+
+    /**
+     * Shows the history of recent user input.
+     * The history is only shown when the searchtool is empty.
+     */
+    private void showHistory(){
+        if(searchHistory.isEmpty()) {
             return;
+        }
         searchTool.getField().removeAllItems();
         Iterator<String> iterator = searchHistory.iterator();
         while (iterator.hasNext()) {
             searchTool.getField().addItem(iterator.next());
         }
         searchTool.getField().setSelectedIndex(-1);
+        //searchTool.getField().hidePopup();
         searchTool.getField().showPopup();
     }
 
-    private void saveHistory(String query)
-    {
+    /**
+     * Saves the history to a JSON file.
+     * @param query The current string in the searchtool field.
+     */
+    private void saveHistory(String query){
+        if(searchHistory.contains(query)){
+            return;
+        }
+
+
         searchHistory.add(query);
 
         try {
-            File file = new File("/tmp/searchHistory.json");
+            File file=new File(OSDetector.getTemporaryPath()  + "searchHistory.json");
             file.createNewFile();
             FileWriter fileWriter = new FileWriter(file);
 
@@ -175,94 +203,130 @@ public final class SearchToolController extends Controller {
         }
     }
 
-    protected boolean doesSearchbarHaveFocus()
-    {
-        return searchTool.getField().getEditor().getEditorComponent().hasFocus();
-    }
+    /**
+     * Adds keybindings to the searchtool.
+     * Enter is used to activate a search.
+     * Escape is used to exit the searchtool field.
+     * Any key except the two above are used to start an autocompletion search in the TST.
+     * Up and down are used to navigate through the autocompletion popup.
+     */
+    protected void specifyKeyBindings() {
+        searchTool.getField().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if (checkForProhibitedKey(e)) {
+                    return;
+                }
+                if (OSDetector.isMac()) {
+                    if (e.getKeyCode() == KeyEvent.VK_UP) return;
+                    if (e.getKeyCode() == KeyEvent.VK_DOWN) return;
+                }
 
-    private boolean checkForProhibitedKey(KeyEvent e)
-    {
-        for (int key : prohibitedKeys) {
-            if (e.getKeyCode() == key)
-                return true;
-        }
-        return false;
-    }
-    // Todo, make sure that the up and down arrows can be used when history is not
-    // empty
-    private void specifyKeyBindings()
-    {
-        searchTool.getField().getEditor().getEditorComponent().addKeyListener(
-            new KeyAdapter() {
-                @Override
-                public void keyPressed(KeyEvent e)
-                {
-                    super.keyPressed(e);
-                    if (checkForProhibitedKey(e)) {
-                        return;
-                    }
-
-                    switch (e.getKeyChar()) {
+                switch (e.getKeyChar()) {
                     case KeyEvent.VK_ENTER:
-                        searchActivatedEvent();
+                        currentQuery = searchTool.getText();
+                            Point2D.Float selectedAddress = searchActivatedEvent();
+                            MainWindowController.getInstance().requestCanvasUpdateAddressMarker(selectedAddress);
                         break;
                     case KeyEvent.VK_ESCAPE:
-                        if (searchTool.getField()
-                                .getEditor()
-                                .getEditorComponent()
-                                .hasFocus())
+                        if (searchTool.getField().getEditor().getEditorComponent().hasFocus())
                             ToolbarController.getInstance().transferFocusToCanvas();
                         break;
-                    default:
-                        if (e.getKeyChar() != KeyEvent.VK_BACK_SPACE) {
+                }
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e);
+                if (checkForProhibitedKey(e)) {
+                    return;
+                }
+                if(OSDetector.isMac()) {
+                    if (searchTool.getField().isPopupVisible()) {
+                        if (e.getKeyCode() == KeyEvent.VK_UP) {
+                            if(searchTool.getField().getSelectedIndex() == 0) isFirstDownAction = true;
+                            if (searchTool.getField().getSelectedIndex() > 0) {
+                                searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() - 1);
+                                return;
+                            } else return;
+                        }
+                        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                            if (searchTool.getField().getSelectedIndex() < searchTool.getField().getModel().getSize() - 1) {
+                                if(isFirstDownAction){
+                                    searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() + 1);
+                                    searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() - 1);
+                                    isFirstDownAction = false;
+                                }else {
+                                    searchTool.getField().setSelectedIndex(searchTool.getField().getSelectedIndex() + 1);
+                                }
+                                return;
+                            } else return;
+                        }
+                    }
+                }
+                if (e.getKeyChar() != KeyEvent.VK_ENTER && e.getKeyChar() != KeyEvent.VK_ESCAPE) {
+                    if(queryTimer == null) {
+                        queryTimer = new Timer(QUERY_DELAY, ae -> {
+                            queryTimer.stop();
+                            queryTimer = null;
                             currentQuery = searchTool.getText();
-                            showMatchingResults();
+                            if(!currentQuery.equals("")) showMatchingResults();
                             searchTool.setText(currentQuery);
-                        }
-                        break;
-                    }
+                            if(searchTool.getField().getModel().getSize() <= 8) {
+                                searchTool.getField().setMaximumRowCount(searchTool.getField().getModel().getSize());
+                            } else if(searchTool.getField().getModel().getSize() > 8)
+                            {
+                                searchTool.getField().hidePopup();
+                                searchTool.getField().setMaximumRowCount(8);
+                                searchTool.getField().showPopup();
+                            }
+
+                            if(searchTool.getField().getModel() == null || searchTool.getField().getModel().getSize() == 0) searchTool.getField().hidePopup();
+                        });
+                        queryTimer.start();
+                    } else queryTimer.restart();
                 }
 
-                @Override
-                public void keyReleased(KeyEvent e)
-                {
-                    super.keyReleased(e);
-                    if (checkForProhibitedKey(e)) {
-                        return;
-                    }
-
-                    if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-                        if (!searchTool.getText().isEmpty()) {
-                            allowSearch = true;
-                        }
-                    }
-                    if (searchTool.getText().isEmpty()) {
-                        ToolbarController.getInstance().requestCanvasRepaint();
-                        searchTool.getField().hidePopup();
-                        showHistory();
+                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+                    if (!searchTool.getText().isEmpty()) {
+                        allowSearch = true;
                     }
                 }
-            });
+                if (searchTool.getText().isEmpty()) {
+                    searchTool.getField().setMaximumRowCount(8);
+                    ToolbarController.getInstance().requestCanvasRepaint();
+                    searchTool.getField().hidePopup();
+                    showHistory();
+                }
+            }
+        });
     }
 
+    /**
+     * Manages the focus of the searchtool.
+     * If the searchtool loses focus, the autocompletion popup gets hidden,
+     * searching is disabled and the field of the searchtool is set to the default text.
+     * If the searchtool gains focus, the history of the recent user inputs is shown and searching
+     * is enabled.
+     */
     private class SearchToolFocusHandler extends FocusAdapter {
 
         private JComboBox<String> field;
         private ComboBoxEditor editor;
         private Component editorComponent;
 
-        private SearchToolFocusHandler()
-        {
+        private SearchToolFocusHandler() {
             field = searchTool.getField();
             editor = field.getEditor();
             editorComponent = editor.getEditorComponent();
         }
 
         @Override
-        public void focusGained(FocusEvent e)
-        {
+        public void focusGained(FocusEvent e) {
             super.focusGained(e);
-            if (editor.getItem().equals(defaultText)) {
+            if(editor.getItem().equals(defaultText)) {
                 showHistory();
                 searchTool.setText("");
             } else {
@@ -272,16 +336,20 @@ public final class SearchToolController extends Controller {
             }
             editorComponent.setForeground(ThemeHelper.color("icon"));
             allowSearch = true;
+            ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBUTTON).toggleActivate(true);
         }
 
         @Override
-        public void focusLost(FocusEvent e)
-        {
+        public void focusLost(FocusEvent e) {
             super.focusLost(e);
+            currentQuery = searchTool.getText();
             setToDefaultText();
             allowSearch = false;
             searchTool.getField().hidePopup();
+            ToolbarController.getInstance().getToolbar().getTool(ToolType.SEARCHBUTTON).toggleActivate(false);
             ToolbarController.getInstance().requestCanvasRepaint();
         }
     }
+
+
 }

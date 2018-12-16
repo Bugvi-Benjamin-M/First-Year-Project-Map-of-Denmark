@@ -267,7 +267,6 @@ Impediments:
 Notes from meeting:
 - We managed to get halfway through the process of finishing the implementation of the datastructure.
 - Changing themes now works flawless.
-- It is going to be a hard Friday.
 
 ## Logbook 31/3 (Scribe Nikolaj)
 What we will do today:
@@ -347,8 +346,8 @@ What we will do until next time:
 - Finishing loading and saving
 
 Impediments:
-- Jacob has to go to work at 16:00
-- Niklas also has to go to work today
+- Jakob has to go to work at 16:00
+- Niclas also has to go to work today
 
 Next time:
 - Monday the 10th of April at 10:00 (Nikolaj joins via skype)
@@ -390,8 +389,6 @@ Impediments:
 Next Time:
 - Wednesday the 19th of April
 
-## Next logbook...
-
 ## Logbook 21/4 (Scribe Jakob)
 What we did since last time:
 - Vacation
@@ -401,11 +398,6 @@ What we did since last time:
 - Draw road names
 - Refactoring the GUI
 - tooltips for roads
-- handyman/Sexy guy worked on the address parser
-- more vacation and painting eggs
-- even more vacation and eating eggs
-- Poop
-- We bombed north Korea
 
 What we will do until next time:
 - Prepare release and presentation
@@ -413,14 +405,148 @@ What we will do until next time:
 - restricted zoom / panning
 - More amenities
 - tooltips on amenities
-- (Make child theme)
 - improme/extends nearest neighbour search
 - Tenary search trie for addresses
 
 Impediments:
-- Frida brings cake <3
+- Frida brings cake <3 (She did not)
 
 Next Time:
 - Monday 24/4 at 10.00
 
-## Next logbook...
+## Logbook 24/4 (Scribe Hedam)
+What we did since last time:
+- Amenities are drawn correctly with icons
+- Autocomplete and address parser BETA/WIP done on feature
+- Zoom panning restriction
+- Path generalisation of relations
+
+
+What we will do until next time:
+- Presentation
+- Tries (Address parser)
+- Add final missing elements
+
+Impediments:
+- Presentation at 14pm
+
+Next Time:
+- Wednesday the 26th of April
+
+## Logbook 27/4 (Scribe Hedam)
+What we did since last time:
+- GUI changes
+- Disable AA on pan or zoom
+- Bugfixes
+- Added more cartographic elements
+- Preperation for Dijkstra/A* implementation next wee
+
+What we will do until next time:
+- Graph preperation for GUI
+- Bugfixes on Trello
+- Dijkstra
+- Report writing
+- POI
+
+Impediments:
+- Lecture at 12 pm
+
+Next Time:
+- Monday the 1st of May 10:00
+
+##Logbook 1/5 (Scribe Nikolaj)
+
+What we did since last time:
+- Study dijkstras algorithm. 
+- Work with building the graph for dijkstras algorithm.
+- Optimizing Tenary search trie.
+- Testing the Tenary search trie.
+- Optimizing save and load.
+- Work with GUI.
+- Optimized relations.
+- Testing mapcanvas.
+- Implemented point of interest.
+
+What we will do until next time:
+- Add the remaining cartographic elements.
+- Finish poi implementation.
+- Continue working with dijkstras algorithm.
+- Blackbox testing.
+
+Impediments:
+- none
+
+Next scrum meeting:
+- 5/5 9:30 am.
+
+##Logbook 5/5 (Scribe Nikolaj)
+
+- We moved the scrum meeting to 8/5.
+
+## Logbook 08/05 (Scribe Blanke)
+What we did since last time:
+- Almost finished route search and graph building
+- Almost finished work on GUI for route search
+- Testing, testing, testing
+- Finished ameneties
+- Model has been optimized
+
+What we will do until next time:
+- Create release for current version
+- Fix bugs with graph
+- Fix bugs with dijekstra
+- Fix zooming and panning on smaller and more rectangular maps
+- Fix nullpointer exception when searching
+- Show Zoom Level
+
+Impediments:
+- None at the moment...
+
+Next meeting: Wednesday 10/05 at 10
+
+## Logbook 10/05 (Scribe Blanke)
+What we did since last time:
+- Distancescaler has been implemented that shows the distance based on zoom level
+- Worked on the GUI for route planning
+- Worked on making the NodeGenerator flexible to work with smaller maps as well
+- Worked on route planning search and autocomplete
+- Optimized the KD-trees, simplified the trees and removed obsolete references
+- Optimized the graph and dijekstra
+- Optimized CPU usage
+- Optimized Font Awesome
+
+What we will do until next time:
+- Optimazation and rethinking the Roads and Edges
+- LSD string search for autocomplete
+- Completing route search
+- Optimazation of RAM usage
+- Fixing bugs
+
+Impediments:
+- None at the moment...
+
+Next meeting: Friday 12/05 at 10
+
+## Logbook 15/05 (Scribe Magnussen)
+
+Note: no scrum meeting was held Friday 12/05. 
+ - 
+What we did since last time:
+ - Fixed bugs
+ - Worked on route search
+ - Worked on white box testing
+ - Javadoc
+ - Removed zoom/pan restrictions
+ - GUI work and fixes. 
+ - Dijkstra optimisation
+ - Usability test
+ - Optimisation (roads, roadEdges).
+
+What we will do until next time:
+ - Finish up the code and make the application ready for handin. 
+
+Impediments:
+ - Handin of the assignment. 
+ 
+Last scrum meeting:
+ - This scrum meeting is the last scrum meeting. All following meeting will be related to report writing, and no log will be kept. 

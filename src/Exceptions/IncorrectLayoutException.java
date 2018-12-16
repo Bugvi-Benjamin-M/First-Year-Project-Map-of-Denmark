@@ -1,12 +1,13 @@
 package Exceptions;
 
-/**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 29/03/2017
+/*
+ * This exception is thrown, when you try to initialize a window with
+ * an unsupported layout.
  */
 public class IncorrectLayoutException extends RuntimeException {
 
+    /*
+     * Constructor
+     */
     public IncorrectLayoutException(String message) { super(message); }
 }

@@ -3,16 +3,23 @@ package Controller;
 import View.Window;
 
 /**
- * Created by Jakob on 06-03-2017.
+ * The superclass of all controllers.
  */
 public abstract class Controller {
 
     protected Window window;
 
+    /**
+     * Constructor.
+     */
     public Controller()
     {
         //
     }
 
+    /**
+     * Specifies the window the controller manipulates.
+     * @param window the window the controller belongs to.
+     */
     public void specifyWindow(Window window) { this.window = window; }
 }

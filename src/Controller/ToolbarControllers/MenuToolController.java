@@ -11,23 +11,19 @@ import View.Toolbar;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 
 import static javax.swing.SpringLayout.NORTH;
 import static javax.swing.SpringLayout.WEST;
 
 /**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 05/04/2017
+ * This class controls the menu tool. It determines the visual dimensions of the menu,
+ * calculates its position, specifies input controls and handles events related to the menu tool.
  */
 public final class MenuToolController extends Controller {
 
     private final int POPUP_MARGIN_LEFT = 10;
-    private final int POPUP_MARGIN_HEIGHT = 282;
+    private final int POPUP_MARGIN_HEIGHT = 340;
     private final int POPUP_MARGIN_WIDTH = 60;
     private final int POPUP_MARGIN_TOP = 10;
     private final int POPUP_MARGIN_BETWEEN_TOOLS = 63;
@@ -39,8 +35,16 @@ public final class MenuToolController extends Controller {
     private MenuTool popupMenu;
     private Toolbar toolbar;
 
+    /**
+     * private constructor, called by getInstance
+     */
     private MenuToolController() { super(); }
 
+
+    /**
+     * Returns the singleton instance of the MenuToolController.
+     * @return the singleton
+     */
     public static MenuToolController getInstance()
     {
         if (instance == null) {
@@ -49,20 +53,43 @@ public final class MenuToolController extends Controller {
         return instance;
     }
 
+    /**
+     * Sets up the menu tool.
+     */
     protected void setupMenuTool()
     {
         toolbar = ToolbarController.getInstance().getToolbar();
         popupMenu = new MenuTool();
-        addFocusListener();
         addActionsToToolsMenu();
     }
 
+    /**
+     * Hides the popup menu.
+     */
     protected void hidePopupMenu()
     {
-        if (popupMenu != null && popupMenu.isVisible())
+        if (popupMenu != null && popupMenu.isVisible()) {
             popupMenu.hidePopupMenu();
+            if (ToolbarController.getInstance().getType() == ToolbarType.SMALL)
+                ToolbarController.getInstance()
+                        .getToolbar()
+                        .getTool(ToolType.MENU)
+                        .toggleActivate(false);
+        }
     }
 
+    /**
+     * Lets a client know whether the popup menu is visible.
+     * @return is the popup menu visible
+     */
+    protected boolean isPopupVisible() {
+        if(popupMenu != null) return popupMenu.isVisible();
+        else return false;
+    }
+
+    /**
+     * Determines the layout of the popup menu, and adds all tools to the popup menu.
+     */
     protected void setupLayoutForMenuTool()
     {
         ToolComponent load = toolbar.getTool(ToolType.LOAD);
@@ -83,11 +110,17 @@ public final class MenuToolController extends Controller {
         popupMenu.getLayout().putConstraint(NORTH, poi, POPUP_MARGIN_BETWEEN_TOOLS,
             NORTH, save);
         popupMenu.addTool(toolbar.getTool(ToolType.POI));
+        ToolComponent routes = toolbar.getTool(ToolType.ROUTES);
+        popupMenu.getLayout().putConstraint(WEST, routes, POPUP_MARGIN_LEFT, WEST,
+                popupMenu.getPopupMenu());
+        popupMenu.getLayout().putConstraint(NORTH, routes, POPUP_MARGIN_BETWEEN_TOOLS,
+                NORTH, poi);
+        popupMenu.addTool(routes);
         ToolComponent settings = toolbar.getTool(ToolType.SETTINGS);
         popupMenu.getLayout().putConstraint(WEST, settings, POPUP_MARGIN_LEFT, WEST,
             popupMenu.getPopupMenu());
         popupMenu.getLayout().putConstraint(
-            NORTH, settings, POPUP_MARGIN_LARGER_BETWEEN_TOOLS, NORTH, poi);
+            NORTH, settings, POPUP_MARGIN_LARGER_BETWEEN_TOOLS, NORTH, routes);
         popupMenu.addTool(toolbar.getTool(ToolType.SETTINGS));
         toolbar.getTool(ToolType.MENU).add(popupMenu.getPopupMenu());
         popupMenu.getPopupMenu().setPopupSize(POPUP_MARGIN_WIDTH,
@@ -97,6 +130,9 @@ public final class MenuToolController extends Controller {
         popupMenu.getPopupMenu().repaint();
     }
 
+    /**
+     * Specifies key bindings for the tools in the popup menu.
+     */
     private void addActionsToToolsMenu()
     {
         addAction(KeyEvent.VK_L, OSDetector.getActivationKey(),
@@ -104,17 +140,20 @@ public final class MenuToolController extends Controller {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    if (popupMenu.isVisible())
+                    if (popupMenu.isVisible()) {
                         ToolbarController.getInstance().toolEvent(ToolType.LOAD);
+                        hidePopupMenu();
+                    }
                 }
             });
         addAction(KeyEvent.VK_S, OSDetector.getActivationKey(),
             new AbstractAction() {
                 @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    if (popupMenu.isVisible())
+                public void actionPerformed(ActionEvent e) {
+                    if (popupMenu.isVisible()) {
                         ToolbarController.getInstance().toolEvent(ToolType.SAVE);
+                        hidePopupMenu();
+                    }
                 }
             });
         addAction(
@@ -122,12 +161,38 @@ public final class MenuToolController extends Controller {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    if (popupMenu.isVisible())
+                    if (popupMenu.isVisible()) {
                         ToolbarController.getInstance().toolEvent(ToolType.SETTINGS);
+                        hidePopupMenu();
+                    }
                 }
             });
+        addAction(KeyEvent.VK_P, OSDetector.getActivationKey(), new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(popupMenu.isVisible()) {
+                    ToolbarController.getInstance().toolEvent(ToolType.POI);
+                    hidePopupMenu();
+                }
+            }
+        });
+        addAction(KeyEvent.VK_R, OSDetector.getActivationKey(), new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(popupMenu.isVisible()) {
+                    ToolbarController.getInstance().toolEvent(ToolType.ROUTES);
+                    hidePopupMenu();
+                }
+            }
+        });
     }
 
+    /**
+     * Adds an action to an action map of the Menu Tool.
+     * @param key the key to activate the action
+     * @param activationKey which key to be held down in order to activate the action (if any).
+     * @param action the action to be triggered when the key is pressed.
+     */
     private void addAction(int key, int activationKey, AbstractAction action)
     {
         toolbar.getTool(ToolType.MENU)
@@ -138,6 +203,10 @@ public final class MenuToolController extends Controller {
             .put(action.toString(), action);
     }
 
+    /**
+     * Activates or deactivates the popup menu, depending on if the popup menu is already
+     * visible.
+     */
     protected void menuToolActivated()
     {
         if (!popupMenu.isVisible()) {
@@ -153,41 +222,34 @@ public final class MenuToolController extends Controller {
         popupMenu.setLocation(calculatePosition());
     }
 
-    private void addFocusListener()
-    {
-        toolbar.getTool(ToolType.MENU).addFocusListener(new MenuToolFocusHandler());
-    }
-
+    /**
+     * Recalculates the position of the popup menu if it is visible
+     * and the window is resized.
+     */
     protected void windowResizedEvent()
     {
         if (popupMenu.isVisible())
             popupMenu.setLocation(calculatePosition());
     }
 
+    /**
+     * Recalculates the position of the popup menu if it is visible
+     * and the window is moved.
+     */
     protected void windowMovedEvent()
     {
         if (popupMenu.isVisible())
             popupMenu.setLocation(calculatePosition());
     }
 
+    /**
+     * Calculates the position of the popup menu.
+     * @return the new position of the popup menu.
+     */
     private Point calculatePosition()
     {
         return new Point(toolbar.getLocationOnScreen().x + POPUPMENU_LEFT_OFFSET,
             (toolbar.getLocationOnScreen().y + toolbar.getHeight()) - POPUPMENU_YAXIS_OFFSET);
     }
 
-    private class MenuToolFocusHandler extends FocusAdapter {
-
-        @Override
-        public void focusLost(FocusEvent e)
-        {
-            super.focusLost(e);
-            popupMenu.hidePopupMenu();
-            if (ToolbarController.getInstance().getType() == ToolbarType.SMALL)
-                ToolbarController.getInstance()
-                    .getToolbar()
-                    .getTool(ToolType.MENU)
-                    .toggleActivate(false);
-        }
-    }
 }

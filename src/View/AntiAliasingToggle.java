@@ -1,10 +1,8 @@
 package View;
 
 /**
- * Created by  on .
- *
- * @author bugvimagnussen
- * @version 03/04/2017
+ * The AntiAliasingToggle is a visual component that handles the setting for
+ * antialiasing on the mapcanvas.
  */
 public class AntiAliasingToggle extends Toggle {
 

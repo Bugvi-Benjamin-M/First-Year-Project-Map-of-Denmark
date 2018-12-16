@@ -10,19 +10,12 @@ import java.util.Map;
 /**
  * Class details:
  * The Toolbar is a visual component consisting of a collection of tools.
- *
- * @author Andreas Blanke, blan@itu.dk
- * @author Niclas Hedam, nhed@itu.dk
- * @version 06-03-2017
  */
 public class Toolbar extends View {
 
     private static Map<ToolType, ToolComponent> tools;
     private SpringLayout layout;
 
-    /**
-   * Constructor for the Toolbar
-   */
     public Toolbar()
     {
         tools = new ToolFactory().setupToolbar();
@@ -32,9 +25,11 @@ public class Toolbar extends View {
         applyTheme();
     }
 
+    /**
+     * Applies the current selected theme to the toolbar
+     */
     public void applyTheme()
     {
-
         setBackground(ThemeHelper.color("toolbar"));
         for (ToolType type : tools.keySet()) {
             if (type == ToolType.SEARCHBAR) {
@@ -47,6 +42,9 @@ public class Toolbar extends View {
         }
     }
 
+    /**
+     * Retrieves the layout manager of the toolbar
+     */
     public SpringLayout getLayout() { return layout; }
 
     /**
@@ -56,6 +54,9 @@ public class Toolbar extends View {
    */
     public ToolComponent getTool(ToolType type) { return tools.get(type); }
 
+    /**
+     * Returns all tools in the toolbar
+     */
     public Map<ToolType, ToolComponent> getAllTools() { return tools; }
 
     /** ToolFactory creates the collection of visual components representing the
@@ -74,6 +75,7 @@ public class Toolbar extends View {
             tools.put(ToolType.SEARCHBUTTON,
                 new ToolFeature("\uf002", ToolType.SEARCHBUTTON));
             tools.put(ToolType.POI, new ToolFeature("\uf041", ToolType.POI));
+            tools.put(ToolType.ROUTES, new ToolFeature("\uf018", ToolType.ROUTES));
             return tools;
         }
     }

@@ -19,9 +19,6 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by Búgvi Magnussen on 22-03-2017.
- */
 public class TestCanvasController {
 
     @Before
@@ -67,53 +64,7 @@ public class TestCanvasController {
     {
         Model.getInstance();
         MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
-        canvas.getVisibleRect().contains(2, 2); // Todo Check if point is on screen
-        // Todo implement properly
-        // Need to find a way to test this properly
-    }
-
-    @Test
-    public void testResetBounds()
-    {
-        // Todo implement properly
-        // Maybe consider Robot class
-        // Transform is always identity, need to find a valid way to test this
-        // methof
-    }
-
-    @Test
-    public void testUpdate()
-    {
-
-        // Todo implement properly
-        Model.getInstance();
-        MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
-        CanvasController canvasController = CanvasController.getInstance();
-        canvasController.update(Model.getInstance(), null);
-    }
-
-    @Test
-    public void testMousePressed()
-    {
-        Model.getInstance();
-        MapCanvas canvas = CanvasController.getInstance().getMapCanvas();
-        MouseListener[] listener = canvas.getMouseListeners();
-        // MouseEvent event = new MouseEvent(canvas, )
-
-        // tODO continue work here, create new mouse event. Maybe use robot class
-        // listener[0].mousePressed();
-    }
-
-    @Test
-    public void testMouseDragged()
-    {
-        // Todo implement properly
-    }
-
-    @Test
-    public void testMouseWheelMoved()
-    {
-        // Todo implement properly
+        canvas.getVisibleRect().contains(2, 2);
     }
 
     @Test

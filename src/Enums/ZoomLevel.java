@@ -2,78 +2,73 @@ package Enums;
 
 /**
  * Class details:
+ * The ZoomLevel enum represents how much the user has zoomed in or out
+ * on the MapCanvas. The ZoomLevel is used by multiple different classes
+ * and as such it is a sort of global value.
  *
- * @author Andreas Blanke, blan@itu.dk
- * @version 27-03-2017.
- * @project BFST
+ * The current ZoomLevel is, among other things, used for determining
+ * which elements to be drawn and used for determining the complexity
+ * of a coastline segment.
+ *
  */
 public enum ZoomLevel {
-    LEVEL_0(1)
-    , // close and detailed
-    LEVEL_1(1)
-    ,
-    LEVEL_2(2)
-    ,
-    LEVEL_3(5)
-    ,
-    LEVEL_4(11)
-    ,
-    LEVEL_5(17)
-    ,
-    LEVEL_6(21); // abstract far away
+    LEVEL_0, // close and detailed
+    LEVEL_1,
+    LEVEL_2,
+    LEVEL_3,
+    LEVEL_4,
+    LEVEL_5,
+    LEVEL_6; // abstract far away
 
-    private int nodesAtLevel;
     private static double zoom_factor = 0;
 
-    ZoomLevel(int nodesAtLevel) { this.nodesAtLevel = nodesAtLevel; }
-
-    public static ZoomLevel getZoomLevel()
-    {
-        if (zoom_factor <= 150) { // LEVEL_6
-            return ZoomLevel.LEVEL_6;
-        } else if (zoom_factor <= 250) { // LEVEL_5
-            return ZoomLevel.LEVEL_5;
-        } else if (zoom_factor <= 350) { // LEVEL_4
-            return ZoomLevel.LEVEL_4;
-        } else if (zoom_factor <= 400) { // LEVEL_3
-            return ZoomLevel.LEVEL_3;
-        } else if (zoom_factor <= 450) { // LEVEL_2
-            return ZoomLevel.LEVEL_2;
-        } else if (zoom_factor <= 570) { // LEVEL_1
-            return ZoomLevel.LEVEL_1;
-        } else { // LEVEL_0
-            return ZoomLevel.LEVEL_0;
-        }
-    }
-
+    /**
+     * Changes the current zoom factor value into something different
+     */
     public static void setZoomFactor(double zoomFactor)
     {
         zoom_factor = zoomFactor;
     }
 
-    public static void resetZoomFactor() { zoom_factor = 0; }
+    /**
+     * Returns the current zoom level based on the current zoom factor
+     */
+    public static ZoomLevel getZoomLevel()
+    {
+        if (zoom_factor <= 150) {           // LEVEL_6
+            return ZoomLevel.LEVEL_6;
+        } else if (zoom_factor <= 250) {    // LEVEL_5
+            return ZoomLevel.LEVEL_5;
+        } else if (zoom_factor <= 350) {    // LEVEL_4
+            return ZoomLevel.LEVEL_4;
+        } else if (zoom_factor <= 400) {    // LEVEL_3
+            return ZoomLevel.LEVEL_3;
+        } else if (zoom_factor <= 450) {    // LEVEL_2
+            return ZoomLevel.LEVEL_2;
+        } else if (zoom_factor <= 570) {    // LEVEL_1
+            return ZoomLevel.LEVEL_1;
+        } else {                            // LEVEL_0
+            return ZoomLevel.LEVEL_0;
+        }
+    }
 
+    /**
+     * Returns the current zoom factor value
+     */
     public static double getZoomFactor() { return zoom_factor; }
 
-    public int getNodesAtLevel() { return nodesAtLevel; }
-
+    /**
+     * Retrieves the number of nodes to skip whenever a path is out of view
+     */
     public static int getNodesAtMaxLevel()
     {
-        return ZoomLevel.LEVEL_6.getNodesAtLevel();
+        return 100;
     }
 
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Current Level: ");
-        sb.append(this.name());
-        sb.append(" (displaying every ");
-        sb.append(nodesAtLevel);
-        sb.append(" nodes)");
-        return sb.toString();
-    }
-
+    /**
+     * Retrieves an epsilon value for path generalization based
+     * upon the current zoom level.
+     */
     public double getEpsilonValueBasedOnZoomLevel()
     {
         switch (this) {
@@ -92,5 +87,15 @@ public enum ZoomLevel {
         default: // LEVEL 6
             return 0.10;
         }
+    }
+
+    /**
+     * Generates a string representation of the current ZoomLevel
+     */
+    @Override
+    public String toString()
+    {
+        return "Current Level: " +
+                this.name();
     }
 }

@@ -1,16 +1,12 @@
 package View;
 
+import Helpers.ThemeHelper;
+
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * Class details:
- *
- *
- * @author Andreas Blanke, blan@itu.dk
- * @author Niclas Hedam, nhed@itu.dk
- * @author Oracle Team
- * @version 06-03-2017.
+ * A ToolComponent is an abstract tool that can be used in a toolbar
  */
 public abstract class ToolComponent extends JPanel {
 
@@ -24,15 +20,35 @@ public abstract class ToolComponent extends JPanel {
         activated = false;
     }
 
+    /**
+     * Sets up the specific layout for any Tool Component
+     */
     abstract void setupLayout();
 
-    public Color getDefaultColor() { return defaultColor; }
-
+    /**
+     * Activate or deactivates the tool
+     */
     public void toggleActivate(boolean state)
     {
         activated = state;
-        paintComponent(getGraphics());
+        for(Component component : this.getComponents()) {
+            if(getActivatedStatus()) component.setForeground(ThemeHelper.color("toolActivated"));
+            else component.setForeground(ThemeHelper.color("icon"));
+        }
     }
 
-    protected boolean getActivatedStatus() { return activated; }
+    /**
+     * Activates or deactiviates hovering over the tool
+     */
+    public void toggleHover(boolean hover) {
+        for(Component component : this.getComponents()) {
+            if(hover) component.setForeground(ThemeHelper.color("toolHover"));
+            else component.setForeground(ThemeHelper.color("icon"));
+        }
+    }
+
+    /**
+     * Returns whether this tool is activated
+     */
+    public boolean getActivatedStatus() { return activated; }
 }
