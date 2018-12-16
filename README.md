@@ -1,10 +1,10 @@
-# Group D
-This is the repository of the Group D BFST project.
+# Map of Denmark
 
+This project was created during the spring of 2017 as part of the course "First Year Project - Map of Denmark" at the IT-University of Copenhagen.
 
-Planned releases:
-* Monday 13/3: v0.1
-* Monday 27/3: v0.2
-* Monday 10/4: v0.3
-* Monday 24/4: v0.4
-* Tuesday 16/5: v1.0 
+The project was created by:
+* Jakob Mollerup
+* Niclas Hedam
+* Andreas Blanke
+* Nikolaj Bläser
+* Búgvi Benjamin Magnussen
