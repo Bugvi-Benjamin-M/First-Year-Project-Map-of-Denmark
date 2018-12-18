@@ -4,7 +4,7 @@ This project was created during the spring of 2017 as part of the course "First 
 
 The project was created by:
 * Jakob Mollerup
-* Niclas Hedam
-* Andreas Blanke
+* Niclas Hedam @NiclasHedam
+* Andreas Blanke @andSubmarine
 * Nikolaj Bläser
 * Búgvi Benjamin Magnussen
